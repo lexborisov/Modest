@@ -46,9 +46,19 @@ mycss_entry_t * create_css_parser(void)
     mycss_t *mycss = mycss_create();
     mycss_status_t status = mycss_init(mycss);
     
+    if(status) {
+        fprintf(stderr, "Can't init CSS Parser\n");
+        exit(EXIT_FAILURE);
+    }
+    
     // currenr entry work init
     mycss_entry_t *entry = mycss_entry_create();
     status = mycss_entry_init(mycss, entry);
+    
+    if(status) {
+        fprintf(stderr, "Can't init CSS Entry\n");
+        exit(EXIT_FAILURE);
+    }
     
     return entry;
 }
