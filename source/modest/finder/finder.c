@@ -60,7 +60,7 @@ modest_finder_t * modest_finder_create_simple(myhtml_tree_t* myhtml_tree, mycss_
     if(finder == NULL)
         return NULL;
     
-    if(modest_finder_init(finder, myhtml_tree, stylesheet) != MyHTML_STATUS_OK)
+    if(modest_finder_init(finder, myhtml_tree, stylesheet) != MODEST_STATUS_OK)
         return modest_finder_destroy(finder, true);
     
     return finder;
