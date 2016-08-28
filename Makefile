@@ -47,7 +47,7 @@ include $(TARGET)/modest/Makefile.mk
 
 OBJS := $(patsubst %.c,%.o,$(SRCS))
 
-shared: $(OBJS) $(HDRS)
+shared: $(OBJS)
 	$(CC) -shared $(LDFLAGS) $(OBJS) -o $(LIB_TMP)/lib$(LIBNAME)$(LIBPOSTFIX)
 
 static: shared
