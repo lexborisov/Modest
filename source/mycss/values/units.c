@@ -64,4 +64,11 @@ mycss_units_type_t mycss_units_type_by_name(const char *name, size_t length)
     return MyCSS_UNIT_TYPE_UNDEF;
 }
 
+const char * mycss_units_name_by_type(mycss_units_type_t unit_type)
+{
+    if(unit_type >= MyCSS_UNIT_TYPE_LAST_ENTRY)
+        return NULL;
+    
+    return mycss_units_index_name[unit_type];
+}
 

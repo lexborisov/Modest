@@ -86,6 +86,7 @@ typedef mycss_units_index_static_entry_t;
 
 mycss_units_type_t mycss_units_type_by_name(const char *name, size_t length);
 const mycss_units_index_static_entry_t * mycss_units_index_entry_by_name(const char* name, size_t length);
+const char * mycss_units_name_by_type(mycss_units_type_t unit_type);
 
 #ifdef __cplusplus
 } /* extern "C" */
