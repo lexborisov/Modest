@@ -1,5 +1,7 @@
 # Modest C/C++ HTML Render
 
+[![Build Status](https://travis-ci.org/lexborisov/Modest.svg?branch=master)](https://travis-ci.org/lexborisov/Modest)
+
 Modest is a fast HTML Render implemented as a pure C99 library with no outside dependencies.
 
 ## Now
