@@ -319,8 +319,9 @@ void mycss_namespace_print(mycss_namespace_t* ns, mycss_namespace_entry_t* ns_en
     }
     else if(ns_entry->ns_id == MyHTML_NAMESPACE_ANY)
         return; //fprintf(fh, "*");
-    else if(ns_entry->ns_id == MyHTML_NAMESPACE_UNDEF)
-        fprintf(fh, "");
+    else if(ns_entry->ns_id == MyHTML_NAMESPACE_UNDEF) {
+        /* some print */
+    }
     else {
         if(ns_entry->ns_id < MyHTML_NAMESPACE_LAST_ENTRY) {
             const char *ns_name = myhtml_namespace_name_by_id(ns_entry->ns_id, NULL);
