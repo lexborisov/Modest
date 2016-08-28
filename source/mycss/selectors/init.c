@@ -425,8 +425,6 @@ void mycss_selectors_print_chain(mycss_selectors_t* selectors, mycss_selectors_e
     while(selector) {
         if(selector->combinator == MyCSS_SELECTORS_COMBINATOR_DESCENDANT)
             fprintf(fh, " ");
-        else if(selector->combinator == MyCSS_SELECTORS_COMBINATOR_UNDEF)
-            fprintf(fh, "");
         else
             fprintf(fh, " %s ", mycss_selectors_resource_combinator_names_map[ selector->combinator ]);
         

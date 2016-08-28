@@ -38,7 +38,7 @@ SRCS :=
 HDRS := 
 EXTDIRS := examples
 
-all: shared static
+all: create shared static
 	for f in $(EXTDIRS); do $(MAKE) -C $$f all; done
 
 include $(TARGET)/myhtml/Makefile.mk
@@ -53,6 +53,9 @@ shared: $(OBJS) $(HDRS)
 static: shared
 	$(AR) crus $(LIB_TMP)/lib$(LIBNAME)$(LIBSTATIC_POSTFIX).a $(OBJS)
 
+create:
+	mkdir -p lib bin
+
 clean:
 	for f in $(EXTDIRS); do $(MAKE) -C $$f clean; done
 	rm -f $(OBJS)
@@ -62,7 +65,7 @@ clean:
 clean_include:
 	rm -rf $(INCLUDE_TMP)
 
-clone: clean_include myhtml_clone mycss_clone modest_clone
+clone: create clean_include myhtml_clone mycss_clone modest_clone
 	find include -name "*.h" -exec sed -i '.bak' -E 's/^[ \t]*#[ \t]*include[ \t]*"([^"]+)"/#include <\1>/g' {} \;
 	find include -name "*.h.bak" -exec rm -f {} \;
 
