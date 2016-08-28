@@ -28,7 +28,7 @@
 #include <modest/finder/finder.h>
 
 #ifdef __cplusplus
-//extern "C" {
+extern "C" {
 #endif
 
 bool modest_finder_selector_sub_type_pseudo_class_function_undef(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector);

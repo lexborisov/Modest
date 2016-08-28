@@ -62,7 +62,7 @@ clean:
 clean_include:
 	rm -rf $(INCLUDE_TMP)
 
-clone: clean_include MODEST_clone mycss_clone modest_clone
+clone: clean_include myhtml_clone mycss_clone modest_clone
 	find include -name "*.h" -exec sed -i '.bak' -E 's/^[ \t]*#[ \t]*include[ \t]*"([^"]+)"/#include <\1>/g' {} \;
 	find include -name "*.h.bak" -exec rm -f {} \;
 

@@ -26,7 +26,7 @@
 #include <myhtml/tree.h>
 
 #ifdef __cplusplus
-//extern "C" {
+extern "C" {
 #endif
 
 bool modest_finder_match_attribute_only_key(myhtml_token_attr_t* attr, const char* key, size_t key_len);

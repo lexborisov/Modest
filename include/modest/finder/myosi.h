@@ -27,7 +27,7 @@
 #include <mycss/myosi.h>
 
 #ifdef __cplusplus
-//extern "C" {
+extern "C" {
 #endif
 
 struct modest_finder typedef modest_finder_t;

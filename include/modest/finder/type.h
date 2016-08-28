@@ -33,7 +33,7 @@
 #include <mycss/selectors/value.h>
 
 #ifdef __cplusplus
-//extern "C" {
+extern "C" {
 #endif
 
 bool modest_finder_selector_type_undef(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector);
