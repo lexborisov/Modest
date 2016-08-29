@@ -96,8 +96,12 @@ mycss_token_type_t mycss_declaration_ending_token_type(mycss_declaration_t* decl
 
 mycss_declaration_entry_t * mycss_declaration_parse(mycss_declaration_t* declaration, myhtml_encoding_t encoding, const char* data, size_t data_size, mycss_status_t* out_status)
 {
-    if(data == NULL || data_size == 0)
+    if(data == NULL || data_size == 0) {
+        if(out_status)
+            *out_status = MyCSS_STATUS_OK;
+        
         return NULL;
+    }
     
     mycss_declaration_clean(declaration);
     

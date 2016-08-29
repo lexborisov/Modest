@@ -77,7 +77,6 @@ int main(int argc, const char * argv[])
     fprintf(stdout, "\n");
     
     /* find and parse style attributes */
-    mycss_status_t out_status;
     myhtml_tree_node_t *node = html_tree->node_html;
     
     fprintf(stdout, "Parse result:\n");
@@ -87,10 +86,10 @@ int main(int argc, const char * argv[])
         
         if(attr) {
             mycss_declaration_entry_t *dec_entry = mycss_declaration_parse(css_entry->declaration, MyHTML_ENCODING_UTF_8,
-                                                                           attr->value.data, attr->value.length, &out_status);
+                                                                           attr->value.data, attr->value.length, NULL);
             
             /* print result */
-            if(out_status == MyCSS_STATUS_OK) {
+            if(dec_entry) {
                 fprintf(stdout, "\tNode: ");
                 myhtml_tree_print_node(html_tree, node, stdout);
                 fprintf(stdout, "\tDeclaration: ");
