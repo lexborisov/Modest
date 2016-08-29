@@ -175,6 +175,9 @@ void modest_finder_begin(modest_finder_t* finder, myhtml_tree_node_t* base_node,
 
 myhtml_tree_node_t * modest_finder_node_combinator_begin(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
 {
+    if(selector == NULL)
+        return NULL;
+    
     myhtml_tree_node_t *node = base_node;
     
     while(node) {
@@ -220,6 +223,9 @@ myhtml_tree_node_t * modest_finder_node_combinator_begin(modest_finder_t* finder
 /* some */
 myhtml_tree_node_t * modest_finder_node_combinator_undef(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
 {
+    if(selector == NULL)
+        return NULL;
+    
     if(base_node->tag_id != MyHTML_TAG__TEXT && base_node->tag_id != MyHTML_TAG__COMMENT &&
        modest_finder_static_selector_type_map[selector->type](finder, base_node, selector)) {
         if(selector->next == NULL) {
@@ -237,6 +243,9 @@ myhtml_tree_node_t * modest_finder_node_combinator_undef(modest_finder_t* finder
 /* E F or E >> F */
 myhtml_tree_node_t * modest_finder_node_combinator_descendant(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
 {
+    if(selector == NULL)
+        return NULL;
+    
     myhtml_tree_node_t *node = base_node->child;
     
     while(node) {
@@ -282,6 +291,9 @@ myhtml_tree_node_t * modest_finder_node_combinator_descendant(modest_finder_t* f
 /* E > F */
 myhtml_tree_node_t * modest_finder_node_combinator_child(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
 {
+    if(selector == NULL)
+        return NULL;
+    
     myhtml_tree_node_t *node = base_node->child;
     
     while(node) {
@@ -306,6 +318,9 @@ myhtml_tree_node_t * modest_finder_node_combinator_child(modest_finder_t* finder
 /* E + F */
 myhtml_tree_node_t * modest_finder_node_combinator_next_sibling(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
 {
+    if(selector == NULL)
+        return NULL;
+    
     myhtml_tree_node_t *node = base_node->next;
     
     if(base_node->next) {
@@ -328,6 +343,9 @@ myhtml_tree_node_t * modest_finder_node_combinator_next_sibling(modest_finder_t*
 /* E ~ F */
 myhtml_tree_node_t * modest_finder_node_combinator_following_sibling(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
 {
+    if(selector == NULL)
+        return NULL;
+    
     myhtml_tree_node_t *node = base_node->next;
     
     while(node) {
@@ -352,6 +370,9 @@ myhtml_tree_node_t * modest_finder_node_combinator_following_sibling(modest_find
 /* E || F */
 myhtml_tree_node_t * modest_finder_node_combinator_column(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
 {
+    if(selector == NULL)
+        return NULL;
+    
     return base_node;
 }
 

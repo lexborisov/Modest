@@ -96,6 +96,9 @@ mycss_token_type_t mycss_declaration_ending_token_type(mycss_declaration_t* decl
 
 mycss_declaration_entry_t * mycss_declaration_parse(mycss_declaration_t* declaration, myhtml_encoding_t encoding, const char* data, size_t data_size, mycss_status_t* out_status)
 {
+    if(data == NULL || data_size == 0)
+        return NULL;
+    
     mycss_declaration_clean(declaration);
     
     mycss_entry_t *entry = declaration->ref_entry;
@@ -111,7 +114,9 @@ mycss_declaration_entry_t * mycss_declaration_parse(mycss_declaration_t* declara
     entry->declaration->ending_token = MyCSS_TOKEN_TYPE_UNDEF;
     
     mycss_declaration_entry_t *dec_entry = NULL;
+    
     declaration->entry = &dec_entry;
+    declaration->entry_last = NULL;
     
     /* parsing */
     mycss_encoding_set(entry, encoding);

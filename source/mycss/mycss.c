@@ -53,9 +53,7 @@ mycss_t * mycss_destroy(mycss_t* mycss, bool self_destroy)
 
 mycss_status_t mycss_parse(mycss_entry_t* entry, myhtml_encoding_t encoding, const char* css, size_t css_size)
 {
-    if(entry->type & MyCSS_ENTRY_TYPE_END) {
-        mycss_entry_clean_all(entry);
-    }
+    mycss_entry_clean(entry);
     
     /* set parser */
     entry->parser = mycss_parser_token;

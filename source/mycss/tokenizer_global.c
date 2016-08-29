@@ -627,11 +627,12 @@ size_t mycss_tokenizer_global_state_name(mycss_entry_t* entry, mycss_token_t* to
                     break;
                 }
             }
-            
-            token->length = (entry->current_buffer->offset + css_offset) - token->begin;
-            entry->state = entry->state_back;
-            
-            break;
+            else {
+                token->length = (entry->current_buffer->offset + css_offset) - token->begin;
+                entry->state = entry->state_back;
+                
+                break;
+            }
         }
         
         css_offset++;
