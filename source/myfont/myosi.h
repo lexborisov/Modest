@@ -1,0 +1,140 @@
+/*
+ Copyright (C) 2016 Alexander Borisov
+ 
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+ 
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ Lesser General Public License for more details.
+ 
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ 
+ Author: lex.borisov@gmail.com (Alexander Borisov)
+ 
+ By specification https://www.microsoft.com/typography/otspec/otff.htm
+*/
+
+#ifndef MyFONT_BASE_H
+#define MyFONT_BASE_H
+#pragma once
+
+#include "myhtml/myosi.h"
+
+// Required Tables
+#define MyFONT_TABLE_TYPE_cmap 1885433187
+#define MyFONT_TABLE_TYPE_head 1684104552
+#define MyFONT_TABLE_TYPE_hhea 1634035816
+#define MyFONT_TABLE_TYPE_hmtx 2020896104
+#define MyFONT_TABLE_TYPE_maxp 1886937453
+#define MyFONT_TABLE_TYPE_name 1701667182
+#define MyFONT_TABLE_TYPE_OS_2 841962319   // OS/2
+#define MyFONT_TABLE_TYPE_post 1953722224
+
+// Tables Related to TrueType Outlines
+#define MyFONT_TABLE_TYPE_cvt  1953915648
+#define MyFONT_TABLE_TYPE_fpgm 1835495526
+#define MyFONT_TABLE_TYPE_glyf 1719233639
+#define MyFONT_TABLE_TYPE_loca 1633906540
+#define MyFONT_TABLE_TYPE_prep 1885696624
+#define MyFONT_TABLE_TYPE_gasp 1886609767
+
+// Tables Related to PostScript Outlines
+#define MyFONT_TABLE_TYPE_CFF  1179009792
+#define MyFONT_TABLE_TYPE_VORG 1196576598
+
+// Tables Related to SVG
+#define MyFONT_TABLE_TYPE_SVG  1196839680
+
+// Tables Related to Bitmap Glyphs
+#define MyFONT_TABLE_TYPE_EBDT 1413759557
+#define MyFONT_TABLE_TYPE_EBLC 1129071173
+#define MyFONT_TABLE_TYPE_EBSC 1129529925
+#define MyFONT_TABLE_TYPE_CBDT 1413759555
+#define MyFONT_TABLE_TYPE_CBLC 1129071171
+
+// Advanced Typographic Tables
+#define MyFONT_TABLE_TYPE_BASE 1163084098
+#define MyFONT_TABLE_TYPE_GDEF 1178944583
+#define MyFONT_TABLE_TYPE_GPOS 1397706823
+#define MyFONT_TABLE_TYPE_GSUB 1112888135
+#define MyFONT_TABLE_TYPE_JSTF 1179931466
+#define MyFONT_TABLE_TYPE_MATH 1213481293
+
+// Other OpenType Tables
+#define MyFONT_TABLE_TYPE_DSIG 1195987780
+#define MyFONT_TABLE_TYPE_hdmx 2020435048
+#define MyFONT_TABLE_TYPE_kern 1852990827
+#define MyFONT_TABLE_TYPE_LTSH 1213420620
+#define MyFONT_TABLE_TYPE_PCLT 1414284112
+#define MyFONT_TABLE_TYPE_VDMX 1481458774
+#define MyFONT_TABLE_TYPE_vhea 1634035830
+#define MyFONT_TABLE_TYPE_vmtx 2020896118
+#define MyFONT_TABLE_TYPE_COLR 1380732739
+#define MyFONT_TABLE_TYPE_CPAL 1279348803
+
+// base
+/*
+ Very important!!!
+ see modest/myosi.h:modest_status_t
+*/
+enum myfont_status {
+    MyFONT_STATUS_OK                                    = 0x000000,
+    MyFONT_STATUS_ERROR_MEMORY_ALLOCATION               = 0x070000,
+    MyFONT_STATUS_NOT_FOUND                             = 0x070001,
+}
+typedef myfont_status_t;
+
+enum myfont_table_key {
+    MyFONT_TKEY_cmap = 0x00,
+    MyFONT_TKEY_head = 0x01,
+    MyFONT_TKEY_hhea = 0x02,
+    MyFONT_TKEY_hmtx = 0x03,
+    MyFONT_TKEY_maxp = 0x04,
+    MyFONT_TKEY_name = 0x05,
+    MyFONT_TKEY_OS_2 = 0x06,
+    MyFONT_TKEY_post = 0x07,
+    MyFONT_TKEY_cvt  = 0x08,
+    MyFONT_TKEY_fpgm = 0x09,
+    MyFONT_TKEY_glyf = 0x0A,
+    MyFONT_TKEY_loca = 0x0B,
+    MyFONT_TKEY_prep = 0x0C,
+    MyFONT_TKEY_gasp = 0x0D,
+    MyFONT_TKEY_CFF  = 0x0E,
+    MyFONT_TKEY_VORG = 0x0F,
+    MyFONT_TKEY_SVG  = 0x10,
+    MyFONT_TKEY_EBDT = 0x11,
+    MyFONT_TKEY_EBLC = 0x12,
+    MyFONT_TKEY_EBSC = 0x13,
+    MyFONT_TKEY_CBDT = 0x14,
+    MyFONT_TKEY_CBLC = 0x15,
+    MyFONT_TKEY_BASE = 0x16,
+    MyFONT_TKEY_GDEF = 0x17,
+    MyFONT_TKEY_GPOS = 0x18,
+    MyFONT_TKEY_GSUB = 0x19,
+    MyFONT_TKEY_JSTF = 0x1A,
+    MyFONT_TKEY_MATH = 0x1B,
+    MyFONT_TKEY_DSIG = 0x1C,
+    MyFONT_TKEY_hdmx = 0x1D,
+    MyFONT_TKEY_kern = 0x1E,
+    MyFONT_TKEY_LTSH = 0x1F,
+    MyFONT_TKEY_PCLT = 0x20,
+    MyFONT_TKEY_VDMX = 0x21,
+    MyFONT_TKEY_vhea = 0x22,
+    MyFONT_TKEY_vmtx = 0x23,
+    MyFONT_TKEY_COLR = 0x24,
+    MyFONT_TKEY_CPAL = 0x25,
+    MyFONT_TKEY_LAST_KEY = 0x26
+}
+typedef myfont_table_key_t;
+
+/* base struct typedef */
+typedef struct myfont_font myfont_font_t;
+
+
+#endif /* MyFONT_BASE_H */

@@ -28,19 +28,10 @@ extern "C" {
 
 #include "myhtml/myosi.h"
 
-
 // base
 /*
  Very important!!!
- 
- for myhtml             0..00ffff;      MyHTML_STATUS_OK    == 0x000000
- for mycss and modules  010000..01ffff; MyCSS_STATUS_OK     == 0x000000
- for modest             020000..02ffff; MODEST_STATUS_OK    == 0x000000
- for myrender           030000..03ffff; MyRENDER_STATUS_OK  == 0x000000
- for mydom              040000..04ffff; MyDOM_STATUS_OK     == 0x000000
- for mynetwork          050000..05ffff; MyNETWORK_STATUS_OK == 0x000000
- for myecma             060000..06ffff; MyECMA_STATUS_OK    == 0x000000
- not occupied           070000..
+ see modest/myosi.h:modest_status_t
 */
 enum mycss_status {
     MyCSS_STATUS_OK                                     = 0x000000,

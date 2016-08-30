@@ -37,7 +37,8 @@ extern "C" {
  for mydom              040000..04ffff; MyDOM_STATUS_OK     == 0x000000
  for mynetwork          050000..05ffff; MyNETWORK_STATUS_OK == 0x000000
  for myecma             060000..06ffff; MyECMA_STATUS_OK    == 0x000000
- not occupied           070000..
+ for myfont             070000..07ffff; MyFONT_STATUS_OK    == 0x000000
+ not occupied           080000..
 */
 enum modest_status {
     MODEST_STATUS_OK                      = 0x000000,
