@@ -365,14 +365,14 @@ float myfont_metrics_glyph_offset_y(myfont_font_t *mf, unsigned long codepoint, 
 
 int16_t myfont_table_version_major(uint32_t version)
 {
-    version = htonl(version);
+    version = myfont_htonl(version);
     version >>= 16;
     return (int16_t)version;
 }
 
 int16_t myfont_table_version_minor(uint32_t version)
 {
-    version = htonl(version);
+    version = myfont_htonl(version);
     version <<= 16;
     version >>= 16;
     return (int16_t)version;

@@ -56,6 +56,18 @@ int32_t myfont_read_32(uint8_t** data)
     return (int32_t)cp;
 }
 
+uint32_t myfont_htonl(uint32_t data)
+{
+    int cp = 0;
+    
+    cp  = data << 24;
+    cp |= data << 16;
+    cp |= data << 8;
+    cp |= data;
+    
+    return (uint32_t)cp;
+}
+
 uint16_t myfont_read_u16(uint8_t** data)
 {
     int cp = 0;

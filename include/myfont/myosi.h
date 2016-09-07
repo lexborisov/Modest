@@ -151,6 +151,8 @@ uint32_t myfont_read_u32(uint8_t** data);
 
 uint32_t myfont_read_u32_as_net(uint8_t** data);
 
+uint32_t myfont_htonl(uint32_t data);
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
