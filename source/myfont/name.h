@@ -24,6 +24,10 @@
 
 #include "myfont/myosi.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // table name
 struct myfont_table_name_record {
     uint16_t  platformID;
@@ -42,13 +46,13 @@ struct myfont_lang_tag_record {
 typedef myfont_ltag_record_t;
 
 struct myfont_table_name {
-    uint16_t          format;
-    uint16_t          count;
-    uint16_t          stringOffset;
+    uint16_t              format;
+    uint16_t              count;
+    uint16_t              stringOffset;
     myfont_record_t      *nameRecord;
-    uint16_t          langTagCount;
+    uint16_t              langTagCount;
     myfont_ltag_record_t *langTagRecord;
-    char *str_data;
+    char                 *str_data;
 }
 typedef myfont_table_name_t;
 
@@ -57,5 +61,9 @@ typedef myfont_table_name_t;
 struct myfont_font;
 
 void myfont_load_table_name(struct myfont_font *mf);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif /* MyFONT_NAME_H */

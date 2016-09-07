@@ -22,7 +22,7 @@
 #define MyFONT_CMAP_H
 #pragma once
 
-#include "myfont/myosi.h"
+#include <myfont/myosi.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -206,7 +206,7 @@ struct myfont_table_cmap {
 }
 typedef myfont_table_cmap_t;
 
-#include "myfont/myfont.h"
+#include <myfont/myfont.h>
 
 void myfont_load_table_cmap(myfont_font_t *mf);
 

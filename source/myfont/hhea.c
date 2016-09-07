@@ -22,5 +22,39 @@
 
 void myfont_load_table_hhea(myfont_font_t *mf)
 {
-    myfont_load_table(mf, &mf->table_hhea, sizeof(myfont_table_hhea_t), MyFONT_TKEY_hhea);
+    memset(&mf->table_hhea, 0, sizeof(myfont_table_hhea_t));
+    
+    if(mf->cache.tables_offset[MyFONT_TKEY_hhea] == 0)
+        return;
+    
+    myfont_table_hhea_t *thhea = &mf->table_hhea;
+    const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_hhea];
+    
+    if(mf->file_size < (table_offset + 8 + 6 + 2 + 22 + 2))
+        return;
+    
+    /* get current data */
+    uint8_t *data = &mf->file_data[table_offset];
+    
+    thhea->version = myfont_read_u32(&data);
+    
+    thhea->Ascender = myfont_read_16(&data);
+    thhea->Descender = myfont_read_16(&data);
+    thhea->LineGap = myfont_read_16(&data);
+    
+    thhea->advanceWidthMax = myfont_read_u16(&data);
+    
+    thhea->minLeftSideBearing = myfont_read_16(&data);
+    thhea->minRightSideBearing = myfont_read_16(&data);
+    thhea->xMaxExtent = myfont_read_16(&data);
+    thhea->caretSlopeRise = myfont_read_16(&data);
+    thhea->caretSlopeRun = myfont_read_16(&data);
+    thhea->caretOffset = myfont_read_16(&data);
+    thhea->reserved1 = myfont_read_16(&data);
+    thhea->reserved2 = myfont_read_16(&data);
+    thhea->reserved3 = myfont_read_16(&data);
+    thhea->reserved4 = myfont_read_16(&data);
+    thhea->metricDataFormat = myfont_read_16(&data);
+    
+    thhea->numberOfHMetrics = myfont_read_u16(&data);
 }

@@ -18,44 +18,46 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#ifndef MyFONT_PCLT_H
-#define MyFONT_PCLT_H
+#ifndef MyFONT_VHEA_H
+#define MyFONT_VHEA_H
 #pragma once
 
-#include "myfont/myosi.h"
+#include <myfont/myosi.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-// table pclt
-struct myfont_table_pclt {
-    int32_t  version;
-    uint32_t fontNumber;
-    uint16_t pitch;
-    uint16_t xHeight;
-    uint16_t style;
-    uint16_t typeFamily;
-    uint16_t capHeight;
-    uint16_t symbolSet;
-    char     typeface[16];
-    char     characterComplement[8];
-    char     fileName[6];
-    char     strokeWeight;
-    char     widthType;
-    uint8_t  serifStyle;
-    uint8_t  reserved;
+// table vhea
+struct myfont_table_vhea {
+    uint32_t version;
+    int16_t  Ascender;
+    int16_t  Descender;
+    int16_t  LineGap;
+    int16_t  advanceHeightMax;
+    int16_t  minTopSideBearing;
+    int16_t  minBottomSideBearing;
+    int16_t  yMaxExtent;
+    int16_t  caretSlopeRise;
+    int16_t  caretSlopeRun;
+    int16_t  caretOffset;
+    int16_t  reserved1;
+    int16_t  reserved2;
+    int16_t  reserved3;
+    int16_t  reserved4;
+    int16_t  metricDataFormat;
+    uint16_t numOfLongVerMetrics;
 }
-typedef myfont_table_pclt_t;
+typedef myfont_table_vhea_t;
 
-#include "myfont/myfont.h"
+#include <myfont/myfont.h>
 
 struct myfont_font;
 
-void myfont_load_table_pclt(struct myfont_font *mf);
+void myfont_load_table_vhea(struct myfont_font *mf);
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
 
-#endif /* MyFONT_PCLT_H */
+#endif /* MyFONT_VHEA_H */

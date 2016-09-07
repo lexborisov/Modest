@@ -18,44 +18,43 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#ifndef MyFONT_PCLT_H
-#define MyFONT_PCLT_H
+#ifndef MyFONT_MAXP_H
+#define MyFONT_MAXP_H
 #pragma once
 
-#include "myfont/myosi.h"
+#include <myfont/myosi.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-// table pclt
-struct myfont_table_pclt {
-    int32_t  version;
-    uint32_t fontNumber;
-    uint16_t pitch;
-    uint16_t xHeight;
-    uint16_t style;
-    uint16_t typeFamily;
-    uint16_t capHeight;
-    uint16_t symbolSet;
-    char     typeface[16];
-    char     characterComplement[8];
-    char     fileName[6];
-    char     strokeWeight;
-    char     widthType;
-    uint8_t  serifStyle;
-    uint8_t  reserved;
+struct myfont_table_maxp {
+    uint32_t version;
+    uint16_t numGlyphs;
+    uint16_t maxPoints;
+    uint16_t maxContours;
+    uint16_t maxCompositePoints;
+    uint16_t maxCompositeContours;
+    uint16_t maxZones;
+    uint16_t maxTwilightPoints;
+    uint16_t maxStorage;
+    uint16_t maxFunctionDefs;
+    uint16_t maxInstructionDefs;
+    uint16_t maxStackElements;
+    uint16_t maxSizeOfInstructions;
+    uint16_t maxComponentElements;
+    uint16_t maxComponentDepth;
 }
-typedef myfont_table_pclt_t;
+typedef myfont_table_maxp_t;
 
-#include "myfont/myfont.h"
+#include <myfont/myfont.h>
 
 struct myfont_font;
 
-void myfont_load_table_pclt(struct myfont_font *mf);
+void myfont_load_table_maxp(struct myfont_font *mf);
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
 
-#endif /* MyFONT_PCLT_H */
+#endif /* MyFONT_MAXP_H */

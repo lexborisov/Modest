@@ -24,6 +24,10 @@
 
 #include "myfont/myosi.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct myfont_table_maxp {
     uint32_t version;
     uint16_t numGlyphs;
@@ -48,5 +52,9 @@ typedef myfont_table_maxp_t;
 struct myfont_font;
 
 void myfont_load_table_maxp(struct myfont_font *mf);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif /* MyFONT_MAXP_H */

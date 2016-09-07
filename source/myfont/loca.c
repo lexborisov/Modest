@@ -22,56 +22,58 @@
 
 void myfont_load_table_loca(struct myfont_font *mf)
 {
-    if(mf->cache.tables_offset[MyFONT_TKEY_loca])
+    memset(&mf->table_loca, 0, sizeof(myfont_table_loca_t));
+    
+    if(mf->cache.tables_offset[MyFONT_TKEY_loca] == 0)
+        return;
+    
+    myfont_table_loca_t *tloca = &mf->table_loca;
+    uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_loca];
+    
+    /* get current data */
+    uint8_t *data = &mf->file_data[table_offset];
+    uint16_t numGlyph = mf->table_maxp.numGlyphs;
+    
+    if(numGlyph == 0)
+        return;
+    
+    numGlyph++;
+    
+    tloca->offsets = (uint32_t *)myfont_calloc(mf, numGlyph, sizeof(uint32_t));
+    
+    if(tloca->offsets == NULL)
+        return;
+    
+    if(mf->table_head.indexToLocFormat)
     {
-        uint16_t numGlyph = ntohs(mf->table_maxp.numGlyphs);
-        
-        if(numGlyph)
-        {
-            numGlyph++;
-            
-            if(mf->table_head.indexToLocFormat)
-            {
-                mf->table_loca.long_offsets = (uint32_t *)malloc(sizeof(uint32_t) * numGlyph);
-                
-                fseek(mf->file_h, mf->cache.tables_offset[MyFONT_TKEY_loca], SEEK_SET);
-                fread(mf->table_loca.long_offsets, sizeof(uint32_t), numGlyph, mf->file_h);
-                
-                mf->table_loca.short_offsets = NULL;
-            }
-            else
-            {
-                mf->table_loca.short_offsets = (uint16_t *)malloc(sizeof(uint16_t) * numGlyph);
-                
-                fseek(mf->file_h, mf->cache.tables_offset[MyFONT_TKEY_loca], SEEK_SET);
-                fread(mf->table_loca.short_offsets, sizeof(uint16_t) , numGlyph, mf->file_h);
-                
-                mf->table_loca.long_offsets = NULL;
-            }
+        if(mf->file_size < (table_offset + (numGlyph * 4))) {
+            myfont_free(mf, tloca->offsets);
+            return;
         }
-        else
-        {
-            mf->table_loca.short_offsets = NULL;
-            mf->table_loca.long_offsets = NULL;
-            
+        
+        for(uint16_t i = 0; i < numGlyph; i++) {
+            tloca->offsets[i] = myfont_read_u32(&data);
+        }
+    }
+    else
+    {
+        if(mf->file_size < (table_offset + (numGlyph * 2))) {
+            myfont_free(mf, tloca->offsets);
+            return;
+        }
+        
+        for(uint16_t i = 0; i < numGlyph; i++) {
+            tloca->offsets[i] = myfont_read_u16(&data) * 2;
         }
     }
 }
 
 uint32_t myfont_loca_get_offset(struct myfont_font *mf, uint16_t glyph_index)
 {
-    //uint16_t numGlyph = ntohs(mf->table_maxp.numGlyphs);
+    if(glyph_index >= mf->table_maxp.numGlyphs)
+        return mf->table_loca.offsets[0];
     
-    if(mf->table_head.indexToLocFormat)
-    {
-        return ntohl(mf->table_loca.long_offsets[glyph_index]);
-    }
-    else
-    {
-        return ntohs(mf->table_loca.short_offsets[glyph_index]);
-    }
-    
-    return 0;
+    return mf->table_loca.offsets[glyph_index];
 }
 
 

@@ -22,25 +22,43 @@
 
 void myfont_load_table_pclt(struct myfont_font *mf)
 {
-    if(mf->cache.tables_offset[MyFONT_TKEY_PCLT])
-    {
-        myfont_load_table(mf, &mf->table_pclt, sizeof(int32_t) * 2, MyFONT_TKEY_PCLT);
-        
-        fread(&mf->table_pclt.pitch              , sizeof(uint32_t) , 6, mf->file_h);
-        fread(&mf->table_pclt.typeface           , sizeof(char)     , 16, mf->file_h);
-        fread(mf->table_pclt.characterComplement , sizeof(char)     , 8, mf->file_h);
-        fread(&mf->table_pclt.fileName           , sizeof(char)     , 6, mf->file_h);
-        fread(&mf->table_pclt.strokeWeight       , sizeof(char)     , 2, mf->file_h);
-        fread(&mf->table_pclt.serifStyle         , sizeof(uint8_t)  , 2, mf->file_h);
-    }
-    else
-    {
-        memset(&mf->table_pclt.pitch               , 0, sizeof(uint32_t) * 6);
-        memset(&mf->table_pclt.typeface            , 0, sizeof(char)     * 16);
-        memset(&mf->table_pclt.characterComplement , 0, sizeof(char)     * 8);
-        memset(&mf->table_pclt.fileName            , 0, sizeof(char)     * 6);
-        memset(&mf->table_pclt.strokeWeight        , 0, sizeof(char)     * 2);
-        memset(&mf->table_pclt.serifStyle          , 0, sizeof(uint32_t) * 2);
-    }
+    memset(&mf->table_pclt, 0, sizeof(myfont_table_pclt_t));
+    
+    if(mf->cache.tables_offset[MyFONT_TKEY_PCLT] == 0)
+        return;
+    
+    myfont_table_pclt_t *tpclt = &mf->table_pclt;
+    const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_PCLT];
+    
+    uint32_t pos = table_offset + 4 + 16 + 16 + 8 + 6 + 4;
+    if(pos > mf->file_size)
+        return;
+    
+    /* get current data */
+    uint8_t *data = &mf->file_data[table_offset];
+    
+    tpclt->version = myfont_read_u32_as_net(&data);
+    
+    tpclt->fontNumber = myfont_read_u32(&data);
+    tpclt->pitch = myfont_read_u16(&data);
+    tpclt->xHeight = myfont_read_u16(&data);
+    tpclt->style = myfont_read_u16(&data);
+    tpclt->typeFamily = myfont_read_u16(&data);
+    tpclt->capHeight = myfont_read_u16(&data);
+    tpclt->symbolSet = myfont_read_u16(&data);
+    
+    memcpy(tpclt->typeface, data, 16);
+    data += 16;
+    
+    memcpy(tpclt->characterComplement, data, 8);
+    data += 8;
+    
+    memcpy(tpclt->fileName, data, 6);
+    data += 6;
+    
+    tpclt->strokeWeight = (char)myfont_read_u8(&data);
+    tpclt->widthType = (char)myfont_read_u8(&data);
+    tpclt->serifStyle = myfont_read_u8(&data);
+    tpclt->reserved = myfont_read_u8(&data);
 }
 

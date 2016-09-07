@@ -22,14 +22,35 @@
 
 void myfont_load_table_hmtx(struct myfont_font *mf)
 {
-    uint16_t num_metrics = htons(mf->table_hhea.numberOfHMetrics);
+    memset(&mf->table_hmtx, 0, sizeof(myfont_table_hmtx_t));
     
-    myfont_long_hor_metric_t *lhor_metric = (myfont_long_hor_metric_t *)malloc(sizeof(myfont_long_hor_metric_t) * num_metrics);
+    if(mf->cache.tables_offset[MyFONT_TKEY_hmtx] == 0)
+        return;
     
-    fseek(mf->file_h, mf->cache.tables_offset[MyFONT_TKEY_hmtx], SEEK_SET);
-    fread(lhor_metric, sizeof(myfont_long_hor_metric_t), num_metrics, mf->file_h);
+    myfont_table_hmtx_t *thmtx = &mf->table_hmtx;
+    const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_hmtx];
     
-    mf->table_hmtx.hMetrics = lhor_metric;
-    mf->table_hmtx.leftSideBearing = NULL;
+    /* get current data */
+    uint8_t *data = &mf->file_data[table_offset];
+    uint16_t num_metrics = mf->table_hhea.numberOfHMetrics;
+    
+    if(num_metrics == 0)
+        return;
+    
+    if(mf->file_size < (table_offset + (num_metrics * 2)))
+        return;
+    
+    myfont_long_hor_metric_t *lhor_metric = (myfont_long_hor_metric_t *)myfont_calloc(mf, num_metrics, sizeof(myfont_long_hor_metric_t));
+    
+    if(lhor_metric == NULL)
+        return;
+    
+    for(uint16_t i = 0; i < num_metrics; i++) {
+        lhor_metric[i].advanceWidth = myfont_read_u16(&data);
+        lhor_metric[i].lsb = myfont_read_16(&data);
+    }
+    
+    thmtx->hMetrics = lhor_metric;
+    thmtx->leftSideBearing = NULL;
 }
 

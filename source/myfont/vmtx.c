@@ -22,35 +22,56 @@
 
 void myfont_load_table_vmtx(myfont_font_t *mf)
 {
-    uint16_t num_metrics = htons(mf->table_vhea.numOfLongVerMetrics);
+    memset(&mf->table_vmtx, 0, sizeof(myfont_table_vmtx_t));
     
-    if(num_metrics)
-    {
-        myfont_long_ver_metric_t *lver_metric = (myfont_long_ver_metric_t *)malloc(sizeof(myfont_long_ver_metric_t) * num_metrics);
-        
-        fseek(mf->file_h, mf->cache.tables_offset[MyFONT_TKEY_vmtx], SEEK_SET);
-        fread(lver_metric, sizeof(myfont_long_ver_metric_t), num_metrics, mf->file_h);
-        
-        mf->table_vmtx.vMetrics = lver_metric;
-        
-        uint16_t numOfTSB = htons(mf->table_maxp.numGlyphs - mf->table_vhea.numOfLongVerMetrics);
-        
-        if(numOfTSB)
-        {
-            int16_t *topSideBearing = (int16_t *)malloc(sizeof(int16_t) * numOfTSB);
-            fread(topSideBearing, sizeof(int16_t), numOfTSB, mf->file_h);
-            
-            mf->table_vmtx.topSideBearing = topSideBearing;
-        }
-        else {
-            mf->table_vmtx.topSideBearing = NULL;
-        }
+    if(mf->cache.tables_offset[MyFONT_TKEY_vmtx] == 0)
+        return;
+    
+    myfont_table_vmtx_t *tvmtx = &mf->table_vmtx;
+    const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_vmtx];
+    
+    /* get current data */
+    uint8_t *data = &mf->file_data[table_offset];
+    uint16_t num_metrics = mf->table_vhea.numOfLongVerMetrics;
+    
+    if(num_metrics == 0)
+        return;
+    
+    uint32_t pos = table_offset + (num_metrics * 4);
+    if(pos > mf->file_size)
+        return;
+    
+    myfont_long_ver_metric_t *lver_metric = (myfont_long_ver_metric_t *)myfont_calloc(mf, num_metrics, sizeof(myfont_long_ver_metric_t));
+    
+    if(lver_metric == NULL)
+        return;
+    
+    for(uint16_t i = 0; i < num_metrics; i++) {
+        lver_metric[i].advanceHeight = myfont_read_u16(&data);
+        lver_metric[i].topSideBearing = myfont_read_16(&data);
     }
-    else
-    {
-        mf->table_vmtx.vMetrics       = NULL;
-        mf->table_vmtx.topSideBearing = NULL;
+    
+    tvmtx->vMetrics = lver_metric;
+    
+    if(mf->table_maxp.numGlyphs <= mf->table_vhea.numOfLongVerMetrics)
+        return;
+    
+    uint16_t numOfTSB = mf->table_maxp.numGlyphs - mf->table_vhea.numOfLongVerMetrics;
+    
+    pos = pos + (numOfTSB * 2);
+    if(pos > mf->file_size)
+        return;
+    
+    int16_t *topSideBearing = (int16_t *)myfont_calloc(mf, numOfTSB, sizeof(int16_t));
+    
+    if(topSideBearing == NULL)
+        return;
+    
+    for(uint16_t i = 0; i < num_metrics; i++) {
+        topSideBearing[i] = myfont_read_16(&data);
     }
+    
+    tvmtx->topSideBearing = topSideBearing;
 }
 
 

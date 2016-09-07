@@ -24,6 +24,10 @@
 
 #include "myfont/myosi.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // table vhea
 struct myfont_table_vhea {
     uint32_t version;
@@ -51,5 +55,9 @@ typedef myfont_table_vhea_t;
 struct myfont_font;
 
 void myfont_load_table_vhea(struct myfont_font *mf);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif /* MyFONT_VHEA_H */

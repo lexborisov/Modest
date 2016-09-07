@@ -22,58 +22,106 @@
 
 void myfont_load_table_os_2(myfont_font_t *mf)
 {
-    if(mf->cache.tables_offset[MyFONT_TKEY_OS_2])
-    {
-        myfont_load_table(mf, &mf->table_os_2, sizeof(int16_t) * 16, MyFONT_TKEY_OS_2);
-        
-        fread(mf->table_os_2.panose           , sizeof(uint8_t) , 10, mf->file_h);
-        fread(&mf->table_os_2.ulUnicodeRange1 , sizeof(uint32_t), 4, mf->file_h);
-        fread(mf->table_os_2.achVendID        , sizeof(int8_t)  , 4, mf->file_h);
-        fread(&mf->table_os_2.fsSelection     , sizeof(int16_t) , 8, mf->file_h);
-        
-        uint16_t version = myfont_table_version_major(mf->table_os_2.version);
-        
-        memset(&mf->table_os_2.ulCodePageRange1, 0, sizeof(uint32_t) * 2);
-        memset(&mf->table_os_2.sxHeight,         0, sizeof(int16_t)  * 7);
-        
-        switch (version)
-        {
-            case 1:
-                fread(&mf->table_os_2.ulCodePageRange1, sizeof(uint32_t), 2, mf->file_h);
-                break;
-            case 2:
-                fread(&mf->table_os_2.ulCodePageRange1, sizeof(uint32_t), 2, mf->file_h);
-                fread(&mf->table_os_2.sxHeight, sizeof(int16_t), 5, mf->file_h);
-                break;
-            case 3:
-                fread(&mf->table_os_2.ulCodePageRange1, sizeof(uint32_t), 2, mf->file_h);
-                fread(&mf->table_os_2.sxHeight, sizeof(int16_t), 5, mf->file_h);
-                break;
-            case 4:
-                fread(&mf->table_os_2.ulCodePageRange1, sizeof(uint32_t), 2, mf->file_h);
-                fread(&mf->table_os_2.sxHeight, sizeof(int16_t), 5, mf->file_h);
-                break;
-            case 5:
-                fread(&mf->table_os_2.ulCodePageRange1, sizeof(uint32_t), 2, mf->file_h);
-                fread(&mf->table_os_2.sxHeight, sizeof(int16_t), 7, mf->file_h);
-                break;
-            default:
-                break;
-        }
-    }
-    else
-    {
-        memset(&mf->table_os_2.version         , 0, sizeof(int16_t)  * 16);
-        memset(&mf->table_os_2.panose          , 0, sizeof(int8_t)   * 10);
-        memset(&mf->table_os_2.ulUnicodeRange1 , 0, sizeof(uint32_t) * 4);
-        memset(&mf->table_os_2.achVendID       , 0, sizeof(int8_t)   * 4);
-        memset(&mf->table_os_2.achVendID       , 0, sizeof(int16_t)  * 8);
-        memset(&mf->table_os_2.ulCodePageRange1, 0, sizeof(uint32_t) * 2);
-        memset(&mf->table_os_2.sxHeight        , 0, sizeof(int16_t)  * 7);
+    memset(&mf->table_os_2, 0, sizeof(myfont_table_os_2_t));
+    
+    if(mf->cache.tables_offset[MyFONT_TKEY_OS_2] == 0)
+        return;
+    
+    myfont_table_os_2_t *tos_2 = &mf->table_os_2;
+    const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_OS_2];
+    
+    /* get current data */
+    uint8_t *data = &mf->file_data[table_offset];
+    uint32_t pos = table_offset + 32 + 10 + 16 + 4 + 16;
+    
+    if(pos > mf->file_size)
+        return;
+    
+    tos_2->version = myfont_read_u16(&data);
+    tos_2->xAvgCharWidth = myfont_read_16(&data);
+    tos_2->usWeightClass = myfont_read_u16(&data);
+    tos_2->usWidthClass = myfont_read_u16(&data);
+    tos_2->fsType = myfont_read_16(&data);
+    tos_2->ySubscriptXSize = myfont_read_16(&data);
+    tos_2->ySubscriptYSize = myfont_read_16(&data);
+    tos_2->ySubscriptXOffset = myfont_read_16(&data);
+    tos_2->ySubscriptYOffset = myfont_read_16(&data);
+    tos_2->ySuperscriptXSize = myfont_read_16(&data);
+    tos_2->ySuperscriptYSize = myfont_read_16(&data);
+    tos_2->ySuperscriptXOffset = myfont_read_16(&data);
+    tos_2->ySuperscriptYOffset = myfont_read_16(&data);
+    tos_2->yStrikeoutSize = myfont_read_16(&data);
+    tos_2->yStrikeoutPosition = myfont_read_16(&data);
+    tos_2->sFamilyClass = myfont_read_16(&data);
+    
+    memcpy(tos_2->panose, data, 10);
+    data += 10;
+    
+    tos_2->ulUnicodeRange1 = myfont_read_u32(&data);
+    tos_2->ulUnicodeRange2 = myfont_read_u32(&data);
+    tos_2->ulUnicodeRange3 = myfont_read_u32(&data);
+    tos_2->ulUnicodeRange4 = myfont_read_u32(&data);
+    
+    memcpy(tos_2->achVendID, data, 4);
+    data += 4;
+    
+    tos_2->fsSelection = myfont_read_u16(&data);
+    tos_2->usFirstCharIndex = myfont_read_u16(&data);
+    tos_2->usLastCharIndex = myfont_read_u16(&data);
+    tos_2->sTypoAscender = myfont_read_16(&data);
+    tos_2->sTypoDescender = myfont_read_16(&data);
+    tos_2->sTypoLineGap = myfont_read_16(&data);
+    tos_2->usWinAscent = myfont_read_u16(&data);
+    tos_2->usWinDescent = myfont_read_u16(&data);
+    
+    switch (tos_2->version) {
+        case 1:
+            pos += 8;
+            if(pos > mf->file_size)
+                return;
+            
+            tos_2->ulCodePageRange1 = myfont_read_u32(&data);
+            tos_2->ulCodePageRange2 = myfont_read_u32(&data);
+            
+            break;
+        case 2:
+        case 3:
+        case 4:
+            pos += 18;
+            if(pos > mf->file_size)
+                return;
+            
+            tos_2->ulCodePageRange1 = myfont_read_u32(&data);
+            tos_2->ulCodePageRange2 = myfont_read_u32(&data);
+            tos_2->sxHeight = myfont_read_16(&data);
+            tos_2->sCapHeight = myfont_read_16(&data);
+            tos_2->usDefaultChar = myfont_read_u16(&data);
+            tos_2->usBreakChar = myfont_read_u16(&data);
+            tos_2->usMaxContext = myfont_read_u16(&data);
+            
+            break;
+        case 5:
+            pos += 22;
+            if(pos > mf->file_size)
+                return;
+            
+            tos_2->ulCodePageRange1 = myfont_read_u32(&data);
+            tos_2->ulCodePageRange2 = myfont_read_u32(&data);
+            tos_2->sxHeight = myfont_read_16(&data);
+            tos_2->sCapHeight = myfont_read_16(&data);
+            tos_2->usDefaultChar = myfont_read_u16(&data);
+            tos_2->usBreakChar = myfont_read_u16(&data);
+            tos_2->usMaxContext = myfont_read_u16(&data);
+            tos_2->usLowerOpticalPointSize = myfont_read_u16(&data);
+            tos_2->usUpperOpticalPointSize = myfont_read_u16(&data);
+            
+            break;
+        default:
+            break;
     }
 }
 
-int8_t myfont_os_2_panose(myfont_font_t *mf, enum myfont_table_os_2_panose id)
+int8_t myfont_os_2_panose(myfont_font_t *mf, myfont_table_os_2_panose_t id)
 {
     return mf->table_os_2.panose[id];
 }

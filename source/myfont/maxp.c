@@ -22,33 +22,48 @@
 
 void myfont_load_table_maxp(myfont_font_t *mf)
 {
-    uint32_t version;
+    memset(&mf->table_maxp, 0, sizeof(myfont_table_maxp_t));
     
-    fseek(mf->file_h, mf->cache.tables_offset[MyFONT_TKEY_maxp], SEEK_SET);
-    fread(&version, sizeof(uint32_t), 1, mf->file_h);
+    if(mf->cache.tables_offset[MyFONT_TKEY_maxp] == 0)
+        return;
     
-    if(myfont_table_version_major(version) == 1)
+    myfont_table_maxp_t *tmaxp = &mf->table_maxp;
+    const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_maxp];
+    
+    if((table_offset + 4) > mf->file_size)
+        return;
+    
+    /* get current data */
+    uint8_t *data = &mf->file_data[table_offset];
+    
+    tmaxp->version = myfont_read_u32_as_net(&data);
+    
+    if(myfont_table_version_major(tmaxp->version) == 1)
     {
-        myfont_load_table(mf, &mf->table_maxp, sizeof(myfont_table_maxp_t), MyFONT_TKEY_maxp);
-    }
-    else
-    {
-        fread(&(mf->table_maxp.numGlyphs), sizeof(uint16_t), 1, mf->file_h);
+        if((table_offset + 4 + 28) > mf->file_size)
+            return;
         
-        mf->table_maxp.version               = version;
-        mf->table_maxp.maxPoints             = 0;
-        mf->table_maxp.maxContours           = 0;
-        mf->table_maxp.maxCompositePoints    = 0;
-        mf->table_maxp.maxCompositeContours  = 0;
-        mf->table_maxp.maxZones              = 0;
-        mf->table_maxp.maxTwilightPoints     = 0;
-        mf->table_maxp.maxStorage            = 0;
-        mf->table_maxp.maxFunctionDefs       = 0;
-        mf->table_maxp.maxInstructionDefs    = 0;
-        mf->table_maxp.maxStackElements      = 0;
-        mf->table_maxp.maxSizeOfInstructions = 0;
-        mf->table_maxp.maxComponentElements  = 0;
-        mf->table_maxp.maxComponentDepth     = 0;
+        tmaxp->numGlyphs = myfont_read_u16(&data);
+        tmaxp->maxPoints = myfont_read_u16(&data);
+        tmaxp->maxContours = myfont_read_u16(&data);
+        tmaxp->maxCompositePoints = myfont_read_u16(&data);
+        tmaxp->maxCompositeContours = myfont_read_u16(&data);
+        tmaxp->maxZones = myfont_read_u16(&data);
+        tmaxp->maxTwilightPoints = myfont_read_u16(&data);
+        tmaxp->maxStorage = myfont_read_u16(&data);
+        tmaxp->maxFunctionDefs = myfont_read_u16(&data);
+        tmaxp->maxInstructionDefs = myfont_read_u16(&data);
+        tmaxp->maxStackElements = myfont_read_u16(&data);
+        tmaxp->maxSizeOfInstructions = myfont_read_u16(&data);
+        tmaxp->maxComponentElements = myfont_read_u16(&data);
+        tmaxp->maxComponentDepth = myfont_read_u16(&data);
+    }
+    else {
+        if((table_offset + 4 + 2) > mf->file_size)
+            return;
+        
+        tmaxp->numGlyphs = myfont_read_u16(&data);
     }
 }
+
 

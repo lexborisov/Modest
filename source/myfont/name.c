@@ -22,30 +22,69 @@
 
 void myfont_load_table_name(myfont_font_t *mf)
 {
-    myfont_table_name_t *table_name = &mf->table_name;
+    memset(&mf->table_name, 0, sizeof(myfont_table_name_t));
     
-    fseek(mf->file_h, mf->cache.tables_offset[MyFONT_TKEY_name], SEEK_SET);
-    fread(table_name, sizeof(uint16_t) * 3, 1, mf->file_h);
+    if(mf->cache.tables_offset[MyFONT_TKEY_name] == 0)
+        return;
     
-    size_t record_size = sizeof(myfont_record_t) * ntohs(table_name->count);
-    myfont_record_t *record = (myfont_record_t *)malloc(record_size);
+    myfont_table_name_t *tname = &mf->table_name;
+    const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_name];
+    uint32_t pos = table_offset + 6;
     
-    fread(record, record_size, 1, mf->file_h);
+    if(pos > mf->file_size)
+        return;
     
-    table_name->nameRecord = record;
+    /* get current data */
+    uint8_t *data = &mf->file_data[table_offset];
     
-    if(ntohs(table_name->format) == 1)
-    {
-        fread(&table_name->langTagCount, sizeof(uint16_t), 1, mf->file_h);
-        
-        size_t lang_record_size = sizeof(myfont_ltag_record_t) * ntohs(table_name->langTagCount);
-        myfont_ltag_record_t *lang_record = (myfont_ltag_record_t *)malloc(lang_record_size);
-        
-        fread(lang_record, lang_record_size, 1, mf->file_h);
-        
-        table_name->langTagRecord = lang_record;
+    tname->format = myfont_read_u16(&data);
+    tname->count = myfont_read_u16(&data);
+    tname->stringOffset = myfont_read_u16(&data);
+    
+    pos = pos + (tname->count * 12);
+    if(pos > mf->file_size) {
+        tname->count = 0;
+        return;
     }
     
-    myfont_load_table(mf, table_name, sizeof(myfont_table_hhea_t), MyFONT_TKEY_hhea);
+    myfont_record_t *record = (myfont_record_t *)myfont_calloc(mf, tname->count, sizeof(myfont_record_t));
+    
+    for(uint16_t i = 0; i < tname->count; i++) {
+        record[i].platformID = myfont_read_u16(&data);
+        record[i].encodingID = myfont_read_u16(&data);
+        record[i].languageID =myfont_read_u16(&data);
+        record[i].nameID = myfont_read_u16(&data);
+        record[i].length = myfont_read_u16(&data);
+        record[i].offset = myfont_read_u16(&data);
+    }
+    
+    tname->nameRecord = record;
+    
+    if(tname->format == 1)
+    {
+        pos += 2;
+        if(pos > mf->file_size)
+            return;
+        
+        tname->langTagCount = myfont_read_u16(&data);
+        
+        pos = pos + (tname->langTagCount * 4);
+        if(pos > mf->file_size) {
+            tname->langTagCount = 0;
+            return;
+        }
+        
+        myfont_ltag_record_t *lang_record = (myfont_ltag_record_t *)myfont_calloc(mf, tname->langTagCount, sizeof(myfont_ltag_record_t));
+        
+        if(lang_record == NULL)
+            return;
+        
+        for(uint16_t i = 0; i < tname->count; i++) {
+            lang_record[i].length = myfont_read_u16(&data);
+            lang_record[i].offset = myfont_read_u16(&data);
+        }
+        
+        tname->langTagRecord = lang_record;
+    }
 }
 

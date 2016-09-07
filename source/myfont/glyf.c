@@ -22,127 +22,235 @@
 
 void myfont_load_table_glyf(struct myfont_font *mf)
 {
+    memset(&mf->table_glyf, 0, sizeof(myfont_table_glyf_t));
     
+    if(mf->cache.tables_offset[MyFONT_TKEY_glyf] == 0)
+        return;
+    
+    if(mf->table_maxp.numGlyphs == 0)
+        return;
+    
+    myfont_table_glyph_t *glyphs = (myfont_table_glyph_t*)myfont_calloc(mf, mf->table_maxp.numGlyphs, sizeof(myfont_table_glyph_t));
+    
+    if(glyphs == NULL)
+        return;
+    
+    for(uint16_t i = 0; i < mf->table_maxp.numGlyphs; i++) {
+        uint32_t offset = mf->cache.tables_offset[MyFONT_TKEY_glyf] + mf->table_loca.offsets[i];
+        myfont_glyf_load_data(mf, &glyphs[i], offset);
+    }
+    
+    mf->table_glyf.cache = glyphs;
 }
 
 void myfont_glyf_load(myfont_font_t *mf, myfont_table_glyph_t *glyph, uint16_t glyph_index)
 {
+    memset(glyph, 0, sizeof(myfont_table_glyph_t));
+    
+    if(mf->table_maxp.numGlyphs == 0)
+        return;
+    
     uint16_t offset = myfont_loca_get_offset(mf, glyph_index);
     offset += mf->cache.tables_offset[MyFONT_TKEY_glyf];
     
     myfont_glyf_load_data(mf, glyph, offset);
 }
 
-void myfont_glyf_load_data(myfont_font_t *mf, myfont_table_glyph_t *glyph, uint16_t offset)
+void myfont_glyf_load_data(myfont_font_t *mf, myfont_table_glyph_t *glyph, uint32_t offset)
 {
-    if(offset > 0)
-    {
-        // load head
-        fseek(mf->file_h, offset, SEEK_SET);
-        fread(&glyph->head, sizeof(myfont_table_glyf_head_t), 1, mf->file_h);
-        
-        uint16_t instructionLength;
-        uint16_t numberOfContours  = ntohs(glyph->head.numberOfContours);
-        uint16_t *endPtsOfContours = (uint16_t *)malloc(sizeof(uint16_t) * numberOfContours);
-        
-        fread(endPtsOfContours, sizeof(uint16_t), numberOfContours, mf->file_h);
-        fread(&instructionLength, sizeof(uint16_t), 1, mf->file_h);
-        
-        uint16_t pointCount = ntohs(endPtsOfContours[numberOfContours - 1]) + 1;
-        
-        uint8_t *instructions = (uint8_t *)malloc(sizeof(uint8_t) * instructionLength);
-        fread(instructions, sizeof(uint8_t), instructionLength, mf->file_h);
-        
-        glyph->simple.endPtsOfContours  = endPtsOfContours;
-        glyph->simple.instructionLength = instructionLength;
-        glyph->simple.instructions      = instructions;
-        
-        glyph->pointCount = pointCount;
-        
-        myfont_glyf_load_flags(mf, glyph);
-        myfont_glyf_load_coordinates(mf, glyph);
-    }
+    memset(&glyph->head, 0, sizeof(myfont_table_glyf_head_t));
+    
+    /* get current data */
+    uint8_t *data = &mf->file_data[offset];
+    
+    // load head
+    offset += 10;
+    if(offset > mf->file_size)
+        return;
+    
+    glyph->head.numberOfContours = myfont_read_16(&data);
+    glyph->head.xMin = myfont_read_16(&data);
+    glyph->head.yMin = myfont_read_16(&data);
+    glyph->head.xMax = myfont_read_16(&data);
+    glyph->head.yMax = myfont_read_16(&data);
+    
+    if(glyph->head.numberOfContours > 0)
+        myfont_glyf_load_simple(mf, glyph, data, offset);
 }
 
-void myfont_glyf_load_flags(myfont_font_t *mf, myfont_table_glyph_t *glyph)
+void myfont_glyf_load_simple(myfont_font_t *mf, myfont_table_glyph_t *glyph, uint8_t *data, uint32_t offset)
 {
-    uint8_t *flags = (uint8_t *)malloc(sizeof(uint8_t) * myfont_glyf_pointCount(glyph));
+    uint16_t *endPtsOfContours = (uint16_t *)myfont_calloc(mf, glyph->head.numberOfContours, sizeof(uint16_t));
     
-    uint16_t i, j; uint8_t repeat;
-    for(i = 0; i < myfont_glyf_pointCount(glyph); i++)
+    if(endPtsOfContours == NULL)
+        return;
+    
+    offset = offset + (glyph->head.numberOfContours * 2) + 2;
+    if(offset > mf->file_size)
+        return;
+    
+    for(uint16_t i = 0; i < glyph->head.numberOfContours; i++) {
+        endPtsOfContours[i] = myfont_read_u16(&data);
+    }
+    
+    glyph->simple.endPtsOfContours = endPtsOfContours;
+    glyph->simple.instructionLength = myfont_read_u16(&data);
+    glyph->pointCount = endPtsOfContours[(glyph->head.numberOfContours - 1)] + 1;
+    
+    /* instruction */
+    if(glyph->simple.instructionLength == 0)
+        return;
+    
+    offset += glyph->simple.instructionLength;
+    if(offset > mf->file_size)
+        return;
+    
+    glyph->simple.instructions = (uint8_t *)myfont_calloc(mf, glyph->simple.instructionLength, sizeof(uint8_t));
+    
+    if(glyph->simple.instructions == NULL)
+        return;
+    
+    memcpy(glyph->simple.instructions, data, glyph->simple.instructionLength);
+    data += glyph->simple.instructionLength;
+    
+    myfont_glyf_load_simple_flags(mf, glyph, data, offset);
+}
+
+void myfont_glyf_load_simple_flags(myfont_font_t *mf, myfont_table_glyph_t *glyph, uint8_t *data, uint32_t offset)
+{
+    uint8_t *flags = (uint8_t *)myfont_calloc(mf, glyph->pointCount, sizeof(uint8_t));
+    if(flags == NULL)
+        return;
+    
+    uint16_t i = 0;
+    while(i < glyph->pointCount)
     {
-        flags[i] = fread(flags, sizeof(uint8_t), 1, mf->file_h);
+        if(offset >= mf->file_size) {
+            myfont_free(mf, flags);
+            return;
+        }
+        
+        flags[i] = myfont_read_u8(&data); offset++;
         
         if(flags[i] & MyFONT_GLYF_SML_FLAGS_repeat)
         {
-            repeat = fread(flags, sizeof(uint8_t), 1, mf->file_h);
+            if(offset >= mf->file_size) {
+                myfont_free(mf, flags);
+                return;
+            }
             
-            for(j = 0; j < repeat; j++, i++)
-                flags[i+1] = flags[i];
+            uint8_t repeat = myfont_read_u8(&data); offset++;
+            uint8_t curr = flags[i];
+            
+            if(repeat > (glyph->pointCount - i)) {
+                myfont_free(mf, flags);
+                return;
+            }
+            
+            while(repeat--) {
+                i++;
+                
+                flags[i] = curr;
+            }
         }
+        
+        i++;
     }
     
     glyph->simple.flags = flags;
+    
+    myfont_glyf_load_simple_coordinates(mf, glyph, data, offset);
 }
 
-void myfont_glyf_load_coordinates(myfont_font_t *mf, myfont_table_glyph_t *glyph)
+void myfont_glyf_load_simple_coordinates(myfont_font_t *mf, myfont_table_glyph_t *glyph, uint8_t *data, uint32_t offset)
 {
-    int16_t *xCoordinates = (int16_t *)malloc(sizeof(int16_t) * myfont_glyf_pointCount(glyph));
-    int16_t *yCoordinates = (int16_t *)malloc(sizeof(int16_t) * myfont_glyf_pointCount(glyph));
+    /* alloc resources */
+    int16_t *xCoordinates = (int16_t *)myfont_calloc(mf, glyph->pointCount, sizeof(int16_t));
+    if(xCoordinates == NULL)
+        return;
     
-    uint16_t i;
-    int16_t in_before = 0, in_now;
+    int16_t *yCoordinates = (int16_t *)myfont_calloc(mf, glyph->pointCount, sizeof(int16_t));
+    if(yCoordinates == NULL) {
+        myfont_free(mf, xCoordinates);
+        return;
+    }
     
-    for(i = 0; i < myfont_glyf_pointCount(glyph); i++)
+    uint8_t *flags = glyph->simple.flags;
+    
+    int32_t in_before = 0;
+    
+    for(uint16_t i = 0; i < glyph->pointCount; i++)
     {
-        in_now = 0;
-        
-        if( myfont_glyf_flags(glyph, i) & 0x02 && myfont_glyf_flags(glyph, i) & 0x10 )
+        if(flags[i] & MyFONT_GLYF_SML_FLAGS_x_ShortVector)
         {
-            fread(&in_now, sizeof(uint8_t), 1, mf->file_h);
-            xCoordinates[i] = in_before + in_now;
-        }
-        else if (myfont_glyf_flags(glyph, i) & 0x02 && !(myfont_glyf_flags(glyph, i) & 0x10) )
-        {
-            fread(&in_now, sizeof(uint8_t), 1, mf->file_h);
-            xCoordinates[i] = in_before - in_now;
-        }
-        else if (!(myfont_glyf_flags(glyph, i) & 0x02) && myfont_glyf_flags(glyph, i) & 0x10 )
-        {
-            xCoordinates[i] = in_before;
+            if(offset >= mf->file_size) {
+                myfont_free(mf, xCoordinates);
+                myfont_free(mf, yCoordinates);
+                return;
+            }
+            
+            if(flags[i] & MyFONT_GLYF_SML_FLAGS_p_x_ShortVector) {
+                xCoordinates[i] = in_before + myfont_read_u8(&data); offset++;
+            }
+            else {
+                xCoordinates[i] = in_before - myfont_read_u8(&data); offset++;
+            }
         }
         else
         {
-            fread(&in_now, sizeof(int16_t), 1, mf->file_h);
-            xCoordinates[i] = in_before + in_now;
+            offset++;
+            
+            if(offset >= mf->file_size) {
+                myfont_free(mf, xCoordinates);
+                myfont_free(mf, yCoordinates);
+                return;
+            }
+            
+            if(flags[i] & MyFONT_GLYF_SML_FLAGS_p_x_ShortVector) {
+                xCoordinates[i] = in_before;
+            }
+            else {
+                xCoordinates[i] = in_before + myfont_read_16(&data); offset++;
+            }
         }
         
         in_before = xCoordinates[i];
     }
     
     in_before = 0;
-    for(i = 0; i < myfont_glyf_pointCount(glyph); i++)
+    
+    for(uint16_t i = 0; i < glyph->pointCount; i++)
     {
-        in_now = 0;
-        
-        if(myfont_glyf_flags(glyph, i) & 0x04 && myfont_glyf_flags(glyph, i) & 0x20)
+        if(flags[i] & MyFONT_GLYF_SML_FLAGS_y_ShortVector)
         {
-            fread(&in_now, sizeof(uint8_t), 1, mf->file_h);
-            yCoordinates[i] = in_before+in_now;
+            if(offset >= mf->file_size) {
+                myfont_free(mf, xCoordinates);
+                myfont_free(mf, yCoordinates);
+                return;
+            }
+            
+            if(flags[i] & MyFONT_GLYF_SML_FLAGS_p_y_ShortVector) {
+                yCoordinates[i] = in_before + myfont_read_u8(&data); offset++;
+            }
+            else {
+                yCoordinates[i] = in_before - myfont_read_u8(&data); offset++;
+            }
         }
-        else if (myfont_glyf_flags(glyph, i) & 0x04 && !(myfont_glyf_flags(glyph, i) & 0x20))
-        {
-            fread(&in_now, sizeof(uint8_t), 1, mf->file_h);
-            yCoordinates[i] = in_before-in_now;
-        }
-        else if (!(myfont_glyf_flags(glyph, i) & 0x04) && myfont_glyf_flags(glyph, i) & 0x20)
-        {
-            yCoordinates[i] = in_before;
-        }
-        else
-        {
-            fread(&in_now, sizeof(int16_t), 1, mf->file_h);
-            yCoordinates[i] = in_before+in_now;
+        else {
+            offset++;
+            
+            if(offset >= mf->file_size) {
+                myfont_free(mf, xCoordinates);
+                myfont_free(mf, yCoordinates);
+                return;
+            }
+            
+            if(flags[i] & MyFONT_GLYF_SML_FLAGS_p_y_ShortVector) {
+                yCoordinates[i] = in_before;
+            }
+            else {
+                yCoordinates[i] = in_before + myfont_read_16(&data); offset += 2;
+            }
         }
         
         in_before = yCoordinates[i];
@@ -151,4 +259,5 @@ void myfont_glyf_load_coordinates(myfont_font_t *mf, myfont_table_glyph_t *glyph
     glyph->simple.xCoordinates = xCoordinates;
     glyph->simple.yCoordinates = yCoordinates;
 }
+
 

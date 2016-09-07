@@ -24,6 +24,10 @@
 
 #include "myfont/myosi.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct myfont_long_hor_metric {
     uint16_t	advanceWidth;
     int16_t		lsb;
@@ -42,5 +46,9 @@ typedef myfont_table_hmtx_t;
 struct myfont_font;
 
 void myfont_load_table_hmtx(struct myfont_font *mf);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif /* MyFONT_HMTX_H */

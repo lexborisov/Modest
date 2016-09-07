@@ -31,106 +31,196 @@ const char myfont_table_name[][5] = {
 
 myfont_font_t * myfont_create(void)
 {
-    myfont_font_t *mf = (myfont_font_t *)malloc(sizeof(myfont_font_t));
+    return (myfont_font_t *)myhtml_calloc(1, sizeof(myfont_font_t));
+}
+
+myfont_status_t myfont_init(myfont_font_t *mf)
+{
+    mf->mchar = mchar_async_create(64, (4096 * 2));
+    mf->mchar_node_id = mchar_async_node_add(mf->mchar);
     
     memset(mf->cache.tables_offset, 0, sizeof(uint32_t) * MyFONT_TKEY_LAST_KEY);
     memset(&mf->header, 0, sizeof(myfont_header_t));
     
     mf->file_path = NULL;
-    mf->file_h = NULL;
     
-    return mf;
+    return MyFONT_STATUS_OK;
 }
 
 void myfont_clean(myfont_font_t *mf)
 {
+    mchar_async_node_clean(mf->mchar, mf->mchar_node_id);
+    
     memset(mf->cache.tables_offset, 0, sizeof(uint32_t) * MyFONT_TKEY_LAST_KEY);
     memset(&mf->header, 0, sizeof(myfont_header_t));
     
-    if(mf->file_h)
-        fclose(mf->file_h);
+    if(mf->file_data) {
+        myhtml_free(mf->file_data);
+        mf->file_data = NULL;
+    }
     
-    mf->file_path = NULL;
-    mf->file_h = NULL;
+    if(mf->file_path) {
+        myhtml_free(mf->file_path);
+        mf->file_path = NULL;
+    }
+    
+    memset(mf, 0, sizeof(myfont_font_t));
 }
 
-myfont_font_t * myfont_destroy(myfont_font_t *mf)
+myfont_font_t * myfont_destroy(myfont_font_t *mf, bool self_destroy)
 {
-    if(mf->file_h)
-        fclose(mf->file_h);
+    if(mf == NULL)
+        return NULL;
     
-    if(mf)
-        free(mf);
+    mf->mchar = mchar_async_destroy(mf->mchar, 1);
     
-    return NULL;
+    if(mf->file_data) {
+        myhtml_free(mf->file_data);
+        mf->file_data = NULL;
+    }
+    
+    if(mf->file_path) {
+        myhtml_free(mf->file_path);
+        mf->file_path = NULL;
+    }
+    
+    if(self_destroy) {
+        myhtml_free(mf);
+        return NULL;
+    }
+    
+    return mf;
+}
+
+void * myfont_malloc(myfont_font_t* mf, size_t size)
+{
+    return (void*)mchar_async_malloc(mf->mchar, mf->mchar_node_id, size);
+}
+
+void * myfont_calloc(myfont_font_t* mf, size_t count, size_t size)
+{
+    void *data = (void*)mchar_async_malloc(mf->mchar, mf->mchar_node_id, (size * count));
+    memset(data, 0, (size * count));
+    
+    return data;
+}
+
+void myfont_free(myfont_font_t *mf, void* data)
+{
+    mchar_async_free(mf->mchar, mf->mchar_node_id, data);
 }
 
 void myfont_load(myfont_font_t *mf, const char *filepath)
 {
     FILE *fh = fopen(filepath, "rb");
+    if(fh == NULL)
+        return;
     
-    fseek(fh, 0L, SEEK_END);
+    if(fseek(fh, 0L, SEEK_END)) {
+        fclose(fh);
+        return;
+    }
+    
     long file_size = ftell(fh);
-    fseek(fh, 0L, SEEK_SET);
+    if(file_size == -1) {
+        fclose(fh);
+        return;
+    }
+    
+    if(fseek(fh, 0L, SEEK_SET)) {
+        fclose(fh);
+        return;
+    }
     
     if(file_size > 0)
         mf->file_size = (size_t)file_size;
+    else
+        return;
     
-    fread(&mf->header, sizeof(myfont_header_t), 1, fh);
+    mf->file_data = (uint8_t*)myhtml_malloc(file_size);
     
-    myfont_table_t table = {0};
-    uint16_t i;
+    if(mf->file_data == NULL)
+        return;
     
-    for(i = 0; i < htons(mf->header.numTables); i++)
+    if(fread(mf->file_data, 1, file_size, fh) != file_size) {
+        fclose(fh);
+        return;
+    }
+    
+    fclose(fh);
+    
+    if(mf->file_size < 12)
+        return;
+    
+    uint8_t *data = (uint8_t*)mf->file_data;
+    
+    mf->header.version_major = myfont_read_u16(&data);
+    mf->header.version_minor = myfont_read_u16(&data);
+    mf->header.numTables     = myfont_read_u16(&data);
+    mf->header.searchRange   = myfont_read_u16(&data);
+    mf->header.entrySelector = myfont_read_u16(&data);
+    mf->header.rangeShift    = myfont_read_u16(&data);
+    
+    if(mf->file_size < (12 + (mf->header.numTables * 16)))
+        return;
+    
+    for(uint16_t i = 0; i < mf->header.numTables; i++)
     {
-        fread(&table, sizeof(myfont_table_t), 1, fh);
+        myfont_table_t table;
+        table.tag      = myfont_read_u32_as_net(&data);
+        table.checkSum = myfont_read_u32(&data);
+        table.offset   = myfont_read_u32(&data);
+        table.length   = myfont_read_u32(&data);
         
         switch(table.tag) {
-            case MyFONT_TABLE_TYPE_cmap: mf->cache.tables_offset[ MyFONT_TKEY_cmap ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_head: mf->cache.tables_offset[ MyFONT_TKEY_head ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_hhea: mf->cache.tables_offset[ MyFONT_TKEY_hhea ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_hmtx: mf->cache.tables_offset[ MyFONT_TKEY_hmtx ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_maxp: mf->cache.tables_offset[ MyFONT_TKEY_maxp ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_name: mf->cache.tables_offset[ MyFONT_TKEY_name ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_OS_2: mf->cache.tables_offset[ MyFONT_TKEY_OS_2 ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_post: mf->cache.tables_offset[ MyFONT_TKEY_post ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_cvt:  mf->cache.tables_offset[ MyFONT_TKEY_cvt  ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_fpgm: mf->cache.tables_offset[ MyFONT_TKEY_fpgm ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_glyf: mf->cache.tables_offset[ MyFONT_TKEY_glyf ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_loca: mf->cache.tables_offset[ MyFONT_TKEY_loca ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_prep: mf->cache.tables_offset[ MyFONT_TKEY_prep ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_gasp: mf->cache.tables_offset[ MyFONT_TKEY_gasp ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_CFF:  mf->cache.tables_offset[ MyFONT_TKEY_CFF  ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_VORG: mf->cache.tables_offset[ MyFONT_TKEY_VORG ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_SVG:  mf->cache.tables_offset[ MyFONT_TKEY_SVG  ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_EBDT: mf->cache.tables_offset[ MyFONT_TKEY_EBDT ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_EBLC: mf->cache.tables_offset[ MyFONT_TKEY_EBLC ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_EBSC: mf->cache.tables_offset[ MyFONT_TKEY_EBSC ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_CBDT: mf->cache.tables_offset[ MyFONT_TKEY_CBDT ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_CBLC: mf->cache.tables_offset[ MyFONT_TKEY_CBLC ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_BASE: mf->cache.tables_offset[ MyFONT_TKEY_BASE ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_GDEF: mf->cache.tables_offset[ MyFONT_TKEY_GDEF ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_GPOS: mf->cache.tables_offset[ MyFONT_TKEY_GPOS ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_GSUB: mf->cache.tables_offset[ MyFONT_TKEY_GSUB ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_JSTF: mf->cache.tables_offset[ MyFONT_TKEY_JSTF ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_MATH: mf->cache.tables_offset[ MyFONT_TKEY_MATH ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_DSIG: mf->cache.tables_offset[ MyFONT_TKEY_DSIG ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_hdmx: mf->cache.tables_offset[ MyFONT_TKEY_hdmx ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_kern: mf->cache.tables_offset[ MyFONT_TKEY_kern ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_LTSH: mf->cache.tables_offset[ MyFONT_TKEY_LTSH ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_PCLT: mf->cache.tables_offset[ MyFONT_TKEY_PCLT ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_VDMX: mf->cache.tables_offset[ MyFONT_TKEY_VDMX ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_vhea: mf->cache.tables_offset[ MyFONT_TKEY_vhea ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_vmtx: mf->cache.tables_offset[ MyFONT_TKEY_vmtx ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_COLR: mf->cache.tables_offset[ MyFONT_TKEY_COLR ] = ntohl(table.offset); break;
-            case MyFONT_TABLE_TYPE_CPAL: mf->cache.tables_offset[ MyFONT_TKEY_CPAL ] = ntohl(table.offset); break;
+            case MyFONT_TABLE_TYPE_cmap: mf->cache.tables_offset[ MyFONT_TKEY_cmap ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_head: mf->cache.tables_offset[ MyFONT_TKEY_head ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_hhea: mf->cache.tables_offset[ MyFONT_TKEY_hhea ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_hmtx: mf->cache.tables_offset[ MyFONT_TKEY_hmtx ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_maxp: mf->cache.tables_offset[ MyFONT_TKEY_maxp ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_name: mf->cache.tables_offset[ MyFONT_TKEY_name ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_OS_2: mf->cache.tables_offset[ MyFONT_TKEY_OS_2 ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_post: mf->cache.tables_offset[ MyFONT_TKEY_post ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_cvt:  mf->cache.tables_offset[ MyFONT_TKEY_cvt  ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_fpgm: mf->cache.tables_offset[ MyFONT_TKEY_fpgm ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_glyf: mf->cache.tables_offset[ MyFONT_TKEY_glyf ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_loca: mf->cache.tables_offset[ MyFONT_TKEY_loca ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_prep: mf->cache.tables_offset[ MyFONT_TKEY_prep ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_gasp: mf->cache.tables_offset[ MyFONT_TKEY_gasp ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_CFF:  mf->cache.tables_offset[ MyFONT_TKEY_CFF  ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_VORG: mf->cache.tables_offset[ MyFONT_TKEY_VORG ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_SVG:  mf->cache.tables_offset[ MyFONT_TKEY_SVG  ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_EBDT: mf->cache.tables_offset[ MyFONT_TKEY_EBDT ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_EBLC: mf->cache.tables_offset[ MyFONT_TKEY_EBLC ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_EBSC: mf->cache.tables_offset[ MyFONT_TKEY_EBSC ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_CBDT: mf->cache.tables_offset[ MyFONT_TKEY_CBDT ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_CBLC: mf->cache.tables_offset[ MyFONT_TKEY_CBLC ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_BASE: mf->cache.tables_offset[ MyFONT_TKEY_BASE ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_GDEF: mf->cache.tables_offset[ MyFONT_TKEY_GDEF ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_GPOS: mf->cache.tables_offset[ MyFONT_TKEY_GPOS ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_GSUB: mf->cache.tables_offset[ MyFONT_TKEY_GSUB ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_JSTF: mf->cache.tables_offset[ MyFONT_TKEY_JSTF ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_MATH: mf->cache.tables_offset[ MyFONT_TKEY_MATH ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_DSIG: mf->cache.tables_offset[ MyFONT_TKEY_DSIG ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_hdmx: mf->cache.tables_offset[ MyFONT_TKEY_hdmx ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_kern: mf->cache.tables_offset[ MyFONT_TKEY_kern ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_LTSH: mf->cache.tables_offset[ MyFONT_TKEY_LTSH ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_PCLT: mf->cache.tables_offset[ MyFONT_TKEY_PCLT ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_VDMX: mf->cache.tables_offset[ MyFONT_TKEY_VDMX ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_vhea: mf->cache.tables_offset[ MyFONT_TKEY_vhea ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_vmtx: mf->cache.tables_offset[ MyFONT_TKEY_vmtx ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_COLR: mf->cache.tables_offset[ MyFONT_TKEY_COLR ] = table.offset; break;
+            case MyFONT_TABLE_TYPE_CPAL: mf->cache.tables_offset[ MyFONT_TKEY_CPAL ] = table.offset; break;
             default:
                 break;
         };
     }
     
-    mf->file_h = fh;
-    mf->file_path = filepath;
+    mf->file_path = (char *)myhtml_calloc(strlen(filepath), sizeof(char));
+    
+    if(mf->file_path) {
+        strncpy(mf->file_path, filepath, strlen(filepath));
+    }
     
     myfont_load_table_cmap(mf);
     myfont_load_table_head(mf);
@@ -139,22 +229,11 @@ void myfont_load(myfont_font_t *mf, const char *filepath)
     myfont_load_table_maxp(mf);
     myfont_load_table_hhea(mf);
     myfont_load_table_hmtx(mf);
+    myfont_load_table_loca(mf);
     myfont_load_table_glyf(mf);
     myfont_load_table_vhea(mf);
     myfont_load_table_vmtx(mf);
     myfont_load_table_pclt(mf);
-    myfont_load_table_loca(mf);
-}
-
-myfont_status_t myfont_load_table(myfont_font_t *mf, void *table, size_t size, enum myfont_table_key tkey)
-{
-    if(mf->cache.tables_offset[tkey] == 0)
-        return MyFONT_STATUS_NOT_FOUND;
-    
-    fseek(mf->file_h, mf->cache.tables_offset[tkey], SEEK_SET);
-    fread(table, size, 1, mf->file_h);
-    
-    return MyFONT_STATUS_OK;
 }
 
 void myfont_font_print_exists_table(myfont_font_t *mf, FILE *file)
@@ -162,72 +241,38 @@ void myfont_font_print_exists_table(myfont_font_t *mf, FILE *file)
     size_t i;
     for(i = 0; i < MyFONT_TKEY_LAST_KEY; i++)
     {
-        if(!mf->cache.tables_offset[i])
-            continue;
-        
-        fprintf(file, "%s = %u\n", myfont_table_name[i], mf->cache.tables_offset[i]);
+        if(mf->cache.tables_offset[i]) {
+            fprintf(file, "%s = %u\n", myfont_table_name[i], mf->cache.tables_offset[i]);
+        }
     }
 }
 
 // metrics
 float myfont_metrics_baseline(myfont_font_t *mf, float font_size)
 {
-    uint16_t baseline = ntohs(mf->table_os_2.usWinAscent);
-    
-    uint16_t reso = ntohs(mf->table_head.unitsPerEm);
-    float fsize = (float)baseline * font_size / ((float)reso);
-    
-    return fsize;
-}
-
-float myfont_metrics_ascent(myfont_font_t *mf, float font_size)
-{
-    return 0.0f;
-}
-
-float myfont_metrics_descent(myfont_font_t *mf, float font_size)
-{
-    float baseline = myfont_metrics_baseline(mf, font_size);
-    uint16_t descent = ntohs(mf->table_os_2.usWinDescent);
-    
-    uint16_t reso = ntohs(mf->table_head.unitsPerEm);
-    float fsize = (float)descent * font_size / ((float)reso);
-    
-    return (baseline + fsize);
+    return (float)(mf->table_hhea.Ascender) * font_size / ((float)mf->table_head.unitsPerEm);
 }
 
 float myfont_metrics_ascender(myfont_font_t *mf, float font_size)
 {
-    float baseline = myfont_metrics_baseline(mf, font_size);
-    int16_t ascender = ntohs(mf->table_os_2.sTypoAscender);
-    
-    uint16_t reso = ntohs(mf->table_head.unitsPerEm);
-    float fsize = (float)ascender * font_size / ((float)reso);
-    
-    return (baseline - fsize);
+    return 0.0f;
 }
 
 float myfont_metrics_descender(myfont_font_t *mf, float font_size)
 {
-    float baseline = myfont_metrics_baseline(mf, font_size);
-    int16_t descender = ntohs(mf->table_os_2.sTypoDescender);
-    
-    if(descender < 0.0f)
-        descender = -descender;
-    
-    uint16_t reso = ntohs(mf->table_head.unitsPerEm);
-    float fsize = (float)descender * font_size / ((float)reso);
-    
-    return (baseline + fsize);
+    return (float)(mf->table_hhea.Ascender - mf->table_hhea.Descender) * font_size / ((float)mf->table_head.unitsPerEm);
+}
+
+float myfont_metrics_line_gap(myfont_font_t *mf, float font_size)
+{
+    return (float)(mf->table_hhea.LineGap) * font_size / ((float)mf->table_head.unitsPerEm);
 }
 
 float myfont_metrics_x_height(myfont_font_t *mf, float font_size)
 {
-    float baseline = myfont_metrics_baseline(mf, font_size);
-    
     int16_t xheight = 0;
     
-    if(myfont_table_version_major(mf->table_os_2.version) > 1)
+    if(mf->table_os_2.version > 1)
     {
         if(mf->table_os_2.sxHeight)
             xheight = mf->table_os_2.sxHeight;
@@ -240,8 +285,7 @@ float myfont_metrics_x_height(myfont_font_t *mf, float font_size)
     {
         uint16_t glyph_index = myfont_glyph_index_by_code(mf, (unsigned long)('x'));
         
-        if(glyph_index)
-        {
+        if(glyph_index) {
             myfont_table_glyph_t glyph;
             myfont_glyf_load(mf, &glyph, glyph_index);
             
@@ -249,20 +293,14 @@ float myfont_metrics_x_height(myfont_font_t *mf, float font_size)
         }
     }
     
-    uint16_t reso = ntohs(mf->table_head.unitsPerEm);
-    float fsize = (float)(ntohs(xheight)) * font_size / (float)(reso);
-    
-    return (baseline - fsize);
+    return (float)(mf->table_hhea.Ascender - xheight) * font_size / (float)mf->table_head.unitsPerEm;
 }
 
 float myfont_metrics_cap_height(myfont_font_t *mf, float font_size)
 {
-    float baseline = myfont_metrics_baseline(mf, font_size);
-    
     int16_t cap_height = 0;
     
-    if(myfont_table_version_major(mf->table_os_2.version) > 1)
-    {
+    if(mf->table_os_2.version > 1) {
         if(mf->table_os_2.sCapHeight)
             cap_height = mf->table_os_2.sCapHeight;
     }
@@ -274,8 +312,7 @@ float myfont_metrics_cap_height(myfont_font_t *mf, float font_size)
     {
         uint16_t glyph_index = myfont_glyph_index_by_code(mf, (unsigned long)('H'));
         
-        if(glyph_index)
-        {
+        if(glyph_index) {
             myfont_table_glyph_t glyph;
             myfont_glyf_load(mf, &glyph, glyph_index);
             
@@ -283,81 +320,47 @@ float myfont_metrics_cap_height(myfont_font_t *mf, float font_size)
         }
     }
     
-    uint16_t reso = ntohs(mf->table_head.unitsPerEm);
-    float fsize = (float)(ntohs(cap_height)) * font_size / (float)(reso);
-    
-    return (baseline - fsize);
+    return(float)(mf->table_hhea.Ascender - cap_height) * font_size / (float)mf->table_head.unitsPerEm;
+}
+
+float myfont_metrics_font_height(myfont_font_t *mf, float font_size)
+{
+    return (float)(mf->table_hhea.Ascender - mf->table_hhea.Descender) * font_size / (float)mf->table_head.unitsPerEm;
 }
 
 // width, height and ...
-float myfont_char_width(myfont_font_t *mf, unsigned long char_code, float font_size)
+float myfont_metrics_width(myfont_font_t *mf, unsigned long codepoint, float font_size)
 {
-    uint16_t glyph_index = myfont_glyph_index_by_code(mf, char_code);
-    uint16_t num_metrics = ntohs(mf->table_hhea.numberOfHMetrics);
-    
-    if(num_metrics == 0)
+    if(mf->table_hhea.numberOfHMetrics == 0 || mf->table_hmtx.hMetrics == NULL)
         return 0.0f;
     
-    if(glyph_index > num_metrics)
-        glyph_index = num_metrics - 1;
+    uint16_t glyph_index = myfont_glyph_index_by_code(mf, codepoint);
+    uint16_t width = mf->table_hmtx.hMetrics[glyph_index].advanceWidth;
     
-    uint16_t width = ntohs(mf->table_hmtx.hMetrics[glyph_index].advanceWidth);
-    
-    uint16_t reso = ntohs(mf->table_head.unitsPerEm);
-    float fsize = (float)width * font_size / ((float)reso);
+    uint16_t reso = mf->table_head.unitsPerEm;
+    float fsize = (float)width * font_size / (float)reso;
     
     return fsize;
 }
 
-float myfont_char_height(myfont_font_t *mf, unsigned long char_code, float font_size)
+float myfont_metrics_height(myfont_font_t *mf, unsigned long codepoint, float font_size)
 {
-    uint16_t glyph_index = myfont_glyph_index_by_code(mf, char_code);
-    uint16_t num_metrics = ntohs(mf->table_vhea.numOfLongVerMetrics);
+    if(mf->table_vhea.numOfLongVerMetrics == 0 || mf->table_vmtx.vMetrics == NULL)
+        return myfont_metrics_font_height(mf, font_size);
     
-    if(num_metrics == 0)
-    {
-        return myfont_font_height(mf, font_size);
-    }
+    uint16_t glyph_index = myfont_glyph_index_by_code(mf, codepoint);
+    uint16_t height = mf->table_vmtx.vMetrics[glyph_index].advanceHeight;
     
-    if(glyph_index > num_metrics)
-        glyph_index = num_metrics - 1;
-    
-    uint16_t height = ntohs(mf->table_vmtx.vMetrics[glyph_index].advanceHeight);
-    
-    uint16_t reso = ntohs(mf->table_head.unitsPerEm);
-    float fsize = (float)height * font_size / ((float)reso);
+    uint16_t reso = mf->table_head.unitsPerEm;
+    float fsize = (float)height * font_size / (float)reso;
     
     return fsize;
 }
 
-float myfont_font_height(myfont_font_t *mf, float font_size)
+float myfont_metrics_glyph_offset_y(myfont_font_t *mf, unsigned long codepoint, float font_size)
 {
-    int16_t height = ntohs(mf->table_os_2.usWinAscent) + ntohs(mf->table_os_2.usWinDescent);
-    
-    uint16_t reso = ntohs(mf->table_head.unitsPerEm);
-    float fsize = (float)height * font_size / ((float)reso);
-    
-    return fsize;
-}
-
-float myfont_font_ascent(myfont_font_t *mf, float font_size)
-{
-    int16_t ascent = ntohs(mf->table_os_2.usWinAscent);
-    
-    uint16_t reso = ntohs(mf->table_head.unitsPerEm);
-    float fsize = (float)ascent * font_size / ((float)reso);
-    
-    return fsize;
-}
-
-float myfont_font_descent(myfont_font_t *mf, float font_size)
-{
-    int16_t descent = ntohs(mf->table_os_2.usWinDescent);
-    
-    uint16_t reso = ntohs(mf->table_head.unitsPerEm);
-    float fsize = (float)descent * font_size / ((float)reso);
-    
-    return fsize;
+    uint16_t glyph_index = myfont_glyph_index_by_code(mf, codepoint);
+    return (float)((mf->table_hhea.Ascender - mf->table_glyf.cache[glyph_index].head.yMax)) * font_size / ((float)mf->table_head.unitsPerEm);
 }
 
 int16_t myfont_table_version_major(uint32_t version)

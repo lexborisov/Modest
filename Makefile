@@ -43,6 +43,7 @@ all: create shared static
 
 include $(TARGET)/myhtml/Makefile.mk
 include $(TARGET)/mycss/Makefile.mk
+include $(TARGET)/myfont/Makefile.mk
 include $(TARGET)/modest/Makefile.mk
 
 OBJS := $(patsubst %.c,%.o,$(SRCS))

@@ -24,10 +24,13 @@
 
 #include "myfont/myosi.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // table pclt
 struct myfont_table_loca {
-    uint16_t *short_offsets;
-    uint32_t *long_offsets;
+    uint32_t *offsets;
 }
 typedef myfont_table_loca_t;
 
@@ -38,5 +41,9 @@ struct myfont_font;
 void myfont_load_table_loca(struct myfont_font *mf);
 
 uint32_t myfont_loca_get_offset(struct myfont_font *mf, uint16_t glyph_index);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif /* MyFONT_LOCA_H */

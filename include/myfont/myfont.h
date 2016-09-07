@@ -22,21 +22,21 @@
 #define MyFONT_MyFONT_H
 #pragma once
 
-#include "myfont/myosi.h"
-#include "myfont/cmap.h"
-#include "myfont/head.h"
-#include "myfont/name.h"
-#include "myfont/os_2.h"
-#include "myfont/maxp.h"
-#include "myfont/hhea.h"
-#include "myfont/hmtx.h"
-#include "myfont/glyf.h"
-#include "myfont/vhea.h"
-#include "myfont/vmtx.h"
-#include "myfont/pclt.h"
-#include "myfont/loca.h"
+#include <myfont/myosi.h>
+#include <myfont/cmap.h>
+#include <myfont/head.h>
+#include <myfont/name.h>
+#include <myfont/os_2.h>
+#include <myfont/maxp.h>
+#include <myfont/hhea.h>
+#include <myfont/hmtx.h>
+#include <myfont/glyf.h>
+#include <myfont/vhea.h>
+#include <myfont/vmtx.h>
+#include <myfont/pclt.h>
+#include <myfont/loca.h>
 
-#include "myhtml/utils/mchar_async.h"
+#include <myhtml/utils/mchar_async.h>
 
 #ifdef __cplusplus
 extern "C" {

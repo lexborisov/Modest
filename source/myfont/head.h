@@ -24,6 +24,10 @@
 
 #include "myfont/myosi.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct myfont_table_head {
     uint32_t version;
     uint32_t fontRevision;
@@ -52,5 +56,9 @@ struct myfont_font;
 void myfont_load_table_head(struct myfont_font *mf);
 
 float myfont_head_yMax_pixel(struct myfont_font *mf, float font_size);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif /* MyFONT_HEAD_H */

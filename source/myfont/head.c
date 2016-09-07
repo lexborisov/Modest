@@ -22,21 +22,55 @@
 
 void myfont_load_table_head(struct myfont_font *mf)
 {
-    fseek(mf->file_h, mf->cache.tables_offset[MyFONT_TKEY_head], SEEK_SET);
+    memset(&mf->table_head, 0, sizeof(myfont_table_head_t));
     
-    fread(&mf->table_head        , sizeof(uint32_t), 4, mf->file_h);
-    fread(&mf->table_head.flags  , sizeof(uint16_t), 2, mf->file_h);
-    fread(mf->table_head.created , sizeof(uint32_t), 2, mf->file_h);
-    fread(mf->table_head.modified, sizeof(uint32_t), 2, mf->file_h);
-    fread(&mf->table_head.xMin   , sizeof(int16_t) , 9, mf->file_h);
+    if(mf->cache.tables_offset[MyFONT_TKEY_head] == 0)
+        return;
+    
+    myfont_table_head_t *thead = &mf->table_head;
+    const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_head];
+    
+    if(mf->file_size < (table_offset + 16 + 4 + 16 + 8 + 4 + 6))
+        return;
+    
+    /* get current data */
+    uint8_t *data = &mf->file_data[table_offset];
+    
+    /* u32 */
+    thead->version = myfont_read_u32(&data);
+    thead->fontRevision = myfont_read_u32(&data);
+    thead->checkSumAdjustment = myfont_read_u32(&data);
+    thead->magicNumber = myfont_read_u32(&data);
+    
+    /* u16 */
+    thead->flags = myfont_read_u16(&data);
+    thead->unitsPerEm = myfont_read_u16(&data);
+    
+    /* u32 */
+    thead->created[0] = myfont_read_u32(&data);
+    thead->created[1] = myfont_read_u32(&data);
+    thead->modified[0] = myfont_read_u32(&data);
+    thead->modified[1] = myfont_read_u32(&data);
+    
+    /* 16 */
+    thead->xMin = myfont_read_16(&data);
+    thead->yMin = myfont_read_16(&data);
+    thead->xMax = myfont_read_16(&data);
+    thead->yMax = myfont_read_16(&data);
+    
+    /* u16 */
+    thead->macStyle = myfont_read_u16(&data);
+    thead->lowestRecPPEM = myfont_read_u16(&data);
+    
+    /* 16 */
+    thead->fontDirectionHint = myfont_read_16(&data);
+    thead->indexToLocFormat = myfont_read_16(&data);
+    thead->glyphDataFormat = myfont_read_16(&data);
 }
 
 float myfont_head_yMax_pixel(struct myfont_font *mf, float font_size)
 {
-    int16_t yMax = ntohs(mf->table_head.yMax);
-    
-    uint16_t reso = ntohs(mf->table_head.unitsPerEm);
-    float fsize = (float)yMax * font_size / ((float)reso);
-    
-    return fsize;
+    return (float)mf->table_head.yMax * font_size / ((float)mf->table_head.unitsPerEm);
 }
+
+

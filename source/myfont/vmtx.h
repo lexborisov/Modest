@@ -24,6 +24,10 @@
 
 #include "myfont/myosi.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct myfont_long_ver_metric {
     uint16_t	advanceHeight;
     int16_t		topSideBearing;
@@ -42,5 +46,9 @@ typedef myfont_table_vmtx_t;
 struct myfont_font;
 
 void myfont_load_table_vmtx(struct myfont_font *mf);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif /* MyFONT_VMTX_H */

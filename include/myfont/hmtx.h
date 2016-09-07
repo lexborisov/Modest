@@ -18,44 +18,37 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#ifndef MyFONT_PCLT_H
-#define MyFONT_PCLT_H
+#ifndef MyFONT_HMTX_H
+#define MyFONT_HMTX_H
 #pragma once
 
-#include "myfont/myosi.h"
+#include <myfont/myosi.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-// table pclt
-struct myfont_table_pclt {
-    int32_t  version;
-    uint32_t fontNumber;
-    uint16_t pitch;
-    uint16_t xHeight;
-    uint16_t style;
-    uint16_t typeFamily;
-    uint16_t capHeight;
-    uint16_t symbolSet;
-    char     typeface[16];
-    char     characterComplement[8];
-    char     fileName[6];
-    char     strokeWeight;
-    char     widthType;
-    uint8_t  serifStyle;
-    uint8_t  reserved;
+struct myfont_long_hor_metric {
+    uint16_t	advanceWidth;
+    int16_t		lsb;
 }
-typedef myfont_table_pclt_t;
+typedef myfont_long_hor_metric_t;
 
-#include "myfont/myfont.h"
+// table hhea
+struct myfont_table_hmtx {
+    myfont_long_hor_metric_t *hMetrics;
+    int16_t *leftSideBearing;
+}
+typedef myfont_table_hmtx_t;
+
+#include <myfont/myfont.h>
 
 struct myfont_font;
 
-void myfont_load_table_pclt(struct myfont_font *mf);
+void myfont_load_table_hmtx(struct myfont_font *mf);
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
 
-#endif /* MyFONT_PCLT_H */
+#endif /* MyFONT_HMTX_H */

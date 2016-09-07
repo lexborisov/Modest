@@ -22,29 +22,37 @@
 
 void myfont_load_table_vhea(myfont_font_t *mf)
 {
-    if(mf->cache.tables_offset[MyFONT_TKEY_vhea])
-    {
-        myfont_load_table(mf, &mf->table_vhea, sizeof(myfont_table_vhea_t), MyFONT_TKEY_vhea);
-    }
-    else
-    {
-        mf->table_vhea.version                = 0;
-        mf->table_vhea.Ascender               = 0;
-        mf->table_vhea.Descender              = 0;
-        mf->table_vhea.LineGap                = 0;
-        mf->table_vhea.advanceHeightMax       = 0;
-        mf->table_vhea.minTopSideBearing      = 0;
-        mf->table_vhea.minBottomSideBearing   = 0;
-        mf->table_vhea.yMaxExtent             = 0;
-        mf->table_vhea.caretSlopeRise         = 0;
-        mf->table_vhea.caretSlopeRun          = 0;
-        mf->table_vhea.caretOffset            = 0;
-        mf->table_vhea.reserved1              = 0;
-        mf->table_vhea.reserved2              = 0;
-        mf->table_vhea.reserved3              = 0;
-        mf->table_vhea.reserved4              = 0;
-        mf->table_vhea.metricDataFormat       = 0;
-        mf->table_vhea.numOfLongVerMetrics    = 0;
-    }
+    memset(&mf->table_vhea, 0, sizeof(myfont_table_vhea_t));
+    
+    if(mf->cache.tables_offset[MyFONT_TKEY_vhea] == 0)
+        return;
+    
+    myfont_table_vhea_t *tvhea = &mf->table_vhea;
+    const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_vhea];
+    
+    if((table_offset + 4 + 32) > mf->file_size)
+        return;
+    
+    /* get current data */
+    uint8_t *data = &mf->file_data[table_offset];
+    
+    tvhea->version = myfont_read_u32_as_net(&data);
+    tvhea->Ascender = myfont_read_16(&data);
+    tvhea->Descender = myfont_read_16(&data);
+    tvhea->LineGap = myfont_read_16(&data);
+    tvhea->advanceHeightMax = myfont_read_16(&data);
+    tvhea->minTopSideBearing = myfont_read_16(&data);
+    tvhea->minBottomSideBearing = myfont_read_16(&data);
+    tvhea->yMaxExtent = myfont_read_16(&data);
+    tvhea->caretSlopeRise = myfont_read_16(&data);
+    tvhea->caretSlopeRun = myfont_read_16(&data);
+    tvhea->caretOffset = myfont_read_16(&data);
+    tvhea->reserved1 = myfont_read_16(&data);
+    tvhea->reserved2 = myfont_read_16(&data);
+    tvhea->reserved3 = myfont_read_16(&data);
+    tvhea->reserved4 = myfont_read_16(&data);
+    tvhea->metricDataFormat = myfont_read_16(&data);
+    tvhea->numOfLongVerMetrics = myfont_read_u16(&data);
 }
+
 
