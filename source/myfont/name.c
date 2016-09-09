@@ -20,19 +20,19 @@
 
 #include "myfont/name.h"
 
-void myfont_load_table_name(myfont_font_t *mf)
+myfont_status_t myfont_load_table_name(myfont_font_t *mf)
 {
     memset(&mf->table_name, 0, sizeof(myfont_table_name_t));
     
     if(mf->cache.tables_offset[MyFONT_TKEY_name] == 0)
-        return;
+        return MyFONT_STATUS_OK;
     
     myfont_table_name_t *tname = &mf->table_name;
     const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_name];
     uint32_t pos = table_offset + 6;
     
     if(pos > mf->file_size)
-        return;
+        return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     /* get current data */
     uint8_t *data = &mf->file_data[table_offset];
@@ -44,10 +44,13 @@ void myfont_load_table_name(myfont_font_t *mf)
     pos = pos + (tname->count * 12);
     if(pos > mf->file_size) {
         tname->count = 0;
-        return;
+        return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     }
     
     myfont_record_t *record = (myfont_record_t *)myfont_calloc(mf, tname->count, sizeof(myfont_record_t));
+    
+    if(record == NULL)
+        return MyFONT_STATUS_ERROR_MEMORY_ALLOCATION;
     
     for(uint16_t i = 0; i < tname->count; i++) {
         record[i].platformID = myfont_read_u16(&data);
@@ -64,20 +67,20 @@ void myfont_load_table_name(myfont_font_t *mf)
     {
         pos += 2;
         if(pos > mf->file_size)
-            return;
+            return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
         
         tname->langTagCount = myfont_read_u16(&data);
         
         pos = pos + (tname->langTagCount * 4);
         if(pos > mf->file_size) {
             tname->langTagCount = 0;
-            return;
+            return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
         }
         
         myfont_ltag_record_t *lang_record = (myfont_ltag_record_t *)myfont_calloc(mf, tname->langTagCount, sizeof(myfont_ltag_record_t));
         
         if(lang_record == NULL)
-            return;
+            return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
         
         for(uint16_t i = 0; i < tname->count; i++) {
             lang_record[i].length = myfont_read_u16(&data);
@@ -86,5 +89,7 @@ void myfont_load_table_name(myfont_font_t *mf)
         
         tname->langTagRecord = lang_record;
     }
+    
+    return MyFONT_STATUS_OK;
 }
 

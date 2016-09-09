@@ -20,18 +20,18 @@
 
 #include "myfont/head.h"
 
-void myfont_load_table_head(struct myfont_font *mf)
+myfont_status_t myfont_load_table_head(struct myfont_font *mf)
 {
     memset(&mf->table_head, 0, sizeof(myfont_table_head_t));
     
     if(mf->cache.tables_offset[MyFONT_TKEY_head] == 0)
-        return;
+        return MyFONT_STATUS_OK;
     
     myfont_table_head_t *thead = &mf->table_head;
     const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_head];
     
     if(mf->file_size < (table_offset + 16 + 4 + 16 + 8 + 4 + 6))
-        return;
+        return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     /* get current data */
     uint8_t *data = &mf->file_data[table_offset];
@@ -66,6 +66,8 @@ void myfont_load_table_head(struct myfont_font *mf)
     thead->fontDirectionHint = myfont_read_16(&data);
     thead->indexToLocFormat = myfont_read_16(&data);
     thead->glyphDataFormat = myfont_read_16(&data);
+    
+    return MyFONT_STATUS_OK;
 }
 
 float myfont_head_yMax_pixel(struct myfont_font *mf, float font_size)

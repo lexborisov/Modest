@@ -90,7 +90,7 @@ typedef myfont_table_os_2_t;
 
 struct myfont_font;
 
-void myfont_load_table_os_2(struct myfont_font *mf);
+myfont_status_t myfont_load_table_os_2(struct myfont_font *mf);
 
 int8_t myfont_os_2_panose(struct myfont_font *mf, myfont_table_os_2_panose_t id);
 

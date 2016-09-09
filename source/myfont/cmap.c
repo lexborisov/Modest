@@ -20,18 +20,18 @@
 
 #include "myfont/cmap.h"
 
-void myfont_table_cmap_format_0(myfont_font_t *mf, myfont_tcmap_entry_t *entry, size_t offset)
+myfont_status_t myfont_table_cmap_format_0(myfont_font_t *mf, myfont_tcmap_entry_t *entry, size_t offset)
 {
     if(mf->file_size < (offset + 260)) {
         entry->header = NULL;
-        return;
+        return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     }
     
     myfont_tcmap_format_0_t *f0 = (myfont_tcmap_format_0_t*)myfont_calloc(mf, 1, sizeof(myfont_tcmap_format_0_t));
     
     if(f0 == NULL) {
         entry->header = NULL;
-        return;
+        return MyFONT_STATUS_ERROR_MEMORY_ALLOCATION;
     }
     
     uint8_t *data = &mf->file_data[offset];
@@ -42,20 +42,25 @@ void myfont_table_cmap_format_0(myfont_font_t *mf, myfont_tcmap_entry_t *entry, 
     memcpy(f0->glyphIdArray, data, 256);
     
     entry->header = (void *)f0;
+    
+    return MyFONT_STATUS_OK;
 }
 
-void myfont_table_cmap_format_4(myfont_font_t *mf, myfont_tcmap_entry_t *entry, size_t offset)
+myfont_status_t myfont_table_cmap_format_4(myfont_font_t *mf, myfont_tcmap_entry_t *entry, size_t offset)
 {
     uint8_t *data = &mf->file_data[offset];
     
     myfont_tcmap_format_4_t *f4 = (myfont_tcmap_format_4_t*)myfont_calloc(mf, 1, sizeof(myfont_tcmap_format_4_t));
     
     if(f4 == NULL)
-        return;
+        return MyFONT_STATUS_ERROR_MEMORY_ALLOCATION;
     
     offset += MyFONT_TCMAP_FORMAT_4_FIRST_LENGTH;
-    if(mf->file_size < offset)
-        return;
+    
+    if(mf->file_size < offset) {
+        myfont_free(mf, f4);
+        return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
+    }
     
     f4->length        = myfont_read_u16(&data);
     f4->language      = myfont_read_u16(&data);
@@ -69,22 +74,22 @@ void myfont_table_cmap_format_4(myfont_font_t *mf, myfont_tcmap_entry_t *entry, 
     
     offset += sizeof(uint16_t) * (f4->segCount * 5);
     if(mf->file_size < offset)
-        return;
+        return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     /* init mem */
     if((f4->endCount = (uint16_t *)myfont_calloc(mf, f4->segCount, sizeof(uint16_t))) == NULL)
-        return;
+        return MyFONT_STATUS_ERROR_MEMORY_ALLOCATION;
     
     if((f4->startCount = (uint16_t *)myfont_calloc(mf, f4->segCount, sizeof(uint16_t))) == NULL) {
         myfont_free(mf, f4->endCount); f4->endCount = NULL;
-        return;
+        return MyFONT_STATUS_ERROR_MEMORY_ALLOCATION;
     }
     
     if((f4->idDelta = (int16_t *)myfont_calloc(mf, f4->segCount, sizeof(int16_t))) == NULL) {
         myfont_free(mf, f4->endCount); f4->endCount = NULL;
         myfont_free(mf, f4->startCount); f4->startCount = NULL;
         
-        return;
+        return MyFONT_STATUS_ERROR_MEMORY_ALLOCATION;
     }
     
     if((f4->idRangeOffset = (uint16_t *)myfont_calloc(mf, f4->segCount, sizeof(uint16_t))) == NULL) {
@@ -92,7 +97,7 @@ void myfont_table_cmap_format_4(myfont_font_t *mf, myfont_tcmap_entry_t *entry, 
         myfont_free(mf, f4->startCount); f4->startCount = NULL;
         myfont_free(mf, f4->idDelta); f4->idDelta = NULL;
         
-        return;
+        return MyFONT_STATUS_ERROR_MEMORY_ALLOCATION;
     }
     
     if((f4->glyphIdArray = (uint16_t *)myfont_calloc(mf, f4->numGlyphId, sizeof(uint16_t))) == NULL) {
@@ -101,7 +106,7 @@ void myfont_table_cmap_format_4(myfont_font_t *mf, myfont_tcmap_entry_t *entry, 
         myfont_free(mf, f4->idDelta); f4->idDelta = NULL;
         myfont_free(mf, f4->idRangeOffset); f4->idRangeOffset = NULL;
         
-        return;
+        return MyFONT_STATUS_ERROR_MEMORY_ALLOCATION;
     }
     
     /* read data */
@@ -128,26 +133,41 @@ void myfont_table_cmap_format_4(myfont_font_t *mf, myfont_tcmap_entry_t *entry, 
     }
     
     entry->header = (void *)f4;
+    
+    return MyFONT_STATUS_OK;
 }
 
-uint16_t myfont_glyph_index_by_code_format_0(myfont_tcmap_format_0_t *f0, unsigned long codepoint)
+uint16_t myfont_glyph_index_by_code_format_0(myfont_tcmap_format_0_t *f0, unsigned long codepoint, myfont_status_t* status)
 {
+    if(status)
+        *status = MyFONT_STATUS_OK;
+    
     if(codepoint < 256)
         return (uint16_t)f0->glyphIdArray[codepoint];
+    
+    if(status)
+        *status = MyFONT_STATUS_ERROR_GLYPH_NOT_FOUND;
     
     return 0;
 }
 
-uint16_t myfont_glyph_index_by_code_format_4(myfont_tcmap_format_4_t *f4, unsigned long codepoint)
+uint16_t myfont_glyph_index_by_code_format_4(myfont_tcmap_format_4_t *f4, unsigned long codepoint, myfont_status_t* status)
 {
     uint16_t i;
+    
+    if(status)
+        *status = MyFONT_STATUS_OK;
     
     for(i = 0; i < f4->segCount; i++)
         if(codepoint <= f4->endCount[i])
             break;
     
-    if(i >= f4->segCount || codepoint < f4->startCount[i])
+    if(i >= f4->segCount || codepoint < f4->startCount[i]) {
+        if(status)
+            *status = MyFONT_STATUS_ERROR_GLYPH_NOT_FOUND;
+        
         return 0;
+    }
     
     if(f4->idRangeOffset[i] == 0) {
         return (codepoint + (uint16_t)f4->idDelta[i]) & 0xFFFF;
@@ -161,12 +181,16 @@ uint16_t myfont_glyph_index_by_code_format_4(myfont_tcmap_format_4_t *f4, unsign
         }
     }
     
+    if(status)
+        *status = MyFONT_STATUS_ERROR_GLYPH_NOT_FOUND;
+    
     return 0;
 }
 
-uint16_t myfont_glyph_index_by_code(myfont_font_t *mf, unsigned long codepoint)
+uint16_t myfont_glyph_index_by_codepoint(myfont_font_t *mf, unsigned long codepoint, myfont_status_t* status)
 {
     uint16_t i, index = 0, tcout = mf->table_cmap.header.numTables;
+    myfont_status_t mf_status;
     
     for(i = 0; i < tcout; i++)
     {
@@ -174,47 +198,42 @@ uint16_t myfont_glyph_index_by_code(myfont_font_t *mf, unsigned long codepoint)
         
         switch (entry->format) {
             case 0:
-                index = myfont_glyph_index_by_code_format_0((myfont_tcmap_format_0_t *)(entry->header), codepoint);
+                index = myfont_glyph_index_by_code_format_0((myfont_tcmap_format_0_t *)(entry->header), codepoint, &mf_status);
                 break;
                 
             case 4:
-                index = myfont_glyph_index_by_code_format_4((myfont_tcmap_format_4_t *)(entry->header), codepoint);
+                index = myfont_glyph_index_by_code_format_4((myfont_tcmap_format_4_t *)(entry->header), codepoint, &mf_status);
                 break;
                 
             default:
+                mf_status = MyFONT_STATUS_ERROR_GLYPH_NOT_FOUND;
                 break;
         };
         
-        if(index)
-            break;
+        if(mf_status == MyFONT_STATUS_OK) {
+            if(status)
+                *status = MyFONT_STATUS_OK;
+            
+            return index;
+        }
     }
     
-    return index;
-}
-
-uint16_t myfont_glyph_index_by_code_on_entry(myfont_tcmap_entry_t *entry, unsigned long codepoint)
-{
-    switch (entry->format) {
-        case 0:
-            return myfont_glyph_index_by_code_format_0((myfont_tcmap_format_0_t *)(entry->header), codepoint);
-            
-        case 4:
-            return myfont_glyph_index_by_code_format_4((myfont_tcmap_format_4_t *)(entry->header), codepoint);
-            
-        default:
-            break;
-    };
+    if(status)
+        *status = MyFONT_STATUS_ERROR_GLYPH_NOT_FOUND;
     
     return 0;
 }
 
-void myfont_load_table_cmap(myfont_font_t *mf)
+myfont_status_t myfont_load_table_cmap(myfont_font_t *mf)
 {
     myfont_table_cmap_t *tcmap = &mf->table_cmap;
     const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_cmap];
     
+    if(table_offset == 0)
+        return MyFONT_STATUS_OK;
+    
     if(mf->file_size < (table_offset + 4))
-        return;
+        return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     /* get current data */
     uint8_t *data = &mf->file_data[table_offset];
@@ -224,22 +243,22 @@ void myfont_load_table_cmap(myfont_font_t *mf)
     tcmap->header.numTables = myfont_read_u16(&data);
     
     if(tcmap->header.numTables == 0)
-        return;
+        return MyFONT_STATUS_OK;
     
     size_t size_records = sizeof(myfont_tcmap_record_t) * tcmap->header.numTables;
     size_t size_entries = sizeof(myfont_tcmap_entry_t) * tcmap->header.numTables;
     
     if(mf->file_size < (size_records + size_entries))
-        return;
+        return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     if((tcmap->records = (myfont_tcmap_record_t *)myfont_malloc(mf, size_records)) == NULL)
-        return;
+        return MyFONT_STATUS_ERROR_MEMORY_ALLOCATION;
     
     if((tcmap->entries = (myfont_tcmap_entry_t *)myfont_malloc(mf, size_entries)) == NULL) {
         tcmap->records = NULL;
         myfont_free(mf, tcmap->records);
         
-        return;
+        return MyFONT_STATUS_ERROR_MEMORY_ALLOCATION;
     }
     
     for(uint16_t i = 0; i < tcmap->header.numTables; i++) {
@@ -253,7 +272,7 @@ void myfont_load_table_cmap(myfont_font_t *mf)
         uint32_t offset = tcmap->records[i].offset + table_offset;
         
         if(mf->file_size <= offset)
-            return;
+            return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
         
         data = &mf->file_data[offset];
         tcmap->entries[i].format = myfont_read_u16(&data);
@@ -271,6 +290,9 @@ void myfont_load_table_cmap(myfont_font_t *mf)
                 break;
         }
     }
+    
+    return MyFONT_STATUS_OK;
 }
+
 
 

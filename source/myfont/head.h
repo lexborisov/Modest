@@ -53,7 +53,7 @@ typedef myfont_table_head_t;
 
 struct myfont_font;
 
-void myfont_load_table_head(struct myfont_font *mf);
+myfont_status_t myfont_load_table_head(struct myfont_font *mf);
 
 float myfont_head_yMax_pixel(struct myfont_font *mf, float font_size);
 

@@ -20,12 +20,12 @@
 
 #include "myfont/hmtx.h"
 
-void myfont_load_table_hmtx(struct myfont_font *mf)
+myfont_status_t myfont_load_table_hmtx(struct myfont_font *mf)
 {
     memset(&mf->table_hmtx, 0, sizeof(myfont_table_hmtx_t));
     
     if(mf->cache.tables_offset[MyFONT_TKEY_hmtx] == 0)
-        return;
+        return MyFONT_STATUS_OK;
     
     myfont_table_hmtx_t *thmtx = &mf->table_hmtx;
     const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_hmtx];
@@ -35,15 +35,15 @@ void myfont_load_table_hmtx(struct myfont_font *mf)
     uint16_t num_metrics = mf->table_hhea.numberOfHMetrics;
     
     if(num_metrics == 0)
-        return;
+        return MyFONT_STATUS_OK;
     
     if(mf->file_size < (table_offset + (num_metrics * 2)))
-        return;
+        return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     myfont_long_hor_metric_t *lhor_metric = (myfont_long_hor_metric_t *)myfont_calloc(mf, num_metrics, sizeof(myfont_long_hor_metric_t));
     
     if(lhor_metric == NULL)
-        return;
+        return MyFONT_STATUS_ERROR_MEMORY_ALLOCATION;
     
     for(uint16_t i = 0; i < num_metrics; i++) {
         lhor_metric[i].advanceWidth = myfont_read_u16(&data);
@@ -52,5 +52,7 @@ void myfont_load_table_hmtx(struct myfont_font *mf)
     
     thmtx->hMetrics = lhor_metric;
     thmtx->leftSideBearing = NULL;
+    
+    return MyFONT_STATUS_OK;
 }
 

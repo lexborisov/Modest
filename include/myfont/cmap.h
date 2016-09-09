@@ -208,10 +208,9 @@ typedef myfont_table_cmap_t;
 
 #include <myfont/myfont.h>
 
-void myfont_load_table_cmap(myfont_font_t *mf);
+myfont_status_t myfont_load_table_cmap(myfont_font_t *mf);
 
-uint16_t myfont_glyph_index_by_code(myfont_font_t *mf, unsigned long char_code);
-uint16_t myfont_glyph_index_by_code_on_entry(myfont_tcmap_entry_t *entry, unsigned long char_code);
+uint16_t myfont_glyph_index_by_codepoint(myfont_font_t *mf, unsigned long char_code, myfont_status_t* status);
 
 #ifdef __cplusplus
 } /* extern "C" */

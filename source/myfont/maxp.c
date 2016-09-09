@@ -20,18 +20,18 @@
 
 #include "myfont/maxp.h"
 
-void myfont_load_table_maxp(myfont_font_t *mf)
+myfont_status_t myfont_load_table_maxp(myfont_font_t *mf)
 {
     memset(&mf->table_maxp, 0, sizeof(myfont_table_maxp_t));
     
     if(mf->cache.tables_offset[MyFONT_TKEY_maxp] == 0)
-        return;
+        return MyFONT_STATUS_OK;
     
     myfont_table_maxp_t *tmaxp = &mf->table_maxp;
     const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_maxp];
     
     if((table_offset + 4) > mf->file_size)
-        return;
+        return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     /* get current data */
     uint8_t *data = &mf->file_data[table_offset];
@@ -41,7 +41,7 @@ void myfont_load_table_maxp(myfont_font_t *mf)
     if(myfont_table_version_major(tmaxp->version) == 1)
     {
         if((table_offset + 4 + 28) > mf->file_size)
-            return;
+            return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
         
         tmaxp->numGlyphs = myfont_read_u16(&data);
         tmaxp->maxPoints = myfont_read_u16(&data);
@@ -60,10 +60,12 @@ void myfont_load_table_maxp(myfont_font_t *mf)
     }
     else {
         if((table_offset + 4 + 2) > mf->file_size)
-            return;
+            return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
         
         tmaxp->numGlyphs = myfont_read_u16(&data);
     }
+    
+    return MyFONT_STATUS_OK;
 }
 
 

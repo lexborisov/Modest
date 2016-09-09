@@ -20,12 +20,12 @@
 
 #include "myfont/vmtx.h"
 
-void myfont_load_table_vmtx(myfont_font_t *mf)
+myfont_status_t myfont_load_table_vmtx(myfont_font_t *mf)
 {
     memset(&mf->table_vmtx, 0, sizeof(myfont_table_vmtx_t));
     
     if(mf->cache.tables_offset[MyFONT_TKEY_vmtx] == 0)
-        return;
+        return MyFONT_STATUS_OK;
     
     myfont_table_vmtx_t *tvmtx = &mf->table_vmtx;
     const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_vmtx];
@@ -35,43 +35,51 @@ void myfont_load_table_vmtx(myfont_font_t *mf)
     uint16_t num_metrics = mf->table_vhea.numOfLongVerMetrics;
     
     if(num_metrics == 0)
-        return;
+        return MyFONT_STATUS_OK;
     
     uint32_t pos = table_offset + (num_metrics * 4);
     if(pos > mf->file_size)
-        return;
+        return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     myfont_long_ver_metric_t *lver_metric = (myfont_long_ver_metric_t *)myfont_calloc(mf, num_metrics, sizeof(myfont_long_ver_metric_t));
     
     if(lver_metric == NULL)
-        return;
+        return MyFONT_STATUS_ERROR_MEMORY_ALLOCATION;
     
     for(uint16_t i = 0; i < num_metrics; i++) {
         lver_metric[i].advanceHeight = myfont_read_u16(&data);
         lver_metric[i].topSideBearing = myfont_read_16(&data);
     }
     
-    tvmtx->vMetrics = lver_metric;
-    
-    if(mf->table_maxp.numGlyphs <= mf->table_vhea.numOfLongVerMetrics)
-        return;
+    if(mf->table_maxp.numGlyphs <= mf->table_vhea.numOfLongVerMetrics) {
+        myfont_free(mf, lver_metric);
+        return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
+    }
     
     uint16_t numOfTSB = mf->table_maxp.numGlyphs - mf->table_vhea.numOfLongVerMetrics;
     
     pos = pos + (numOfTSB * 2);
-    if(pos > mf->file_size)
-        return;
+    
+    if(pos > mf->file_size) {
+        myfont_free(mf, lver_metric);
+        return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
+    }
     
     int16_t *topSideBearing = (int16_t *)myfont_calloc(mf, numOfTSB, sizeof(int16_t));
     
-    if(topSideBearing == NULL)
-        return;
+    if(topSideBearing == NULL) {
+        myfont_free(mf, lver_metric);
+        return MyFONT_STATUS_ERROR_MEMORY_ALLOCATION;
+    }
     
     for(uint16_t i = 0; i < num_metrics; i++) {
         topSideBearing[i] = myfont_read_16(&data);
     }
     
+    tvmtx->vMetrics = lver_metric;
     tvmtx->topSideBearing = topSideBearing;
+    
+    return MyFONT_STATUS_OK;
 }
 
 

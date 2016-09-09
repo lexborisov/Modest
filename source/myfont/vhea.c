@@ -20,18 +20,18 @@
 
 #include "myfont/vhea.h"
 
-void myfont_load_table_vhea(myfont_font_t *mf)
+myfont_status_t myfont_load_table_vhea(myfont_font_t *mf)
 {
     memset(&mf->table_vhea, 0, sizeof(myfont_table_vhea_t));
     
     if(mf->cache.tables_offset[MyFONT_TKEY_vhea] == 0)
-        return;
+        return MyFONT_STATUS_OK;
     
     myfont_table_vhea_t *tvhea = &mf->table_vhea;
     const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_vhea];
     
     if((table_offset + 4 + 32) > mf->file_size)
-        return;
+        return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     /* get current data */
     uint8_t *data = &mf->file_data[table_offset];
@@ -53,6 +53,8 @@ void myfont_load_table_vhea(myfont_font_t *mf)
     tvhea->reserved4 = myfont_read_16(&data);
     tvhea->metricDataFormat = myfont_read_16(&data);
     tvhea->numOfLongVerMetrics = myfont_read_u16(&data);
+    
+    return MyFONT_STATUS_OK;
 }
 
 

@@ -20,12 +20,12 @@
 
 #include "myfont/loca.h"
 
-void myfont_load_table_loca(struct myfont_font *mf)
+myfont_status_t myfont_load_table_loca(struct myfont_font *mf)
 {
     memset(&mf->table_loca, 0, sizeof(myfont_table_loca_t));
     
     if(mf->cache.tables_offset[MyFONT_TKEY_loca] == 0)
-        return;
+        return MyFONT_STATUS_OK;
     
     myfont_table_loca_t *tloca = &mf->table_loca;
     uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_loca];
@@ -35,20 +35,20 @@ void myfont_load_table_loca(struct myfont_font *mf)
     uint16_t numGlyph = mf->table_maxp.numGlyphs;
     
     if(numGlyph == 0)
-        return;
+        return MyFONT_STATUS_ERROR_TABLE_BROKEN;
     
     numGlyph++;
     
     tloca->offsets = (uint32_t *)myfont_calloc(mf, numGlyph, sizeof(uint32_t));
     
     if(tloca->offsets == NULL)
-        return;
+        return MyFONT_STATUS_ERROR_MEMORY_ALLOCATION;
     
     if(mf->table_head.indexToLocFormat)
     {
         if(mf->file_size < (table_offset + (numGlyph * 4))) {
             myfont_free(mf, tloca->offsets);
-            return;
+            return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
         }
         
         for(uint16_t i = 0; i < numGlyph; i++) {
@@ -59,13 +59,15 @@ void myfont_load_table_loca(struct myfont_font *mf)
     {
         if(mf->file_size < (table_offset + (numGlyph * 2))) {
             myfont_free(mf, tloca->offsets);
-            return;
+            return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
         }
         
         for(uint16_t i = 0; i < numGlyph; i++) {
             tloca->offsets[i] = myfont_read_u16(&data) * 2;
         }
     }
+    
+    return MyFONT_STATUS_OK;
 }
 
 uint32_t myfont_loca_get_offset(struct myfont_font *mf, uint16_t glyph_index)

@@ -100,9 +100,10 @@ void * myfont_malloc(myfont_font_t* mf, size_t size);
 void * myfont_calloc(myfont_font_t* mf, size_t count, size_t size);
 void myfont_free(myfont_font_t *mf, void* data);
 
-void myfont_load(myfont_font_t *mf, const char *filepath);
+myfont_status_t myfont_load(myfont_font_t *mf, const char *filepath);
 
 void myfont_font_print_exists_table(myfont_font_t *mf, FILE *file);
+myfont_status_t myfont_check_required_tables(myfont_font_t *mf);
 
 float myfont_metrics_baseline(myfont_font_t *mf, float font_size);
 float myfont_metrics_ascender(myfont_font_t *mf, float font_size);
@@ -112,9 +113,9 @@ float myfont_metrics_x_height(myfont_font_t *mf, float font_size);
 float myfont_metrics_cap_height(myfont_font_t *mf, float font_size);
 float myfont_metrics_font_height(myfont_font_t *mf, float font_size);
 
-float myfont_metrics_width(myfont_font_t *mf, unsigned long codepoint, float font_size);
-float myfont_metrics_height(myfont_font_t *mf, unsigned long codepoint, float font_size);
-float myfont_metrics_glyph_offset_y(myfont_font_t *mf, unsigned long codepoint, float font_size);
+float myfont_metrics_width(myfont_font_t *mf, unsigned long codepoint, float font_size, myfont_status_t* status);
+float myfont_metrics_height(myfont_font_t *mf, unsigned long codepoint, float font_size, myfont_status_t* status);
+float myfont_metrics_glyph_offset_y(myfont_font_t *mf, unsigned long codepoint, float font_size, myfont_status_t* status);
 
 myfont_status_t myfont_load_table(myfont_font_t *mf, void *table, size_t size, enum myfont_table_key tkey);
 

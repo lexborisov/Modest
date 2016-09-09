@@ -20,12 +20,12 @@
 
 #include "myfont/os_2.h"
 
-void myfont_load_table_os_2(myfont_font_t *mf)
+myfont_status_t myfont_load_table_os_2(myfont_font_t *mf)
 {
     memset(&mf->table_os_2, 0, sizeof(myfont_table_os_2_t));
     
     if(mf->cache.tables_offset[MyFONT_TKEY_OS_2] == 0)
-        return;
+        return MyFONT_STATUS_OK;
     
     myfont_table_os_2_t *tos_2 = &mf->table_os_2;
     const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_OS_2];
@@ -35,7 +35,7 @@ void myfont_load_table_os_2(myfont_font_t *mf)
     uint32_t pos = table_offset + 32 + 10 + 16 + 4 + 16;
     
     if(pos > mf->file_size)
-        return;
+        return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     tos_2->version = myfont_read_u16(&data);
     tos_2->xAvgCharWidth = myfont_read_16(&data);
@@ -78,7 +78,7 @@ void myfont_load_table_os_2(myfont_font_t *mf)
         case 1:
             pos += 8;
             if(pos > mf->file_size)
-                return;
+                return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
             
             tos_2->ulCodePageRange1 = myfont_read_u32(&data);
             tos_2->ulCodePageRange2 = myfont_read_u32(&data);
@@ -89,7 +89,7 @@ void myfont_load_table_os_2(myfont_font_t *mf)
         case 4:
             pos += 18;
             if(pos > mf->file_size)
-                return;
+                return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
             
             tos_2->ulCodePageRange1 = myfont_read_u32(&data);
             tos_2->ulCodePageRange2 = myfont_read_u32(&data);
@@ -103,7 +103,7 @@ void myfont_load_table_os_2(myfont_font_t *mf)
         case 5:
             pos += 22;
             if(pos > mf->file_size)
-                return;
+                return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
             
             tos_2->ulCodePageRange1 = myfont_read_u32(&data);
             tos_2->ulCodePageRange2 = myfont_read_u32(&data);
@@ -119,6 +119,8 @@ void myfont_load_table_os_2(myfont_font_t *mf)
         default:
             break;
     }
+    
+    return MyFONT_STATUS_OK;
 }
 
 int8_t myfont_os_2_panose(myfont_font_t *mf, myfont_table_os_2_panose_t id)

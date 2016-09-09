@@ -110,47 +110,47 @@ void myfont_free(myfont_font_t *mf, void* data)
     mchar_async_free(mf->mchar, mf->mchar_node_id, data);
 }
 
-void myfont_load(myfont_font_t *mf, const char *filepath)
+myfont_status_t myfont_load(myfont_font_t *mf, const char *filepath)
 {
     FILE *fh = fopen(filepath, "rb");
     if(fh == NULL)
-        return;
+        return MyFONT_STATUS_ERROR_FILE_OPEN;
     
     if(fseek(fh, 0L, SEEK_END)) {
         fclose(fh);
-        return;
+        return MyFONT_STATUS_ERROR_FILE_SEEK;
     }
     
     long file_size = ftell(fh);
     if(file_size == -1) {
         fclose(fh);
-        return;
+        return MyFONT_STATUS_ERROR_FILE_TELL;
     }
     
     if(fseek(fh, 0L, SEEK_SET)) {
         fclose(fh);
-        return;
+        return MyFONT_STATUS_ERROR_FILE_SEEK;
     }
     
     if(file_size > 0)
         mf->file_size = (size_t)file_size;
     else
-        return;
+        return MyFONT_STATUS_ERROR_FILE_TOO_SMALL;
     
     mf->file_data = (uint8_t*)myhtml_malloc(file_size);
     
     if(mf->file_data == NULL)
-        return;
+        return MyFONT_STATUS_ERROR_MEMORY_ALLOCATION;
     
     if(fread(mf->file_data, 1, file_size, fh) != file_size) {
         fclose(fh);
-        return;
+        return MyFONT_STATUS_ERROR_FILE_READ;
     }
     
     fclose(fh);
     
     if(mf->file_size < 12)
-        return;
+        return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     uint8_t *data = (uint8_t*)mf->file_data;
     
@@ -162,7 +162,7 @@ void myfont_load(myfont_font_t *mf, const char *filepath)
     mf->header.rangeShift    = myfont_read_u16(&data);
     
     if(mf->file_size < (12 + (mf->header.numTables * 16)))
-        return;
+        return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     for(uint16_t i = 0; i < mf->header.numTables; i++)
     {
@@ -216,24 +216,70 @@ void myfont_load(myfont_font_t *mf, const char *filepath)
         };
     }
     
+    if(myfont_check_required_tables(mf))
+        return MyFONT_STATUS_ERROR_TABLE_LACKS_REQUIRED;
+    
     mf->file_path = (char *)myhtml_calloc(strlen(filepath), sizeof(char));
     
     if(mf->file_path) {
         strncpy(mf->file_path, filepath, strlen(filepath));
     }
     
-    myfont_load_table_cmap(mf);
-    myfont_load_table_head(mf);
-    myfont_load_table_name(mf);
-    myfont_load_table_os_2(mf);
-    myfont_load_table_maxp(mf);
-    myfont_load_table_hhea(mf);
-    myfont_load_table_hmtx(mf);
-    myfont_load_table_loca(mf);
-    myfont_load_table_glyf(mf);
-    myfont_load_table_vhea(mf);
-    myfont_load_table_vmtx(mf);
-    myfont_load_table_pclt(mf);
+    myfont_status_t status;
+    
+    if((status = myfont_load_table_cmap(mf)))
+        return MyFONT_STATUS_ERROR_TABLE_LOAD_CMAP;
+    
+    if((status = myfont_load_table_head(mf)))
+        return MyFONT_STATUS_ERROR_TABLE_LOAD_HEAD;
+    
+    if((status = myfont_load_table_name(mf)))
+        return MyFONT_STATUS_ERROR_TABLE_LOAD_NAME;
+    
+    if((status = myfont_load_table_os_2(mf)))
+        return MyFONT_STATUS_ERROR_TABLE_LOAD_OS_2;
+    
+    if((status = myfont_load_table_maxp(mf)))
+        return MyFONT_STATUS_ERROR_TABLE_LOAD_MAXP;
+    
+    if((status = myfont_load_table_hhea(mf)))
+        return MyFONT_STATUS_ERROR_TABLE_LOAD_HHEA;
+    
+    if((status = myfont_load_table_hmtx(mf)))
+        return MyFONT_STATUS_ERROR_TABLE_LOAD_HMTX;
+    
+    if((status = myfont_load_table_loca(mf)))
+        return MyFONT_STATUS_ERROR_TABLE_LOAD_LOCA;
+    
+    if((status = myfont_load_table_glyf(mf)))
+        return MyFONT_STATUS_ERROR_TABLE_LOAD_GLYF;
+    
+    if((status = myfont_load_table_vhea(mf)))
+        return MyFONT_STATUS_ERROR_TABLE_LOAD_VHEA;
+    
+    if((status = myfont_load_table_vmtx(mf)))
+        return MyFONT_STATUS_ERROR_TABLE_LOAD_VMTX;
+    
+    if((status = myfont_load_table_pclt(mf)))
+        return MyFONT_STATUS_ERROR_TABLE_LOAD_PCLT;
+    
+    return MyFONT_STATUS_OK;
+}
+
+myfont_status_t myfont_check_required_tables(myfont_font_t *mf)
+{
+    if(mf->cache.tables_offset[ MyFONT_TKEY_cmap ] == 0 ||
+       mf->cache.tables_offset[ MyFONT_TKEY_glyf ] == 0 ||
+       mf->cache.tables_offset[ MyFONT_TKEY_head ] == 0 ||
+       mf->cache.tables_offset[ MyFONT_TKEY_hhea ] == 0 ||
+       mf->cache.tables_offset[ MyFONT_TKEY_hmtx ] == 0 ||
+       mf->cache.tables_offset[ MyFONT_TKEY_loca ] == 0 ||
+       mf->cache.tables_offset[ MyFONT_TKEY_maxp ] == 0 ||
+       mf->cache.tables_offset[ MyFONT_TKEY_name ] == 0 ||
+       mf->cache.tables_offset[ MyFONT_TKEY_post ] == 0)
+        return MyFONT_STATUS_ERROR_TABLE_LACKS_REQUIRED;
+    
+    return MyFONT_STATUS_OK;
 }
 
 void myfont_font_print_exists_table(myfont_font_t *mf, FILE *file)
@@ -250,7 +296,7 @@ void myfont_font_print_exists_table(myfont_font_t *mf, FILE *file)
 // metrics
 float myfont_metrics_baseline(myfont_font_t *mf, float font_size)
 {
-    return (float)(mf->table_hhea.Ascender) * font_size / ((float)mf->table_head.unitsPerEm);
+    return (float)(mf->table_hhea.Ascender) * font_size / ((float)(mf->table_head.unitsPerEm));
 }
 
 float myfont_metrics_ascender(myfont_font_t *mf, float font_size)
@@ -260,12 +306,12 @@ float myfont_metrics_ascender(myfont_font_t *mf, float font_size)
 
 float myfont_metrics_descender(myfont_font_t *mf, float font_size)
 {
-    return (float)(mf->table_hhea.Ascender - mf->table_hhea.Descender) * font_size / ((float)mf->table_head.unitsPerEm);
+    return (float)(mf->table_hhea.Ascender - mf->table_hhea.Descender) * font_size / ((float)(mf->table_head.unitsPerEm));
 }
 
 float myfont_metrics_line_gap(myfont_font_t *mf, float font_size)
 {
-    return (float)(mf->table_hhea.LineGap) * font_size / ((float)mf->table_head.unitsPerEm);
+    return (float)(mf->table_hhea.LineGap) * font_size / ((float)(mf->table_head.unitsPerEm));
 }
 
 float myfont_metrics_x_height(myfont_font_t *mf, float font_size)
@@ -283,17 +329,16 @@ float myfont_metrics_x_height(myfont_font_t *mf, float font_size)
     
     if(xheight == 0)
     {
-        uint16_t glyph_index = myfont_glyph_index_by_code(mf, (unsigned long)('x'));
+        myfont_status_t mf_status;
+        uint16_t glyph_index = myfont_glyph_index_by_codepoint(mf, (unsigned long)('x'), &mf_status);
         
-        if(glyph_index) {
-            myfont_table_glyph_t glyph;
-            myfont_glyf_load(mf, &glyph, glyph_index);
-            
-            xheight = glyph.head.yMax;
+        if(mf_status == MyFONT_STATUS_OK) {
+            myfont_table_glyph_t *glyph = &mf->table_glyf.cache[glyph_index];
+            xheight = glyph->head.yMax;
         }
     }
     
-    return (float)(mf->table_hhea.Ascender - xheight) * font_size / (float)mf->table_head.unitsPerEm;
+    return (float)((mf->table_hhea.Ascender) - xheight) * font_size / (float)(mf->table_head.unitsPerEm);
 }
 
 float myfont_metrics_cap_height(myfont_font_t *mf, float font_size)
@@ -310,17 +355,16 @@ float myfont_metrics_cap_height(myfont_font_t *mf, float font_size)
     
     if(cap_height == 0)
     {
-        uint16_t glyph_index = myfont_glyph_index_by_code(mf, (unsigned long)('H'));
+        myfont_status_t mf_status;
+        uint16_t glyph_index = myfont_glyph_index_by_codepoint(mf, (unsigned long)('H'), &mf_status);
         
-        if(glyph_index) {
-            myfont_table_glyph_t glyph;
-            myfont_glyf_load(mf, &glyph, glyph_index);
-            
-            cap_height = glyph.head.yMax;
+        if(mf_status == MyFONT_STATUS_OK) {
+            myfont_table_glyph_t *glyph = &mf->table_glyf.cache[glyph_index];
+            cap_height = glyph->head.yMax;
         }
     }
     
-    return(float)(mf->table_hhea.Ascender - cap_height) * font_size / (float)mf->table_head.unitsPerEm;
+    return(float)((mf->table_hhea.Ascender) - cap_height) * font_size / (float)(mf->table_head.unitsPerEm);
 }
 
 float myfont_metrics_font_height(myfont_font_t *mf, float font_size)
@@ -329,37 +373,57 @@ float myfont_metrics_font_height(myfont_font_t *mf, float font_size)
 }
 
 // width, height and ...
-float myfont_metrics_width(myfont_font_t *mf, unsigned long codepoint, float font_size)
+float myfont_metrics_width(myfont_font_t *mf, unsigned long codepoint, float font_size, myfont_status_t* status)
 {
     if(mf->table_hhea.numberOfHMetrics == 0 || mf->table_hmtx.hMetrics == NULL)
         return 0.0f;
     
-    uint16_t glyph_index = myfont_glyph_index_by_code(mf, codepoint);
-    uint16_t width = mf->table_hmtx.hMetrics[glyph_index].advanceWidth;
+    myfont_status_t mf_status;
     
-    uint16_t reso = mf->table_head.unitsPerEm;
-    float fsize = (float)width * font_size / (float)reso;
+    uint16_t glyph_index = myfont_glyph_index_by_codepoint(mf, codepoint, &mf_status);
     
-    return fsize;
+    if(mf_status) {
+        if(status)
+            *status = mf_status;
+        
+        return 0.0f;
+    }
+    
+    return (float)(mf->table_hmtx.hMetrics[glyph_index].advanceWidth) * font_size / (float)(mf->table_head.unitsPerEm);
 }
 
-float myfont_metrics_height(myfont_font_t *mf, unsigned long codepoint, float font_size)
+float myfont_metrics_height(myfont_font_t *mf, unsigned long codepoint, float font_size, myfont_status_t* status)
 {
     if(mf->table_vhea.numOfLongVerMetrics == 0 || mf->table_vmtx.vMetrics == NULL)
         return myfont_metrics_font_height(mf, font_size);
     
-    uint16_t glyph_index = myfont_glyph_index_by_code(mf, codepoint);
-    uint16_t height = mf->table_vmtx.vMetrics[glyph_index].advanceHeight;
+    myfont_status_t mf_status;
     
-    uint16_t reso = mf->table_head.unitsPerEm;
-    float fsize = (float)height * font_size / (float)reso;
+    uint16_t glyph_index = myfont_glyph_index_by_codepoint(mf, codepoint, &mf_status);
     
-    return fsize;
+    if(mf_status) {
+        if(status)
+            *status = mf_status;
+        
+        return 0.0f;
+    }
+    
+    return (float)(mf->table_vmtx.vMetrics[glyph_index].advanceHeight) * font_size / (float)(mf->table_head.unitsPerEm);
 }
 
-float myfont_metrics_glyph_offset_y(myfont_font_t *mf, unsigned long codepoint, float font_size)
+float myfont_metrics_glyph_offset_y(myfont_font_t *mf, unsigned long codepoint, float font_size, myfont_status_t* status)
 {
-    uint16_t glyph_index = myfont_glyph_index_by_code(mf, codepoint);
+    myfont_status_t mf_status;
+    
+    uint16_t glyph_index = myfont_glyph_index_by_codepoint(mf, codepoint, &mf_status);
+    
+    if(mf_status) {
+        if(status)
+            *status = mf_status;
+        
+        return 0.0f;
+    }
+    
     return (float)((mf->table_hhea.Ascender - mf->table_glyf.cache[glyph_index].head.yMax)) * font_size / ((float)mf->table_head.unitsPerEm);
 }
 
