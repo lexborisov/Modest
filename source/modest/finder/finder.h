@@ -24,15 +24,17 @@
 
 #include "modest/finder/myosi.h"
 #include "modest/finder/type.h"
-#include "mycss/selectors/myosi.h"
-#include "mycss/selectors/list.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef bool (*modest_finder_selector_type_f)(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector);
-typedef myhtml_tree_node_t * (*modest_finder_selector_combinator_f)(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector);
+typedef bool (*modest_finder_selector_type_f)(modest_finder_t* finder, myhtml_tree_node_t* node,
+    mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec);
+
+typedef myhtml_tree_node_t * (*modest_finder_selector_combinator_f)(modest_finder_t* finder, myhtml_tree_node_t* node,
+    mycss_selectors_list_t* selector_list, mycss_selectors_entry_t* selector,
+    mycss_selectors_specificity_t* spec, modest_finder_callback_f callback_found, void* ctx);
 
 /* init */
 modest_finder_t * modest_finder_create(void);
@@ -44,22 +46,52 @@ modest_finder_t * modest_finder_destroy(modest_finder_t* finder, bool self_destr
 modest_finder_t * modest_finder_create_simple(myhtml_tree_t* myhtml_tree, mycss_stylesheet_t *stylesheet);
 
 /* callbacks */
-void modest_finder_callback_found_with_collection(modest_finder_t* finder, myhtml_tree_node_t* node, void* ctx);
-void modest_finder_callback_found_with_bool(modest_finder_t* finder, myhtml_tree_node_t* node, void* ctx);
+void modest_finder_callback_found_with_collection(modest_finder_t* finder, myhtml_tree_node_t* node,
+                                                  mycss_selectors_list_t* selector_list, mycss_selectors_entry_t* selector,
+                                                  mycss_selectors_specificity_t* spec, void* ctx);
+
+void modest_finder_callback_found_with_bool(modest_finder_t* finder, myhtml_tree_node_t* node,
+                                            mycss_selectors_list_t* selector_list, mycss_selectors_entry_t* selector,
+                                            mycss_selectors_specificity_t* spec, void* ctx);
+
+void modest_finder_specificity_inc(mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec);
 
 /* base api */
 void modest_finder_begin(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector);
-modest_finder_t * modest_finder_by_stylesheet(myhtml_tree_t* myhtml_tree, mycss_stylesheet_t *stylesheet, myhtml_collection_t** collection, myhtml_tree_node_t* base_node, mycss_selectors_list_t* selector_list);
-myhtml_collection_t * modest_finder_by_selectors_list(modest_finder_t* finder, mycss_selectors_list_t *sel_list, myhtml_tree_node_t* base_node, myhtml_collection_t* collection);
+modest_finder_t * modest_finder_by_stylesheet(myhtml_tree_t* myhtml_tree, mycss_stylesheet_t *stylesheet,
+                                              myhtml_collection_t** collection, myhtml_tree_node_t* base_node, mycss_selectors_list_t* selector_list);
+
+myhtml_collection_t * modest_finder_by_selectors_list(modest_finder_t* finder, mycss_selectors_list_t *sel_list,
+                                                      myhtml_tree_node_t* base_node, myhtml_collection_t* collection);
 
 /* process */
-myhtml_tree_node_t * modest_finder_node_combinator_begin(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector);
-myhtml_tree_node_t * modest_finder_node_combinator_undef(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector);
-myhtml_tree_node_t * modest_finder_node_combinator_descendant(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector);
-myhtml_tree_node_t * modest_finder_node_combinator_child(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector);
-myhtml_tree_node_t * modest_finder_node_combinator_next_sibling(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector);
-myhtml_tree_node_t * modest_finder_node_combinator_following_sibling(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector);
-myhtml_tree_node_t * modest_finder_node_combinator_column(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector);
+myhtml_tree_node_t * modest_finder_node_combinator_begin(modest_finder_t* finder, myhtml_tree_node_t* base_node,
+                                                         mycss_selectors_list_t* selector_list, mycss_selectors_entry_t* selector,
+                                                         mycss_selectors_specificity_t* spec, modest_finder_callback_f callback_found, void* ctx);
+
+myhtml_tree_node_t * modest_finder_node_combinator_undef(modest_finder_t* finder, myhtml_tree_node_t* base_node,
+                                                         mycss_selectors_list_t* selector_list, mycss_selectors_entry_t* selector,
+                                                         mycss_selectors_specificity_t* spec, modest_finder_callback_f callback_found, void* ctx);
+
+myhtml_tree_node_t * modest_finder_node_combinator_descendant(modest_finder_t* finder, myhtml_tree_node_t* base_node,
+                                                              mycss_selectors_list_t* selector_list, mycss_selectors_entry_t* selector,
+                                                              mycss_selectors_specificity_t* spec, modest_finder_callback_f callback_found, void* ctx);
+
+myhtml_tree_node_t * modest_finder_node_combinator_child(modest_finder_t* finder, myhtml_tree_node_t* base_node,
+                                                         mycss_selectors_list_t* selector_list, mycss_selectors_entry_t* selector,
+                                                         mycss_selectors_specificity_t* spec, modest_finder_callback_f callback_found, void* ctx);
+
+myhtml_tree_node_t * modest_finder_node_combinator_next_sibling(modest_finder_t* finder, myhtml_tree_node_t* base_node,
+                                                                mycss_selectors_list_t* selector_list, mycss_selectors_entry_t* selector,
+                                                                mycss_selectors_specificity_t* spec, modest_finder_callback_f callback_found, void* ctx);
+
+myhtml_tree_node_t * modest_finder_node_combinator_following_sibling(modest_finder_t* finder, myhtml_tree_node_t* base_node,
+                                                                     mycss_selectors_list_t* selector_list, mycss_selectors_entry_t* selector,
+                                                                     mycss_selectors_specificity_t* spec, modest_finder_callback_f callback_found, void* ctx);
+
+myhtml_tree_node_t * modest_finder_node_combinator_column(modest_finder_t* finder, myhtml_tree_node_t* base_node,
+                                                          mycss_selectors_list_t* selector_list, mycss_selectors_entry_t* selector,
+                                                          mycss_selectors_specificity_t* spec, modest_finder_callback_f callback_found, void* ctx);
 
 #ifdef __cplusplus
 } /* extern "C" */

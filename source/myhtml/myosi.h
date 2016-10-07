@@ -31,7 +31,7 @@
 
 #define MyHTML_VERSION_MAJOR 1
 #define MyHTML_VERSION_MINOR 0
-#define MyHTML_VERSION_PATCH 3
+#define MyHTML_VERSION_PATCH 4
 
 #if (defined(_WIN32) || defined(_WIN64)) && !defined(__WINPTHREADS_VERSION)
 #define IS_OS_WINDOWS
@@ -172,7 +172,8 @@ enum mythread_thread_opt {
     MyTHREAD_OPT_UNDEF = 0x00,
     MyTHREAD_OPT_WAIT  = 0x01,
     MyTHREAD_OPT_QUIT  = 0x02,
-    MyTHREAD_OPT_STOP  = 0x04
+    MyTHREAD_OPT_STOP  = 0x04,
+    MyTHREAD_OPT_DONE  = 0x08
 }
 typedef mythread_thread_opt_t;
 
@@ -483,9 +484,6 @@ typedef struct myhtml myhtml_t;
 
 // parser state function
 typedef size_t (*myhtml_tokenizer_state_f)(myhtml_tree_t* tree, myhtml_token_node_t* token_node, const char* html, size_t html_offset, size_t html_size);
-
-// parser stream function
-typedef void (*mythread_f)(mythread_id_t thread_id, mythread_queue_node_t *qnode);
 
 // parser insertion mode function
 typedef bool (*myhtml_insertion_f)(myhtml_tree_t* tree, myhtml_token_node_t* token);

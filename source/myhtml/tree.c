@@ -299,15 +299,8 @@ myhtml_tree_t * myhtml_tree_destroy(myhtml_tree_t* tree)
 
 void myhtml_tree_node_clean(myhtml_tree_node_t* tree_node)
 {
-    tree_node->flags         = MyHTML_TREE_NODE_UNDEF;
-    tree_node->tag_id        = MyHTML_TAG__UNDEF;
-    tree_node->prev          = 0;
-    tree_node->next          = 0;
-    tree_node->child         = 0;
-    tree_node->parent        = 0;
-    tree_node->last_child    = 0;
-    tree_node->token         = 0;
-    tree_node->ns            = MyHTML_NAMESPACE_HTML;
+    memset(tree_node, 0, sizeof(myhtml_tree_node_t));
+    tree_node->ns = MyHTML_NAMESPACE_HTML;
 }
 
 /* parse flags */
@@ -729,6 +722,7 @@ myhtml_tree_node_t * myhtml_tree_node_insert_by_node(myhtml_tree_t* tree, myhtml
     myhtml_tree_node_insert_by_mode(tree, adjusted_location, node, mode);
     
     myhtml_tree_open_elements_append(tree, node);
+    myhtml_tree_index_append(tree, node);
     
     return node;
 }

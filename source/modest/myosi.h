@@ -22,6 +22,8 @@
 #define MODEST_MYOSI_H
 #pragma once
 
+#include "myhtml/myosi.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -45,6 +47,10 @@ enum modest_status {
     MODEST_STATUS_ERROR_MEMORY_ALLOCATION = 0x020000
 }
 typedef modest_status_t;
+
+typedef struct modest modest_t;
+typedef struct modest_node modest_node_t;
+typedef struct modest_style_sheet modest_style_sheet_t;
 
 #ifdef __cplusplus
 } /* extern "C" */

@@ -28,8 +28,10 @@ extern "C" {
 
 typedef struct mycss_selectors mycss_selectors_t;
 typedef struct mycss_selectors_entry mycss_selectors_entry_t;
+typedef struct mycss_selectors_entries_list mycss_selectors_entries_list_t;
 typedef struct mycss_selectors_list mycss_selectors_list_t;
-    
+typedef struct mycss_selectors_specificity mycss_selectors_specificity_t;
+
 #include "mycss/myosi.h"
 #include "mycss/mystring.h"
 #include "mycss/namespace/myosi.h"
@@ -184,6 +186,12 @@ enum mycss_selectors_function_drop_type {
 }
 typedef mycss_selectors_function_drop_type_t;
 
+struct mycss_selectors_specificity {
+    unsigned int a;
+    unsigned int b;
+    unsigned int c;
+};
+
 struct mycss_selectors {
     // refs
     mycss_entry_t* ref_entry;
@@ -194,6 +202,7 @@ struct mycss_selectors {
     mycss_selectors_list_t** list;
     mycss_selectors_list_t*  list_last;
     
+    mycss_selectors_specificity_t* specificity;
     mycss_selectors_combinator_t* combinator;
     
     mycss_token_type_t ending_token;
@@ -213,9 +222,6 @@ struct mycss_selectors_entry {
     void* value;
     
     mycss_selectors_combinator_t combinator;
-    
-    /* TODO: experimental */
-    void* node;
     
     mycss_selectors_entry_t* next;
     mycss_selectors_entry_t* prev;

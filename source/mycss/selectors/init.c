@@ -199,29 +199,29 @@ void * mycss_selectors_entry_value_destroy(mycss_entry_t* entry, mycss_selectors
     return mycss_selector_value_destroy(entry, selector_entry->type, selector_entry->sub_type, selector_entry->value, destroy_self);
 }
 
-mycss_selectors_entry_t ** mycss_selectors_entry_list_create(mycss_selectors_t* selectors)
+mycss_selectors_entries_list_t * mycss_selectors_entries_list_create(mycss_selectors_t* selectors)
 {
     mycss_entry_t* entry = selectors->ref_entry;
     
-    return (mycss_selectors_entry_t**) mchar_async_malloc(entry->mchar,
+    return (mycss_selectors_entries_list_t*) mchar_async_malloc(entry->mchar,
                                                           entry->mchar_value_node_id,
-                                                          sizeof(mycss_selectors_entry_t*));
+                                                          sizeof(mycss_selectors_entries_list_t));
 }
 
-mycss_selectors_entry_t ** mycss_selectors_entry_list_add_one(mycss_selectors_t* selectors, mycss_selectors_entry_t** list, size_t current_size)
+mycss_selectors_entries_list_t * mycss_selectors_entries_list_add_one(mycss_selectors_t* selectors, mycss_selectors_entries_list_t* entries, size_t current_size)
 {
     mycss_entry_t* entry = selectors->ref_entry;
-    size_t current_size_char = current_size * sizeof(mycss_selectors_entry_t *);
+    size_t current_size_char = current_size * sizeof(mycss_selectors_entries_list_t);
     
-    return (mycss_selectors_entry_t**)
+    return (mycss_selectors_entries_list_t*)
     mchar_async_realloc(entry->mchar, entry->mchar_value_node_id,
-                        (char*)list, current_size_char, (current_size_char + sizeof(mycss_selectors_entry_t*)));
+                        (char*)entries, current_size_char, (current_size_char + sizeof(mycss_selectors_entries_list_t)));
 }
 
-mycss_selectors_entry_t ** mycss_selectors_entry_list_destroy(mycss_selectors_t* selectors, mycss_selectors_entry_t** list)
+mycss_selectors_entries_list_t * mycss_selectors_entries_list_destroy(mycss_selectors_t* selectors, mycss_selectors_entries_list_t* entries)
 {
     mycss_entry_t* entry = selectors->ref_entry;
-    mchar_async_free(entry->mchar, entry->mchar_value_node_id, (char*)list);
+    mchar_async_free(entry->mchar, entry->mchar_value_node_id, (char*)entries);
     
     return NULL;
 }
@@ -440,10 +440,11 @@ void mycss_selectors_print_chain(mycss_selectors_t* selectors, mycss_selectors_e
 void mycss_selectors_print_list(mycss_selectors_t* selectors, mycss_selectors_list_t* selectors_list, FILE* fh)
 {
     while(selectors_list) {
-        for(size_t i = 0; i < selectors_list->selector_list_length; i++) {
-            mycss_selectors_print_chain(selectors, selectors_list->selector_list[i], fh);
+        for(size_t i = 0; i < selectors_list->entries_list_length; i++) {
+            mycss_selectors_entries_list_t *entries = &selectors_list->entries_list[i];
+            mycss_selectors_print_chain(selectors, entries->entry, fh);
             
-            if((i + 1) != selectors_list->selector_list_length)
+            if((i + 1) != selectors_list->entries_list_length)
                 fprintf(fh, ", ");
         }
         

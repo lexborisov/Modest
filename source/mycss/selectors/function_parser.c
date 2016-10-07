@@ -83,7 +83,7 @@ mycss_selectors_list_t * mycss_selectors_parser_check_selector_list(mycss_select
     if(list->flags & MyCSS_SELECTORS_FLAGS_SELECTOR_BAD)
         mycss_selectors_list_destroy_last_empty_selector(selectors, list, true);
     
-    if(list->selector_list_length == 0 || list->selector_list[0] == NULL) {
+    if(list->entries_list_length == 0 || list->entries_list[0].entry == NULL) {
         return mycss_selectors_list_destroy(selectors, list, true);
     }
     
@@ -96,8 +96,8 @@ mycss_selectors_list_t * mycss_selectors_parser_check_selector_list(mycss_select
 ///////////////////////////////////////////////////////////
 void mycss_selectors_function_parser_not_or_matches_or_current_find_bad_selector(mycss_selectors_list_t* selectors_list)
 {
-    for(size_t i = 0; i < selectors_list->selector_list_length; i++) {
-        mycss_selectors_entry_t* selector = selectors_list->selector_list[i];
+    for(size_t i = 0; i < selectors_list->entries_list_length; i++) {
+        mycss_selectors_entry_t* selector = selectors_list->entries_list[i].entry;
         
         while(selector) {
             if(selector->sub_type == MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_MATCHES ||
@@ -124,6 +124,14 @@ bool mycss_selectors_function_parser_not_or_matches_or_current_parser(mycss_entr
     
     selectors->entry_last = mycss_selectors_list_last_entry(parent_list);
     selectors->list_last = parent_list;
+    selectors->specificity = &parent_list->entries_list[ (parent_list->entries_list_length - 1) ].specificity;
+    
+    if(selectors->specificity && selectors->entry_last && (
+                                 selectors->entry_last->sub_type == MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_MATCHES ||
+                                 selectors->entry_last->sub_type == MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_NOT))
+    {
+        selectors->specificity->b--;
+    }
     
     mycss_selectors_function_parser_not_or_matches_or_current_find_bad_selector(selectors_list);
     selectors_list = mycss_selectors_parser_check_selector_list(selectors, selectors_list);
@@ -160,8 +168,8 @@ bool mycss_selectors_function_parser_not_or_matches_or_current_parser(mycss_entr
 ///////////////////////////////////////////////////////////
 void mycss_selectors_function_parser_has_find_bad_selector(mycss_selectors_list_t* selectors_list)
 {
-    for(size_t i = 0; i < selectors_list->selector_list_length; i++) {
-        mycss_selectors_entry_t* selector = selectors_list->selector_list[i];
+    for(size_t i = 0; i < selectors_list->entries_list_length; i++) {
+        mycss_selectors_entry_t* selector = selectors_list->entries_list[i].entry;
 
         while(selector) {
             if(selector->type == MyCSS_SELECTORS_TYPE_PSEUDO_ELEMENT) {
@@ -184,6 +192,7 @@ bool mycss_selectors_function_parser_has(mycss_entry_t* entry, mycss_token_t* to
     
     selectors->entry_last = mycss_selectors_list_last_entry(parent_list);
     selectors->list_last = parent_list;
+    selectors->specificity = &parent_list->entries_list[ (parent_list->entries_list_length - 1) ].specificity;
     
     mycss_selectors_function_parser_has_find_bad_selector(selectors_list);
     selectors_list = mycss_selectors_parser_check_selector_list(selectors, selectors_list);
@@ -310,6 +319,7 @@ bool mycss_selectors_function_parser_nth_with_selectors_need_of_after(mycss_entr
     
     selectors->list_last = parent_list;
     selectors->entry_last = mycss_selectors_list_last_entry(parent_list);
+    selectors->specificity = &parent_list->entries_list[ (parent_list->entries_list_length - 1) ].specificity;
     
     if(selectors_list == NULL) {
         if(selectors->entry_last) {

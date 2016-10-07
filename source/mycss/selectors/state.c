@@ -200,7 +200,7 @@ bool mycss_selectors_state_complex_selector_list(mycss_entry_t* entry, mycss_tok
     mycss_selectors_list_append_to_current(entry->selectors, sel_list);
     
     mycss_selectors_list_append_selector(selectors, sel_list, NULL);
-    selectors->entry = &sel_list->selector_list[0];
+    selectors->entry = &sel_list->entries_list[0].entry;
     selectors->entry_last = NULL;
     
     entry->parser = mycss_selectors_state_complex_selector_list_need_selector;
@@ -247,7 +247,7 @@ bool mycss_selectors_state_complex_selector_list_need_combinator_or_selector(myc
         
         mycss_selectors_list_append_selector(selectors, selectors->list_last, NULL);
         
-        selectors->entry = &selectors->list_last->selector_list[ (selectors->list_last->selector_list_length - 1) ];
+        selectors->entry = &selectors->list_last->entries_list[ (selectors->list_last->entries_list_length - 1) ].entry;
         selectors->entry_last = NULL;
         
         entry->parser = mycss_selectors_state_complex_selector_list_need_selector;
@@ -278,7 +278,7 @@ bool mycss_selectors_state_complex_selector_list_need_combinator_or_selector_ws(
         
         mycss_selectors_list_append_selector(selectors, selectors->list_last, NULL);
         
-        selectors->entry = &selectors->list_last->selector_list[ (selectors->list_last->selector_list_length - 1) ];
+        selectors->entry = &selectors->list_last->entries_list[ (selectors->list_last->entries_list_length - 1) ].entry;
         selectors->entry_last = NULL;
         
         entry->parser = mycss_selectors_state_complex_selector_list_need_selector;
@@ -316,7 +316,7 @@ bool mycss_selectors_state_compound_selector_list(mycss_entry_t* entry, mycss_to
     mycss_selectors_list_append_to_current(entry->selectors, sel_list);
     
     mycss_selectors_list_append_selector(selectors, sel_list, NULL);
-    selectors->entry = &sel_list->selector_list[0];
+    selectors->entry = &sel_list->entries_list[0].entry;
     selectors->entry_last = NULL;
     
     entry->parser = mycss_selectors_state_compound_selector_list_comma_ws;
@@ -350,7 +350,7 @@ bool mycss_selectors_state_compound_selector_list_need_selector_or_comma(mycss_e
         
         mycss_selectors_list_append_selector(selectors, selectors->list_last, NULL);
         
-        selectors->entry = &selectors->list_last->selector_list[ (selectors->list_last->selector_list_length - 1) ];
+        selectors->entry = &selectors->list_last->entries_list[ (selectors->list_last->entries_list_length - 1) ].entry;
         selectors->entry_last = NULL;
         
         entry->parser = mycss_selectors_state_compound_selector_list_comma_ws;
@@ -393,7 +393,7 @@ bool mycss_selectors_state_compound_selector_list_need_ending_or_comma(mycss_ent
         
         mycss_selectors_list_append_selector(selectors, selectors->list_last, NULL);
         
-        selectors->entry = &selectors->list_last->selector_list[ (selectors->list_last->selector_list_length - 1) ];
+        selectors->entry = &selectors->list_last->entries_list[ (selectors->list_last->entries_list_length - 1) ].entry;
         selectors->entry_last = NULL;
         
         entry->parser = mycss_selectors_state_compound_selector_list_comma_ws;
@@ -418,7 +418,7 @@ bool mycss_selectors_state_relative_selector_list(mycss_entry_t* entry, mycss_to
     mycss_selectors_list_append_to_current(entry->selectors, sel_list);
     
     mycss_selectors_list_append_selector(selectors, sel_list, NULL);
-    selectors->entry = &sel_list->selector_list[0];
+    selectors->entry = &sel_list->entries_list[0].entry;
     selectors->entry_last = NULL;
     
     entry->parser = mycss_selectors_state_relative_selector_list_need_combinator_or_selector_begin;
@@ -495,7 +495,7 @@ bool mycss_selectors_state_relative_selector_list_need_combinator_or_selector(my
         
         mycss_selectors_list_append_selector(selectors, selectors->list_last, NULL);
         
-        selectors->entry = &selectors->list_last->selector_list[ (selectors->list_last->selector_list_length - 1) ];
+        selectors->entry = &selectors->list_last->entries_list[ (selectors->list_last->entries_list_length - 1) ].entry;
         selectors->entry_last = NULL;
         
         entry->parser = mycss_selectors_state_relative_selector_list_need_combinator_or_selector_begin;
@@ -532,7 +532,7 @@ bool mycss_selectors_state_relative_selector_list_need_combinator_or_selector_ws
         
         mycss_selectors_list_append_selector(selectors, selectors->list_last, NULL);
         
-        selectors->entry = &selectors->list_last->selector_list[ (selectors->list_last->selector_list_length - 1) ];
+        selectors->entry = &selectors->list_last->entries_list[ (selectors->list_last->entries_list_length - 1) ].entry;
         selectors->entry_last = NULL;
         
         entry->parser = mycss_selectors_state_relative_selector_list_need_combinator_or_selector_begin;

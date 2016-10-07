@@ -52,9 +52,9 @@ void mycss_selectors_print_chain(mycss_selectors_t* selectors, mycss_selectors_e
 
 mycss_selectors_entry_t * mycss_selectors_entry_create(mycss_selectors_t* selectors);
     
-mycss_selectors_entry_t ** mycss_selectors_entry_list_create(mycss_selectors_t* selectors);
-mycss_selectors_entry_t ** mycss_selectors_entry_list_add_one(mycss_selectors_t* selectors, mycss_selectors_entry_t** list, size_t current_size);
-mycss_selectors_entry_t ** mycss_selectors_entry_list_destroy(mycss_selectors_t* selectors, mycss_selectors_entry_t** list);
+mycss_selectors_entries_list_t * mycss_selectors_entries_list_create(mycss_selectors_t* selectors);
+mycss_selectors_entries_list_t * mycss_selectors_entries_list_add_one(mycss_selectors_t* selectors, mycss_selectors_entries_list_t* entries, size_t current_size);
+mycss_selectors_entries_list_t * mycss_selectors_entries_list_destroy(mycss_selectors_t* selectors, mycss_selectors_entries_list_t* entries);
 
 mycss_selectors_entry_t * mycss_selectors_entry(mycss_selectors_t* selectors);
 void mycss_selectors_entry_append_to_current(mycss_selectors_t* selectors, mycss_selectors_entry_t* selector);

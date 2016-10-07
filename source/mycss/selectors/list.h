@@ -25,14 +25,19 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-    
+
 #include "mycss/entry.h"
 #include "mycss/selectors/myosi.h"
 #include "mycss/declaration/myosi.h"
 
+struct mycss_selectors_entries_list {
+    mycss_selectors_entry_t* entry;
+    mycss_selectors_specificity_t specificity;
+};
+
 struct mycss_selectors_list {
-    mycss_selectors_entry_t** selector_list;
-    size_t selector_list_length;
+    mycss_selectors_entries_list_t* entries_list;
+    size_t entries_list_length;
     
     mycss_declaration_entry_t* declaration_entry;
     

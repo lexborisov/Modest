@@ -48,6 +48,10 @@ void mycss_selectors_parser_selector_ident_type(mycss_entry_t* entry, mycss_toke
     
     selector->type = MyCSS_SELECTORS_TYPE_ELEMENT;
     selector->key  = str;
+    
+    if(entry->selectors->specificity)
+        if(str->length != 1 || *str->data != '*')
+            entry->selectors->specificity->c++;
 }
 
 void mycss_selectors_parser_selector_ident_attr(mycss_entry_t* entry, mycss_token_t* token)
@@ -63,6 +67,10 @@ void mycss_selectors_parser_selector_ident_attr(mycss_entry_t* entry, mycss_toke
     
     selector->type = MyCSS_SELECTORS_TYPE_ATTRIBUTE;
     selector->key  = str;
+    
+    if(entry->selectors->specificity)
+        if(str->length != 1 || *str->data != '*')
+            entry->selectors->specificity->b++;
 }
 
 void mycss_selectors_parser_selector_id(mycss_entry_t* entry, mycss_token_t* token)
@@ -78,6 +86,9 @@ void mycss_selectors_parser_selector_id(mycss_entry_t* entry, mycss_token_t* tok
     
     selector->type = MyCSS_SELECTORS_TYPE_ID;
     selector->key  = str;
+    
+    if(entry->selectors->specificity)
+        entry->selectors->specificity->a++;
     
     mycss_selectors_parser_selector_end(entry, token);
 }
@@ -95,6 +106,9 @@ void mycss_selectors_parser_selector_class(mycss_entry_t* entry, mycss_token_t* 
     
     selector->type = MyCSS_SELECTORS_TYPE_CLASS;
     selector->key  = str;
+    
+    if(entry->selectors->specificity)
+        entry->selectors->specificity->a++;
     
     mycss_selectors_parser_selector_end(entry, token);
 }
@@ -168,6 +182,22 @@ void mycss_selectors_parser_selector_after_namespace(mycss_entry_t* entry, mycss
     mycss_token_data_to_string(entry, token, str, true, true);
     
     selector->key = str;
+    
+    if(entry->selectors->specificity) {
+        if(selector->ns_entry == &entry->stylesheet->ns_stylesheet.entry_any) {
+            if(selector->type == MyCSS_SELECTORS_TYPE_ATTRIBUTE)
+                entry->selectors->specificity->b--;
+            else
+                entry->selectors->specificity->c--;
+        }
+        
+        if(str->length != 1 || *str->data != '*') {
+            if(selector->type == MyCSS_SELECTORS_TYPE_ATTRIBUTE)
+                entry->selectors->specificity->b++;
+            else
+                entry->selectors->specificity->c++;
+        }
+    }
 }
 
 /////////////////////////////////////////////////////////
@@ -218,6 +248,9 @@ void mycss_selectors_parser_selector_pseudo_class(mycss_entry_t* entry, mycss_to
         }
     }
     
+    if(entry->selectors->specificity)
+        entry->selectors->specificity->b++;
+    
     mycss_selectors_parser_check_and_set_bad_parent_selector(entry, entry->selectors->list_last);
     mycss_selectors_parser_selector_end(entry, token);
 }
@@ -234,6 +267,9 @@ void mycss_selectors_parser_selector_pseudo_class_function(mycss_entry_t* entry,
     
     entry->parser_ending_token = MyCSS_TOKEN_TYPE_RIGHT_PARENTHESIS;
     mycss_entry_parser_list_push(entry, mycss_selectors_state_simple_selector_colon_function, entry->parser_switch, entry->selectors->ending_token, false);
+    
+    if(entry->selectors->specificity)
+        entry->selectors->specificity->b++;
     
     mycss_selectors_function_begin_f to_func = mycss_function_begin_by_name(str->data, str->length);
     
@@ -278,6 +314,9 @@ void mycss_selectors_parser_selector_pseudo_element(mycss_entry_t* entry, mycss_
     if(selector->sub_type == MyCSS_SELECTORS_SUB_TYPE_PSEUDO_ELEMENT_UNKNOWN)
         selector->flags |= MyCSS_SELECTORS_FLAGS_SELECTOR_BAD;
     
+    if(entry->selectors->specificity)
+        entry->selectors->specificity->c++;
+    
     mycss_selectors_parser_check_and_set_bad_parent_selector(entry, entry->selectors->list_last);
     mycss_selectors_parser_selector_end(entry, token);
 }
@@ -294,6 +333,9 @@ void mycss_selectors_parser_selector_pseudo_element_function(mycss_entry_t* entr
     
     selector->flags |= MyCSS_SELECTORS_FLAGS_SELECTOR_BAD;
     mycss_selectors_begin_unknown(entry, selector);
+    
+    if(entry->selectors->specificity)
+        entry->selectors->specificity->c++;
 }
 
 void mycss_selectors_parser_selector_pseudo_element_function_end(mycss_entry_t* entry, mycss_token_t* token)

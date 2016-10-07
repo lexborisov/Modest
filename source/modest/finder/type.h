@@ -28,23 +28,38 @@
 #include "modest/finder/match.h"
 #include "myhtml/tree.h"
 #include "myhtml/utils.h"
-#include "mycss/selectors/myosi.h"
-#include "mycss/selectors/list.h"
 #include "mycss/selectors/value.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-bool modest_finder_selector_type_undef(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector);
-bool modest_finder_selector_type_element(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector);
-bool modest_finder_selector_type_id(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector);
-bool modest_finder_selector_type_class(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector);
-bool modest_finder_selector_type_attribute(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector);
-bool modest_finder_selector_type_pseudo_class_function(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector);
-bool modest_finder_selector_type_pseudo_class(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector);
-bool modest_finder_selector_type_pseudo_element_function(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector);
-bool modest_finder_selector_type_pseudo_element(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector);
+bool modest_finder_selector_type_undef(modest_finder_t* finder, myhtml_tree_node_t* node,
+                                       mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec);
+
+bool modest_finder_selector_type_element(modest_finder_t* finder, myhtml_tree_node_t* node,
+                                         mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec);
+
+bool modest_finder_selector_type_id(modest_finder_t* finder, myhtml_tree_node_t* node,
+                                    mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec);
+
+bool modest_finder_selector_type_class(modest_finder_t* finder, myhtml_tree_node_t* node,
+                                       mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec);
+
+bool modest_finder_selector_type_attribute(modest_finder_t* finder, myhtml_tree_node_t* node,
+                                           mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec);
+
+bool modest_finder_selector_type_pseudo_class_function(modest_finder_t* finder, myhtml_tree_node_t* node,
+                                                       mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec);
+
+bool modest_finder_selector_type_pseudo_class(modest_finder_t* finder, myhtml_tree_node_t* node,
+                                              mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec);
+
+bool modest_finder_selector_type_pseudo_element_function(modest_finder_t* finder, myhtml_tree_node_t* node,
+                                                         mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec);
+
+bool modest_finder_selector_type_pseudo_element(modest_finder_t* finder, myhtml_tree_node_t* node,
+                                                mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec);
 
 
 #ifdef __cplusplus

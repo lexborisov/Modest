@@ -68,7 +68,7 @@ myhtml_status_t myhtml_init(myhtml_t* myhtml, enum myhtml_options opt, size_t th
     
 #ifdef MyHTML_BUILD_WITHOUT_THREADS
     
-    status = mythread_init(myhtml->thread, NULL, thread_count, queue_size);
+    status = mythread_init(myhtml->thread, NULL, thread_count);
     
     if(status)
         return status;
@@ -76,18 +76,26 @@ myhtml_status_t myhtml_init(myhtml_t* myhtml, enum myhtml_options opt, size_t th
 #else /* MyHTML_BUILD_WITHOUT_THREADS */
     switch (opt) {
         case MyHTML_OPTIONS_PARSE_MODE_SINGLE:
-            status = mythread_init(myhtml->thread, "lastmac", 0, queue_size);
+            status = mythread_init(myhtml->thread, "lastmac", 0);
+            if(status)
+                return status;
+            
+            myhtml->thread->context = mythread_queue_list_create(&status);
             if(status)
                 return status;
             
             break;
             
         case MyHTML_OPTIONS_PARSE_MODE_ALL_IN_ONE:
-            status = mythread_init(myhtml->thread, "lastmac", 1, queue_size);
+            status = mythread_init(myhtml->thread, "lastmac", 1);
             if(status)
                 return status;
             
-            myhread_create_stream(myhtml->thread, myhtml_parser_worker_stream, &status);
+            myhtml->thread->context = mythread_queue_list_create(&status);
+            if(status)
+                return status;
+            
+            myhread_create_stream(myhtml->thread, mythread_function_queue_stream, myhtml_parser_worker_stream, MyTHREAD_OPT_STOP, &status);
             break;
             
         default:
@@ -95,12 +103,16 @@ myhtml_status_t myhtml_init(myhtml_t* myhtml, enum myhtml_options opt, size_t th
             if(thread_count == 0)
                 thread_count = 1;
             
-            status = mythread_init(myhtml->thread, "lastmac", (thread_count + 1), queue_size);
+            status = mythread_init(myhtml->thread, "lastmac", (thread_count + 1));
             if(status)
                 return status;
             
-            myhread_create_stream(myhtml->thread, myhtml_parser_stream, &status);
-            myhread_create_batch(myhtml->thread, myhtml_parser_worker, &status, thread_count);
+            myhtml->thread->context = mythread_queue_list_create(&status);
+            if(status)
+                return status;
+            
+            myhread_create_stream(myhtml->thread, mythread_function_queue_stream, myhtml_parser_stream, MyTHREAD_OPT_STOP, &status);
+            myhread_create_batch(myhtml->thread, mythread_function_queue_batch, myhtml_parser_worker, MyTHREAD_OPT_STOP, &status, thread_count);
             break;
     }
     
@@ -123,7 +135,13 @@ myhtml_t* myhtml_destroy(myhtml_t* myhtml)
     
     myhtml_destroy_marker(myhtml);
     
-    mythread_destroy(myhtml->thread, true);
+    if(myhtml->thread) {
+#ifndef MyHTML_BUILD_WITHOUT_THREADS
+        mythread_queue_list_destroy(myhtml->thread->context);
+#endif
+        mythread_destroy(myhtml->thread, mythread_queue_wait_all_for_done, true);
+    }
+    
     myhtml_tokenizer_state_destroy(myhtml);
     
     if(myhtml->insertion_func)
@@ -719,6 +737,16 @@ myhtml_position_t myhtml_node_element_pasition(myhtml_tree_node_t *node)
         return (myhtml_position_t){node->token->element_begin, node->token->element_length};
     
     return (myhtml_position_t){0, 0};
+}
+
+void myhtml_node_set_data(myhtml_tree_node_t *node, void* data)
+{
+    node->data = data;
+}
+
+void * myhtml_node_get_data(myhtml_tree_node_t *node)
+{
+    return node->data;
 }
 
 myhtml_status_t myhtml_get_nodes_by_attribute_key_recursion(myhtml_tree_t *tree, myhtml_tree_node_t* node, myhtml_collection_t* collection, const char* key, size_t key_len)

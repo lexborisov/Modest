@@ -21,158 +21,142 @@
 #include "modest/finder/pseudo_class.h"
 #include "modest/finder/resource.h"
 
-bool modest_finder_selector_sub_type_pseudo_class_function_undef(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_function_undef(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_function_current(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_function_current(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     mycss_selectors_list_t *list = selector->value;
-    
-    modest_finder_callback_f current_callback_found = finder->callback_found;
-    void *current_ctx = finder->callback_found_ctx;
-    
     bool i_found;
     
-    finder->callback_found = modest_finder_callback_found_with_bool;
-    finder->callback_found_ctx = &i_found;
-    
-    for(size_t i = 0; i < list->selector_list_length; i++)
+    for(size_t i = 0; i < list->entries_list_length; i++)
     {
         i_found = false;
-        modest_finder_node_combinator_undef(finder, base_node, list->selector_list[i]);
+        modest_finder_node_combinator_undef(finder, base_node, NULL, list->entries_list[i].entry, spec, modest_finder_callback_found_with_bool, &i_found);
         
-        if(i_found == true) {
-            finder->callback_found = current_callback_found;
-            finder->callback_found_ctx = current_ctx;
-            
+        if(i_found == true)
             return true;
-        }
     }
-    
-    finder->callback_found = current_callback_found;
-    finder->callback_found_ctx = current_ctx;
     
     return false;
 }
 
 /* after create render */
-bool modest_finder_selector_sub_type_pseudo_class_function_dir(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_function_dir(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_function_drop(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_function_drop(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_function_has(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_function_has(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     mycss_selectors_list_t *list = selector->value;
-    
-    modest_finder_callback_f current_callback_found = finder->callback_found;
-    void *current_ctx = finder->callback_found_ctx;
-    
     bool i_found;
     
-    finder->callback_found = modest_finder_callback_found_with_bool;
-    finder->callback_found_ctx = &i_found;
-    
-    for(size_t i = 0; i < list->selector_list_length; i++)
+    for(size_t i = 0; i < list->entries_list_length; i++)
     {
         i_found = false;
         
-        mycss_selectors_entry_t *sel_entry = list->selector_list[i];
+        mycss_selectors_entry_t *sel_entry = list->entries_list[i].entry;
         
         if(sel_entry->combinator == MyCSS_SELECTORS_COMBINATOR_UNDEF)
-            modest_finder_node_combinator_descendant(finder, base_node, sel_entry);
+            modest_finder_node_combinator_descendant(finder, base_node, NULL, sel_entry, spec, modest_finder_callback_found_with_bool, &i_found);
         else
-            modest_finder_static_selector_combinator_map[sel_entry->combinator](finder, base_node, sel_entry);
+            modest_finder_static_selector_combinator_map[sel_entry->combinator](finder, base_node, NULL, sel_entry, spec, modest_finder_callback_found_with_bool, &i_found);
+        
+        if(i_found == true)
+            return true;
+    }
+    
+    return false;
+}
+
+bool modest_finder_selector_sub_type_pseudo_class_function_lang(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
+{
+    return false;
+}
+
+bool modest_finder_selector_sub_type_pseudo_class_function_matches(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
+{
+    mycss_selectors_list_t *list = selector->value;
+    bool i_found, is_true = false;
+    
+    for(size_t i = 0; i < list->entries_list_length; i++)
+    {
+        i_found = false;
+        modest_finder_node_combinator_undef(finder, base_node, NULL, list->entries_list[i].entry, spec, modest_finder_callback_found_with_bool, &i_found);
         
         if(i_found == true) {
-            finder->callback_found = current_callback_found;
-            finder->callback_found_ctx = current_ctx;
+            modest_finder_specificity_inc(list->entries_list[i].entry, spec);
             
-            return true;
+            if(is_true == false)
+                is_true = true;
         }
     }
     
-    finder->callback_found = current_callback_found;
-    finder->callback_found_ctx = current_ctx;
-    
-    return false;
+    return is_true;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_function_lang(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector)
-{
-    return false;
-}
-
-bool modest_finder_selector_sub_type_pseudo_class_function_matches(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_function_not(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     mycss_selectors_list_t *list = selector->value;
     
-    modest_finder_callback_f current_callback_found = finder->callback_found;
-    void *current_ctx = finder->callback_found_ctx;
-    
     bool i_found;
+    mycss_selectors_specificity_t work_spec = {0, 0, 0};
     
-    finder->callback_found = modest_finder_callback_found_with_bool;
-    finder->callback_found_ctx = &i_found;
-    
-    for(size_t i = 0; i < list->selector_list_length; i++)
+    for(size_t i = 0; i < list->entries_list_length; i++)
     {
         i_found = false;
-        modest_finder_node_combinator_undef(finder, base_node, list->selector_list[i]);
+        modest_finder_node_combinator_undef(finder, base_node, NULL, list->entries_list[i].entry, &work_spec, modest_finder_callback_found_with_bool, &i_found);
         
-        if(i_found == true) {
-            finder->callback_found = current_callback_found;
-            finder->callback_found_ctx = current_ctx;
-            
-            return true;
-        }
-    }
-    
-    finder->callback_found = current_callback_found;
-    finder->callback_found_ctx = current_ctx;
-    
-    return false;
-}
-
-bool modest_finder_selector_sub_type_pseudo_class_function_not(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
-{
-    mycss_selectors_list_t *list = selector->value;
-    
-    modest_finder_callback_f current_callback_found = finder->callback_found;
-    void *current_ctx = finder->callback_found_ctx;
-    
-    bool i_found;
-    
-    finder->callback_found = modest_finder_callback_found_with_bool;
-    finder->callback_found_ctx = &i_found;
-    
-    for(size_t i = 0; i < list->selector_list_length; i++)
-    {
-        i_found = false;
-        modest_finder_node_combinator_undef(finder, base_node, list->selector_list[i]);
-        
-        if(i_found == true) {
-            finder->callback_found = current_callback_found;
-            finder->callback_found_ctx = current_ctx;
-            
+        if(i_found == true)
             return false;
+        else {
+            modest_finder_specificity_inc(list->entries_list[i].entry, &work_spec);
         }
     }
     
-    finder->callback_found = current_callback_found;
-    finder->callback_found_ctx = current_ctx;
+    if(work_spec.a)
+        spec->a++;
+    else if(work_spec.b)
+        spec->b++;
+    else if(work_spec.c)
+        spec->c++;
     
     return true;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_function_nth_child(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_function_nth_child_check_selectors(modest_finder_t* finder, bool* i_found, myhtml_tree_node_t* node, mycss_selectors_list_t *list, mycss_selectors_specificity_t* spec)
+{
+    for(size_t i = 0; i < list->entries_list_length; i++)
+    {
+        *i_found = false;
+        modest_finder_node_combinator_undef(finder, node, NULL, list->entries_list[i].entry, spec, modest_finder_callback_found_with_bool, i_found);
+        
+        if(*i_found) {
+            /*
+             :nth-child(even of li, .item) has a specificity of (0,1,1)--like 
+             a tag selector plus a pseudo-class--when matched against <li>, 
+             and a specificity of (0,2,0)--like a class selector plus 
+             a pseudo-class--when matched against <li class=item id=foo>.
+             */
+            spec->b++;
+            modest_finder_specificity_inc(list->entries_list[i].entry, spec);
+        }
+        else
+            return false;
+    }
+    
+    return true;
+}
+
+bool modest_finder_selector_sub_type_pseudo_class_function_nth_child(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(selector->value == NULL)
         return NULL;
@@ -183,43 +167,33 @@ bool modest_finder_selector_sub_type_pseudo_class_function_nth_child(modest_find
     myhtml_tree_node_t* node = base_node;
     
     if(anb->of) {
-        modest_finder_callback_f current_callback_found = finder->callback_found;
-        void *current_ctx = finder->callback_found_ctx;
-        
         bool i_found;
+        mycss_selectors_specificity_t temp_spec = {0, 0, 0};
         
-        finder->callback_found = modest_finder_callback_found_with_bool;
-        finder->callback_found_ctx = &i_found;
+        if(spec->b)
+            spec->b--;
         
-        mycss_selectors_list_t *list = anb->of;
+        if(modest_finder_selector_sub_type_pseudo_class_function_nth_child_check_selectors(finder, &i_found, node, anb->of, spec) == false)
+            return false;
+        
+        node_pos++;
+        node = node->prev;
         
         while(node)
         {
-            for(size_t i = 0; i < list->selector_list_length; i++)
+            for(size_t i = 0; i < anb->of->entries_list_length; i++)
             {
                 i_found = false;
-                modest_finder_node_combinator_undef(finder, node, list->selector_list[i]);
+                modest_finder_node_combinator_undef(finder, node, NULL, anb->of->entries_list[i].entry, &temp_spec, modest_finder_callback_found_with_bool, &i_found);
                 
-                if(i_found == true) {
+                if(i_found) {
                     node_pos++;
                     break;
-                }
-                else if(node_pos == 0) {
-                    finder->callback_found = current_callback_found;
-                    finder->callback_found_ctx = current_ctx;
-                    
-                    return false;
                 }
             }
             
             node = node->prev;
         }
-        
-        finder->callback_found = current_callback_found;
-        finder->callback_found_ctx = current_ctx;
-        
-        if(node_pos == 0)
-            return false;
     }
     else {
         while(node) {
@@ -244,12 +218,12 @@ bool modest_finder_selector_sub_type_pseudo_class_function_nth_child(modest_find
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_function_nth_column(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_function_nth_column(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_function_nth_last_child(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_function_nth_last_child(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(selector->value == NULL)
         return NULL;
@@ -260,43 +234,30 @@ bool modest_finder_selector_sub_type_pseudo_class_function_nth_last_child(modest
     myhtml_tree_node_t* node = base_node;
     
     if(anb->of) {
-        modest_finder_callback_f current_callback_found = finder->callback_found;
-        void *current_ctx = finder->callback_found_ctx;
-        
         bool i_found;
+        mycss_selectors_specificity_t temp_spec = {0, 0, 0};
         
-        finder->callback_found = modest_finder_callback_found_with_bool;
-        finder->callback_found_ctx = &i_found;
+        if(spec->b)
+            spec->b--;
         
-        mycss_selectors_list_t *list = anb->of;
+        if(modest_finder_selector_sub_type_pseudo_class_function_nth_child_check_selectors(finder, &i_found, node, anb->of, spec) == false)
+            return false;
         
         while(node)
         {
-            for(size_t i = 0; i < list->selector_list_length; i++)
+            for(size_t i = 0; i < anb->of->entries_list_length; i++)
             {
                 i_found = false;
-                modest_finder_node_combinator_undef(finder, node, list->selector_list[i]);
+                modest_finder_node_combinator_undef(finder, node, NULL, anb->of->entries_list[i].entry, &temp_spec, modest_finder_callback_found_with_bool, &i_found);
                 
                 if(i_found == true) {
                     node_pos++;
                     break;
                 }
-                else if(node_pos == 0) {
-                    finder->callback_found = current_callback_found;
-                    finder->callback_found_ctx = current_ctx;
-                    
-                    return false;
-                }
             }
             
             node = node->next;
         }
-        
-        finder->callback_found = current_callback_found;
-        finder->callback_found_ctx = current_ctx;
-        
-        if(node_pos == 0)
-            return false;
     }
     else {
         while(node) {
@@ -321,12 +282,12 @@ bool modest_finder_selector_sub_type_pseudo_class_function_nth_last_child(modest
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_function_nth_last_column(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_function_nth_last_column(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_function_nth_last_of_type(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_function_nth_last_of_type(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(selector->value == NULL)
         return NULL;
@@ -358,7 +319,7 @@ bool modest_finder_selector_sub_type_pseudo_class_function_nth_last_of_type(mode
     return true;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_function_nth_of_type(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_function_nth_of_type(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(selector->value == NULL)
         return NULL;
@@ -391,17 +352,17 @@ bool modest_finder_selector_sub_type_pseudo_class_function_nth_of_type(modest_fi
 }
 
 /* classes */
-bool modest_finder_selector_sub_type_pseudo_class_undef(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_undef(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_active(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_active(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_any_link(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_any_link(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(base_node->tag_id == MyHTML_TAG_A ||
        base_node->tag_id == MyHTML_TAG_AREA ||
@@ -414,7 +375,7 @@ bool modest_finder_selector_sub_type_pseudo_class_any_link(modest_finder_t* find
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_blank(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_blank(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     myhtml_tree_node_t *node = base_node->child;
     
@@ -450,7 +411,7 @@ bool modest_finder_selector_sub_type_pseudo_class_blank(modest_finder_t* finder,
     return true;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_checked(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_checked(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(base_node->tag_id == MyHTML_TAG_INPUT || base_node->tag_id == MyHTML_TAG_MENUITEM)
     {
@@ -486,17 +447,17 @@ bool modest_finder_selector_sub_type_pseudo_class_checked(modest_finder_t* finde
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_current(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_current(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_default(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_default(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_disabled(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_disabled(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(base_node->token == NULL)
         return false;
@@ -577,12 +538,12 @@ bool modest_finder_selector_sub_type_pseudo_class_disabled(modest_finder_t* find
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_drop(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_drop(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_empty(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_empty(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     myhtml_tree_node_t *node = base_node->child;
     
@@ -606,12 +567,12 @@ bool modest_finder_selector_sub_type_pseudo_class_empty(modest_finder_t* finder,
     return true;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_enabled(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_enabled(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
-    return ~modest_finder_selector_sub_type_pseudo_class_disabled(finder, base_node, selector);
+    return ~modest_finder_selector_sub_type_pseudo_class_disabled(finder, base_node, selector, spec);
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_first_child(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_first_child(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     myhtml_tree_node_t *node = base_node->prev;
     
@@ -625,7 +586,7 @@ bool modest_finder_selector_sub_type_pseudo_class_first_child(modest_finder_t* f
     return true;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_first_of_type(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_first_of_type(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     myhtml_tree_node_t *node = base_node->prev;
     
@@ -639,37 +600,37 @@ bool modest_finder_selector_sub_type_pseudo_class_first_of_type(modest_finder_t*
     return true;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_focus(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_focus(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_future(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_future(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_hover(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_hover(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_in_range(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_in_range(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_indeterminate(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_indeterminate(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_invalid(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_invalid(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_last_child(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_last_child(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     myhtml_tree_node_t *node = base_node->next;
     
@@ -683,7 +644,7 @@ bool modest_finder_selector_sub_type_pseudo_class_last_child(modest_finder_t* fi
     return true;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_last_of_type(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_last_of_type(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     myhtml_tree_node_t *node = base_node->next;
     
@@ -697,7 +658,7 @@ bool modest_finder_selector_sub_type_pseudo_class_last_of_type(modest_finder_t* 
     return true;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_link(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_link(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(base_node->tag_id == MyHTML_TAG_A ||
        base_node->tag_id == MyHTML_TAG_AREA ||
@@ -710,21 +671,21 @@ bool modest_finder_selector_sub_type_pseudo_class_link(modest_finder_t* finder, 
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_only_child(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_only_child(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return
-    modest_finder_selector_sub_type_pseudo_class_first_child(finder, base_node, selector) &&
-    modest_finder_selector_sub_type_pseudo_class_last_child(finder, base_node, selector);
+    modest_finder_selector_sub_type_pseudo_class_first_child(finder, base_node, selector, spec) &&
+    modest_finder_selector_sub_type_pseudo_class_last_child(finder, base_node, selector, spec);
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_only_of_type(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_only_of_type(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return
-    modest_finder_selector_sub_type_pseudo_class_first_of_type(finder, base_node, selector) &&
-    modest_finder_selector_sub_type_pseudo_class_last_of_type(finder, base_node, selector);
+    modest_finder_selector_sub_type_pseudo_class_first_of_type(finder, base_node, selector, spec) &&
+    modest_finder_selector_sub_type_pseudo_class_last_of_type(finder, base_node, selector, spec);
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_optional(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_optional(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(base_node->tag_id == MyHTML_TAG_INPUT ||
        base_node->tag_id == MyHTML_TAG_SELECT ||
@@ -739,17 +700,17 @@ bool modest_finder_selector_sub_type_pseudo_class_optional(modest_finder_t* find
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_out_of_range(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_out_of_range(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_past(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_past(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_placeholder_shown(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_placeholder_shown(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(base_node->tag_id == MyHTML_TAG_INPUT ||
        base_node->tag_id == MyHTML_TAG_TEXTAREA)
@@ -761,15 +722,15 @@ bool modest_finder_selector_sub_type_pseudo_class_placeholder_shown(modest_finde
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_read_only(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_read_only(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
-    if(modest_finder_selector_sub_type_pseudo_class_read_write(finder, base_node, selector))
+    if(modest_finder_selector_sub_type_pseudo_class_read_write(finder, base_node, selector, spec))
         return false;
     
     return true;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_read_write(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_read_write(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(base_node->tag_id == MyHTML_TAG_INPUT ||
        base_node->tag_id == MyHTML_TAG_TEXTAREA)
@@ -777,13 +738,13 @@ bool modest_finder_selector_sub_type_pseudo_class_read_write(modest_finder_t* fi
         if(modest_finder_match_attribute_only_key(base_node->token->attr_first, "readonly", 8))
             return false;
         
-        return ~modest_finder_selector_sub_type_pseudo_class_disabled(finder, base_node, selector);
+        return ~modest_finder_selector_sub_type_pseudo_class_disabled(finder, base_node, selector, spec);
     }
     
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_required(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_required(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(base_node->tag_id == MyHTML_TAG_INPUT ||
        base_node->tag_id == MyHTML_TAG_SELECT ||
@@ -796,7 +757,7 @@ bool modest_finder_selector_sub_type_pseudo_class_required(modest_finder_t* find
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_root(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_root(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(finder->tree->node_html == base_node)
         return true;
@@ -804,27 +765,27 @@ bool modest_finder_selector_sub_type_pseudo_class_root(modest_finder_t* finder, 
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_scope(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_scope(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_target(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_target(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_user_error(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_user_error(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_valid(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_valid(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }
 
-bool modest_finder_selector_sub_type_pseudo_class_visited(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_sub_type_pseudo_class_visited(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }

@@ -21,12 +21,12 @@
 #include "modest/finder/type.h"
 #include "modest/finder/resource.h"
 
-bool modest_finder_selector_type_undef(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_type_undef(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }
 
-bool modest_finder_selector_type_element(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_type_element(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     /* namespace */
     if(selector->ns_entry) {
@@ -47,7 +47,7 @@ bool modest_finder_selector_type_element(modest_finder_t* finder, myhtml_tree_no
     return false;
 }
 
-bool modest_finder_selector_type_id(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_type_id(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(node->token == NULL)
         return false;
@@ -58,7 +58,7 @@ bool modest_finder_selector_type_id(modest_finder_t* finder, myhtml_tree_node_t*
                                             (finder->tree->compat_mode != MyHTML_TREE_COMPAT_MODE_QUIRKS));
 }
 
-bool modest_finder_selector_type_class(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_type_class(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(node->token == NULL)
         return false;
@@ -69,7 +69,7 @@ bool modest_finder_selector_type_class(modest_finder_t* finder, myhtml_tree_node
                                             (finder->tree->compat_mode != MyHTML_TREE_COMPAT_MODE_QUIRKS));
 }
 
-bool modest_finder_selector_type_attribute(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_type_attribute(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     /* namespace */
     if(selector->ns_entry) {
@@ -97,28 +97,28 @@ bool modest_finder_selector_type_attribute(modest_finder_t* finder, myhtml_tree_
     return false;
 }
 
-bool modest_finder_selector_type_pseudo_class_function(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_type_pseudo_class_function(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(selector->sub_type < MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_LAST_ENTRY)
-        return modest_finder_static_selector_sub_type_pseudo_class_function_map[selector->sub_type](finder, node, selector);
+        return modest_finder_static_selector_sub_type_pseudo_class_function_map[selector->sub_type](finder, node, selector, spec);
     
     return false;
 }
 
-bool modest_finder_selector_type_pseudo_class(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_type_pseudo_class(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(selector->sub_type < MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_LAST_ENTRY)
-        return modest_finder_static_selector_sub_type_pseudo_class_map[selector->sub_type](finder, node, selector);
+        return modest_finder_static_selector_sub_type_pseudo_class_map[selector->sub_type](finder, node, selector, spec);
     
     return false;
 }
 
-bool modest_finder_selector_type_pseudo_element_function(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_type_pseudo_element_function(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }
 
-bool modest_finder_selector_type_pseudo_element(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector)
+bool modest_finder_selector_type_pseudo_element(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
 }

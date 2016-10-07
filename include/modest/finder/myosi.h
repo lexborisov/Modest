@@ -23,8 +23,9 @@
 #pragma once
 
 #include <modest/myosi.h>
-#include <myhtml/myosi.h>
 #include <mycss/myosi.h>
+#include <mycss/selectors/myosi.h>
+#include <mycss/selectors/list.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,17 +33,19 @@ extern "C" {
 
 struct modest_finder typedef modest_finder_t;
 
-typedef void (*modest_finder_callback_f)(modest_finder_t* finder, myhtml_tree_node_t* node, void* ctx);
+typedef void (*modest_finder_callback_f)(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_list_t* selector_list, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec, void* ctx);
 typedef bool (*modest_finder_match_f)(myhtml_token_attr_t* attr, const char* key, size_t key_len, const char* value, size_t value_len, bool case_sensitive);
 
 struct modest_finder {
     myhtml_tree_t* tree;
     mycss_stylesheet_t* stylesheet;
-    
-    modest_finder_callback_f callback_found;
-    void* callback_found_ctx;
 };
 
+typedef struct modest_finder_thread_declaration modest_finder_thread_declaration_t;
+typedef struct modest_finder_thread_entry modest_finder_thread_entry_t;
+typedef struct modest_finder_thread_context modest_finder_thread_context_t;
+typedef struct modest_finder_thread modest_finder_thread_t;
+typedef struct modest_finder_thread_found_context modest_finder_thread_found_context_t;
 
 #ifdef __cplusplus
 } /* extern "C" */
