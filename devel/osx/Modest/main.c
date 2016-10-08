@@ -219,7 +219,7 @@ int main(int argc, const char * argv[]) {
     
     /* threads */
     modest_finder_thread_t *finder_thread = modest_finder_thread_create();
-    modest_finder_thread_init(finder, finder_thread, 8);
+    modest_finder_thread_init(finder, finder_thread, 2);
     
     status = modest_finder_thread_process(modest, finder_thread, myhtml_tree, myhtml_tree->node_html, stylesheet->sel_list_first);
     
@@ -227,7 +227,7 @@ int main(int argc, const char * argv[]) {
     finder = modest_finder_destroy(finder, true);
     
     
-//    print_tree_after_all(modest, myhtml_tree, myhtml_tree->node_html, mycss_entry);
+    //print_tree_after_all(modest, myhtml_tree, myhtml_tree->node_html, mycss_entry);
     
     
     

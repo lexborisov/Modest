@@ -11,6 +11,7 @@
 		0E0239811D9FE8EC0084A81A /* type.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E02397F1D9FE8EC0084A81A /* type.c */; };
 		0E0239851D9FEAB90084A81A /* node.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E0239831D9FEAB90084A81A /* node.c */; };
 		0E0239881D9FEBE10084A81A /* modest.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E0239861D9FEBE10084A81A /* modest.c */; };
+		0E5AA4BD1DA9689700FF5358 /* shared.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E5AA4BB1DA9689700FF5358 /* shared.c */; };
 		0E750EE31D9AF1D500337E9B /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E750EE21D9AF1D500337E9B /* main.c */; };
 		0E750EF81D9AF25300337E9B /* finder.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E750EEE1D9AF25300337E9B /* finder.c */; };
 		0E750EF91D9AF25300337E9B /* match.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E750EF01D9AF25300337E9B /* match.c */; };
@@ -120,6 +121,8 @@
 		0E0239841D9FEAB90084A81A /* node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = node.h; path = ../../../source/modest/node/node.h; sourceTree = "<group>"; };
 		0E0239861D9FEBE10084A81A /* modest.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = modest.c; path = ../../../source/modest/modest.c; sourceTree = "<group>"; };
 		0E0239871D9FEBE10084A81A /* modest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = modest.h; path = ../../../source/modest/modest.h; sourceTree = "<group>"; };
+		0E5AA4BB1DA9689700FF5358 /* shared.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = shared.c; sourceTree = "<group>"; };
+		0E5AA4BC1DA9689700FF5358 /* shared.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shared.h; sourceTree = "<group>"; };
 		0E750EDF1D9AF1D500337E9B /* Modest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Modest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E750EE21D9AF1D500337E9B /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = main.c; path = Modest/main.c; sourceTree = "<group>"; };
 		0E750EEC1D9AF25300337E9B /* myosi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = myosi.h; path = ../../../source/modest/myosi.h; sourceTree = "<group>"; };
@@ -598,6 +601,8 @@
 				0E750F501D9AF27200337E9B /* init.c */,
 				0E750F541D9AF27200337E9B /* parser.h */,
 				0E750F531D9AF27200337E9B /* parser.c */,
+				0E5AA4BC1DA9689700FF5358 /* shared.h */,
+				0E5AA4BB1DA9689700FF5358 /* shared.c */,
 				0E750F551D9AF27200337E9B /* resources.h */,
 			);
 			name = property;
@@ -786,6 +791,7 @@
 				0E750F991D9AF27200337E9B /* value.c in Sources */,
 				0E750FF01D9AF27F00337E9B /* mystring.c in Sources */,
 				0E750F961D9AF27200337E9B /* parser.c in Sources */,
+				0E5AA4BD1DA9689700FF5358 /* shared.c in Sources */,
 				0E7510041D9AF27F00337E9B /* mctree.c in Sources */,
 				0E750F9F1D9AF27200337E9B /* serialization.c in Sources */,
 				0E750FF51D9AF27F00337E9B /* stream.c in Sources */,
