@@ -52,7 +52,6 @@ void mycss_declaration_parser_ident(mycss_entry_t* entry, mycss_token_t* token)
         entry->parser_switch = prop_entry->parser;
     }
     else {
-        
         entry->parser = mycss_declaration_state_parse_error;
     }
     

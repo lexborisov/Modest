@@ -186,6 +186,7 @@ int main(int argc, const char * argv[]) {
     
     char *html_f = "/new/C-git/habr/1.html";
     char *css_f = "/new/C-git/habr/1_glob.css";
+    //char *css_f = "/new/C-git/bootstrap.css";
     
     char *html = "<fff>sdsd<aaaa id=hash class=best><div a1><menu class=\"lalala\" id=\"menu-id\" b1><span span1><div a2></div></div><menu class=\"be\" id=\"menu\" b1><span span2></aaaa><a href=\"\" sec></a><div div1><div div2></div><div div3></div><div div4></div></div><p p1><p p2><p p3><p p4>";
     char *css = "lala, bebe, sss {width: 10px}";
@@ -196,7 +197,7 @@ int main(int argc, const char * argv[]) {
     modest_status_t status = modest_init(modest);
     
     myhtml_tree_t *myhtml_tree = myhtml(html_f, strlen(html_f), true, false, modest_callback_for_create_mnode, (void*)modest);
-    mycss_entry_t *mycss_entry = mycss(css_f, strlen(css_f), true, false);
+    mycss_entry_t *mycss_entry = mycss(css_f, strlen(css_f), true, true);
     
 //    myhtml_tree_t *myhtml_tree = myhtml(html, strlen(html), false, true, modest_callback_for_create_mnode, (void*)modest);
 //    mycss_entry_t *mycss_entry = mycss(css, strlen(css), false, true);
