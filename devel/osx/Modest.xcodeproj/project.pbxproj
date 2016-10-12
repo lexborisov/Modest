@@ -131,6 +131,7 @@
 		0E0C918E1DAED006007A0501 /* serialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = serialization.h; sourceTree = "<group>"; };
 		0E0C91901DAED0F5007A0501 /* serialization.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = serialization.c; sourceTree = "<group>"; };
 		0E0C91911DAED0F5007A0501 /* serialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = serialization.h; sourceTree = "<group>"; };
+		0E0C91931DAEEFC8007A0501 /* resources_name.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = resources_name.h; sourceTree = "<group>"; };
 		0E5AA4BB1DA9689700FF5358 /* shared.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = shared.c; sourceTree = "<group>"; };
 		0E5AA4BC1DA9689700FF5358 /* shared.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shared.h; sourceTree = "<group>"; };
 		0E750EDF1D9AF1D500337E9B /* Modest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Modest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -622,6 +623,7 @@
 				0E5AA4BC1DA9689700FF5358 /* shared.h */,
 				0E5AA4BB1DA9689700FF5358 /* shared.c */,
 				0E750F551D9AF27200337E9B /* resources.h */,
+				0E0C91931DAEEFC8007A0501 /* resources_name.h */,
 				0E0C918B1DAECB56007A0501 /* serialization.h */,
 				0E0C918A1DAECB56007A0501 /* serialization.c */,
 			);

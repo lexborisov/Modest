@@ -19,7 +19,7 @@
 */
 
 #include "mycss/property/serialization.h"
-#include "mycss/property/resources.h"
+#include "mycss/property/resources_name.h"
 
 void mycss_property_serialization_type_name(mycss_property_type_t prop_type, mycss_callback_serialization_f callback, void* context)
 {
