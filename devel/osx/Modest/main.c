@@ -22,6 +22,7 @@
 #include "mycss/mycss.h"
 #include "modest/modest.h"
 
+#include "mycss/selectors/serialization.h"
 #include "mycss/declaration/init.h"
 #include "modest/finder/finder.h"
 #include "modest/finder/thread.h"
@@ -48,6 +49,11 @@ struct res_data load_data(const char* filename)
     
     struct res_data res = {html, (size_t)l};
     return res;
+}
+
+void serialization_callback(const char* data, size_t len, void* ctx)
+{
+    printf("%.*s", (int)len, data);
 }
 
 myhtml_tree_t * myhtml(const char* data, size_t data_size, bool is_file, bool print_result, myhtml_callback_tree_node_f cai, void* cai_ctx)
@@ -123,7 +129,7 @@ mycss_entry_t * mycss(const char* data, size_t data_size, bool is_file, bool pri
     if(print_result) {
         printf("\n");
         mycss_stylesheet_t *stylesheet = mycss_entry_stylesheet(entry);
-        mycss_selectors_print_list(entry->selectors, stylesheet->sel_list_first, stdout);
+        mycss_selectors_serialization_list(entry->selectors, stylesheet->sel_list_first, serialization_callback, NULL);
         
         printf("\n------------\nMyCSS Information:\n");
         printf("\tTicks/sec: %llu\n", (unsigned long long) myhtml_hperf_res(NULL));
@@ -147,9 +153,11 @@ void print_tree_after_all(modest_t* modest, myhtml_tree_t* myhtml_tree, myhtml_t
         
         if(m_node) {
             printf("\tstyles: ");
+            
             if(m_node->stylesheet->width.raw.declaration) {
-                mycss_declaration_entry_print(mycss_entry->declaration, m_node->stylesheet->width.raw.declaration, stdout);
+                mycss_declaration_serialization_entry(mycss_entry, m_node->stylesheet->width.raw.declaration, serialization_callback, NULL);
             }
+            
             printf("\n");
         }
         
@@ -189,18 +197,18 @@ int main(int argc, const char * argv[]) {
     //char *css_f = "/new/C-git/bootstrap.css";
     
     char *html = "<fff>sdsd<aaaa id=hash class=best><div a1><menu class=\"lalala\" id=\"menu-id\" b1><span span1><div a2></div></div><menu class=\"be\" id=\"menu\" b1><span span2></aaaa><a href=\"\" sec></a><div div1><div div2></div><div div3></div><div div4></div></div><p p1><p p2><p p3><p p4>";
-    char *css = "lala, bebe, sss {width: 10px}";
+    char *css = "div {padding: 10px 10 3em 0 !important; padding-bottom: 130px !important; padding-top: 18888pt !important; padding-left: 1em !important; padding-right: !important 20%;}  div {width: 20px;}";
     
     char *selector = "menu";
     
     modest_t *modest = modest_create();
     modest_status_t status = modest_init(modest);
     
-    myhtml_tree_t *myhtml_tree = myhtml(html_f, strlen(html_f), true, false, modest_callback_for_create_mnode, (void*)modest);
-    mycss_entry_t *mycss_entry = mycss(css_f, strlen(css_f), true, true);
+//    myhtml_tree_t *myhtml_tree = myhtml(html_f, strlen(html_f), true, false, modest_callback_for_create_mnode, (void*)modest);
+//    mycss_entry_t *mycss_entry = mycss(css_f, strlen(css_f), true, true);
     
-//    myhtml_tree_t *myhtml_tree = myhtml(html, strlen(html), false, true, modest_callback_for_create_mnode, (void*)modest);
-//    mycss_entry_t *mycss_entry = mycss(css, strlen(css), false, true);
+    myhtml_tree_t *myhtml_tree = myhtml(html, strlen(html), false, true, modest_callback_for_create_mnode, (void*)modest);
+    mycss_entry_t *mycss_entry = mycss(css, strlen(css), false, true);
     
     mycss_stylesheet_t *stylesheet = mycss_entry_stylesheet(mycss_entry);
     

@@ -18,21 +18,23 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#ifndef MyHTML_MyCSS_VALUES_SERIALIZATION_H
-#define MyHTML_MyCSS_VALUES_SERIALIZATION_H
+#ifndef MyHTML_MyCSS_PROPERTY_SERIALIZATION_H
+#define MyHTML_MyCSS_PROPERTY_SERIALIZATION_H
 #pragma once
+
+#include "mycss/property/myosi.h"
+#include "mycss/property/init.h"
+#include "mycss/values/serialization.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <mycss/values/values.h>
-
-void mycss_values_serialization_length(mycss_values_length_t* value, mycss_callback_serialization_f callback, void* context);
-void mycss_values_serialization_percentage(mycss_values_percentage_t* value, mycss_callback_serialization_f callback, void* context);
+void mycss_property_serialization_type_name(mycss_property_type_t prop_type, mycss_callback_serialization_f callback, void* context);
+void mycss_property_serialization_value(unsigned int value_type, void* value, mycss_callback_serialization_f callback, void* context);
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
 
-#endif /* MyHTML_MyCSS_VALUES_SERIALIZATION_H */
+#endif /* MyHTML_MyCSS_PROPERTY_SERIALIZATION_H */

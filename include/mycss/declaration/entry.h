@@ -42,9 +42,6 @@ void mycss_declaration_entry_append_to_current(mycss_declaration_t* declaration,
 void mycss_declaration_entry_remove(mycss_declaration_t* declaration, mycss_declaration_entry_t* dec_entry);
 mycss_declaration_entry_t * mycss_declaration_entry_delete(mycss_declaration_t* declaration, mycss_declaration_entry_t* dec_entry);
 
-void mycss_declaration_entry_print(mycss_declaration_t* declaration, mycss_declaration_entry_t* dec_entry, FILE* fh);
-void mycss_declaration_entries_print(mycss_declaration_t* declaration, mycss_declaration_entry_t* first_dec_entry, FILE* fh);
-
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

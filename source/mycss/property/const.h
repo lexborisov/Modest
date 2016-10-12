@@ -1791,6 +1791,34 @@ enum mycss_property_overflow_y {
 }
 typedef mycss_property_overflow_y_t;
 
+enum mycss_property_padding_bottom {
+	MyCSS_PROPERTY_PADDING_BOTTOM_INHERIT    = 0x008f,
+	MyCSS_PROPERTY_PADDING_BOTTOM_LENGTH     = 0x00ad,
+	MyCSS_PROPERTY_PADDING_BOTTOM_PERCENTAGE = 0x00fd
+}
+typedef mycss_property_padding_bottom_t;
+
+enum mycss_property_padding_left {
+	MyCSS_PROPERTY_PADDING_LEFT_INHERIT    = 0x008f,
+	MyCSS_PROPERTY_PADDING_LEFT_LENGTH     = 0x00ad,
+	MyCSS_PROPERTY_PADDING_LEFT_PERCENTAGE = 0x00fd
+}
+typedef mycss_property_padding_left_t;
+
+enum mycss_property_padding_right {
+	MyCSS_PROPERTY_PADDING_RIGHT_INHERIT    = 0x008f,
+	MyCSS_PROPERTY_PADDING_RIGHT_LENGTH     = 0x00ad,
+	MyCSS_PROPERTY_PADDING_RIGHT_PERCENTAGE = 0x00fd
+}
+typedef mycss_property_padding_right_t;
+
+enum mycss_property_padding_top {
+	MyCSS_PROPERTY_PADDING_TOP_INHERIT    = 0x008f,
+	MyCSS_PROPERTY_PADDING_TOP_LENGTH     = 0x00ad,
+	MyCSS_PROPERTY_PADDING_TOP_PERCENTAGE = 0x00fd
+}
+typedef mycss_property_padding_top_t;
+
 enum mycss_property_pause_after {
 	MyCSS_PROPERTY_PAUSE_AFTER_MEDIUM   = 0x00c4,
 	MyCSS_PROPERTY_PAUSE_AFTER_NONE     = 0x00da,

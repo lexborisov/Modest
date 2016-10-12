@@ -23,7 +23,9 @@
 
 mycss_declaration_entry_t * mycss_declaration_entry_create(mycss_declaration_t* declaration, myhtml_status_t* status)
 {
-    return mcobject_malloc(declaration->mcobject_entries, status);
+    mycss_declaration_entry_t *dec_entry = mcobject_malloc(declaration->mcobject_entries, status);
+    memset(dec_entry, 0, sizeof(mycss_declaration_entry_t));
+    return dec_entry;
 }
 
 void mycss_declaration_entry_clean(mycss_declaration_entry_t* entry)
@@ -35,9 +37,9 @@ void mycss_declaration_entry_clean(mycss_declaration_entry_t* entry)
     entry->flags        = MyCSS_DECLARATION_FLAGS_UNDEF;
 }
 
-void mycss_declaration_entry_clean_all(mycss_declaration_entry_t* entry)
+void mycss_declaration_entry_clean_all(mycss_declaration_entry_t* dec_entry)
 {
-    memset(entry, 0, sizeof(mycss_declaration_entry_t));
+    memset(dec_entry, 0, sizeof(mycss_declaration_entry_t));
 }
 
 void mycss_declaration_entry_destroy(mycss_declaration_t* declaration, mycss_declaration_entry_t* dec_entry)
@@ -93,25 +95,4 @@ mycss_declaration_entry_t * mycss_declaration_entry_last(mycss_declaration_t* de
     return declaration->entry_last;
 }
 
-void mycss_declaration_entry_print(mycss_declaration_t* declaration, mycss_declaration_entry_t* dec_entry, FILE* fh)
-{
-    mycss_property_print(dec_entry->type, fh);
-    fprintf(fh, ": ");
-    mycss_property_value_print(dec_entry->value_type, dec_entry->value, fh);
-}
-
-void mycss_declaration_entries_print(mycss_declaration_t* declaration, mycss_declaration_entry_t* first_dec_entry, FILE* fh)
-{
-    while(first_dec_entry) {
-        mycss_declaration_entry_print(declaration, first_dec_entry, fh);
-        
-        if(first_dec_entry->next) {
-            fprintf(fh, "; ");
-        } else {
-            fprintf(fh, ";");
-        }
-        
-        first_dec_entry = first_dec_entry->next;
-    }
-}
 

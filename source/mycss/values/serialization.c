@@ -21,27 +21,43 @@
 #include "mycss/values/serialization.h"
 #include "mycss/values/units_resources.h"
 
-void mycss_serialization_length(mycss_values_length_t* value, FILE* fh)
+static void mycss_values_serialization_to_callback(const char* data, size_t len, mycss_callback_serialization_f callback, void* context)
 {
+    if(len > 0)
+        callback(data, len, context);
+}
+
+void mycss_values_serialization_length(mycss_values_length_t* value, mycss_callback_serialization_f callback, void* context)
+{
+    char buff[512];
+    
     if(value->is_float) {
-        fprintf(fh, "%0.4f", value->f);
+        int len = snprintf(buff, 512, "%0.4f", value->f);
+        mycss_values_serialization_to_callback(buff, len, callback, context);
     }
     else {
-        fprintf(fh, "%d", value->i);
+        int len = snprintf(buff, 512, "%d", value->i);
+        mycss_values_serialization_to_callback(buff, len, callback, context);
     }
     
     if(value->type < MyCSS_UNIT_TYPE_LAST_ENTRY) {
-        fprintf(fh, "%s", mycss_units_index_name[ value->type ]);
+        const char* name = mycss_units_index_name[ value->type ];
+        callback(name, strlen(name), context);
     }
 }
 
-void mycss_serialization_percentage(mycss_values_percentage_t* value, FILE* fh)
+void mycss_values_serialization_percentage(mycss_values_percentage_t* value, mycss_callback_serialization_f callback, void* context)
 {
+    char buff[512];
+    
     if(value->is_float) {
-        fprintf(fh, "%0.4f%%", value->f);
+        int len = snprintf(buff, 512, "%0.4f%%", value->f);
+        mycss_values_serialization_to_callback(buff, len, callback, context);
     }
     else {
-        fprintf(fh, "%d%%", value->i);
+        int len = snprintf(buff, 512, "%d%%", value->i);
+        mycss_values_serialization_to_callback(buff, len, callback, context);
     }
 }
+
 

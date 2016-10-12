@@ -46,10 +46,6 @@ mycss_selectors_list_t * mycss_selectors_parse_by_function(mycss_selectors_t* se
 
 mycss_selectors_entry_t * mycss_selectors_entry_find_first(mycss_selectors_entry_t* selector);
 
-void mycss_selectors_print_list(mycss_selectors_t* selectors, mycss_selectors_list_t* selectors_list, FILE* fh);
-void mycss_selectors_print_selector(mycss_selectors_t* selectors, mycss_selectors_entry_t* selector, FILE* fh);
-void mycss_selectors_print_chain(mycss_selectors_t* selectors, mycss_selectors_entry_t* selector, FILE* fh);
-
 mycss_selectors_entry_t * mycss_selectors_entry_create(mycss_selectors_t* selectors);
     
 mycss_selectors_entries_list_t * mycss_selectors_entries_list_create(mycss_selectors_t* selectors);

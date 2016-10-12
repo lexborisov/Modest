@@ -88,22 +88,30 @@ void mycss_an_plus_b_parser_expectations_error(mycss_entry_t* entry)
 }
 
 /////////////////////////////////////////////////////////
-//// An+B Print
+//// An+B Serialization
 ////
 /////////////////////////////////////////////////////////
-void mycss_an_plus_b_print(mycss_an_plus_b_entry_t* anb_entry, FILE* fh)
+void mycss_an_plus_b_serialization(mycss_an_plus_b_entry_t* anb_entry, mycss_callback_serialization_f callback, void* context)
 {
+    char data[512];
+    
     if(anb_entry->a != 0) {
-        fprintf(fh, "%ld", anb_entry->a);
+        int len = snprintf(data, 512, "%ld", anb_entry->a);
+        
+        if(len > 0)
+            callback(data, (size_t)len, context);
     }
     
-    fprintf(fh, "n");
+    callback("n", 1, context);
     
     if(anb_entry->b != 0) {
         if(anb_entry->b >= 0)
-            fprintf(fh, "+%ld", anb_entry->b);
-        else
-            fprintf(fh, "%ld", anb_entry->b);
+            callback("+", 1, context);
+        
+        int len = snprintf(data, 512, "%ld", anb_entry->b);
+        
+        if(len > 0)
+            callback(data, (size_t)len, context);
     }
 }
 

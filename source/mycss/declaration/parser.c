@@ -33,8 +33,6 @@ void mycss_declaration_parser_ident(mycss_entry_t* entry, mycss_token_t* token)
     
     if(dec_entry == NULL || (dec_entry->flags & MyCSS_DECLARATION_FLAGS_BAD) == 0) {
         dec_entry = mycss_declaration_entry_create(entry->declaration, NULL);
-        mycss_declaration_entry_clean_all(dec_entry);
-        
         mycss_declaration_entry_append_to_current(entry->declaration, dec_entry);
     }
     else

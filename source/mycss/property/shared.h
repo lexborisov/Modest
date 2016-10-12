@@ -32,7 +32,8 @@ extern "C" {
 
 bool mycss_property_shared_switch_to_find_important(mycss_entry_t* entry);
 bool mycss_property_shared_switch_to_parse_error(mycss_entry_t* entry);
-bool mycss_property_shared_length(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_shared_check_declaration_end(mycss_entry_t* entry, mycss_token_t* token);
+bool mycss_property_shared_length(mycss_entry_t* entry, mycss_token_t* token, mycss_declaration_entry_t* dec_entry);
 
 #ifdef __cplusplus
 } /* extern "C" */

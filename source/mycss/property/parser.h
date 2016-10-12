@@ -26,9 +26,10 @@
 #include "mycss/property/shared.h"
 #include "mycss/values/consume.h"
 #include "mycss/values/values.h"
+#include "mycss/declaration/entry.h"
 
 #ifdef __cplusplus
-//extern "C" {
+extern "C" {
 #endif
 
 bool mycss_property_parser_undef(mycss_entry_t* entry, mycss_token_t* token, bool last_response);

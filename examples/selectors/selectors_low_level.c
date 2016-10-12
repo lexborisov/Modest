@@ -26,6 +26,7 @@
 #include <mycss/mycss.h>
 #include <mycss/selectors/init.h>
 #include <modest/finder/finder.h>
+#include "mycss/selectors/serialization.h"
 
 myhtml_tree_t * parse_html(const char* data, size_t data_size)
 {
@@ -38,6 +39,11 @@ myhtml_tree_t * parse_html(const char* data, size_t data_size)
     myhtml_parse(tree, MyHTML_ENCODING_UTF_8, data, data_size);
     
     return tree;
+}
+
+void serialization_callback(const char* data, size_t len, void* ctx)
+{
+    printf("%.*s", (int)len, data);
 }
 
 mycss_entry_t * create_css_parser(void)
@@ -86,7 +92,7 @@ int main(int argc, const char * argv[])
     fprintf(stdout, "\n");
     
     fprintf(stdout, "Selector:\n\t");
-    mycss_selectors_print_list(css_entry->selectors, list, stdout);
+    mycss_selectors_serialization_list(css_entry->selectors, list, serialization_callback, NULL);
     fprintf(stdout, "\n");
     
     printf("\nFound result:\n");

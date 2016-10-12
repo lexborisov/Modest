@@ -26,6 +26,7 @@
 #include "mycss/entry.h"
 #include "mycss/namespace/myosi.h"
 #include "mycss/selectors/myosi.h"
+#include "mycss/selectors/serialization.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -48,7 +49,7 @@ mycss_status_t mycss_stylesheet_init(mycss_stylesheet_t* stylesheet, mycss_entry
 mycss_status_t mycss_stylesheet_clean_all(mycss_stylesheet_t* stylesheet);
 mycss_stylesheet_t * mycss_stylesheet_destroy(mycss_stylesheet_t* stylesheet, bool self_destroy);
 
-void mycss_stylesheet_print(mycss_stylesheet_t* stylesheet, FILE* fh);
+void mycss_stylesheet_serialization(mycss_stylesheet_t* stylesheet, mycss_callback_serialization_f callback, void* context);
 
 #ifdef __cplusplus
 } /* extern "C" */

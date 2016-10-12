@@ -263,6 +263,7 @@ typedef mycss_token_t * (*mycss_token_ready_callback_f)(mycss_entry_t* entry, my
 typedef size_t (*mycss_string_process_state_f)(myhtml_string_t* str, const char* data, size_t length, size_t size, mycss_string_res_t *out_res);
 typedef bool (*mycss_parser_token_f)(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 typedef bool (*mycss_an_plus_b_state_f)(mycss_entry_t* entry, mycss_an_plus_b_t* anb, mycss_an_plus_b_entry_t* anb_entry, mycss_token_t* token);
+typedef void (*mycss_callback_serialization_f)(const char* buffer, size_t size, void* ctx);
 
 #ifdef __cplusplus
 } /* extern "C" */

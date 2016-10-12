@@ -27,6 +27,7 @@
 #include <mycss/selectors/init.h>
 #include <mycss/declaration/init.h>
 #include <mycss/declaration/entry.h>
+#include "mycss/declaration/serialization.h"
 
 myhtml_tree_t * parse_html(const char* data, size_t data_size)
 {
@@ -39,6 +40,11 @@ myhtml_tree_t * parse_html(const char* data, size_t data_size)
     myhtml_parse(tree, MyHTML_ENCODING_UTF_8, data, data_size);
     
     return tree;
+}
+
+void serialization_callback(const char* data, size_t len, void* ctx)
+{
+    printf("%.*s", (int)len, data);
 }
 
 mycss_entry_t * create_css_parser(void)
@@ -93,7 +99,7 @@ int main(int argc, const char * argv[])
                 fprintf(stdout, "\tNode: ");
                 myhtml_tree_print_node(html_tree, node, stdout);
                 fprintf(stdout, "\tDeclaration: ");
-                mycss_declaration_entries_print(css_entry->declaration, dec_entry, stdout);
+                mycss_declaration_serialization_entries(css_entry, dec_entry, serialization_callback, NULL);
                 fprintf(stdout, "\n\n");
             }
         }

@@ -18,21 +18,24 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#ifndef MyHTML_MyCSS_VALUES_SERIALIZATION_H
-#define MyHTML_MyCSS_VALUES_SERIALIZATION_H
+#ifndef MyHTML_MyCSS_SELECTORS_SERIALIZATION_H
+#define MyHTML_MyCSS_SELECTORS_SERIALIZATION_H
 #pragma once
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <mycss/values/values.h>
+#include <mycss/selectors/myosi.h>
+#include <mycss/namespace/serialization.h>
+#include <mycss/declaration/serialization.h>
 
-void mycss_values_serialization_length(mycss_values_length_t* value, mycss_callback_serialization_f callback, void* context);
-void mycss_values_serialization_percentage(mycss_values_percentage_t* value, mycss_callback_serialization_f callback, void* context);
+void mycss_selectors_serialization_chain(mycss_selectors_t* selectors, mycss_selectors_entry_t* selector, mycss_callback_serialization_f callback, void* context);
+bool mycss_selectors_serialization_list(mycss_selectors_t* selectors, mycss_selectors_list_t* selectors_list, mycss_callback_serialization_f callback, void* context);
+bool mycss_selectors_serialization_selector(mycss_selectors_t* selectors, mycss_selectors_entry_t* selector, mycss_callback_serialization_f callback, void* context);
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
 
-#endif /* MyHTML_MyCSS_VALUES_SERIALIZATION_H */
+#endif /* MyHTML_MyCSS_SELECTORS_SERIALIZATION_H */

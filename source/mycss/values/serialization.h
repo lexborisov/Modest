@@ -28,8 +28,8 @@ extern "C" {
 
 #include "mycss/values/values.h"
 
-void mycss_serialization_length(mycss_values_length_t* value, FILE* fh);
-void mycss_serialization_percentage(mycss_values_percentage_t* value, FILE* fh);
+void mycss_values_serialization_length(mycss_values_length_t* value, mycss_callback_serialization_f callback, void* context);
+void mycss_values_serialization_percentage(mycss_values_percentage_t* value, mycss_callback_serialization_f callback, void* context);
 
 #ifdef __cplusplus
 } /* extern "C" */

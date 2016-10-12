@@ -32,13 +32,28 @@ bool mycss_property_shared_switch_to_parse_error(mycss_entry_t* entry)
     return false;
 }
 
-bool mycss_property_shared_length(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+bool mycss_property_shared_check_declaration_end(mycss_entry_t* entry, mycss_token_t* token)
 {
-    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+    if(token->type == MyCSS_TOKEN_TYPE_SEMICOLON) {
+        entry->parser = mycss_declaration_state_data;
         return true;
+    }
+    else if(token->type == MyCSS_TOKEN_TYPE_DELIM && *token->data == '!') {
+        entry->parser = mycss_declaration_state_colon_important;
+        return true;
+    }
+    else if(token->type == entry->declaration->ending_token) {
+        mycss_entry_parser_list_pop(entry);
+        mycss_declaration_parser_end(entry, token);
+        
+        return true;
+    }
     
-    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
-    
+    return false;
+}
+
+bool mycss_property_shared_length(mycss_entry_t* entry, mycss_token_t* token, mycss_declaration_entry_t* dec_entry)
+{
     void *value = NULL;
     mycss_values_entry_set(entry, &value);
     
@@ -61,14 +76,14 @@ bool mycss_property_shared_length(mycss_entry_t* entry, mycss_token_t* token, bo
         if(dec_entry->value_type != MyCSS_PROPERTY_WIDTH_AUTO &&
            dec_entry->value_type != MyCSS_PROPERTY_WIDTH_INHERIT)
         {
-            return mycss_property_shared_switch_to_parse_error(entry);
+            return false;
         }
     }
     else {
-        return mycss_property_shared_switch_to_parse_error(entry);
+        return false;
     }
     
-    return mycss_property_shared_switch_to_find_important(entry);
+    return true;
 }
 
 bool mycss_property_shared_line_width(mycss_entry_t* entry, mycss_token_t* token, bool last_response)

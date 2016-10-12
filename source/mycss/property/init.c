@@ -106,35 +106,4 @@ mycss_property_value_t mycss_property_value_type_by_name(const char *name, size_
     return MyCSS_PROPERTY_VALUE_UNDEF;
 }
 
-void mycss_property_print(mycss_property_type_t prop_type, FILE* fh)
-{
-    if(prop_type >= MyCSS_PROPERTY_TYPE_LAST_ENTRY)
-        return;
-    
-    fprintf(fh, "%s", mycss_property_index_type_name[prop_type]);
-}
-
-void mycss_property_value_print(unsigned int value_type, void* value, FILE* fh)
-{
-    switch (value_type) {
-        case MyCSS_PROPERTY_VALUE_LENGTH:
-            mycss_serialization_length(value, fh);
-            break;
-            
-        case MyCSS_PROPERTY_VALUE_PERCENTAGE:
-            mycss_serialization_percentage(value, fh);
-            break;
-            
-        default:
-        {
-            if(value_type >= MyCSS_PROPERTY_VALUE_LAST_ENTRY)
-                break;
-            
-            fprintf(fh, "%s", mycss_property_index_type_value[value_type]);
-            
-            break;
-        }
-    }
-}
-
 

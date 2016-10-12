@@ -133,7 +133,9 @@ bool mycss_declaration_state_colon_delim_after_important(mycss_entry_t* entry, m
         }
         default: {
             if(token->type == entry->declaration->ending_token) {
-                entry->parser = entry->parser_original;
+                mycss_entry_parser_list_pop(entry);
+                mycss_declaration_parser_end(entry, token);
+                
                 return true;
             }
             

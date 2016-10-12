@@ -60,9 +60,9 @@ mycss_stylesheet_t * mycss_stylesheet_destroy(mycss_stylesheet_t* stylesheet, bo
 }
 
 /* print */
-void mycss_stylesheet_print(mycss_stylesheet_t* stylesheet, FILE* fh)
+void mycss_stylesheet_serialization(mycss_stylesheet_t* stylesheet, mycss_callback_serialization_f callback, void* context)
 {
-    mycss_selectors_print_list(stylesheet->entry->selectors, stylesheet->sel_list_first, fh);
+    mycss_selectors_serialization_list(stylesheet->entry->selectors, stylesheet->sel_list_first, callback, context);
 }
 
 

@@ -18,42 +18,22 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#ifndef MyHTML_MyCSS_STYLESHEET_H
-#define MyHTML_MyCSS_STYLESHEET_H
+#ifndef MyHTML_MyCSS_NAMESPACE_SERIALIZATION_H
+#define MyHTML_MyCSS_NAMESPACE_SERIALIZATION_H
 #pragma once
 
-#include <mycss/myosi.h>
 #include <mycss/entry.h>
 #include <mycss/namespace/myosi.h>
-#include <mycss/selectors/myosi.h>
-#include <mycss/selectors/serialization.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-struct mycss_stylesheet {
-    mycss_entry_t* entry; /* refs */
-    
-    mycss_namespace_stylesheet_t ns_stylesheet;
-    mycss_selectors_list_t* sel_list_first;
-    
-    mycss_stylesheet_t* child;
-    mycss_stylesheet_t* parent;
-    mycss_stylesheet_t* next;
-    mycss_stylesheet_t* prev;
-};
-
-mycss_stylesheet_t * mycss_stylesheet_create(void);
-mycss_status_t mycss_stylesheet_init(mycss_stylesheet_t* stylesheet, mycss_entry_t* entry);
-mycss_status_t mycss_stylesheet_clean_all(mycss_stylesheet_t* stylesheet);
-mycss_stylesheet_t * mycss_stylesheet_destroy(mycss_stylesheet_t* stylesheet, bool self_destroy);
-
-void mycss_stylesheet_serialization(mycss_stylesheet_t* stylesheet, mycss_callback_serialization_f callback, void* context);
+void mycss_namespace_serialization_stylesheet(mycss_namespace_stylesheet_t* ns_stylesheet, mycss_callback_serialization_f callback, void* context);
+void mycss_namespace_serialization_entry(mycss_namespace_t* ns, mycss_namespace_entry_t* ns_entry, mycss_callback_serialization_f callback, void* context, bool with_vbar);
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
 
-
-#endif /* MyHTML_MyCSS_STYLESHEET_H */
+#endif /* MyHTML_MyCSS_NAMESPACE_SERIALIZATION_H */

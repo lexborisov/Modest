@@ -30,6 +30,17 @@
 extern "C" {
 #endif
 
+typedef struct mycss_values_shorthand_four mycss_values_shorthand_four_t;
+typedef struct mycss_values_percentage mycss_values_percentage_t;
+typedef struct mycss_values_length mycss_values_length_t;
+
+struct mycss_values_shorthand_four {
+    void* one;
+    void* two;
+    void* three;
+    void* four;
+};
+
 struct mycss_values_length {
     union {
         int i;
@@ -38,8 +49,7 @@ struct mycss_values_length {
     
     bool is_float;
     mycss_units_type_t type;
-}
-typedef mycss_values_length_t;
+};
 
 struct mycss_values_percentage {
     union {
@@ -48,8 +58,7 @@ struct mycss_values_percentage {
     };
     
     bool is_float;
-}
-typedef mycss_values_percentage_t;
+};
 
 
 void * mycss_values_create(mycss_entry_t* entry, size_t size);

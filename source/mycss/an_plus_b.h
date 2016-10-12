@@ -53,7 +53,7 @@ mycss_an_plus_b_entry_t * mycss_an_plus_b_entry_create(mycss_entry_t* entry);
 void mycss_an_plus_b_entry_clean_all(mycss_an_plus_b_entry_t* anb_entry);
 mycss_an_plus_b_entry_t * mycss_an_plus_b_entry_destroy(mycss_entry_t* entry, mycss_an_plus_b_entry_t* anb_entry, bool self_destroy);
 
-void mycss_an_plus_b_print(mycss_an_plus_b_entry_t* anb_entry, FILE* fh);
+void mycss_an_plus_b_serialization(mycss_an_plus_b_entry_t* anb_entry, mycss_callback_serialization_f callback, void* context);
 
 void mycss_an_plus_b_parser_expectations_error(mycss_entry_t* entry);
 
