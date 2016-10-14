@@ -137,9 +137,14 @@ myhtml_t* myhtml_destroy(myhtml_t* myhtml)
     
     if(myhtml->thread) {
 #ifndef MyHTML_BUILD_WITHOUT_THREADS
-        mythread_queue_list_destroy(myhtml->thread->context);
+        mythread_queue_list_t* queue_list = myhtml->thread->context;
 #endif
-        mythread_destroy(myhtml->thread, mythread_queue_wait_all_for_done, true);
+        
+        myhtml->thread = mythread_destroy(myhtml->thread, mythread_queue_wait_all_for_done, true);
+        
+#ifndef MyHTML_BUILD_WITHOUT_THREADS
+        mythread_queue_list_destroy(queue_list);
+#endif
     }
     
     myhtml_tokenizer_state_destroy(myhtml);
