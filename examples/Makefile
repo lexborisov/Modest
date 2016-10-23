@@ -20,10 +20,19 @@ else
 	CFLAGS += -pthread
 endif
 
+ifeq ($(OS),Windows_NT)
+else
+	UNAM := $(shell uname -s)
+	ifeq ($(UNAM),Darwin)
+	else
+		CFLAGS += -D_POSIX_C_SOURCE=199309L
+	endif
+endif
+
 find_files_h = $(wildcard $(dir)/*.h)
 find_files_c = $(wildcard $(dir)/*.c)
 
-SUBDIRS := selectors declarations font
+SUBDIRS := selectors declarations font modest
 HDRS += $(foreach dir,$(SUBDIRS),$(find_files_h))
 SRCS += $(foreach dir,$(SUBDIRS),$(find_files_c))
 

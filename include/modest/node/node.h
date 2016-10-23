@@ -24,13 +24,22 @@
 
 #include <modest/myosi.h>
 #include <modest/modest.h>
-#include <modest/style/sheet.h>
+#include <modest/style/raw.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct modest_node {
     modest_style_sheet_t* stylesheet;
+    modest_style_raw_t* raw_style;
 };
 
 modest_node_t * modest_node_create(modest_t* modest);
 modest_status_t modest_node_init(modest_t* modest, modest_node_t *mnode);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif /* MODEST_NODE_NODE_H */

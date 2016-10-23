@@ -26,12 +26,37 @@
 #include "modest/modest.h"
 #include "modest/style/type.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct modest_style_sheet {
     modest_style_type_length_t width;
     modest_style_type_length_t height;
+    
+    modest_style_type_length_t padding_top;
+    modest_style_type_length_t padding_right;
+    modest_style_type_length_t padding_bottom;
+    modest_style_type_length_t padding_left;
+    
+    modest_style_type_length_t margin_top;
+    modest_style_type_length_t margin_right;
+    modest_style_type_length_t margin_bottom;
+    modest_style_type_length_t margin_left;
+    
+    modest_style_type_display_t display;
+    
+    modest_style_type_length_t border_top_width;
+    modest_style_type_length_t border_right_width;
+    modest_style_type_length_t border_bottom_width;
+    modest_style_type_length_t border_left_width;
 };
 
 modest_style_sheet_t * modest_style_sheet_create(modest_t* modest);
 modest_status_t modest_style_sheet_init(modest_t* modest, modest_style_sheet_t* m_stylesheet);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif /* MODEST_STYLE_SHEET_H */

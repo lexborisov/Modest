@@ -28,6 +28,7 @@
 #include "modest/finder/thread.h"
 #include "myhtml/encoding.h"
 #include "myfont/myfont.h"
+#include "modest/node/serialization.h"
 
 struct res_data {
     char *data;
@@ -154,9 +155,7 @@ void print_tree_after_all(modest_t* modest, myhtml_tree_t* myhtml_tree, myhtml_t
         if(m_node) {
             printf("\tstyles: ");
             
-            if(m_node->stylesheet->width.raw.declaration) {
-                mycss_declaration_serialization_entry(mycss_entry, m_node->stylesheet->width.raw.declaration, serialization_callback, NULL);
-            }
+            modest_node_raw_serialization(mycss_entry, m_node, serialization_callback, NULL);
             
             printf("\n");
         }
@@ -175,8 +174,14 @@ void print_tree_after_all(modest_t* modest, myhtml_tree_t* myhtml_tree, myhtml_t
     }
 }
 
+size_t count = 0;
+
 void modest_callback_for_create_mnode(myhtml_tree_t* tree, myhtml_tree_node_t* node, void* ctx)
 {
+    if(node->tag_id == MyHTML_TAG__TEXT) {
+        return;
+    }
+    
     modest_t *modest = (modest_t*)ctx;
     
     /* create modest node */
@@ -197,18 +202,21 @@ int main(int argc, const char * argv[]) {
     //char *css_f = "/new/C-git/bootstrap.css";
     
     char *html = "<fff>sdsd<aaaa id=hash class=best><div a1><menu class=\"lalala\" id=\"menu-id\" b1><span span1><div a2></div></div><menu class=\"be\" id=\"menu\" b1><span span2></aaaa><a href=\"\" sec></a><div div1><div div2></div><div div3></div><div div4></div></div><p p1><p p2><p p3><p p4>";
-    char *css = "div {padding: 10px 10 3em 0 !important; padding-bottom: 130px !important; padding-top: 18888pt !important; padding-left: 1em !important; padding-right: !important 20%;}  div {width: 20px;}";
+    char *css = "div {width: 0;}  div[div2] {border-top-style: none;}";
     
     char *selector = "menu";
     
     modest_t *modest = modest_create();
     modest_status_t status = modest_init(modest);
     
-//    myhtml_tree_t *myhtml_tree = myhtml(html_f, strlen(html_f), true, false, modest_callback_for_create_mnode, (void*)modest);
-//    mycss_entry_t *mycss_entry = mycss(css_f, strlen(css_f), true, true);
+    myhtml_tree_t *myhtml_tree = myhtml(html_f, strlen(html_f), true, false, modest_callback_for_create_mnode, (void*)modest);
+    mycss_entry_t *mycss_entry = mycss(css_f, strlen(css_f), true, true);
     
-    myhtml_tree_t *myhtml_tree = myhtml(html, strlen(html), false, true, modest_callback_for_create_mnode, (void*)modest);
-    mycss_entry_t *mycss_entry = mycss(css, strlen(css), false, true);
+//    myhtml_tree_t *myhtml_tree = myhtml(html, strlen(html), false, true, modest_callback_for_create_mnode, (void*)modest);
+//    mycss_entry_t *mycss_entry = mycss(css, strlen(css), false, true);
+    
+    modest->myhtml_tree = myhtml_tree;
+    modest->mycss_entry = mycss_entry;
     
     mycss_stylesheet_t *stylesheet = mycss_entry_stylesheet(mycss_entry);
     
@@ -216,11 +224,14 @@ int main(int argc, const char * argv[]) {
     uint64_t parse_simple_start = myhtml_hperf_clock(NULL);
     uint64_t parse_simple_stop = myhtml_hperf_clock(NULL);
     
+    
+    
+    
+    
+    
+    
     /* full api */
     uint64_t parse_start = myhtml_hperf_clock(NULL);
-    
-    
-    
     
     
     modest_finder_t* finder = modest_finder_create();
@@ -232,9 +243,11 @@ int main(int argc, const char * argv[]) {
     
     status = modest_finder_thread_process(modest, finder_thread, myhtml_tree, myhtml_tree->node_html, stylesheet->sel_list_first);
     
-    finder_thread = modest_finder_thread_destroy(finder_thread, true);
-    finder = modest_finder_destroy(finder, true);
+    //finder_thread = modest_finder_thread_destroy(finder_thread, true);
+    //finder = modest_finder_destroy(finder, true);
     
+    
+    uint64_t parse_stop = myhtml_hperf_clock(NULL);
     
     //print_tree_after_all(modest, myhtml_tree, myhtml_tree->node_html, mycss_entry);
     
@@ -242,7 +255,8 @@ int main(int argc, const char * argv[]) {
     
     
     
-    uint64_t parse_stop = myhtml_hperf_clock(NULL);
+    
+    
     
     printf("\n\n------------\nInformation:\n");
     printf("\tTicks/sec: %llu\n", (unsigned long long) myhtml_hperf_res(NULL));
@@ -272,5 +286,7 @@ int main(int argc, const char * argv[]) {
     
     return 0;
 }
+
+
 
 

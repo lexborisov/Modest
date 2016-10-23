@@ -23,8 +23,8 @@
 /* private functions */
 static void modest_finder_thread_stream(mythread_id_t thread_id, void* arg);
 static modest_finder_thread_context_t * modest_finder_thread_create_context(modest_finder_thread_t* finder_thread, size_t count);
-static void modest_finder_thread_callback_found(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_list_t* selector_list,
-                                                mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec, void* ctx);
+//static void modest_finder_thread_callback_found(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_list_t* selector_list,
+//                                                mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec, void* ctx);
 
 /* basic functions */
 modest_finder_thread_t * modest_finder_thread_create(void)
@@ -126,7 +126,7 @@ void modest_finder_thread_collate_node(modest_t* modest, myhtml_tree_node_t* nod
     modest_finder_thread_declaration_t* dec = entry->declaration;
     
     while(dec) {
-        modest_style_map_collate_declaration(node, dec);
+        modest_style_map_collate_declaration(modest, node, dec->entry, &dec->raw_spec);
         dec = dec->next;
     }
 }
@@ -377,7 +377,6 @@ void modest_finder_thread_stream(mythread_id_t thread_id, void* arg)
     
     while(selector_list) {
         for(size_t i = 0; i < selector_list->entries_list_length; i++) {
-            
             /* split selectors by thread id */
             if(count == counnt_done) {
                 mycss_selectors_entries_list_t *entries = &selector_list->entries_list[i];

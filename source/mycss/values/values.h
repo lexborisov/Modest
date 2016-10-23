@@ -30,15 +30,30 @@
 extern "C" {
 #endif
 
+typedef struct mycss_values_shorthand_two_type mycss_values_shorthand_two_type_t;
 typedef struct mycss_values_shorthand_four mycss_values_shorthand_four_t;
+typedef struct mycss_values_shorthand_two mycss_values_shorthand_two_t;
 typedef struct mycss_values_percentage mycss_values_percentage_t;
 typedef struct mycss_values_length mycss_values_length_t;
+
+struct mycss_values_shorthand_two_type {
+    void* one;
+    void* two;
+    
+    unsigned int type_one;
+    unsigned int type_two;
+};
 
 struct mycss_values_shorthand_four {
     void* one;
     void* two;
     void* three;
     void* four;
+};
+
+struct mycss_values_shorthand_two {
+    void* one;
+    void* two;
 };
 
 struct mycss_values_length {
@@ -60,9 +75,10 @@ struct mycss_values_percentage {
     bool is_float;
 };
 
-
 void * mycss_values_create(mycss_entry_t* entry, size_t size);
 void * mycss_values_destroy(mycss_entry_t* entry, void* value);
+
+void * mycss_values_clone(mycss_entry_t* entry, void* value);
 
 void * mycss_values_entry(mycss_entry_t* entry);
 void mycss_values_entry_set(mycss_entry_t* entry, void** value);

@@ -33,11 +33,11 @@ void mycss_property_serialization_type_name(mycss_property_type_t prop_type, myc
 void mycss_property_serialization_value(unsigned int value_type, void* value, mycss_callback_serialization_f callback, void* context)
 {
     switch (value_type) {
-        case MyCSS_PROPERTY_VALUE_LENGTH:
+        case MyCSS_PROPERTY_VALUE__LENGTH:
             mycss_values_serialization_length(value, callback, context);
             break;
             
-        case MyCSS_PROPERTY_VALUE_PERCENTAGE:
+        case MyCSS_PROPERTY_VALUE__PERCENTAGE:
             mycss_values_serialization_percentage(value, callback, context);
             break;
             

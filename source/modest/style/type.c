@@ -20,5 +20,19 @@
 
 #include "modest/style/type.h"
 
+void * modest_style_type_create(modest_t* modest, size_t size)
+{
+    void* data = (void*)mchar_async_malloc(modest->mstyle_type_obj, modest->mstyle_type_node_id, size);
+    
+    if(data == NULL)
+        return NULL;
+    
+    memset(data, 0, size);
+    
+    return data;
+}
 
-
+modest_status_t modest_style_type_init(modest_t* modest, void *data)
+{
+    return MODEST_STATUS_OK;
+}

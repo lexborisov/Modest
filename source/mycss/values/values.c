@@ -31,8 +31,21 @@ void * mycss_values_create(mycss_entry_t* entry, size_t size)
 
 void * mycss_values_destroy(mycss_entry_t* entry, void* value)
 {
+    if(value == NULL)
+        return NULL;
+    
     mchar_async_free(entry->mchar, entry->mchar_value_node_id, value);
     return NULL;
+}
+
+void * mycss_values_clone(mycss_entry_t* entry, void* value)
+{
+    size_t size = mchar_async_get_size_by_data(value);
+    
+    void *new_value = mycss_values_create(entry, size);
+    memcpy(new_value, value, size);
+    
+    return new_value;
 }
 
 void mycss_values_entry_set(mycss_entry_t* entry, void** value)
@@ -40,9 +53,9 @@ void mycss_values_entry_set(mycss_entry_t* entry, void** value)
     entry->values = value;
 }
 
-
 void * mycss_values_entry(mycss_entry_t* entry)
 {
     return (*entry->values);
 }
+
 

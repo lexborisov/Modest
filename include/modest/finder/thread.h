@@ -34,6 +34,10 @@
 
 #include <mycss/declaration/myosi.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct modest_finder_thread_declaration {
     mycss_declaration_entry_t* entry;
     modest_style_raw_specificity_t raw_spec;
@@ -89,5 +93,9 @@ modest_status_t modest_finder_thread_process(modest_t* modest, modest_finder_thr
 
 void modest_finder_thread_wait_for_all_done(modest_finder_thread_t* finder_thread);
 bool modest_finder_thread_spec_is_up(modest_style_raw_specificity_t* spec_f, modest_style_raw_specificity_t* spec_t);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif /* thread_h */

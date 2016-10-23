@@ -31,6 +31,9 @@ static void mycss_declaration_serialization_important_if_need(mycss_declaration_
 bool mycss_declaration_serialization_entry(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
                                            mycss_callback_serialization_f callback, void* context)
 {
+    if(dec_entry == NULL)
+        return false;
+    
     mycss_property_serialization_type_name(dec_entry->type, callback, context);
     
     callback(": ", 2, context);
@@ -41,6 +44,9 @@ bool mycss_declaration_serialization_entry(mycss_entry_t* entry, mycss_declarati
 void mycss_declaration_serialization_entries(mycss_entry_t* entry, mycss_declaration_entry_t* first_dec_entry,
                                              mycss_callback_serialization_f callback, void* context)
 {
+    if(first_dec_entry == NULL)
+        return;
+    
     while(first_dec_entry) {
         mycss_declaration_serialization_entry(entry, first_dec_entry, callback, context);
         
@@ -56,7 +62,7 @@ void mycss_declaration_serialization_entries(mycss_entry_t* entry, mycss_declara
 bool mycss_declaration_serialization_undef(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
                                            mycss_callback_serialization_f callback, void* context)
 {
-    if(dec_entry->value == NULL)
+    if(dec_entry == NULL)
         return false;
     
     mycss_property_serialization_value(dec_entry->value_type, dec_entry->value, callback, context);
@@ -65,10 +71,10 @@ bool mycss_declaration_serialization_undef(mycss_entry_t* entry, mycss_declarati
     return true;
 }
 
-bool mycss_declaration_serialization_padding(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
+bool mycss_declaration_serialization_shorthand_four(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
                                            mycss_callback_serialization_f callback, void* context)
 {
-    if(dec_entry->value == NULL)
+    if(dec_entry == NULL || dec_entry->value == NULL)
         return false;
     
     mycss_values_shorthand_four_t *value = (mycss_values_shorthand_four_t*)dec_entry->value;
@@ -105,14 +111,52 @@ bool mycss_declaration_serialization_padding(mycss_entry_t* entry, mycss_declara
     return true;
 }
 
-bool mycss_declaration_serialization_padding_x(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
-                                               mycss_callback_serialization_f callback, void* context)
+bool mycss_declaration_serialization_shorthand_two(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
+                                                   mycss_callback_serialization_f callback, void* context)
 {
-    if(dec_entry->value == NULL)
+    if(dec_entry == NULL || dec_entry->value == NULL)
         return false;
     
-    mycss_property_serialization_value(dec_entry->value_type, dec_entry->value, callback, context);
+    mycss_values_shorthand_two_t *shorthand_two = (mycss_values_shorthand_two_t*)dec_entry->value;
+    mycss_declaration_entry_t *tmp;
+    
+    if(shorthand_two->one) {
+        tmp = (mycss_declaration_entry_t*)shorthand_two->one;
+        mycss_property_serialization_value(tmp->value_type, tmp->value, callback, context);
+    }
+    
+    if(shorthand_two->two) {
+        callback(" ", 1, context);
+        
+        tmp = (mycss_declaration_entry_t*)shorthand_two->two;
+        mycss_property_serialization_value(tmp->value_type, tmp->value, callback, context);
+    }
+    
     mycss_declaration_serialization_important_if_need(dec_entry, callback, context);
     
     return true;
 }
+
+bool mycss_declaration_serialization_shorthand_two_type(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
+                                                        mycss_callback_serialization_f callback, void* context)
+{
+    if(dec_entry == NULL || dec_entry->value == NULL)
+        return false;
+    
+    mycss_values_shorthand_two_type_t *short_two_type = (mycss_values_shorthand_two_type_t*)dec_entry->value;
+    
+    if(short_two_type->one) {
+        mycss_property_serialization_value(short_two_type->type_one, short_two_type->one, callback, context);
+    }
+    
+    if(short_two_type->two) {
+        callback(" ", 1, context);
+        
+        mycss_property_serialization_value(short_two_type->type_two, short_two_type->two, callback, context);
+    }
+    
+    mycss_declaration_serialization_important_if_need(dec_entry, callback, context);
+    
+    return true;
+}
+

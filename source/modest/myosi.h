@@ -22,7 +22,8 @@
 #define MODEST_MYOSI_H
 #pragma once
 
-#include "myhtml/myosi.h"
+#include "myhtml/myhtml.h"
+#include "mycss/mycss.h"
 
 #ifdef __cplusplus
 extern "C" {

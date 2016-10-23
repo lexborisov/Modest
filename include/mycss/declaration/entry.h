@@ -37,6 +37,9 @@ void mycss_declaration_entry_destroy(mycss_declaration_t* declaration, mycss_dec
 
 mycss_declaration_entry_t * mycss_declaration_entry(mycss_declaration_t* declaration);
 mycss_declaration_entry_t * mycss_declaration_entry_last(mycss_declaration_t* declaration);
+mycss_declaration_entry_t * mycss_declaration_entry_clone(mycss_declaration_t* declaration, mycss_declaration_entry_t* dec_entry, bool with_value);
+void mycss_declaration_entry_type_set(mycss_declaration_entry_t* dec_entry, mycss_property_type_t type);
+void mycss_declaration_entry_important_set(mycss_declaration_entry_t* dec_entry, bool is_important);
 
 void mycss_declaration_entry_append_to_current(mycss_declaration_t* declaration, mycss_declaration_entry_t* dec_entry);
 void mycss_declaration_entry_remove(mycss_declaration_t* declaration, mycss_declaration_entry_t* dec_entry);

@@ -265,7 +265,7 @@ bool mycss_property_parser_text_decoration(mycss_entry_t* entry, mycss_token_t* 
 bool mycss_property_parser_text_decoration_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_property_parser_text_decoration_line(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_property_parser_text_decoration_skip(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
-bool mycss_property_parser_text_decoration_styl(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_text_decoration_style(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_property_parser_text_emphasis(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_property_parser_text_emphasis_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_property_parser_text_emphasis_position(mycss_entry_t* entry, mycss_token_t* token, bool last_response);

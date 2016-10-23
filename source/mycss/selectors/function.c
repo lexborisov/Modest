@@ -154,7 +154,8 @@ void mycss_selectors_function_begin_not(mycss_entry_t* entry, mycss_selectors_en
     
     (*new_list)->parent = current_list;
     
-    mycss_entry_parser_list_push(entry, mycss_selectors_function_parser_not_or_matches_or_current_parser, entry->parser_switch, entry->parser_ending_token, false);
+    mycss_entry_parser_list_push(entry, mycss_selectors_function_parser_not_or_matches_or_current_parser,
+                                 entry->parser_switch, entry->parser_ending_token, false);
 }
 
 void mycss_selectors_function_begin_current(mycss_entry_t* entry, mycss_selectors_entry_t* selector)
@@ -173,7 +174,8 @@ void mycss_selectors_function_begin_current(mycss_entry_t* entry, mycss_selector
     
     (*new_list)->parent = current_list;
     
-    mycss_entry_parser_list_push(entry, mycss_selectors_function_parser_not_or_matches_or_current_parser, entry->parser_switch, entry->parser_ending_token, false);
+    mycss_entry_parser_list_push(entry, mycss_selectors_function_parser_not_or_matches_or_current_parser,
+                                 entry->parser_switch, entry->parser_ending_token, false);
 }
 
 void mycss_selectors_function_begin_nth_of_type(mycss_entry_t* entry, mycss_selectors_entry_t* selector)

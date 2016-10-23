@@ -18,36 +18,6 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#ifndef MODEST_STYLE_TYPE_H
-#define MODEST_STYLE_TYPE_H
-#pragma once
-
-#include "modest/myosi.h"
-#include "modest/modest.h"
-#include "mycss/declaration/myosi.h"
-#include "myhtml/utils/mchar_async.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef struct modest_style_type_length modest_style_type_length_t;
-typedef struct modest_style_type_display modest_style_type_display_t;
-
-struct modest_style_type_length {
-    float value;
-};
-
-struct modest_style_type_display {
-    mycss_property_display_t value;
-};
+#include "modest/node/property.h"
 
 
-void * modest_style_type_create(modest_t* modest, size_t size);
-modest_status_t modest_style_type_init(modest_t* modest, void *data);
-
-#ifdef __cplusplus
-} /* extern "C" */
-#endif
-
-#endif /* MODEST_STYLE_TYPE_H */

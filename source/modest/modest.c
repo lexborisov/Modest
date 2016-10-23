@@ -19,6 +19,9 @@
 */
 
 #include "modest/modest.h"
+#include "modest/style/sheet.h"
+#include "modest/style/raw.h"
+#include "modest/node/node.h"
 
 modest_t * modest_create(void)
 {
@@ -56,6 +59,40 @@ modest_status_t modest_init(modest_t* modest)
     modest->mstylesheet_node_id = mcobject_async_node_add(modest->mstylesheet_obj, &mcstatus);
     
     if(mcstatus)
+        return MODEST_STATUS_OK;
+    
+    
+    /* Modest style type */
+    modest->mstyle_type_obj = mchar_async_create(12, (4096 * 5));
+    if(modest->mstyle_type_obj == NULL)
+        return MODEST_STATUS_OK;
+    
+    modest->mstyle_type_node_id = mchar_async_node_add(modest->mstyle_type_obj);
+    
+    
+    /* Modest raw style */
+    modest->mraw_style_obj = mcobject_async_create();
+    if(modest->mraw_style_obj == NULL)
+        return MODEST_STATUS_OK;
+    
+    mcstatus = mcobject_async_init(modest->mraw_style_obj, 128, 1024, sizeof(modest_style_raw_t));
+    if(mcstatus)
+        return MODEST_STATUS_OK;
+    
+    /* base object node for all modest raw style objects */
+    modest->mraw_style_node_id = mcobject_async_node_add(modest->mraw_style_obj, &mcstatus);
+    
+    if(mcstatus)
+        return MODEST_STATUS_OK;
+    
+    
+    /* for raw declaration style */
+    modest->mraw_style_declaration_obj = mcobject_create();
+    if(modest->mraw_style_declaration_obj == NULL)
+        return MODEST_STATUS_OK;
+    
+    myhtml_status_t myhtml_status = mcobject_init(modest->mraw_style_declaration_obj, 256, sizeof(modest_style_raw_declaration_t));
+    if(myhtml_status)
         return MODEST_STATUS_OK;
     
     return MODEST_STATUS_OK;

@@ -23,8 +23,13 @@
 #pragma once
 
 #include <modest/myosi.h>
-#include <modest/node/node.h>
+#include <myhtml/utils/mcobject.h>
 #include <myhtml/utils/mcobject_async.h>
+#include <myhtml/utils/mchar_async.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct modest {
     mcobject_async_t* mnode_obj;
@@ -32,6 +37,18 @@ struct modest {
     
     mcobject_async_t* mstylesheet_obj;
     size_t mstylesheet_node_id;
+    
+    mchar_async_t* mstyle_type_obj;
+    size_t mstyle_type_node_id;
+    
+    mcobject_async_t* mraw_style_obj;
+    size_t mraw_style_node_id;
+    
+    mcobject_t* mraw_style_declaration_obj;
+    
+    /* refs */
+    myhtml_tree_t* myhtml_tree;
+    mycss_entry_t* mycss_entry;
 };
 
 
@@ -40,5 +57,8 @@ modest_status_t modest_init(modest_t* modest);
 void modest_clean(modest_t* modest);
 modest_t * modest_destroy(modest_t* modest, bool self_destroy);
 
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif /* MODEST_H */

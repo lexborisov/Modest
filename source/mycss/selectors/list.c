@@ -77,9 +77,12 @@ mycss_selectors_list_t * mycss_selectors_list_append_selector(mycss_selectors_t*
         current_list->entries_list = mycss_selectors_entries_list_add_one(selectors, current_list->entries_list, current_list->entries_list_length);
     }
     
-    selectors->specificity = &current_list->entries_list[current_list->entries_list_length].specificity;
+    mycss_selectors_entries_list_t *entries_list = &current_list->entries_list[current_list->entries_list_length];
+    memset(entries_list, 0, sizeof(mycss_selectors_entries_list_t));
     
-    current_list->entries_list[current_list->entries_list_length].entry = selector;
+    selectors->specificity = &entries_list->specificity;
+    
+    entries_list->entry = selector;
     current_list->entries_list_length++;
     
     return current_list;

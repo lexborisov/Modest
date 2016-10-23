@@ -44,8 +44,11 @@ void mycss_declaration_entry_clean_all(mycss_declaration_entry_t* dec_entry)
 
 void mycss_declaration_entry_destroy(mycss_declaration_t* declaration, mycss_declaration_entry_t* dec_entry)
 {
+    if(dec_entry == NULL)
+        return;
+    
     if(dec_entry->value)
-        mycss_values_destroy(declaration->ref_entry, dec_entry);
+        mycss_values_destroy(declaration->ref_entry, dec_entry->value);
     
     mcobject_free(declaration->mcobject_entries, dec_entry);
 }
@@ -61,6 +64,18 @@ void mycss_declaration_entry_append_to_current(mycss_declaration_t* declaration,
     }
     
     declaration->entry_last = dec_entry;
+}
+
+mycss_declaration_entry_t * mycss_declaration_entry_clone(mycss_declaration_t* declaration, mycss_declaration_entry_t* dec_entry, bool with_value)
+{
+    mycss_declaration_entry_t *new_decl = mycss_declaration_entry_create(declaration, NULL);
+    memcpy(new_decl, dec_entry, sizeof(mycss_declaration_entry_t));
+    
+    if(with_value && dec_entry->value) {
+        new_decl->value = mycss_values_clone(declaration->ref_entry, dec_entry->value);
+    }
+    
+    return new_decl;
 }
 
 void mycss_declaration_entry_remove(mycss_declaration_t* declaration, mycss_declaration_entry_t* dec_entry)
@@ -93,6 +108,16 @@ mycss_declaration_entry_t * mycss_declaration_entry(mycss_declaration_t* declara
 mycss_declaration_entry_t * mycss_declaration_entry_last(mycss_declaration_t* declaration)
 {
     return declaration->entry_last;
+}
+
+void mycss_declaration_entry_type_set(mycss_declaration_entry_t* dec_entry, mycss_property_type_t type)
+{
+    dec_entry->type = type;
+}
+
+void mycss_declaration_entry_important_set(mycss_declaration_entry_t* dec_entry, bool is_important)
+{
+    dec_entry->is_important = is_important;
 }
 
 

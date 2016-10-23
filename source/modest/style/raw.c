@@ -18,28 +18,34 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#ifndef MODEST_NODE_NODE_H
-#define MODEST_NODE_NODE_H
-#pragma once
-
-#include "modest/myosi.h"
-#include "modest/modest.h"
 #include "modest/style/raw.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+modest_style_raw_t * modest_style_raw_create(modest_t* modest)
+{
+    modest_style_raw_t* raw_style = (modest_style_raw_t*)mcobject_async_malloc(modest->mraw_style_obj, modest->mraw_style_node_id, NULL);
+    
+    if(raw_style == NULL)
+        return NULL;
+    
+    memset(raw_style, 0, sizeof(modest_style_raw_t));
+    
+    return raw_style;
+}
 
-struct modest_node {
-    modest_style_sheet_t* stylesheet;
-    modest_style_raw_t* raw_style;
-};
+modest_status_t modest_style_raw_init(modest_t* modest, modest_style_raw_t* raw_style)
+{
+    return MODEST_STATUS_OK;
+}
 
-modest_node_t * modest_node_create(modest_t* modest);
-modest_status_t modest_node_init(modest_t* modest, modest_node_t *mnode);
+modest_style_raw_declaration_t * modest_style_raw_declaration_create(modest_t* modest)
+{
+    modest_style_raw_declaration_t* raw_decl = (modest_style_raw_declaration_t*)mcobject_malloc(modest->mraw_style_declaration_obj, NULL);
+    
+    if(raw_decl == NULL)
+        return NULL;
+    
+    memset(raw_decl, 0, sizeof(modest_style_raw_declaration_t));
+    
+    return raw_decl;
+}
 
-#ifdef __cplusplus
-} /* extern "C" */
-#endif
-
-#endif /* MODEST_NODE_NODE_H */

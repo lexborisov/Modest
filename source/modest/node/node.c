@@ -19,6 +19,7 @@
 */
 
 #include "modest/node/node.h"
+#include "modest/style/sheet.h"
 
 modest_node_t * modest_node_create(modest_t* modest)
 {
@@ -42,5 +43,15 @@ modest_status_t modest_node_init(modest_t* modest, modest_node_t *mnode)
     if(status)
         return MODEST_STATUS_OK;
     
+    mnode->raw_style = modest_style_raw_create(modest);
+    if(mnode->raw_style == NULL)
+        return MODEST_STATUS_OK;
+    
+    status = modest_style_raw_init(modest, mnode->raw_style);
+    if(status)
+        return MODEST_STATUS_OK;
+    
     return MODEST_STATUS_OK;
 }
+
+

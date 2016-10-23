@@ -33,7 +33,20 @@ extern "C" {
 bool mycss_property_shared_switch_to_find_important(mycss_entry_t* entry);
 bool mycss_property_shared_switch_to_parse_error(mycss_entry_t* entry);
 bool mycss_property_shared_check_declaration_end(mycss_entry_t* entry, mycss_token_t* token);
-bool mycss_property_shared_length(mycss_entry_t* entry, mycss_token_t* token, mycss_declaration_entry_t* dec_entry);
+
+bool mycss_property_shared_number(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str);
+bool mycss_property_shared_length(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str);
+bool mycss_property_shared_percentage(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str);
+bool mycss_property_shared_length_percentage(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str);
+bool mycss_property_shared_default(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str);
+unsigned int mycss_property_shared_get_value_type(mycss_entry_t* entry, mycss_token_t* token, myhtml_string_t* str);
+bool mycss_property_shared_by_value_type(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, unsigned int check_type, myhtml_string_t* str);
+bool mycss_property_shared_width(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str);
+bool mycss_property_shared_height(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str);
+bool mycss_property_shared_line_width(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str);
+bool mycss_property_shared_line_style(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str);
+
+void mycss_property_shared_destroy_string(myhtml_string_t* str);
 
 #ifdef __cplusplus
 } /* extern "C" */
