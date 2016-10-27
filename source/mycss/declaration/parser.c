@@ -75,3 +75,5 @@ void mycss_declaration_parser_end(mycss_entry_t* entry, mycss_token_t* token)
         }
     }
 }
+
+

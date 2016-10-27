@@ -139,6 +139,214 @@ bool mycss_property_shared_length_percentage(mycss_entry_t* entry, mycss_token_t
     mycss_property_shared_percentage(entry, token, value, value_type, str);
 }
 
+bool mycss_property_shared_color(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+{
+    switch (token->type) {
+        case MyCSS_TOKEN_TYPE_FUNCTION:
+        {
+            if(str->data == NULL)
+                mycss_token_data_to_string(entry, token, str, true, false);
+            
+            const mycss_values_color_function_index_static_entry_t *color_entry =
+                mycss_values_color_function_index_entry_by_name(str->data, str->length);
+            
+            if(color_entry) {
+                *value = mycss_values_create(entry, sizeof(mycss_values_color_t));
+                *value_type = MyCSS_PROPERTY_VALUE__COLOR;
+                
+                entry->parser = color_entry->parser;
+                return true;
+            }
+            
+            break;
+        }
+            
+        case MyCSS_TOKEN_TYPE_IDENT:
+        {
+            if(str->data == NULL)
+                mycss_token_data_to_string(entry, token, str, true, false);
+            
+            const mycss_values_color_index_static_entry_t *color_entry =
+                mycss_values_color_index_entry_by_name(str->data, str->length);
+            
+            if(color_entry) {
+                mycss_values_color_t *color = mycss_values_create(entry, sizeof(mycss_values_color_t));
+                
+                color->name_id = color_entry->type;
+                color->type    = MyCSS_VALUES_COLOR_TYPE_NAMED;
+                
+                *value = color;
+                *value_type = MyCSS_PROPERTY_VALUE__COLOR;
+                return true;
+            }
+            
+            break;
+        }
+            
+        case MyCSS_TOKEN_TYPE_HASH: {
+            return mycss_values_color_parser_hex(entry, token, value, value_type, str);
+        }
+            
+        default:
+            break;
+    }
+    
+    return false;
+}
+
+bool mycss_property_shared_text_decoration_skip(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value,
+                                                unsigned int* value_type, myhtml_string_t* str, bool with_global)
+{
+    if(str->data == NULL)
+        mycss_token_data_to_string(entry, token, str, true, false);
+    
+    unsigned int text_dec_type = mycss_property_value_type_by_name(str->data, str->length);
+    
+    switch (text_dec_type) {
+        case MyCSS_PROPERTY_TEXT_DECORATION_SKIP_OBJECTS:
+            if(*value & MyCSS_VALUES_TEXT_DECORATION_SKIP_OBJECTS)
+                return false;
+            
+            *value |= MyCSS_VALUES_TEXT_DECORATION_SKIP_OBJECTS;
+            
+            entry->parser = mycss_property_parser_text_decoration_skip_not_none;
+            return true;
+            
+        case MyCSS_PROPERTY_TEXT_DECORATION_SKIP_SPACES:
+            if(*value & MyCSS_VALUES_TEXT_DECORATION_SKIP_SPACES)
+                return false;
+            
+            *value |= MyCSS_VALUES_TEXT_DECORATION_SKIP_SPACES;
+            
+            entry->parser = mycss_property_parser_text_decoration_skip_not_none;
+            return true;
+            
+        case MyCSS_PROPERTY_TEXT_DECORATION_SKIP_INK:
+            if(*value & MyCSS_VALUES_TEXT_DECORATION_SKIP_INK)
+                return false;
+            
+            *value |= MyCSS_VALUES_TEXT_DECORATION_SKIP_INK;
+            
+            entry->parser = mycss_property_parser_text_decoration_skip_not_none;
+            return true;
+            
+        case MyCSS_PROPERTY_TEXT_DECORATION_SKIP_EDGES:
+            if(*value & MyCSS_VALUES_TEXT_DECORATION_SKIP_EDGES)
+                return false;
+            
+            *value |= MyCSS_VALUES_TEXT_DECORATION_SKIP_EDGES;
+            
+            entry->parser = mycss_property_parser_text_decoration_skip_not_none;
+            return true;
+            
+        case MyCSS_PROPERTY_TEXT_DECORATION_SKIP_BOX_DECORATION:
+            if(*value & MyCSS_VALUES_TEXT_DECORATION_SKIP_BOX_DECORATION)
+                return false;
+            
+            *value |= MyCSS_VALUES_TEXT_DECORATION_SKIP_BOX_DECORATION;
+            
+            entry->parser = mycss_property_parser_text_decoration_skip_not_none;
+            return true;
+            
+        case MyCSS_PROPERTY_TEXT_DECORATION_LINE_NONE:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
+            if(with_global) {
+                *value_type = text_dec_type;
+                return true;
+            }
+            
+            break;
+            
+        default:
+            break;
+    }
+    
+    return false;
+}
+
+bool mycss_property_shared_text_decoration_line(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value,
+                                                unsigned int* value_type, myhtml_string_t* str, bool with_global)
+{
+    if(str->data == NULL)
+        mycss_token_data_to_string(entry, token, str, true, false);
+    
+    unsigned int text_dec_type = mycss_property_value_type_by_name(str->data, str->length);
+    
+    switch (text_dec_type) {
+        case MyCSS_PROPERTY_TEXT_DECORATION_LINE_UNDERLINE:
+            *value |= MyCSS_VALUES_TEXT_DECORATION_LINE_UNDERLINE;
+            
+            entry->parser = mycss_property_parser_text_decoration_line_not_none;
+            return true;
+            
+        case MyCSS_PROPERTY_TEXT_DECORATION_LINE_OVERLINE:
+            *value |= MyCSS_VALUES_TEXT_DECORATION_LINE_OVERLINE;
+            
+            entry->parser = mycss_property_parser_text_decoration_line_not_none;
+            return true;
+            
+        case MyCSS_PROPERTY_TEXT_DECORATION_LINE_LINE_THROUGH:
+            *value |= MyCSS_VALUES_TEXT_DECORATION_LINE_LINE_THROUGH;
+            
+            entry->parser = mycss_property_parser_text_decoration_line_not_none;
+            return true;
+            
+        case MyCSS_PROPERTY_TEXT_DECORATION_LINE_BLINK:
+            *value |= MyCSS_VALUES_TEXT_DECORATION_LINE_BLINK;
+            
+            entry->parser = mycss_property_parser_text_decoration_line_not_none;
+            return true;
+            
+        case MyCSS_PROPERTY_TEXT_DECORATION_LINE_NONE:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
+            if(with_global) {
+                *value_type = text_dec_type;
+                return true;
+            }
+            
+        default:
+            *value_type = MyCSS_PROPERTY_VALUE_UNDEF;
+            break;
+    }
+    
+    return false;
+}
+
+bool mycss_property_shared_text_decoration_style(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str)
+{
+    if(str->data == NULL)
+        mycss_token_data_to_string(entry, token, str, true, false);
+    
+    unsigned int valye_type = mycss_property_value_type_by_name(str->data, str->length);
+    
+    switch (valye_type) {
+        case MyCSS_PROPERTY_TEXT_DECORATION_STYLE_SOLID:
+        case MyCSS_PROPERTY_TEXT_DECORATION_STYLE_DOUBLE:
+        case MyCSS_PROPERTY_TEXT_DECORATION_STYLE_DOTTED:
+        case MyCSS_PROPERTY_TEXT_DECORATION_STYLE_DASHED:
+        case MyCSS_PROPERTY_TEXT_DECORATION_STYLE_WAVY:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
+            *value_type = valye_type;
+            return true;
+            
+        default:
+            *value_type = MyCSS_PROPERTY_VALUE_UNDEF;
+            break;
+    }
+    
+    return false;
+}
+
+
 bool mycss_property_shared_default(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
@@ -204,10 +412,6 @@ bool mycss_property_shared_width(mycss_entry_t* entry, mycss_token_t* token, voi
     *value_type = mycss_property_value_type_by_name(str->data, str->length);
     
     switch (*value_type) {
-        case MyCSS_PROPERTY_WIDTH_AVAILABLE:
-        case MyCSS_PROPERTY_WIDTH_MIN_CONTENT:
-        case MyCSS_PROPERTY_WIDTH_MAX_CONTENT:
-        case MyCSS_PROPERTY_WIDTH_FIT_CONTENT:
         case MyCSS_PROPERTY_WIDTH_AUTO:
             /* default values */
         case MyCSS_PROPERTY_VALUE_INHERIT:
@@ -237,12 +441,7 @@ bool mycss_property_shared_height(mycss_entry_t* entry, mycss_token_t* token, vo
     *value_type = mycss_property_value_type_by_name(str->data, str->length);
     
     switch (*value_type) {
-        case MyCSS_PROPERTY_HEIGHT_AVAILABLE:
-        case MyCSS_PROPERTY_HEIGHT_MIN_CONTENT:
-        case MyCSS_PROPERTY_HEIGHT_MAX_CONTENT:
-        case MyCSS_PROPERTY_HEIGHT_FIT_CONTENT:
         case MyCSS_PROPERTY_HEIGHT_AUTO:
-        case MyCSS_PROPERTY_HEIGHT_COMPLEX:
             /* default values */
         case MyCSS_PROPERTY_VALUE_INHERIT:
         case MyCSS_PROPERTY_VALUE_INITIAL:
@@ -288,6 +487,37 @@ bool mycss_property_shared_line_width(mycss_entry_t* entry, mycss_token_t* token
     return true;
 }
 
+bool mycss_property_shared_line_height(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+{
+    if(mycss_property_shared_length_percentage(entry, token, value, value_type, str) ||
+       mycss_property_shared_number(entry, token, value, value_type, str))
+    {
+        return true;
+    }
+    
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return false;
+    
+    if(str->data == NULL)
+        mycss_token_data_to_string(entry, token, str, true, false);
+    
+    *value_type = mycss_property_value_type_by_name(str->data, str->length);
+    
+    switch (*value_type) {
+        case MyCSS_PROPERTY_LINE_HEIGHT_NORMAL:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
+            return true;
+            
+        default:
+            break;
+    }
+    
+    return false;
+}
+
 bool mycss_property_shared_line_style(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
@@ -326,6 +556,247 @@ bool mycss_property_shared_line_style(mycss_entry_t* entry, mycss_token_t* token
 void mycss_property_shared_destroy_string(myhtml_string_t* str)
 {
     myhtml_string_destroy(str, false);
+}
+
+bool mycss_property_shared_font_ends(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str)
+{
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return false;
+    
+    if(str->data == NULL)
+        mycss_token_data_to_string(entry, token, str, true, false);
+    
+    *value_type = mycss_property_value_type_by_name(str->data, str->length);
+    
+    switch (*value_type) {
+        case MyCSS_PROPERTY_FONT_CAPTION:
+        case MyCSS_PROPERTY_FONT_ICON:
+        case MyCSS_PROPERTY_FONT_MENU:
+        case MyCSS_PROPERTY_FONT_MESSAGE_BOX:
+        case MyCSS_PROPERTY_FONT_SMALL_CAPTION:
+        case MyCSS_PROPERTY_FONT_STATUS_BAR:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
+            return true;
+            
+        default:
+            break;
+    }
+    
+    return false;
+}
+
+static mycss_values_font_family_entry_t * mycss_property_shared_font_family_check(mycss_entry_t* entry, void** value)
+{
+    if(*value == NULL)
+        *value = mycss_values_create(entry, sizeof(mycss_values_font_family_t));
+    
+    mycss_values_font_family_t *font_family = *value;
+    
+    if(font_family->entries) {
+        font_family->entries = mycss_values_realloc(entry, font_family->entries,
+                                                    (sizeof(mycss_values_font_family_entry_t) * font_family->entries_length),
+                                                    sizeof(mycss_values_font_family_entry_t));
+    }
+    else
+        font_family->entries = mycss_values_create(entry, sizeof(mycss_values_font_family_entry_t));
+    
+    mycss_values_font_family_entry_t *ff_entry = &font_family->entries[font_family->entries_length];
+    font_family->entries_length++;
+    
+    return ff_entry;
+}
+
+bool mycss_property_shared_font_family(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, bool* dont_destroy_str, myhtml_string_t* str)
+{
+    *dont_destroy_str = false;
+    
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT && token->type != MyCSS_TOKEN_TYPE_STRING)
+        return false;
+    
+    if(str->data == NULL)
+        mycss_token_data_to_string(entry, token, str, true, false);
+    
+    unsigned int family_type = mycss_property_value_type_by_name(str->data, str->length);
+    
+    switch (family_type) {
+        case MyCSS_PROPERTY_FONT_FAMILY_SERIF:
+        case MyCSS_PROPERTY_FONT_FAMILY_SANS_SERIF:
+        case MyCSS_PROPERTY_FONT_FAMILY_CURSIVE:
+        case MyCSS_PROPERTY_FONT_FAMILY_FANTASY:
+        case MyCSS_PROPERTY_FONT_FAMILY_MONOSPACE: {
+            mycss_values_font_family_entry_t *ff_entry = mycss_property_shared_font_family_check(entry, value);
+            
+            ff_entry->type = MyCSS_VALUES_FONT_FAMILY_TYPE_GENERIC;
+            ff_entry->prop_type = family_type;
+            
+            return true;
+        }
+            
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET: {
+            if(*value)
+                return false;
+            
+            switch (*value_type) {
+                case MyCSS_PROPERTY_VALUE_INHERIT:
+                case MyCSS_PROPERTY_VALUE_INITIAL:
+                case MyCSS_PROPERTY_VALUE_UNSET:
+                    return false;
+                    
+                default:
+                    *value_type = family_type;
+                    return true;
+            }
+        }
+            
+        default: {
+            mycss_values_font_family_entry_t *ff_entry = mycss_property_shared_font_family_check(entry, value);
+            
+            ff_entry->type = MyCSS_VALUES_FONT_FAMILY_TYPE_NAME;
+            ff_entry->str = *str;
+            
+            *dont_destroy_str = true;
+            return true;
+        }
+    }
+}
+
+bool mycss_property_shared_font_weight(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str)
+{
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT && token->type != MyCSS_TOKEN_TYPE_NUMBER)
+        return false;
+    
+    if(str->data == NULL)
+        mycss_token_data_to_string(entry, token, str, true, false);
+    
+    *value_type = mycss_property_value_type_by_name(str->data, str->length);
+    
+    switch (*value_type) {
+        case MyCSS_PROPERTY_FONT_WEIGHT_NORMAL:
+        case MyCSS_PROPERTY_FONT_WEIGHT_BOLD:
+        case MyCSS_PROPERTY_FONT_WEIGHT_BOLDER:
+        case MyCSS_PROPERTY_FONT_WEIGHT_LIGHTER:
+        case MyCSS_PROPERTY_FONT_WEIGHT_100:
+        case MyCSS_PROPERTY_FONT_WEIGHT_200:
+        case MyCSS_PROPERTY_FONT_WEIGHT_300:
+        case MyCSS_PROPERTY_FONT_WEIGHT_400:
+        case MyCSS_PROPERTY_FONT_WEIGHT_500:
+        case MyCSS_PROPERTY_FONT_WEIGHT_600:
+        case MyCSS_PROPERTY_FONT_WEIGHT_700:
+        case MyCSS_PROPERTY_FONT_WEIGHT_800:
+        case MyCSS_PROPERTY_FONT_WEIGHT_900:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
+            return true;
+            
+        default:
+            break;
+    }
+    
+    return false;
+}
+
+bool mycss_property_shared_font_size(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+{
+    if(mycss_property_shared_length_percentage(entry, token, value, value_type, str))
+        return true;
+    
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return false;
+    
+    if(str->data == NULL)
+        mycss_token_data_to_string(entry, token, str, true, false);
+    
+    *value_type = mycss_property_value_type_by_name(str->data, str->length);
+    
+    switch (*value_type) {
+        case MyCSS_PROPERTY_FONT_SIZE_XX_SMALL:
+        case MyCSS_PROPERTY_FONT_SIZE_X_SMALL:
+        case MyCSS_PROPERTY_FONT_SIZE_SMALL:
+        case MyCSS_PROPERTY_FONT_SIZE_MEDIUM:
+        case MyCSS_PROPERTY_FONT_SIZE_LARGE:
+        case MyCSS_PROPERTY_FONT_SIZE_X_LARGE:
+        case MyCSS_PROPERTY_FONT_SIZE_XX_LARGE:
+        case MyCSS_PROPERTY_FONT_SIZE_LARGER:
+        case MyCSS_PROPERTY_FONT_SIZE_SMALLER:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
+            return true;
+            
+        default:
+            break;
+    }
+    
+    return false;
+}
+
+bool mycss_property_shared_font_stretch(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str)
+{
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return false;
+    
+    if(str->data == NULL)
+        mycss_token_data_to_string(entry, token, str, true, false);
+    
+    *value_type = mycss_property_value_type_by_name(str->data, str->length);
+    
+    switch (*value_type) {
+        case MyCSS_PROPERTY_FONT_STRETCH_NORMAL:
+        case MyCSS_PROPERTY_FONT_STRETCH_ULTRA_CONDENSED:
+        case MyCSS_PROPERTY_FONT_STRETCH_EXTRA_CONDENSED:
+        case MyCSS_PROPERTY_FONT_STRETCH_CONDENSED:
+        case MyCSS_PROPERTY_FONT_STRETCH_SEMI_CONDENSED:
+        case MyCSS_PROPERTY_FONT_STRETCH_SEMI_EXPANDED:
+        case MyCSS_PROPERTY_FONT_STRETCH_EXPANDED:
+        case MyCSS_PROPERTY_FONT_STRETCH_EXTRA_EXPANDED:
+        case MyCSS_PROPERTY_FONT_STRETCH_ULTRA_EXPANDED:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
+            return true;
+            
+        default:
+            break;
+    }
+    
+    return false;
+}
+
+bool mycss_property_shared_font_style(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str)
+{
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return false;
+    
+    if(str->data == NULL)
+        mycss_token_data_to_string(entry, token, str, true, false);
+    
+    *value_type = mycss_property_value_type_by_name(str->data, str->length);
+    
+    switch (*value_type) {
+        case MyCSS_PROPERTY_FONT_STYLE_NORMAL:
+        case MyCSS_PROPERTY_FONT_STYLE_ITALIC:
+        case MyCSS_PROPERTY_FONT_STYLE_OBLIQUE:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
+            return true;
+            
+        default:
+            break;
+    }
+    
+    return false;
 }
 
 

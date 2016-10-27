@@ -25,6 +25,7 @@
 #include <mycss/property/myosi.h>
 #include <mycss/values/consume.h>
 #include <mycss/values/values.h>
+#include <mycss/values/color.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,13 +39,25 @@ bool mycss_property_shared_number(mycss_entry_t* entry, mycss_token_t* token, vo
 bool mycss_property_shared_length(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str);
 bool mycss_property_shared_percentage(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str);
 bool mycss_property_shared_length_percentage(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str);
+bool mycss_property_shared_color(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str);
 bool mycss_property_shared_default(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str);
 unsigned int mycss_property_shared_get_value_type(mycss_entry_t* entry, mycss_token_t* token, myhtml_string_t* str);
 bool mycss_property_shared_by_value_type(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, unsigned int check_type, myhtml_string_t* str);
 bool mycss_property_shared_width(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str);
 bool mycss_property_shared_height(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str);
 bool mycss_property_shared_line_width(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str);
+bool mycss_property_shared_line_height(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str);
 bool mycss_property_shared_line_style(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str);
+bool mycss_property_shared_text_decoration_skip(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value, unsigned int* value_type, myhtml_string_t* str, bool with_global);
+bool mycss_property_shared_text_decoration_style(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str);
+bool mycss_property_shared_text_decoration_line(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value, unsigned int* value_type, myhtml_string_t* str, bool with_global);
+
+bool mycss_property_shared_font_ends(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str);
+bool mycss_property_shared_font_weight(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str);
+bool mycss_property_shared_font_size(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str);
+bool mycss_property_shared_font_stretch(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str);
+bool mycss_property_shared_font_style(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str);
+bool mycss_property_shared_font_family(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, bool *dont_destroy_str, myhtml_string_t* str);
 
 void mycss_property_shared_destroy_string(myhtml_string_t* str);
 

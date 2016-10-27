@@ -24,17 +24,43 @@
 
 #include "mycss/myosi.h"
 #include "mycss/values/units.h"
+#include "mycss/values/color_const.h"
+#include "mycss/property/const.h"
 #include "myhtml/utils/mchar_async.h"
+#include "myhtml/mystring.h"
+#include "mycss/declaration/myosi.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+typedef enum mycss_values_text_decoration_line mycss_values_text_decoration_line_t;
+typedef enum mycss_values_text_decoration_skip mycss_values_text_decoration_skip_t;
+typedef struct mycss_values_text_decoration mycss_values_text_decoration_t;
+
+typedef enum mycss_values_color_type mycss_values_color_type_t;
+typedef enum mycss_values_color_type_value mycss_values_color_type_value_t;
+typedef struct mycss_values_color_alpha_value mycss_values_color_alpha_value_t;
+typedef struct mycss_values_color_hue_value mycss_values_color_hue_value_t;
+typedef struct mycss_values_color_hsla mycss_values_color_hsla_t;
+typedef struct mycss_values_color_hwb mycss_values_color_hwb_t;
+typedef struct mycss_values_color_gray mycss_values_color_gray_t;
+typedef struct mycss_values_color_rgba_number mycss_values_color_rgba_number_t;
+typedef struct mycss_values_color_rgba_percentage mycss_values_color_rgba_percentage_t;
+typedef struct mycss_values_color mycss_values_color_t;
+
+typedef enum mycss_values_font_family_type mycss_values_font_family_type_t;
+typedef struct mycss_values_font_family_entry mycss_values_font_family_entry_t;
+typedef struct mycss_values_font_family mycss_values_font_family_t;
+typedef struct mycss_values_font mycss_values_font_t;
 
 typedef struct mycss_values_shorthand_two_type mycss_values_shorthand_two_type_t;
 typedef struct mycss_values_shorthand_four mycss_values_shorthand_four_t;
 typedef struct mycss_values_shorthand_two mycss_values_shorthand_two_t;
 typedef struct mycss_values_percentage mycss_values_percentage_t;
 typedef struct mycss_values_length mycss_values_length_t;
+typedef struct mycss_values_number mycss_values_number_t;
+typedef struct mycss_values_angle mycss_values_angle_t;
 
 struct mycss_values_shorthand_two_type {
     void* one;
@@ -56,6 +82,15 @@ struct mycss_values_shorthand_two {
     void* two;
 };
 
+struct mycss_values_number {
+    union {
+        int i;
+        float f;
+    };
+    
+    bool is_float;
+};
+
 struct mycss_values_length {
     union {
         int i;
@@ -75,9 +110,172 @@ struct mycss_values_percentage {
     bool is_float;
 };
 
+struct mycss_values_angle {
+    union {
+        int i;
+        float f;
+    };
+    
+    bool is_float;
+    mycss_units_type_t type;
+};
+
+/*
+ Color
+ */
+enum mycss_values_color_type {
+    MyCSS_VALUES_COLOR_TYPE_UNDEF        = 0x00,
+    MyCSS_VALUES_COLOR_TYPE_RGB          = 0x01,
+    MyCSS_VALUES_COLOR_TYPE_RGBA         = 0x02,
+    MyCSS_VALUES_COLOR_TYPE_HSL          = 0x03,
+    MyCSS_VALUES_COLOR_TYPE_HSLA         = 0x04,
+    MyCSS_VALUES_COLOR_TYPE_HWB          = 0x05,
+    MyCSS_VALUES_COLOR_TYPE_GRAY         = 0x06,
+    MyCSS_VALUES_COLOR_TYPE_DEVICE_CMYK  = 0x07,
+    MyCSS_VALUES_COLOR_TYPE_MOD          = 0x08,
+    MyCSS_VALUES_COLOR_TYPE_HEX          = 0x09,
+    MyCSS_VALUES_COLOR_TYPE_NAMED        = 0x0a,
+    MyCSS_VALUES_COLOR_TYPE_CURRENTCOLOR = 0x0b,
+};
+
+enum mycss_values_color_type_value {
+    MyCSS_VALUES_COLOR_TYPE_VALUE_UNDEF      = 0x00,
+    MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER     = 0x01,
+    MyCSS_VALUES_COLOR_TYPE_VALUE_PERCENTAGE = 0x02,
+    MyCSS_VALUES_COLOR_TYPE_VALUE_ANGLE      = 0x03,
+    MyCSS_VALUES_COLOR_TYPE_VALUE_HEX_8      = 0x04,
+    MyCSS_VALUES_COLOR_TYPE_VALUE_HEX_6      = 0x05,
+    MyCSS_VALUES_COLOR_TYPE_VALUE_HEX_4      = 0x06,
+    MyCSS_VALUES_COLOR_TYPE_VALUE_HEX_3      = 0x07,
+};
+
+struct mycss_values_color_alpha_value {
+    union {
+        mycss_values_number_t number;
+        mycss_values_percentage_t percentage;
+    };
+    
+    mycss_values_color_type_value_t type_value;
+};
+
+struct mycss_values_color_hue_value {
+    union {
+        mycss_values_number_t number;
+        mycss_values_angle_t angle;
+    };
+    
+    mycss_values_color_type_value_t type_value;
+};
+
+struct mycss_values_color_hsla {
+    mycss_values_color_hue_value_t hue;
+    mycss_values_percentage_t saturation;
+    mycss_values_percentage_t lightness;
+    mycss_values_color_alpha_value_t alpha;
+};
+
+struct mycss_values_color_hwb {
+    mycss_values_color_hue_value_t hue;
+    mycss_values_percentage_t saturation;
+    mycss_values_percentage_t lightness;
+    mycss_values_color_alpha_value_t alpha;
+};
+
+struct mycss_values_color_gray {
+    mycss_values_number_t number;
+    mycss_values_color_alpha_value_t alpha;
+};
+
+struct mycss_values_color_rgba_number {
+    mycss_values_number_t r;
+    mycss_values_number_t g;
+    mycss_values_number_t b;
+    mycss_values_color_alpha_value_t alpha;
+};
+
+struct mycss_values_color_rgba_percentage {
+    mycss_values_percentage_t r;
+    mycss_values_percentage_t g;
+    mycss_values_percentage_t b;
+    mycss_values_color_alpha_value_t alpha;
+};
+
+struct mycss_values_color {
+    union {
+        mycss_values_color_rgba_number_t hex;
+        mycss_values_color_rgba_number_t rgba_number;
+        mycss_values_color_rgba_percentage_t rgba_percentage;
+        mycss_values_color_hsla_t hsla;
+        mycss_values_color_hwb_t hwb;
+        mycss_values_color_gray_t gray;
+        mycss_values_color_id_t name_id;
+    };
+    
+    mycss_values_color_type_t type;
+    mycss_values_color_type_value_t type_value;
+};
+
+/*
+ Font
+ */
+enum mycss_values_font_family_type {
+    MyCSS_VALUES_FONT_FAMILY_TYPE_UNDEF    = 0x00,
+    MyCSS_VALUES_FONT_FAMILY_TYPE_NAME     = 0x01,
+    MyCSS_VALUES_FONT_FAMILY_TYPE_GENERIC  = 0x02,
+};
+
+struct mycss_values_font_family_entry {
+    union {
+        myhtml_string_t str;
+        mycss_property_font_family_t prop_type;
+    };
+    
+    mycss_values_font_family_type_t type;
+};
+
+struct mycss_values_font_family {
+    mycss_values_font_family_entry_t* entries;
+    size_t entries_length;
+};
+
+struct mycss_values_font {
+    mycss_declaration_entry_t* style;
+    mycss_declaration_entry_t* weight;
+    mycss_declaration_entry_t* stretch;
+    mycss_declaration_entry_t* size;
+    mycss_declaration_entry_t* family;
+    mycss_declaration_entry_t* line_height;
+};
+
+/*
+ Decoration
+ */
+enum mycss_values_text_decoration_line {
+    MyCSS_VALUES_TEXT_DECORATION_LINE_UNDEF        = 0x00,
+    MyCSS_VALUES_TEXT_DECORATION_LINE_UNDERLINE    = 0x01,
+    MyCSS_VALUES_TEXT_DECORATION_LINE_OVERLINE     = 0x02,
+    MyCSS_VALUES_TEXT_DECORATION_LINE_LINE_THROUGH = 0x04,
+    MyCSS_VALUES_TEXT_DECORATION_LINE_BLINK        = 0x08
+};
+
+enum mycss_values_text_decoration_skip {
+    MyCSS_VALUES_TEXT_DECORATION_SKIP_UNDEF          = 0x00,
+    MyCSS_VALUES_TEXT_DECORATION_SKIP_OBJECTS        = 0x01,
+    MyCSS_VALUES_TEXT_DECORATION_SKIP_SPACES         = 0x02,
+    MyCSS_VALUES_TEXT_DECORATION_SKIP_INK            = 0x04,
+    MyCSS_VALUES_TEXT_DECORATION_SKIP_EDGES          = 0x08,
+    MyCSS_VALUES_TEXT_DECORATION_SKIP_BOX_DECORATION = 0x10
+};
+
+struct mycss_values_text_decoration {
+    mycss_declaration_entry_t* line;
+    mycss_declaration_entry_t* style;
+    mycss_declaration_entry_t* color;
+};
+
 void * mycss_values_create(mycss_entry_t* entry, size_t size);
 void * mycss_values_destroy(mycss_entry_t* entry, void* value);
-
+void * mycss_values_realloc(mycss_entry_t* entry, void* value, size_t old_size, size_t up_to);
 void * mycss_values_clone(mycss_entry_t* entry, void* value);
 
 void * mycss_values_entry(mycss_entry_t* entry);

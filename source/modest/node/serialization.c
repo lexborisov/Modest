@@ -70,6 +70,10 @@ bool modest_node_raw_serialization(mycss_entry_t* mycss_entry, modest_node_t* mn
     modest_node_raw_serialization_declaration(mycss_entry, modest_node_raw_property(mnode, vertical_align), callback, context, &is_use);
     modest_node_raw_serialization_declaration(mycss_entry, modest_node_raw_property(mnode, line_height), callback, context, &is_use);
     
+    modest_node_raw_serialization_declaration(mycss_entry, modest_node_raw_property(mnode, text_decoration_line), callback, context, &is_use);
+    modest_node_raw_serialization_declaration(mycss_entry, modest_node_raw_property(mnode, text_decoration_style), callback, context, &is_use);
+    modest_node_raw_serialization_declaration(mycss_entry, modest_node_raw_property(mnode, text_decoration_skip), callback, context, &is_use);
+    
     return true;
 }
 

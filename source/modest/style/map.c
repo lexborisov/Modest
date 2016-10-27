@@ -663,6 +663,87 @@ void modest_style_map_collate_declaration_line_height(modest_t* modest, myhtml_t
     }
 }
 
+/* text decoration */
+void modest_style_map_collate_declaration_text_decoration(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
+void modest_style_map_collate_declaration_text_decoration_color(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+    if(node->data == NULL)
+        return;
+    
+    modest_node_t *m_node = (modest_node_t*)node->data;
+    
+    if(m_node->raw_style->text_decoration_color == NULL) {
+        m_node->raw_style->text_decoration_color = modest_style_raw_declaration_create(modest);
+    }
+    
+    modest_style_raw_declaration_t *text_decoration_color = m_node->raw_style->text_decoration_color;
+    
+    if(modest_finder_thread_spec_is_up(spec, &text_decoration_color->spec)) {
+        text_decoration_color->declaration = decl;
+        text_decoration_color->spec = *spec;
+    }
+}
+
+void modest_style_map_collate_declaration_text_decoration_line(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+    if(node->data == NULL)
+        return;
+    
+    modest_node_t *m_node = (modest_node_t*)node->data;
+    
+    if(m_node->raw_style->text_decoration_line == NULL) {
+        m_node->raw_style->text_decoration_line = modest_style_raw_declaration_create(modest);
+    }
+    
+    modest_style_raw_declaration_t *text_decoration_line = m_node->raw_style->text_decoration_line;
+    
+    if(modest_finder_thread_spec_is_up(spec, &text_decoration_line->spec)) {
+        text_decoration_line->declaration = decl;
+        text_decoration_line->spec = *spec;
+    }
+}
+
+void modest_style_map_collate_declaration_text_decoration_skip(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+    if(node->data == NULL)
+        return;
+    
+    modest_node_t *m_node = (modest_node_t*)node->data;
+    
+    if(m_node->raw_style->text_decoration_skip == NULL) {
+        m_node->raw_style->text_decoration_skip = modest_style_raw_declaration_create(modest);
+    }
+    
+    modest_style_raw_declaration_t *text_decoration_skip = m_node->raw_style->text_decoration_skip;
+    
+    if(modest_finder_thread_spec_is_up(spec, &text_decoration_skip->spec)) {
+        text_decoration_skip->declaration = decl;
+        text_decoration_skip->spec = *spec;
+    }
+}
+
+void modest_style_map_collate_declaration_text_decoration_style(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+    if(node->data == NULL)
+        return;
+    
+    modest_node_t *m_node = (modest_node_t*)node->data;
+    
+    if(m_node->raw_style->text_decoration_style == NULL) {
+        m_node->raw_style->text_decoration_style = modest_style_raw_declaration_create(modest);
+    }
+    
+    modest_style_raw_declaration_t *text_decoration_style = m_node->raw_style->text_decoration_style;
+    
+    if(modest_finder_thread_spec_is_up(spec, &text_decoration_style->spec)) {
+        text_decoration_style->declaration = decl;
+        text_decoration_style->spec = *spec;
+    }
+}
+
 /* not yet */
 void modest_style_map_collate_declaration_align_content(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
 {
@@ -1477,26 +1558,6 @@ void modest_style_map_collate_declaration_text_align_last(modest_t* modest, myht
 }
 
 void modest_style_map_collate_declaration_text_combine_upright(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
-{
-}
-
-void modest_style_map_collate_declaration_text_decoration(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
-{
-}
-
-void modest_style_map_collate_declaration_text_decoration_color(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
-{
-}
-
-void modest_style_map_collate_declaration_text_decoration_line(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
-{
-}
-
-void modest_style_map_collate_declaration_text_decoration_skip(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
-{
-}
-
-void modest_style_map_collate_declaration_text_decoration_styl(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
 {
 }
 

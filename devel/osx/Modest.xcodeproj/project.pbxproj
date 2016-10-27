@@ -11,12 +11,14 @@
 		0E0239811D9FE8EC0084A81A /* type.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E02397F1D9FE8EC0084A81A /* type.c */; };
 		0E0239851D9FEAB90084A81A /* node.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E0239831D9FEAB90084A81A /* node.c */; };
 		0E0239881D9FEBE10084A81A /* modest.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E0239861D9FEBE10084A81A /* modest.c */; };
+		0E0460221DBE1B0D00685A80 /* color.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E0460201DBE1B0D00685A80 /* color.c */; };
 		0E0C918C1DAECB56007A0501 /* serialization.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E0C918A1DAECB56007A0501 /* serialization.c */; };
 		0E0C918F1DAED006007A0501 /* serialization.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E0C918D1DAED006007A0501 /* serialization.c */; };
 		0E0C91921DAED0F5007A0501 /* serialization.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E0C91901DAED0F5007A0501 /* serialization.c */; };
 		0E0C91961DB1064E007A0501 /* serialization.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E0C91941DB1064E007A0501 /* serialization.c */; };
 		0E0C91991DB107E7007A0501 /* property.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E0C91971DB107E7007A0501 /* property.c */; };
 		0E0C919C1DB10866007A0501 /* raw_property.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E0C919A1DB10866007A0501 /* raw_property.c */; };
+		0E4B525C1DC13BBB0095026A /* parser_text_decoration.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E4B525A1DC13BBB0095026A /* parser_text_decoration.c */; };
 		0E5AA4BD1DA9689700FF5358 /* shared.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E5AA4BB1DA9689700FF5358 /* shared.c */; };
 		0E750EE31D9AF1D500337E9B /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E750EE21D9AF1D500337E9B /* main.c */; };
 		0E750EF81D9AF25300337E9B /* finder.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E750EEE1D9AF25300337E9B /* finder.c */; };
@@ -104,6 +106,7 @@
 		0E7510051D9AF27F00337E9B /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E750FE51D9AF27F00337E9B /* utils.c */; };
 		0E818EF61DAE6F8F005B0C77 /* serialization.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E818EF41DAE6F8F005B0C77 /* serialization.c */; };
 		0EA033771DB6AFBA009CB2B9 /* raw.c in Sources */ = {isa = PBXBuildFile; fileRef = 0EA033751DB6AFBA009CB2B9 /* raw.c */; };
+		0EF68DCE1DBF6CF000B0DEA4 /* color_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 0EF68DCC1DBF6CF000B0DEA4 /* color_parser.c */; };
 		0EF808A31D9FF3BC001AF6EF /* sheet.c in Sources */ = {isa = PBXBuildFile; fileRef = 0EF808A11D9FF3BC001AF6EF /* sheet.c */; };
 		0EF808A61DA08BBE001AF6EF /* map.c in Sources */ = {isa = PBXBuildFile; fileRef = 0EF808A41DA08BBE001AF6EF /* map.c */; };
 /* End PBXBuildFile section */
@@ -129,6 +132,10 @@
 		0E0239841D9FEAB90084A81A /* node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = node.h; path = ../../../source/modest/node/node.h; sourceTree = "<group>"; };
 		0E0239861D9FEBE10084A81A /* modest.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = modest.c; path = ../../../source/modest/modest.c; sourceTree = "<group>"; };
 		0E0239871D9FEBE10084A81A /* modest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = modest.h; path = ../../../source/modest/modest.h; sourceTree = "<group>"; };
+		0E04601E1DBE1A7500685A80 /* color_const.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = color_const.h; sourceTree = "<group>"; };
+		0E04601F1DBE1A7500685A80 /* color_resources.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = color_resources.h; sourceTree = "<group>"; };
+		0E0460201DBE1B0D00685A80 /* color.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = color.c; sourceTree = "<group>"; };
+		0E0460211DBE1B0D00685A80 /* color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = color.h; sourceTree = "<group>"; };
 		0E0C918A1DAECB56007A0501 /* serialization.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = serialization.c; sourceTree = "<group>"; };
 		0E0C918B1DAECB56007A0501 /* serialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = serialization.h; sourceTree = "<group>"; };
 		0E0C918D1DAED006007A0501 /* serialization.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = serialization.c; sourceTree = "<group>"; };
@@ -142,6 +149,7 @@
 		0E0C91981DB107E7007A0501 /* property.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = property.h; path = ../../../source/modest/node/property.h; sourceTree = "<group>"; };
 		0E0C919A1DB10866007A0501 /* raw_property.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = raw_property.c; path = ../../../source/modest/node/raw_property.c; sourceTree = "<group>"; };
 		0E0C919B1DB10866007A0501 /* raw_property.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = raw_property.h; path = ../../../source/modest/node/raw_property.h; sourceTree = "<group>"; };
+		0E4B525A1DC13BBB0095026A /* parser_text_decoration.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = parser_text_decoration.c; sourceTree = "<group>"; };
 		0E5AA4BB1DA9689700FF5358 /* shared.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = shared.c; sourceTree = "<group>"; };
 		0E5AA4BC1DA9689700FF5358 /* shared.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shared.h; sourceTree = "<group>"; };
 		0E750EDF1D9AF1D500337E9B /* Modest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Modest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -342,6 +350,8 @@
 		0E818EF71DAE6FEE005B0C77 /* serialization_resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = serialization_resources.h; sourceTree = "<group>"; };
 		0EA033751DB6AFBA009CB2B9 /* raw.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = raw.c; sourceTree = "<group>"; };
 		0EA033761DB6AFBA009CB2B9 /* raw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = raw.h; sourceTree = "<group>"; };
+		0EF68DCC1DBF6CF000B0DEA4 /* color_parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = color_parser.c; sourceTree = "<group>"; };
+		0EF68DCD1DBF6CF000B0DEA4 /* color_parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = color_parser.h; sourceTree = "<group>"; };
 		0EF808A11D9FF3BC001AF6EF /* sheet.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sheet.c; sourceTree = "<group>"; };
 		0EF808A21D9FF3BC001AF6EF /* sheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sheet.h; sourceTree = "<group>"; };
 		0EF808A41DA08BBE001AF6EF /* map.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = map.c; sourceTree = "<group>"; };
@@ -503,8 +513,8 @@
 				0E750F401D9AF27200337E9B /* mycss.h */,
 				0E750F421D9AF27200337E9B /* mystring.c */,
 				0E750F431D9AF27200337E9B /* mystring.h */,
-				0E750F4C1D9AF27200337E9B /* parser.c */,
 				0E750F4D1D9AF27200337E9B /* parser.h */,
+				0E750F4C1D9AF27200337E9B /* parser.c */,
 				0E750F6D1D9AF27200337E9B /* stylesheet.h */,
 				0E750F6C1D9AF27200337E9B /* stylesheet.c */,
 				0E750F6E1D9AF27200337E9B /* tokenizer_end.c */,
@@ -640,6 +650,7 @@
 				0E750F501D9AF27200337E9B /* init.c */,
 				0E750F541D9AF27200337E9B /* parser.h */,
 				0E750F531D9AF27200337E9B /* parser.c */,
+				0E4B525A1DC13BBB0095026A /* parser_text_decoration.c */,
 				0E5AA4BC1DA9689700FF5358 /* shared.h */,
 				0E5AA4BB1DA9689700FF5358 /* shared.c */,
 				0E750F551D9AF27200337E9B /* resources.h */,
@@ -689,6 +700,12 @@
 				0E750F7E1D9AF27200337E9B /* values.c */,
 				0E750F771D9AF27200337E9B /* consume.h */,
 				0E750F761D9AF27200337E9B /* consume.c */,
+				0E0460211DBE1B0D00685A80 /* color.h */,
+				0E0460201DBE1B0D00685A80 /* color.c */,
+				0E04601E1DBE1A7500685A80 /* color_const.h */,
+				0EF68DCD1DBF6CF000B0DEA4 /* color_parser.h */,
+				0EF68DCC1DBF6CF000B0DEA4 /* color_parser.c */,
+				0E04601F1DBE1A7500685A80 /* color_resources.h */,
 				0E750F7C1D9AF27200337E9B /* units.h */,
 				0E750F7B1D9AF27200337E9B /* units.c */,
 				0E750F7D1D9AF27200337E9B /* units_resources.h */,
@@ -803,6 +820,7 @@
 				0E7510031D9AF27F00337E9B /* mcsync.c in Sources */,
 				0E750F231D9AF26300337E9B /* pclt.c in Sources */,
 				0E750F8C1D9AF27200337E9B /* init.c in Sources */,
+				0EF68DCE1DBF6CF000B0DEA4 /* color_parser.c in Sources */,
 				0E750F1F1D9AF26300337E9B /* myfont.c in Sources */,
 				0E750FF81D9AF27F00337E9B /* thread.c in Sources */,
 				0E750FE71D9AF27F00337E9B /* callback.c in Sources */,
@@ -837,6 +855,7 @@
 				0E750F9D1D9AF27200337E9B /* tokenizer.c in Sources */,
 				0E750FF11D9AF27F00337E9B /* parser.c in Sources */,
 				0E750F221D9AF26300337E9B /* os_2.c in Sources */,
+				0E0460221DBE1B0D00685A80 /* color.c in Sources */,
 				0E750F991D9AF27200337E9B /* value.c in Sources */,
 				0E0C919C1DB10866007A0501 /* raw_property.c in Sources */,
 				0E750FF01D9AF27F00337E9B /* mystring.c in Sources */,
@@ -864,6 +883,7 @@
 				0E750FED1D9AF27F00337E9B /* myhtml.c in Sources */,
 				0E750F821D9AF27200337E9B /* convert.c in Sources */,
 				0E750FE91D9AF27F00337E9B /* data_process.c in Sources */,
+				0E4B525C1DC13BBB0095026A /* parser_text_decoration.c in Sources */,
 				0E7510011D9AF27F00337E9B /* mcobject_async.c in Sources */,
 				0E750FE81D9AF27F00337E9B /* charef.c in Sources */,
 				0E750EE31D9AF1D500337E9B /* main.c in Sources */,
@@ -973,7 +993,7 @@
 		0E750EE71D9AF1D500337E9B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_OPTIMIZATION_LEVEL = 2;
 				HEADER_SEARCH_PATHS = ../../source;
 				OTHER_CFLAGS = (
 					"-DMyHTML_WITH_PERF",

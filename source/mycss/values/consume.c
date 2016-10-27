@@ -20,7 +20,6 @@
 
 #include "mycss/values/consume.h"
 
-
 bool mycss_values_consume_length(mycss_entry_t* entry, mycss_token_t* token)
 {
     if(token->type == MyCSS_TOKEN_TYPE_DIMENSION || token->type == MyCSS_TOKEN_TYPE_NUMBER)

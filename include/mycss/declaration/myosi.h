@@ -47,6 +47,7 @@ struct mycss_declaration {
     
     mycss_declaration_entry_t** entry;
     mycss_declaration_entry_t*  entry_last;
+    mycss_declaration_entry_t*  entry_temp;
     
     mycss_token_type_t ending_token;
     

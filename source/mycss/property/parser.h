@@ -32,6 +32,20 @@
 extern "C" {
 #endif
 
+/* custom added */
+bool mycss_property_parser_destroy_string(myhtml_string_t* str, bool return_value);
+bool mycss_property_parser_switcher_to_find_important(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_text_decoration_line_not_none(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_text_decoration_line_after(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_text_decoration_skip_not_none(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_text_decoration_skip_after(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_text_decoration_color_after(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_text_decoration_after_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_text_decoration_after_line(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_color_after(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_border_color_after(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+
+/* all generated */
 bool mycss_property_parser_undef(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_property_parser_align_content(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_property_parser_align_items(mycss_entry_t* entry, mycss_token_t* token, bool last_response);

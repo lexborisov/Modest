@@ -20,10 +20,16 @@
 
 #include "mycss/property/parser.h"
 
-static bool mycss_property_parser_destroy_string(myhtml_string_t* str, bool return_value)
+bool mycss_property_parser_destroy_string(myhtml_string_t* str, bool return_value)
 {
     mycss_property_shared_destroy_string(str);
     return return_value;
+}
+
+bool mycss_property_parser_switcher_to_find_important(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    entry->parser = mycss_declaration_state_colon_before_important;
+    return true;
 }
 
 /////////////////////////////////////////////////////////
@@ -63,6 +69,68 @@ bool mycss_property_parser_height(mycss_entry_t* entry, mycss_token_t* token, bo
         return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
     
     return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+bool mycss_property_parser_max_width(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(mycss_property_shared_length_percentage(entry, token, &dec_entry->value, &dec_entry->value_type, &str))
+        return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+    
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return mycss_property_shared_switch_to_parse_error(entry);
+    
+    if(str.data == NULL)
+        mycss_token_data_to_string(entry, token, &str, true, false);
+    
+    dec_entry->value_type = mycss_property_value_type_by_name(str.data, str.length);
+    
+    switch (dec_entry->value_type) {
+        case MyCSS_PROPERTY_MAX_WIDTH_NONE:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+            
+        default:
+            dec_entry->value_type = MyCSS_PROPERTY_VALUE_UNDEF;
+            break;
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+bool mycss_property_parser_max_height(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_max_width(entry, token, last_response);
+}
+
+bool mycss_property_parser_min_width(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(mycss_property_shared_length_percentage(entry, token, &dec_entry->value, &dec_entry->value_type, &str) ||
+       mycss_property_shared_default(entry, token, &dec_entry->value_type, &str))
+    {
+        return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+bool mycss_property_parser_min_height(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_min_width(entry, token, last_response);
 }
 
 /* padding */
@@ -783,11 +851,195 @@ bool mycss_property_parser_line_height(mycss_entry_t* entry, mycss_token_t* toke
     myhtml_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
-    if(mycss_property_shared_length_percentage(entry, token, &dec_entry->value, &dec_entry->value_type, &str) ||
-       mycss_property_shared_number(entry, token, &dec_entry->value, &dec_entry->value_type, &str))
-    {
+    if(mycss_property_shared_line_height(entry, token, &dec_entry->value, &dec_entry->value_type, &str))
         return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+/* color */
+bool mycss_property_parser_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(mycss_property_shared_color(entry, token, &dec_entry->value, &dec_entry->value_type, &str))
+    {
+        if(entry->parser != mycss_property_parser_text_decoration_color)
+            entry->parser_switch = mycss_property_parser_color_after;
+        
+        return mycss_property_parser_destroy_string(&str, true);
     }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+bool mycss_property_parser_color_after(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(mycss_property_shared_check_declaration_end(entry, token))
+        return true;
+    
+    dec_entry->value = mycss_values_destroy(entry, dec_entry->value);
+    
+    return mycss_property_shared_switch_to_parse_error(entry);
+}
+
+/* border color */
+static mycss_declaration_entry_t * mycss_property_parser_border_color_step(mycss_entry_t* entry, mycss_token_t* token, unsigned int type)
+{
+    myhtml_string_t str = {0};
+    
+    void *value = NULL;
+    unsigned int value_type = 0;
+    
+    if(mycss_property_shared_color(entry, token, &value, &value_type, &str) ||
+       mycss_property_shared_default(entry, token, &value_type, &str))
+    {
+        mycss_declaration_entry_t* step_dec_entry = mycss_declaration_entry_create(entry->declaration, NULL);
+        
+        step_dec_entry->type       = type;
+        step_dec_entry->value      = value;
+        step_dec_entry->value_type = value_type;
+        
+        if(entry->parser != mycss_property_parser_border_color) {
+            entry->declaration->entry_temp = entry->declaration->entry_last;
+            entry->declaration->entry_last = step_dec_entry;
+            
+            entry->parser_switch = mycss_property_parser_border_color_after;
+        }
+        
+        myhtml_string_destroy(&str, false);
+        return step_dec_entry;
+    }
+    
+    myhtml_string_destroy(&str, false);
+    return NULL;
+}
+
+bool mycss_property_parser_border_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(dec_entry->value == NULL)
+        dec_entry->value = mycss_values_create(entry, sizeof(mycss_values_shorthand_four_t));
+    
+    mycss_values_shorthand_four_t *value = dec_entry->value;
+    
+    if(value->one == NULL) {
+        if((value->one = mycss_property_parser_border_color_step(entry, token, MyCSS_PROPERTY_BORDER_TOP_COLOR__COLOR))) {
+            return true;
+        }
+    }
+    else if(value->two == NULL) {
+        if((value->two = mycss_property_parser_border_color_step(entry, token, MyCSS_PROPERTY_BORDER_RIGHT_COLOR__COLOR))) {
+            return true;
+        }
+    }
+    else if(value->three == NULL) {
+        if((value->three = mycss_property_parser_border_color_step(entry, token, MyCSS_PROPERTY_BORDER_BOTTOM_COLOR__COLOR))) {
+            return true;
+        }
+    }
+    else if(value->four == NULL) {
+        if((value->four = mycss_property_parser_border_color_step(entry, token, MyCSS_PROPERTY_BORDER_LEFT_COLOR__COLOR))) {
+            return true;
+        }
+    }
+    
+    return mycss_property_shared_switch_to_parse_error(entry);
+}
+
+bool mycss_property_parser_border_color_after(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    entry->declaration->entry_last = entry->declaration->entry_temp;
+    
+    if(mycss_property_shared_check_declaration_end(entry, token)) {
+        return true;
+    }
+    
+    entry->parser = mycss_property_parser_border_color;
+    return false;
+}
+
+bool mycss_property_parser_border_top_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_color(entry, token, last_response);
+}
+
+bool mycss_property_parser_border_right_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_color(entry, token, last_response);
+}
+
+bool mycss_property_parser_border_bottom_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_color(entry, token, last_response);
+}
+
+bool mycss_property_parser_border_left_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_color(entry, token, last_response);
+}
+
+/* position */
+bool mycss_property_parser_position(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return mycss_property_shared_switch_to_parse_error(entry);
+    
+    mycss_token_data_to_string(entry, token, &str, true, false);
+    dec_entry->value_type = mycss_property_value_type_by_name(str.data, str.length);
+    
+    switch (dec_entry->value_type) {
+        case MyCSS_PROPERTY_POSITION_STATIC:
+        case MyCSS_PROPERTY_POSITION_RELATIVE:
+        case MyCSS_PROPERTY_POSITION_ABSOLUTE:
+        case MyCSS_PROPERTY_POSITION_STICKY:
+        case MyCSS_PROPERTY_POSITION_FIXED:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+            
+        default:
+            break;
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+/* z-index */
+bool mycss_property_parser_z_index(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(mycss_property_shared_number(entry, token, &dec_entry->value, &dec_entry->value_type, &str))
+        return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
         return mycss_property_shared_switch_to_parse_error(entry);
@@ -798,7 +1050,7 @@ bool mycss_property_parser_line_height(mycss_entry_t* entry, mycss_token_t* toke
     dec_entry->value_type = mycss_property_value_type_by_name(str.data, str.length);
     
     switch (dec_entry->value_type) {
-        case MyCSS_PROPERTY_LINE_HEIGHT_NORMAL:
+        case MyCSS_PROPERTY_Z_INDEX_AUTO:
             /* default values */
         case MyCSS_PROPERTY_VALUE_INHERIT:
         case MyCSS_PROPERTY_VALUE_INITIAL:
@@ -813,41 +1065,893 @@ bool mycss_property_parser_line_height(mycss_entry_t* entry, mycss_token_t* toke
     return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
 }
 
-/* text decoration */
-bool mycss_property_parser_text_decoration_line(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+/* Cursor */
+bool mycss_property_parser_cursor(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
-        return mycss_property_shared_switch_to_parse_error(entry);
-    
     myhtml_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
-    if(str.data == NULL)
-        mycss_token_data_to_string(entry, token, &str, true, false);
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return mycss_property_shared_switch_to_parse_error(entry);
     
-    mycss_property_value_t valye_type = mycss_property_value_type_by_name(str.data, str.length);
+    mycss_token_data_to_string(entry, token, &str, true, false);
+    dec_entry->value_type = mycss_property_value_type_by_name(str.data, str.length);
     
     switch (dec_entry->value_type) {
-        case MyCSS_PROPERTY_TEXT_DECORATION_LINE_UNDERLINE:
-        case MyCSS_PROPERTY_TEXT_DECORATION_LINE_OVERLINE:
-        case MyCSS_PROPERTY_TEXT_DECORATION_LINE_LINE_THROUGH:
-        case MyCSS_PROPERTY_TEXT_DECORATION_LINE_BLINK:
-            dec_entry->value_type |= valye_type;
-            return mycss_property_parser_destroy_string(&str, true);
-            
-        case MyCSS_PROPERTY_TEXT_DECORATION_LINE_NONE:
+        case MyCSS_PROPERTY_CURSOR_AUTO:
+        case MyCSS_PROPERTY_CURSOR_DEFAULT:
+        case MyCSS_PROPERTY_CURSOR_NONE:
+        case MyCSS_PROPERTY_CURSOR_CONTEXT_MENU:
+        case MyCSS_PROPERTY_CURSOR_HELP:
+        case MyCSS_PROPERTY_CURSOR_POINTER:
+        case MyCSS_PROPERTY_CURSOR_PROGRESS:
+        case MyCSS_PROPERTY_CURSOR_WAIT:
+        case MyCSS_PROPERTY_CURSOR_CELL:
+        case MyCSS_PROPERTY_CURSOR_CROSSHAIR:
+        case MyCSS_PROPERTY_CURSOR_TEXT:
+        case MyCSS_PROPERTY_CURSOR_VERTICAL_TEXT:
+        case MyCSS_PROPERTY_CURSOR_ALIAS:
+        case MyCSS_PROPERTY_CURSOR_COPY:
+        case MyCSS_PROPERTY_CURSOR_MOVE:
+        case MyCSS_PROPERTY_CURSOR_NO_DROP:
+        case MyCSS_PROPERTY_CURSOR_NOT_ALLOWED:
+        case MyCSS_PROPERTY_CURSOR_GRAB:
+        case MyCSS_PROPERTY_CURSOR_GRABBING:
+        case MyCSS_PROPERTY_CURSOR_E_RESIZE:
+        case MyCSS_PROPERTY_CURSOR_N_RESIZE:
+        case MyCSS_PROPERTY_CURSOR_NE_RESIZE:
+        case MyCSS_PROPERTY_CURSOR_NW_RESIZE:
+        case MyCSS_PROPERTY_CURSOR_S_RESIZE:
+        case MyCSS_PROPERTY_CURSOR_SE_RESIZE:
+        case MyCSS_PROPERTY_CURSOR_SW_RESIZE:
+        case MyCSS_PROPERTY_CURSOR_W_RESIZE:
+        case MyCSS_PROPERTY_CURSOR_EW_RESIZE:
+        case MyCSS_PROPERTY_CURSOR_NS_RESIZE:
+        case MyCSS_PROPERTY_CURSOR_NESW_RESIZE:
+        case MyCSS_PROPERTY_CURSOR_NWSE_RESIZE:
+        case MyCSS_PROPERTY_CURSOR_COL_RESIZE:
+        case MyCSS_PROPERTY_CURSOR_ROW_RESIZE:
+        case MyCSS_PROPERTY_CURSOR_ALL_SCROLL:
+        case MyCSS_PROPERTY_CURSOR_ZOOM_IN:
+        case MyCSS_PROPERTY_CURSOR_ZOOM_OUT:
             /* default values */
         case MyCSS_PROPERTY_VALUE_INHERIT:
         case MyCSS_PROPERTY_VALUE_INITIAL:
         case MyCSS_PROPERTY_VALUE_UNSET:
-            dec_entry->value_type = valye_type;
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+            
+        default:
+            break;
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+/* background */
+bool mycss_property_parser_background_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_color(entry, token, last_response);
+}
+
+/* float */
+bool mycss_property_parser_float(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return mycss_property_shared_switch_to_parse_error(entry);
+    
+    mycss_token_data_to_string(entry, token, &str, true, false);
+    dec_entry->value_type = mycss_property_value_type_by_name(str.data, str.length);
+    
+    switch (dec_entry->value_type) {
+        case MyCSS_PROPERTY_FLOAT_LEFT:
+        case MyCSS_PROPERTY_FLOAT_RIGHT:
+        case MyCSS_PROPERTY_FLOAT_TOP:
+        case MyCSS_PROPERTY_FLOAT_BOTTOM:
+        case MyCSS_PROPERTY_FLOAT_START:
+        case MyCSS_PROPERTY_FLOAT_END:
+        case MyCSS_PROPERTY_FLOAT_NONE:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+            
+        default:
+            break;
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+bool mycss_property_parser_float_displace(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return mycss_property_shared_switch_to_parse_error(entry);
+    
+    mycss_token_data_to_string(entry, token, &str, true, false);
+    dec_entry->value_type = mycss_property_value_type_by_name(str.data, str.length);
+    
+    switch (dec_entry->value_type) {
+        case MyCSS_PROPERTY_FLOAT_DISPLACE_LINE:
+        case MyCSS_PROPERTY_FLOAT_DISPLACE_INDENT:
+        case MyCSS_PROPERTY_FLOAT_DISPLACE_BLOCK:
+        case MyCSS_PROPERTY_FLOAT_DISPLACE_BLOCK_WITHIN_PAGE:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+            
+        default:
+            break;
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+/* top right bottom left */
+bool mycss_property_parser_top(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(mycss_property_shared_length_percentage(entry, token, &dec_entry->value, &dec_entry->value_type, &str))
+        return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+    
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return mycss_property_shared_switch_to_parse_error(entry);
+    
+    if(str.data == NULL)
+        mycss_token_data_to_string(entry, token, &str, true, false);
+    
+    dec_entry->value_type = mycss_property_value_type_by_name(str.data, str.length);
+    
+    switch (dec_entry->value_type) {
+        case MyCSS_PROPERTY_VALUE_AUTO:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
             return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
             
         default:
             dec_entry->value_type = MyCSS_PROPERTY_VALUE_UNDEF;
+            break;
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+bool mycss_property_parser_right(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_top(entry, token, last_response);
+}
+
+bool mycss_property_parser_bottom(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_top(entry, token, last_response);
+}
+
+bool mycss_property_parser_left(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_top(entry, token, last_response);
+}
+
+/* clear */
+bool mycss_property_parser_clear(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return mycss_property_shared_switch_to_parse_error(entry);
+    
+    mycss_token_data_to_string(entry, token, &str, true, false);
+    dec_entry->value_type = mycss_property_value_type_by_name(str.data, str.length);
+    
+    switch (dec_entry->value_type) {
+        case MyCSS_PROPERTY_CLEAR_LEFT:
+        case MyCSS_PROPERTY_CLEAR_RIGHT:
+        case MyCSS_PROPERTY_CLEAR_BOTH:
+        case MyCSS_PROPERTY_CLEAR_NONE:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+            
+        default:
+            break;
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+bool mycss_property_parser_clear_after(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return mycss_property_shared_switch_to_parse_error(entry);
+    
+    mycss_token_data_to_string(entry, token, &str, true, false);
+    dec_entry->value_type = mycss_property_value_type_by_name(str.data, str.length);
+    
+    switch (dec_entry->value_type) {
+        case MyCSS_PROPERTY_CLEAR_AFTER_NONE:
+        case MyCSS_PROPERTY_CLEAR_AFTER_LEFT:
+        case MyCSS_PROPERTY_CLEAR_AFTER_RIGHT:
+        case MyCSS_PROPERTY_CLEAR_AFTER_TOP:
+        case MyCSS_PROPERTY_CLEAR_AFTER_BOTTOM:
+        case MyCSS_PROPERTY_CLEAR_AFTER_INSIDE:
+        case MyCSS_PROPERTY_CLEAR_AFTER_OUTSIDE:
+        case MyCSS_PROPERTY_CLEAR_AFTER_START:
+        case MyCSS_PROPERTY_CLEAR_AFTER_END:
+        case MyCSS_PROPERTY_CLEAR_AFTER_BOTH:
+        case MyCSS_PROPERTY_CLEAR_AFTER_DESCENDANTS:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+            
+        default:
+            break;
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+/* overflow */
+bool mycss_property_parser_overflow(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return mycss_property_shared_switch_to_parse_error(entry);
+    
+    mycss_token_data_to_string(entry, token, &str, true, false);
+    dec_entry->value_type = mycss_property_value_type_by_name(str.data, str.length);
+    
+    switch (dec_entry->value_type) {
+        case MyCSS_PROPERTY_OVERFLOW_VISIBLE:
+        case MyCSS_PROPERTY_OVERFLOW_HIDDEN:
+        case MyCSS_PROPERTY_OVERFLOW_SCROLL:
+        case MyCSS_PROPERTY_OVERFLOW_AUTO:
+        case MyCSS_PROPERTY_OVERFLOW_NO_DISPLAY:
+        case MyCSS_PROPERTY_OVERFLOW_NO_CONTENT:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+            
+        default:
+            break;
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+bool mycss_property_parser_overflow_wrap(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_shared_switch_to_parse_error(entry);
+}
+
+bool mycss_property_parser_overflow_x(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_overflow(entry, token, last_response);
+}
+
+bool mycss_property_parser_overflow_y(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_overflow(entry, token, last_response);
+}
+
+/* visibility */
+bool mycss_property_parser_visibility(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return mycss_property_shared_switch_to_parse_error(entry);
+    
+    mycss_token_data_to_string(entry, token, &str, true, false);
+    dec_entry->value_type = mycss_property_value_type_by_name(str.data, str.length);
+    
+    switch (dec_entry->value_type) {
+        case MyCSS_PROPERTY_VISIBILITY_VISIBLE:
+        case MyCSS_PROPERTY_VISIBILITY_HIDDEN:
+        case MyCSS_PROPERTY_VISIBILITY_COLLAPSE:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+            
+        default:
+            break;
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+/* font */
+bool mycss_property_parser_font_weight(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(mycss_property_shared_font_weight(entry, token, &dec_entry->value_type, &str))
+        return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+bool mycss_property_parser_font_size(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(mycss_property_shared_font_size(entry, token, &dec_entry->value, &dec_entry->value_type, &str))
+        return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+bool mycss_property_parser_font_size_adjust(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(mycss_property_shared_number(entry, token, &dec_entry->value, &dec_entry->value_type, &str))
+        return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+    
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return mycss_property_shared_switch_to_parse_error(entry);
+    
+    if(str.data == NULL)
+        mycss_token_data_to_string(entry, token, &str, true, false);
+    
+    dec_entry->value_type = mycss_property_value_type_by_name(str.data, str.length);
+    
+    switch (dec_entry->value_type) {
+        case MyCSS_PROPERTY_FONT_SIZE_ADJUST_NONE:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+            
+        default:
+            dec_entry->value_type = MyCSS_PROPERTY_VALUE_UNDEF;
+            break;
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+bool mycss_property_parser_font_stretch(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(mycss_property_shared_font_stretch(entry, token, &dec_entry->value_type, &str))
+        return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+bool mycss_property_parser_font_style(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(mycss_property_shared_font_style(entry, token, &dec_entry->value_type, &str))
+        return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+static bool mycss_property_parser_font_family_wait_comma_or_end(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE )
+        return true;
+    
+    if(token->type == MyCSS_TOKEN_TYPE_COMMA) {
+        entry->parser = mycss_property_parser_font_family;
+        return true;
+    }
+    
+    if(mycss_property_shared_check_declaration_end(entry, token))
+        return true;
+    
+    return mycss_property_shared_switch_to_parse_error(entry);
+}
+
+bool mycss_property_parser_font_family(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    if(mycss_property_shared_check_declaration_end(entry, token))
+        return true;
+    
+    myhtml_string_t str = {0}; bool dont_destroy_str;
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(mycss_property_shared_font_family(entry, token, &dec_entry->value, &dec_entry->value_type, &dont_destroy_str, &str)) {
+        if(dont_destroy_str == false)
+            mycss_property_shared_destroy_string(&str);
+        
+        entry->parser = mycss_property_parser_font_family_wait_comma_or_end;
+        return true;
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+/*
+ * Font
+ */
+bool mycss_property_parser_font_step_wait_family(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+
+static bool mycss_property_parser_font_step_wait_family_comma_or_end(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE )
+        return true;
+    
+    if(token->type == MyCSS_TOKEN_TYPE_COMMA) {
+        entry->parser = mycss_property_parser_font_step_wait_family;
+        return true;
+    }
+    
+    if(mycss_property_shared_check_declaration_end(entry, token))
+        return true;
+    
+    return mycss_property_shared_switch_to_parse_error(entry);
+}
+
+bool mycss_property_parser_font_step_wait_family(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    if(mycss_property_shared_check_declaration_end(entry, token))
+        return true;
+    
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(dec_entry->value == NULL)
+        return mycss_property_shared_switch_to_parse_error(entry);
+    
+    myhtml_string_t str = {0};
+    mycss_values_font_t *font = (mycss_values_font_t*)dec_entry->value;
+    
+    void *value = NULL;
+    unsigned int value_type = 0;
+    bool dont_destroy_str;
+    
+    if(font->family) {
+        value = font->family->value;
+        value_type = font->family->value_type;
+    }
+    
+    if(mycss_property_shared_font_family(entry, token, &value, &value_type, &dont_destroy_str, &str)) {
+        if(dont_destroy_str == false)
+            mycss_property_shared_destroy_string(&str);
+        
+        if(font->family == NULL) {
+            font->family = mycss_declaration_entry_create(entry->declaration, NULL);
+            
+            font->family->type = MyCSS_PROPERTY_TYPE_FONT_FAMILY;
+            font->family->value = value;
+            font->family->value_type = value_type;
+        }
+        
+        entry->parser = mycss_property_parser_font_step_wait_family_comma_or_end;
+        return true;
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+bool mycss_property_parser_font_step_wait_line_height(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    if(mycss_property_shared_check_declaration_end(entry, token))
+        return true;
+    
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(dec_entry->value == NULL)
+        return mycss_property_shared_switch_to_parse_error(entry);
+    
+    void *value = NULL;
+    unsigned int value_type = 0;
+    
+    myhtml_string_t str = {0};
+    mycss_values_font_t *font = (mycss_values_font_t*)dec_entry->value;
+    
+    if(mycss_property_shared_line_height(entry, token, &value, &value_type, &str)) {
+        font->line_height = mycss_declaration_entry_create(entry->declaration, NULL);
+        
+        font->line_height->type = MyCSS_PROPERTY_TYPE_LINE_HEIGHT;
+        font->line_height->value = value;
+        font->line_height->value_type = value_type;
+        
+        entry->parser = mycss_property_parser_font_step_wait_family;
+        return mycss_property_parser_destroy_string(&str, true);
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+bool mycss_property_parser_font_step_after_size(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    if(token->type == MyCSS_TOKEN_TYPE_DELIM) {
+        if(*token->data == '/') {
+            entry->parser = mycss_property_parser_font_step_wait_line_height;
+            return true;
+        }
+        
+        return mycss_property_shared_switch_to_parse_error(entry);
+    }
+    
+    if(mycss_property_shared_check_declaration_end(entry, token))
+        return true;
+    
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(dec_entry->value == NULL)
+        return mycss_property_shared_switch_to_parse_error(entry);
+    
+    void *value = NULL;
+    unsigned int value_type = 0;
+    bool dont_destroy_str;
+    
+    myhtml_string_t str = {0};
+    mycss_values_font_t *font = (mycss_values_font_t*)dec_entry->value;
+    
+    if(mycss_property_shared_font_family(entry, token, &value, &value_type, &dont_destroy_str, &str)) {
+        if(dont_destroy_str == false)
+            mycss_property_shared_destroy_string(&str);
+        
+        font->family = mycss_declaration_entry_create(entry->declaration, NULL);
+        
+        font->family->type = MyCSS_PROPERTY_TYPE_FONT_FAMILY;
+        font->family->value = value;
+        font->family->value_type = value_type;
+        
+        entry->parser = mycss_property_parser_font_step_wait_family_comma_or_end;
+        return true;
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+bool mycss_property_parser_font_step_one(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    if(mycss_property_shared_check_declaration_end(entry, token))
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(dec_entry->value == NULL)
+        mycss_property_shared_switch_to_parse_error(entry);
+    
+    void *value = NULL;
+    unsigned int value_type = 0;
+    
+    mycss_values_font_t *font = (mycss_values_font_t*)dec_entry->value;
+    
+    if(mycss_property_shared_font_style(entry, token, &value_type, &str))
+    {
+        if(font->style)
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+        
+        font->style = mycss_declaration_entry_create(entry->declaration, NULL);
+        
+        font->style->type = MyCSS_PROPERTY_TYPE_FONT_STYLE;
+        font->style->value_type = value_type;
+        
+        return mycss_property_parser_destroy_string(&str, true);
+    }
+    else if(mycss_property_shared_font_weight(entry, token, &value_type, &str)) {
+        if(font->weight)
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+        
+        font->weight = mycss_declaration_entry_create(entry->declaration, NULL);
+        
+        font->weight->type = MyCSS_PROPERTY_TYPE_FONT_WEIGHT;
+        font->weight->value_type = value_type;
+        
+        return mycss_property_parser_destroy_string(&str, true);
+    }
+    else if(mycss_property_shared_font_stretch(entry, token, &value_type, &str)) {
+        if(font->stretch)
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+        
+        font->stretch = mycss_declaration_entry_create(entry->declaration, NULL);
+        
+        font->stretch->type = MyCSS_PROPERTY_TYPE_FONT_STRETCH;
+        font->stretch->value_type = value_type;
+        
+        return mycss_property_parser_destroy_string(&str, true);
+    }
+    
+    /* <‘font-size’> [ / <‘line-height’> ]? <‘font-family’>  */
+    if(mycss_property_shared_font_size(entry, token, &value, &value_type, &str)) {
+        font->size = mycss_declaration_entry_create(entry->declaration, NULL);
+        
+        font->size->type = MyCSS_PROPERTY_TYPE_FONT_SIZE;
+        font->size->value = value;
+        font->size->value_type = value_type;
+        
+        entry->parser = mycss_property_parser_font_step_after_size;
+        return mycss_property_parser_destroy_string(&str, true);
+    }
+    
+    bool dont_destroy_str;
+    
+    if(mycss_property_shared_font_family(entry, token, &value, &value_type, &dont_destroy_str, &str)) {
+        if(dont_destroy_str == false)
+            mycss_property_shared_destroy_string(&str);
+        
+        font->family = mycss_declaration_entry_create(entry->declaration, NULL);
+        
+        font->family->type = MyCSS_PROPERTY_TYPE_FONT_FAMILY;
+        font->family->value = value;
+        font->family->value_type = value_type;
+        
+        entry->parser = mycss_property_parser_font_step_wait_family_comma_or_end;
+        return true;
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+bool mycss_property_parser_font(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    dec_entry->value = mycss_values_create(entry, sizeof(mycss_values_font_t));
+    
+    if(dec_entry->value == NULL)
+        mycss_property_shared_switch_to_parse_error(entry);
+    
+    void *value = NULL;
+    unsigned int value_type = 0;
+    
+    mycss_values_font_t *font = (mycss_values_font_t*)dec_entry->value;
+    
+    /* caption | icon | menu | message-box | small-caption | status-bar */
+    if(mycss_property_shared_font_ends(entry, token, &value_type, &str)) {
+        dec_entry->value_type = value_type;
+        return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+    }
+    
+    /* [ <‘font-style’> || <font-variant-css21> || <‘font-weight’> || <‘font-stretch’> ]? */
+    if(mycss_property_shared_font_style(entry, token, &value_type, &str))
+    {
+        font->style = mycss_declaration_entry_create(entry->declaration, NULL);
+        
+        font->style->type = MyCSS_PROPERTY_TYPE_FONT_STYLE;
+        font->style->value_type = value_type;
+        
+        entry->parser = mycss_property_parser_font_step_one;
+        return mycss_property_parser_destroy_string(&str, true);
+    }
+    else if(mycss_property_shared_font_weight(entry, token, &value_type, &str)) {
+        font->weight = mycss_declaration_entry_create(entry->declaration, NULL);
+        
+        font->weight->type = MyCSS_PROPERTY_TYPE_FONT_STYLE;
+        font->weight->value_type = value_type;
+        
+        entry->parser = mycss_property_parser_font_step_one;
+        return mycss_property_parser_destroy_string(&str, true);
+    }
+    else if(mycss_property_shared_font_stretch(entry, token, &value_type, &str)) {
+        font->stretch = mycss_declaration_entry_create(entry->declaration, NULL);
+        
+        font->stretch->type = MyCSS_PROPERTY_TYPE_FONT_STYLE;
+        font->stretch->value_type = value_type;
+        
+        entry->parser = mycss_property_parser_font_step_one;
+        return mycss_property_parser_destroy_string(&str, true);
+    }
+    
+    /* <‘font-size’> [ / <‘line-height’> ]? <‘font-family’>  */
+    if(mycss_property_shared_font_size(entry, token, &value, &value_type, &str)) {
+        font->size = mycss_declaration_entry_create(entry->declaration, NULL);
+        
+        font->size->type = MyCSS_PROPERTY_TYPE_FONT_STYLE;
+        font->size->value = value;
+        font->size->value_type = value_type;
+        
+        entry->parser = mycss_property_parser_font_step_after_size;
+        return mycss_property_parser_destroy_string(&str, true);
+    }
+    
+    bool dont_destroy_str;
+    
+    if(mycss_property_shared_font_family(entry, token, &value, &value_type, &dont_destroy_str, &str)) {
+        if(dont_destroy_str == false)
+            mycss_property_shared_destroy_string(&str);
+        
+        font->family = mycss_declaration_entry_create(entry->declaration, NULL);
+        
+        font->family->type = MyCSS_PROPERTY_TYPE_FONT_FAMILY;
+        font->family->value = value;
+        font->family->value_type = value_type;
+        
+        entry->parser = mycss_property_parser_font_step_wait_family_comma_or_end;
+        return true;
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+/* text align */
+bool mycss_property_parser_text_align(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return mycss_property_shared_switch_to_parse_error(entry);
+    
+    mycss_token_data_to_string(entry, token, &str, true, false);
+    dec_entry->value_type = mycss_property_value_type_by_name(str.data, str.length);
+    
+    switch (dec_entry->value_type) {
+        case MyCSS_PROPERTY_TEXT_ALIGN_START:
+        case MyCSS_PROPERTY_TEXT_ALIGN_END:
+        case MyCSS_PROPERTY_TEXT_ALIGN_LEFT:
+        case MyCSS_PROPERTY_TEXT_ALIGN_RIGHT:
+        case MyCSS_PROPERTY_TEXT_ALIGN_CENTER:
+        case MyCSS_PROPERTY_TEXT_ALIGN_JUSTIFY:
+        case MyCSS_PROPERTY_TEXT_ALIGN_MATCH_PARENT:
+        case MyCSS_PROPERTY_TEXT_ALIGN_JUSTIFY_ALL:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+            
+        default:
+            break;
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+bool mycss_property_parser_text_align_all(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return mycss_property_shared_switch_to_parse_error(entry);
+    
+    mycss_token_data_to_string(entry, token, &str, true, false);
+    dec_entry->value_type = mycss_property_value_type_by_name(str.data, str.length);
+    
+    switch (dec_entry->value_type) {
+        case MyCSS_PROPERTY_TEXT_ALIGN_ALL_START:
+        case MyCSS_PROPERTY_TEXT_ALIGN_ALL_END:
+        case MyCSS_PROPERTY_TEXT_ALIGN_ALL_LEFT:
+        case MyCSS_PROPERTY_TEXT_ALIGN_ALL_RIGHT:
+        case MyCSS_PROPERTY_TEXT_ALIGN_ALL_CENTER:
+        case MyCSS_PROPERTY_TEXT_ALIGN_ALL_JUSTIFY:
+        case MyCSS_PROPERTY_TEXT_ALIGN_ALL_MATCH_PARENT:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+            
+        default:
+            break;
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+bool mycss_property_parser_text_align_last(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return mycss_property_shared_switch_to_parse_error(entry);
+    
+    mycss_token_data_to_string(entry, token, &str, true, false);
+    dec_entry->value_type = mycss_property_value_type_by_name(str.data, str.length);
+    
+    switch (dec_entry->value_type) {
+        case MyCSS_PROPERTY_TEXT_ALIGN_LAST_AUTO:
+        case MyCSS_PROPERTY_TEXT_ALIGN_LAST_START:
+        case MyCSS_PROPERTY_TEXT_ALIGN_LAST_END:
+        case MyCSS_PROPERTY_TEXT_ALIGN_LAST_LEFT:
+        case MyCSS_PROPERTY_TEXT_ALIGN_LAST_RIGHT:
+        case MyCSS_PROPERTY_TEXT_ALIGN_LAST_CENTER:
+        case MyCSS_PROPERTY_TEXT_ALIGN_LAST_JUSTIFY:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+            
+        default:
             break;
     }
     
@@ -940,11 +2044,6 @@ bool mycss_property_parser_background_clip(mycss_entry_t* entry, mycss_token_t* 
     return mycss_property_shared_switch_to_parse_error(entry);
 }
 
-bool mycss_property_parser_background_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
 bool mycss_property_parser_background_image(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     return mycss_property_shared_switch_to_parse_error(entry);
@@ -995,17 +2094,7 @@ bool mycss_property_parser_border_bottom(mycss_entry_t* entry, mycss_token_t* to
     return mycss_property_shared_switch_to_parse_error(entry);
 }
 
-bool mycss_property_parser_border_bottom_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
 bool mycss_property_parser_border_collapse(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_border_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     return mycss_property_shared_switch_to_parse_error(entry);
 }
@@ -1040,17 +2129,7 @@ bool mycss_property_parser_border_left(mycss_entry_t* entry, mycss_token_t* toke
     return mycss_property_shared_switch_to_parse_error(entry);
 }
 
-bool mycss_property_parser_border_left_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
 bool mycss_property_parser_border_right(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_border_right_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     return mycss_property_shared_switch_to_parse_error(entry);
 }
@@ -1061,16 +2140,6 @@ bool mycss_property_parser_border_spacing(mycss_entry_t* entry, mycss_token_t* t
 }
 
 bool mycss_property_parser_border_top(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_border_top_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_bottom(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     return mycss_property_shared_switch_to_parse_error(entry);
 }
@@ -1121,21 +2190,6 @@ bool mycss_property_parser_caret_color(mycss_entry_t* entry, mycss_token_t* toke
 }
 
 bool mycss_property_parser_caret_shape(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_clear(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_clear_after(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     return mycss_property_shared_switch_to_parse_error(entry);
 }
@@ -1245,11 +2299,6 @@ bool mycss_property_parser_cue_before(mycss_entry_t* entry, mycss_token_t* token
     return mycss_property_shared_switch_to_parse_error(entry);
 }
 
-bool mycss_property_parser_cursor(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
 bool mycss_property_parser_direction(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     return mycss_property_shared_switch_to_parse_error(entry);
@@ -1310,26 +2359,6 @@ bool mycss_property_parser_flex_wrap(mycss_entry_t* entry, mycss_token_t* token,
     return mycss_property_shared_switch_to_parse_error(entry);
 }
 
-bool mycss_property_parser_float(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_float_displace(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_font(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_font_family(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
 bool mycss_property_parser_font_feature_settings(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     return mycss_property_shared_switch_to_parse_error(entry);
@@ -1341,26 +2370,6 @@ bool mycss_property_parser_font_kerning(mycss_entry_t* entry, mycss_token_t* tok
 }
 
 bool mycss_property_parser_font_language_override(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_font_size(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_font_size_adjust(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_font_stretch(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_font_style(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     return mycss_property_shared_switch_to_parse_error(entry);
 }
@@ -1405,11 +2414,6 @@ bool mycss_property_parser_font_variant_position(mycss_entry_t* entry, mycss_tok
     return mycss_property_shared_switch_to_parse_error(entry);
 }
 
-bool mycss_property_parser_font_weight(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
 bool mycss_property_parser_glyph_orientation_vertical(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     return mycss_property_shared_switch_to_parse_error(entry);
@@ -1441,11 +2445,6 @@ bool mycss_property_parser_inline_size_step(mycss_entry_t* entry, mycss_token_t*
 }
 
 bool mycss_property_parser_justify_content(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_left(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     return mycss_property_shared_switch_to_parse_error(entry);
 }
@@ -1510,27 +2509,7 @@ bool mycss_property_parser_marker_start(mycss_entry_t* entry, mycss_token_t* tok
     return mycss_property_shared_switch_to_parse_error(entry);
 }
 
-bool mycss_property_parser_max_height(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
 bool mycss_property_parser_max_lines(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_max_width(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_min_height(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_min_width(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     return mycss_property_shared_switch_to_parse_error(entry);
 }
@@ -1615,26 +2594,6 @@ bool mycss_property_parser_outline_width(mycss_entry_t* entry, mycss_token_t* to
     return mycss_property_shared_switch_to_parse_error(entry);
 }
 
-bool mycss_property_parser_overflow(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_overflow_wrap(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_overflow_x(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_overflow_y(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
 bool mycss_property_parser_pause(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     return mycss_property_shared_switch_to_parse_error(entry);
@@ -1656,11 +2615,6 @@ bool mycss_property_parser_perspective(mycss_entry_t* entry, mycss_token_t* toke
 }
 
 bool mycss_property_parser_perspective_origin(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_position(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     return mycss_property_shared_switch_to_parse_error(entry);
 }
@@ -1696,11 +2650,6 @@ bool mycss_property_parser_rest_after(mycss_entry_t* entry, mycss_token_t* token
 }
 
 bool mycss_property_parser_rest_before(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_right(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     return mycss_property_shared_switch_to_parse_error(entry);
 }
@@ -1830,42 +2779,7 @@ bool mycss_property_parser_table_layout(mycss_entry_t* entry, mycss_token_t* tok
     return mycss_property_shared_switch_to_parse_error(entry);
 }
 
-bool mycss_property_parser_text_align(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_text_align_all(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_text_align_last(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
 bool mycss_property_parser_text_combine_upright(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_text_decoration(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_text_decoration_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_text_decoration_skip(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_text_decoration_style(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     return mycss_property_shared_switch_to_parse_error(entry);
 }
@@ -1935,11 +2849,6 @@ bool mycss_property_parser_text_underline_position(mycss_entry_t* entry, mycss_t
     return mycss_property_shared_switch_to_parse_error(entry);
 }
 
-bool mycss_property_parser_top(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
 bool mycss_property_parser_touch_action(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     return mycss_property_shared_switch_to_parse_error(entry);
@@ -1996,11 +2905,6 @@ bool mycss_property_parser_unicode_bidi(mycss_entry_t* entry, mycss_token_t* tok
 }
 
 bool mycss_property_parser_user_select(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_visibility(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     return mycss_property_shared_switch_to_parse_error(entry);
 }
@@ -2090,9 +2994,5 @@ bool mycss_property_parser_writing_mode(mycss_entry_t* entry, mycss_token_t* tok
     return mycss_property_shared_switch_to_parse_error(entry);
 }
 
-bool mycss_property_parser_z_index(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
 
 

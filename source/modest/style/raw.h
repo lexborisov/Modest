@@ -75,6 +75,11 @@ struct modest_style_raw {
     
     modest_style_raw_declaration_t* vertical_align;
     modest_style_raw_declaration_t* line_height;
+    
+    modest_style_raw_declaration_t* text_decoration_line;
+    modest_style_raw_declaration_t* text_decoration_style;
+    modest_style_raw_declaration_t* text_decoration_skip;
+    modest_style_raw_declaration_t* text_decoration_color;
 };
 
 modest_style_raw_t * modest_style_raw_create(modest_t* modest);

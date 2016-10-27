@@ -37,8 +37,16 @@ void mycss_property_serialization_value(unsigned int value_type, void* value, my
             mycss_values_serialization_length(value, callback, context);
             break;
             
+        case MyCSS_PROPERTY_VALUE__NUMBER:
+            mycss_values_serialization_length(value, callback, context);
+            break;
+            
         case MyCSS_PROPERTY_VALUE__PERCENTAGE:
             mycss_values_serialization_percentage(value, callback, context);
+            break;
+            
+        case MyCSS_PROPERTY_VALUE__COLOR:
+            mycss_values_serialization_color(value, callback, context);
             break;
             
         default:
@@ -53,4 +61,5 @@ void mycss_property_serialization_value(unsigned int value_type, void* value, my
         }
     }
 }
+
 

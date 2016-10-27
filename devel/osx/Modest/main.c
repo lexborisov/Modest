@@ -44,7 +44,9 @@ struct res_data load_data(const char* filename)
     fseek(f, 0L, SEEK_SET);
     
     char *html = (char*)myhtml_malloc(l);
-    fread(html, 1, l, f);
+    if(fread(html, 1, l, f) != l) {
+        exit(1);
+    }
     
     fclose(f);
     
@@ -62,7 +64,7 @@ myhtml_tree_t * myhtml(const char* data, size_t data_size, bool is_file, bool pr
     setbuf(stdout, NULL);
     
     myhtml_t* myhtml = myhtml_create();
-    myhtml_init(myhtml, MyHTML_OPTIONS_PARSE_MODE_SINGLE, 1, 0);
+    myhtml_init(myhtml, MyHTML_OPTIONS_DEFAULT, 1, 0);
     
     uint64_t all_start = myhtml_hperf_clock(NULL);
     uint64_t tree_init_start = myhtml_hperf_clock(NULL);
@@ -89,14 +91,14 @@ myhtml_tree_t * myhtml(const char* data, size_t data_size, bool is_file, bool pr
     
     if(print_result) {
         myhtml_tree_print_node_children(tree, tree->document, stdout, 0);
-        
-        printf("\n\nMyHTML Information:\n");
-        printf("\tTicks/sec: %llu\n", (unsigned long long) myhtml_hperf_res(NULL));
-        myhtml_hperf_print("\tFirst Tree init", tree_init_start, tree_init_stop, stdout);
-        myhtml_hperf_print("\tParse html", parse_start, parse_stop, stdout);
-        myhtml_hperf_print("\tTotal", all_start, all_stop, stdout);
-        printf("\n");
     }
+    
+    printf("\n\nMyHTML Information:\n");
+    printf("\tTicks/sec: %llu\n", (unsigned long long) myhtml_hperf_res(NULL));
+    myhtml_hperf_print("\tFirst Tree init", tree_init_start, tree_init_stop, stdout);
+    myhtml_hperf_print("\tParse html", parse_start, parse_stop, stdout);
+    myhtml_hperf_print("\tTotal", all_start, all_stop, stdout);
+    printf("\n");
     
     //myhtml_tree_destroy(tree);
     //myhtml_destroy(myhtml);
@@ -108,11 +110,11 @@ mycss_entry_t * mycss(const char* data, size_t data_size, bool is_file, bool pri
 {
     // base init
     mycss_t *mycss = mycss_create();
-    mycss_status_t status = mycss_init(mycss);
+    mycss_init(mycss);
     
     // currenr entry work init
     mycss_entry_t *entry = mycss_entry_create();
-    status = mycss_entry_init(mycss, entry);
+    mycss_entry_init(mycss, entry);
     
     uint64_t parse_start = myhtml_hperf_clock(NULL);
     
@@ -131,11 +133,11 @@ mycss_entry_t * mycss(const char* data, size_t data_size, bool is_file, bool pri
         printf("\n");
         mycss_stylesheet_t *stylesheet = mycss_entry_stylesheet(entry);
         mycss_selectors_serialization_list(entry->selectors, stylesheet->sel_list_first, serialization_callback, NULL);
-        
-        printf("\n------------\nMyCSS Information:\n");
-        printf("\tTicks/sec: %llu\n", (unsigned long long) myhtml_hperf_res(NULL));
-        myhtml_hperf_print("\tParse css", parse_start, parse_stop, stdout);
     }
+    
+    printf("\n------------\nMyCSS Information:\n");
+    printf("\tTicks/sec: %llu\n", (unsigned long long) myhtml_hperf_res(NULL));
+    myhtml_hperf_print("\tParse css", parse_start, parse_stop, stdout);
     
     //mycss_entry_destroy(entry, true);
     //mycss_destroy(mycss, true);
@@ -202,12 +204,12 @@ int main(int argc, const char * argv[]) {
     //char *css_f = "/new/C-git/bootstrap.css";
     
     char *html = "<fff>sdsd<aaaa id=hash class=best><div a1><menu class=\"lalala\" id=\"menu-id\" b1><span span1><div a2></div></div><menu class=\"be\" id=\"menu\" b1><span span2></aaaa><a href=\"\" sec></a><div div1><div div2></div><div div3></div><div div4></div></div><p p1><p p2><p p3><p p4>";
-    char *css = "div {width: 0;}  div[div2] {border-top-style: none;}";
+    char *css = "div {font: italic 20px/1.667 Helvetica, Verdana, \"sans\"-serif, ultra-condensed bolder  ;}";
     
     char *selector = "menu";
     
     modest_t *modest = modest_create();
-    modest_status_t status = modest_init(modest);
+    modest_init(modest);
     
     myhtml_tree_t *myhtml_tree = myhtml(html_f, strlen(html_f), true, false, modest_callback_for_create_mnode, (void*)modest);
     mycss_entry_t *mycss_entry = mycss(css_f, strlen(css_f), true, true);
@@ -235,13 +237,13 @@ int main(int argc, const char * argv[]) {
     
     
     modest_finder_t* finder = modest_finder_create();
-    status = modest_finder_init(finder, myhtml_tree, stylesheet);
+    modest_finder_init(finder, myhtml_tree, stylesheet);
     
     /* threads */
     modest_finder_thread_t *finder_thread = modest_finder_thread_create();
-    modest_finder_thread_init(finder, finder_thread, 2);
+    modest_finder_thread_init(finder, finder_thread, 8);
     
-    status = modest_finder_thread_process(modest, finder_thread, myhtml_tree, myhtml_tree->node_html, stylesheet->sel_list_first);
+    modest_finder_thread_process(modest, finder_thread, myhtml_tree, myhtml_tree->node_html, stylesheet->sel_list_first);
     
     //finder_thread = modest_finder_thread_destroy(finder_thread, true);
     //finder = modest_finder_destroy(finder, true);

@@ -268,7 +268,7 @@ void modest_style_map_collate_declaration_text_decoration(modest_t* modest, myht
 void modest_style_map_collate_declaration_text_decoration_color(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec);
 void modest_style_map_collate_declaration_text_decoration_line(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec);
 void modest_style_map_collate_declaration_text_decoration_skip(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec);
-void modest_style_map_collate_declaration_text_decoration_styl(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec);
+void modest_style_map_collate_declaration_text_decoration_style(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec);
 void modest_style_map_collate_declaration_text_emphasis(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec);
 void modest_style_map_collate_declaration_text_emphasis_color(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec);
 void modest_style_map_collate_declaration_text_emphasis_position(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec);

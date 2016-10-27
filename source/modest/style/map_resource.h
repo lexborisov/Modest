@@ -257,7 +257,7 @@ static const modest_style_map_collate_f modest_style_map_static_collate_declarat
     modest_style_map_collate_declaration_text_decoration_color,
     modest_style_map_collate_declaration_text_decoration_line,
     modest_style_map_collate_declaration_text_decoration_skip,
-    modest_style_map_collate_declaration_text_decoration_styl,
+    modest_style_map_collate_declaration_text_decoration_style,
     modest_style_map_collate_declaration_text_emphasis,
     modest_style_map_collate_declaration_text_emphasis_color,
     modest_style_map_collate_declaration_text_emphasis_position,

@@ -42,15 +42,17 @@ void mycss_declaration_entry_clean_all(mycss_declaration_entry_t* dec_entry)
     memset(dec_entry, 0, sizeof(mycss_declaration_entry_t));
 }
 
-void mycss_declaration_entry_destroy(mycss_declaration_t* declaration, mycss_declaration_entry_t* dec_entry)
+void * mycss_declaration_entry_destroy(mycss_declaration_t* declaration, mycss_declaration_entry_t* dec_entry)
 {
     if(dec_entry == NULL)
-        return;
+        return NULL;
     
     if(dec_entry->value)
         mycss_values_destroy(declaration->ref_entry, dec_entry->value);
     
     mcobject_free(declaration->mcobject_entries, dec_entry);
+    
+    return NULL;
 }
 
 void mycss_declaration_entry_append_to_current(mycss_declaration_t* declaration, mycss_declaration_entry_t* dec_entry)

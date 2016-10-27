@@ -38,6 +38,14 @@ void * mycss_values_destroy(mycss_entry_t* entry, void* value)
     return NULL;
 }
 
+void * mycss_values_realloc(mycss_entry_t* entry, void* value, size_t old_size, size_t up_to)
+{
+    char *new_value = mchar_async_realloc(entry->mchar, entry->mchar_value_node_id, value, old_size, (up_to + old_size));
+    memset(&new_value[old_size], 0, up_to);
+    
+    return (void*)new_value;
+}
+
 void * mycss_values_clone(mycss_entry_t* entry, void* value)
 {
     size_t size = mchar_async_get_size_by_data(value);
