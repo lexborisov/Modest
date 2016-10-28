@@ -21,9 +21,9 @@ Render is in development. Now available:
 - See Features of [MyHTML]
 - See Features of [MyCSS]
 
-## The Story of Creation
+## Introduction
 
-[The Story of Creation]
+[Introduction]
 
 ## Build and Installation
 
