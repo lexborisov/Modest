@@ -128,5 +128,5 @@ See the [LICENSE] file.
 [MyHTML]: https://github.com/lexborisov/myhtml
 [MyCSS]: https://github.com/lexborisov/mycss
 [CHANGELOG.md]: https://github.com/lexborisov/modest/blob/master/CHANGELOG.md
-[The Story of Creation]: http://lexborisov.github.io/myhtml/
+[Introduction]: http://lexborisov.github.io/myhtml/
 [LICENSE]: https://github.com/lexborisov/myhtml/blob/master/LICENSE
