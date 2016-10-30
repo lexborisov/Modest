@@ -34,12 +34,8 @@
 extern "C" {
 #endif
 
-typedef enum mycss_values_text_decoration_line mycss_values_text_decoration_line_t;
-typedef enum mycss_values_text_decoration_skip mycss_values_text_decoration_skip_t;
 typedef struct mycss_values_text_decoration mycss_values_text_decoration_t;
 
-typedef enum mycss_values_color_type mycss_values_color_type_t;
-typedef enum mycss_values_color_type_value mycss_values_color_type_value_t;
 typedef struct mycss_values_color_alpha_value mycss_values_color_alpha_value_t;
 typedef struct mycss_values_color_hue_value mycss_values_color_hue_value_t;
 typedef struct mycss_values_color_hsla mycss_values_color_hsla_t;
@@ -49,7 +45,6 @@ typedef struct mycss_values_color_rgba_number mycss_values_color_rgba_number_t;
 typedef struct mycss_values_color_rgba_percentage mycss_values_color_rgba_percentage_t;
 typedef struct mycss_values_color mycss_values_color_t;
 
-typedef enum mycss_values_font_family_type mycss_values_font_family_type_t;
 typedef struct mycss_values_font_family_entry mycss_values_font_family_entry_t;
 typedef struct mycss_values_font_family mycss_values_font_family_t;
 typedef struct mycss_values_font mycss_values_font_t;
@@ -136,7 +131,8 @@ enum mycss_values_color_type {
     MyCSS_VALUES_COLOR_TYPE_HEX          = 0x09,
     MyCSS_VALUES_COLOR_TYPE_NAMED        = 0x0a,
     MyCSS_VALUES_COLOR_TYPE_CURRENTCOLOR = 0x0b,
-};
+}
+typedef mycss_values_color_type_t;
 
 enum mycss_values_color_type_value {
     MyCSS_VALUES_COLOR_TYPE_VALUE_UNDEF      = 0x00,
@@ -147,7 +143,8 @@ enum mycss_values_color_type_value {
     MyCSS_VALUES_COLOR_TYPE_VALUE_HEX_6      = 0x05,
     MyCSS_VALUES_COLOR_TYPE_VALUE_HEX_4      = 0x06,
     MyCSS_VALUES_COLOR_TYPE_VALUE_HEX_3      = 0x07,
-};
+}
+typedef mycss_values_color_type_value_t;
 
 struct mycss_values_color_alpha_value {
     union {
@@ -222,7 +219,8 @@ enum mycss_values_font_family_type {
     MyCSS_VALUES_FONT_FAMILY_TYPE_UNDEF    = 0x00,
     MyCSS_VALUES_FONT_FAMILY_TYPE_NAME     = 0x01,
     MyCSS_VALUES_FONT_FAMILY_TYPE_GENERIC  = 0x02,
-};
+}
+typedef mycss_values_font_family_type_t;
 
 struct mycss_values_font_family_entry {
     union {
@@ -256,7 +254,8 @@ enum mycss_values_text_decoration_line {
     MyCSS_VALUES_TEXT_DECORATION_LINE_OVERLINE     = 0x02,
     MyCSS_VALUES_TEXT_DECORATION_LINE_LINE_THROUGH = 0x04,
     MyCSS_VALUES_TEXT_DECORATION_LINE_BLINK        = 0x08
-};
+}
+typedef mycss_values_text_decoration_line_t;
 
 enum mycss_values_text_decoration_skip {
     MyCSS_VALUES_TEXT_DECORATION_SKIP_UNDEF          = 0x00,
@@ -265,7 +264,8 @@ enum mycss_values_text_decoration_skip {
     MyCSS_VALUES_TEXT_DECORATION_SKIP_INK            = 0x04,
     MyCSS_VALUES_TEXT_DECORATION_SKIP_EDGES          = 0x08,
     MyCSS_VALUES_TEXT_DECORATION_SKIP_BOX_DECORATION = 0x10
-};
+}
+typedef mycss_values_text_decoration_skip_t;
 
 struct mycss_values_text_decoration {
     mycss_declaration_entry_t* line;
