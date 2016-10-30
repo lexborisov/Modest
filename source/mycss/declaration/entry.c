@@ -19,7 +19,7 @@
 */
 
 #include "mycss/declaration/entry.h"
-
+#include "mycss/declaration/entry_destroy_resources.h"
 
 mycss_declaration_entry_t * mycss_declaration_entry_create(mycss_declaration_t* declaration, myhtml_status_t* status)
 {
@@ -42,17 +42,12 @@ void mycss_declaration_entry_clean_all(mycss_declaration_entry_t* dec_entry)
     memset(dec_entry, 0, sizeof(mycss_declaration_entry_t));
 }
 
-void * mycss_declaration_entry_destroy(mycss_declaration_t* declaration, mycss_declaration_entry_t* dec_entry)
+mycss_declaration_entry_t * mycss_declaration_entry_destroy(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy)
 {
-    if(dec_entry == NULL)
+    if(decl_entry == NULL)
         return NULL;
     
-    if(dec_entry->value)
-        mycss_values_destroy(declaration->ref_entry, dec_entry->value);
-    
-    mcobject_free(declaration->mcobject_entries, dec_entry);
-    
-    return NULL;
+    return mycss_declaration_entry_destroy_map_by_type[ decl_entry->type ](declaration, decl_entry, self_destroy);
 }
 
 void mycss_declaration_entry_append_to_current(mycss_declaration_t* declaration, mycss_declaration_entry_t* dec_entry)
@@ -97,7 +92,7 @@ void mycss_declaration_entry_remove(mycss_declaration_t* declaration, mycss_decl
 mycss_declaration_entry_t * mycss_declaration_entry_delete(mycss_declaration_t* declaration, mycss_declaration_entry_t* dec_entry)
 {
     mycss_declaration_entry_remove(declaration, dec_entry);
-    mycss_declaration_entry_destroy(declaration, dec_entry);
+    mycss_declaration_entry_destroy(declaration, dec_entry, true);
     
     return NULL;
 }

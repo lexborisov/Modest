@@ -34,7 +34,7 @@ extern "C" {
 typedef struct mycss_declaration_entry mycss_declaration_entry_t;
 typedef struct mycss_declaration mycss_declaration_t;
 
-typedef void (*mycss_callback_declaration_destroy_f)(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry);
+typedef mycss_declaration_entry_t * (*mycss_callback_declaration_destroy_f)(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy);
 
 enum mycss_declaration_flags {
     MyCSS_DECLARATION_FLAGS_UNDEF = 0x00,

@@ -346,7 +346,6 @@ bool mycss_property_shared_text_decoration_style(mycss_entry_t* entry, mycss_tok
     return false;
 }
 
-
 bool mycss_property_shared_default(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)

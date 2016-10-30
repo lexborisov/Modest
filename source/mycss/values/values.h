@@ -71,15 +71,15 @@ struct mycss_values_shorthand_two_type {
 };
 
 struct mycss_values_shorthand_four {
-    void* one;
-    void* two;
-    void* three;
-    void* four;
+    mycss_declaration_entry_t* one;
+    mycss_declaration_entry_t* two;
+    mycss_declaration_entry_t* three;
+    mycss_declaration_entry_t* four;
 };
 
 struct mycss_values_shorthand_two {
-    void* one;
-    void* two;
+    mycss_declaration_entry_t* one;
+    mycss_declaration_entry_t* two;
 };
 
 struct mycss_values_number {

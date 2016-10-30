@@ -6,8 +6,6 @@ HDRS += $(foreach dir,$(SUBDIRS),$(find_files_h))
 SRCS += $(foreach dir,$(SUBDIRS),$(find_files_c))
 
 mycss_clone: MyCSS_DIR_$(SUBDIRS)
-	mkdir -p $(INCLUDE_TMP)/mycss
-	cp $(SRCDIR)/mycss/*.h $(INCLUDE_TMP)/mycss
 
 MyCSS_DIR_$(SUBDIRS):
 	mkdir -p $(INCLUDE_TMP)/mycss/$(patsubst MyCSS_DIR_%,%,$@)

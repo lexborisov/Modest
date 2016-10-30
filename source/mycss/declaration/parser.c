@@ -67,7 +67,7 @@ void mycss_declaration_parser_end(mycss_entry_t* entry, mycss_token_t* token)
             dec_entry->prev->next = NULL;
             dec_entry->prev = NULL;
             
-            mycss_declaration_entry_destroy(entry->declaration, dec_entry);
+            mycss_declaration_entry_destroy(entry->declaration, dec_entry, true);
         }
         else {
             *entry->declaration->entry = NULL;

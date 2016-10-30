@@ -20,6 +20,8 @@
 		0E0C919C1DB10866007A0501 /* raw_property.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E0C919A1DB10866007A0501 /* raw_property.c */; };
 		0E4B525C1DC13BBB0095026A /* parser_text_decoration.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E4B525A1DC13BBB0095026A /* parser_text_decoration.c */; };
 		0E5AA4BD1DA9689700FF5358 /* shared.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E5AA4BB1DA9689700FF5358 /* shared.c */; };
+		0E5E2AAB1DC53CC1007836AB /* entry_destroy.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E5E2AA91DC53CC1007836AB /* entry_destroy.c */; };
+		0E5E2AAE1DC5406C007836AB /* destroy.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E5E2AAD1DC5406C007836AB /* destroy.c */; };
 		0E750EE31D9AF1D500337E9B /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E750EE21D9AF1D500337E9B /* main.c */; };
 		0E750EF81D9AF25300337E9B /* finder.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E750EEE1D9AF25300337E9B /* finder.c */; };
 		0E750EF91D9AF25300337E9B /* match.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E750EF01D9AF25300337E9B /* match.c */; };
@@ -152,6 +154,11 @@
 		0E4B525A1DC13BBB0095026A /* parser_text_decoration.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = parser_text_decoration.c; sourceTree = "<group>"; };
 		0E5AA4BB1DA9689700FF5358 /* shared.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = shared.c; sourceTree = "<group>"; };
 		0E5AA4BC1DA9689700FF5358 /* shared.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shared.h; sourceTree = "<group>"; };
+		0E5E2AA81DC53C5A007836AB /* entry_destroy_resources.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = entry_destroy_resources.h; sourceTree = "<group>"; };
+		0E5E2AA91DC53CC1007836AB /* entry_destroy.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = entry_destroy.c; sourceTree = "<group>"; };
+		0E5E2AAA1DC53CC1007836AB /* entry_destroy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = entry_destroy.h; sourceTree = "<group>"; };
+		0E5E2AAC1DC54067007836AB /* destroy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = destroy.h; sourceTree = "<group>"; };
+		0E5E2AAD1DC5406C007836AB /* destroy.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = destroy.c; sourceTree = "<group>"; };
 		0E750EDF1D9AF1D500337E9B /* Modest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Modest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E750EE21D9AF1D500337E9B /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = main.c; path = Modest/main.c; sourceTree = "<group>"; };
 		0E750EEC1D9AF25300337E9B /* myosi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = myosi.h; path = ../../../source/modest/myosi.h; sourceTree = "<group>"; };
@@ -599,6 +606,9 @@
 				0E750F301D9AF27200337E9B /* init.c */,
 				0E750F2F1D9AF27200337E9B /* entry.h */,
 				0E750F2E1D9AF27200337E9B /* entry.c */,
+				0E5E2AAA1DC53CC1007836AB /* entry_destroy.h */,
+				0E5E2AA91DC53CC1007836AB /* entry_destroy.c */,
+				0E5E2AA81DC53C5A007836AB /* entry_destroy_resources.h */,
 				0E750F341D9AF27200337E9B /* parser.h */,
 				0E750F331D9AF27200337E9B /* parser.c */,
 				0E750F361D9AF27200337E9B /* state.h */,
@@ -698,6 +708,8 @@
 			children = (
 				0E750F7F1D9AF27200337E9B /* values.h */,
 				0E750F7E1D9AF27200337E9B /* values.c */,
+				0E5E2AAC1DC54067007836AB /* destroy.h */,
+				0E5E2AAD1DC5406C007836AB /* destroy.c */,
 				0E750F771D9AF27200337E9B /* consume.h */,
 				0E750F761D9AF27200337E9B /* consume.c */,
 				0E0460211DBE1B0D00685A80 /* color.h */,
@@ -831,7 +843,9 @@
 				0E0C91961DB1064E007A0501 /* serialization.c in Sources */,
 				0E750F901D9AF27200337E9B /* init.c in Sources */,
 				0E750F921D9AF27200337E9B /* function.c in Sources */,
+				0E5E2AAE1DC5406C007836AB /* destroy.c in Sources */,
 				0E750FFA1D9AF27F00337E9B /* tokenizer_doctype.c in Sources */,
+				0E5E2AAB1DC53CC1007836AB /* entry_destroy.c in Sources */,
 				0E750FF61D9AF27F00337E9B /* tag_init.c in Sources */,
 				0E750F8E1D9AF27200337E9B /* state.c in Sources */,
 				0EF808A31D9FF3BC001AF6EF /* sheet.c in Sources */,
@@ -993,7 +1007,7 @@
 		0E750EE71D9AF1D500337E9B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				HEADER_SEARCH_PATHS = ../../source;
 				OTHER_CFLAGS = (
 					"-DMyHTML_WITH_PERF",

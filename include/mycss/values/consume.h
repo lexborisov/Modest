@@ -31,10 +31,8 @@
 extern "C" {
 #endif
 
-
 bool mycss_values_consume_length(mycss_entry_t* entry, mycss_token_t* token);
 bool mycss_values_consume_percentage(mycss_entry_t* entry, mycss_token_t* token);
-
 
 #ifdef __cplusplus
 } /* extern "C" */

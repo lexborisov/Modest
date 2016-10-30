@@ -28,13 +28,13 @@ void * mycss_property_destroy_text_decoration(mycss_entry_t* entry, void* value)
     mycss_values_text_decoration_t *text_decoration = (mycss_values_text_decoration_t*)value;
     
     if(text_decoration->color)
-        text_decoration->color = mycss_declaration_entry_destroy(entry->declaration, text_decoration->color);
+        text_decoration->color = mycss_declaration_entry_destroy(entry->declaration, text_decoration->color, true);
     
     if(text_decoration->line)
-        text_decoration->color = mycss_declaration_entry_destroy(entry->declaration, text_decoration->line);
+        text_decoration->color = mycss_declaration_entry_destroy(entry->declaration, text_decoration->line, true);
     
     if(text_decoration->style)
-        text_decoration->color = mycss_declaration_entry_destroy(entry->declaration, text_decoration->style);
+        text_decoration->color = mycss_declaration_entry_destroy(entry->declaration, text_decoration->style, true);
     
     return mycss_values_destroy(entry, text_decoration);
 }

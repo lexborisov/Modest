@@ -217,8 +217,10 @@ bool mycss_declaration_serialization_font_family(mycss_entry_t* entry, mycss_dec
             mycss_property_serialization_value(font_family->entries[i].prop_type, NULL, callback, context);
         }
         else if(font_family->entries[i].type == MyCSS_VALUES_FONT_FAMILY_TYPE_NAME) {
+            callback("\"", 1, context);
             myhtml_string_t *str = &font_family->entries[i].str;
             callback(str->data, str->length, context);
+            callback("\"", 1, context);
         }
     }
     

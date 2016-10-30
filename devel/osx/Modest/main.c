@@ -64,7 +64,7 @@ myhtml_tree_t * myhtml(const char* data, size_t data_size, bool is_file, bool pr
     setbuf(stdout, NULL);
     
     myhtml_t* myhtml = myhtml_create();
-    myhtml_init(myhtml, MyHTML_OPTIONS_DEFAULT, 1, 0);
+    myhtml_init(myhtml, MyHTML_OPTIONS_PARSE_MODE_SINGLE, 1, 0);
     
     uint64_t all_start = myhtml_hperf_clock(NULL);
     uint64_t tree_init_start = myhtml_hperf_clock(NULL);
@@ -204,7 +204,7 @@ int main(int argc, const char * argv[]) {
     //char *css_f = "/new/C-git/bootstrap.css";
     
     char *html = "<fff>sdsd<aaaa id=hash class=best><div a1><menu class=\"lalala\" id=\"menu-id\" b1><span span1><div a2></div></div><menu class=\"be\" id=\"menu\" b1><span span2></aaaa><a href=\"\" sec></a><div div1><div div2></div><div div3></div><div div4></div></div><p p1><p p2><p p3><p p4>";
-    char *css = "div {font: italic 20px/1.667 Helvetica, Verdana, \"sans\"-serif, ultra-condensed bolder  ;}";
+    char *css = "div {font-family:Trebuchet MS}";
     
     char *selector = "menu";
     

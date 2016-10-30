@@ -75,16 +75,19 @@ bool mycss_declaration_state_colon_before_important(mycss_entry_t* entry, mycss_
 {
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return token;
-    
-    if(token->type == MyCSS_TOKEN_TYPE_SEMICOLON) {
+    else if(token->type == MyCSS_TOKEN_TYPE_SEMICOLON) {
         entry->parser = mycss_declaration_state_data;
         return true;
     }
-    
-    if(token->type == MyCSS_TOKEN_TYPE_DELIM && *token->data == '!') {
+    else if(token->type == MyCSS_TOKEN_TYPE_DELIM && *token->data == '!') {
         entry->parser = mycss_declaration_state_colon_important;
         return true;
-
+    }
+    else if(token->type == entry->declaration->ending_token) {
+        mycss_entry_parser_list_pop(entry);
+        mycss_declaration_parser_end(entry, token);
+        
+        return true;
     }
     
     /* parse error */
@@ -170,7 +173,12 @@ bool mycss_declaration_state_find_ending(mycss_entry_t* entry, mycss_token_t* to
 
 bool mycss_declaration_state_parse_error(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
-    (entry->declaration->entry_last)->flags = MyCSS_DECLARATION_FLAGS_BAD;
+    mycss_declaration_entry_t *decl_entry = entry->declaration->entry_last;
+    
+    decl_entry->flags = MyCSS_DECLARATION_FLAGS_BAD;
+    decl_entry->value_type = MyCSS_PROPERTY_VALUE_UNDEF;
+    
+    mycss_declaration_entry_destroy(entry->declaration, decl_entry, false);
     
     entry->parser = mycss_declaration_state_find_ending;
     return false;
