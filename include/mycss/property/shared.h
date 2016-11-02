@@ -70,6 +70,7 @@ bool mycss_property_shared_background_repeat_two(mycss_entry_t* entry, mycss_tok
 bool mycss_property_shared_background_attachment(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str);
 bool mycss_property_shared_background_position(mycss_entry_t* entry, mycss_token_t* token, void* value, unsigned int* value_type, myhtml_string_t* str);
 bool mycss_property_shared_background_clip(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str);
+bool mycss_property_shared_background_size(mycss_entry_t* entry, mycss_token_t* token, void* value, unsigned int* value_type, myhtml_string_t* str);
 
 void mycss_property_shared_destroy_string(myhtml_string_t* str);
 

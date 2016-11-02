@@ -134,6 +134,26 @@ void mycss_values_serialization_percentage(mycss_values_percentage_t* value, myc
     }
 }
 
+void mycss_values_serialization_type_length_percentage(mycss_values_type_length_percentage_entry_t* value, mycss_callback_serialization_f callback, void* context)
+{
+    switch (value->type) {
+        case MyCSS_PROPERTY_VALUE__LENGTH:
+            mycss_values_serialization_length(value->length, callback, context);
+            break;
+            
+        case MyCSS_PROPERTY_VALUE__PERCENTAGE:
+            mycss_values_serialization_percentage(value->percentage, callback, context);
+            break;
+            
+        default: {
+            const char* text_value = mycss_property_index_type_value[value->type];
+            callback(text_value, strlen(text_value), context);
+            
+            break;
+        }
+    }
+}
+
 static void mycss_values_serialization_color_hex_one_value(int value, unsigned char* data)
 {
     data[0] = myhtml_string_hex_to_char_map[ (unsigned int)(value >> 4) ];
@@ -528,6 +548,25 @@ void mycss_values_serialization_image(mycss_values_image_t* image, mycss_callbac
             callback(text_value, strlen(text_value), context);
             
             break;
+        }
+    }
+}
+
+void mycss_values_serialization_background_size_entry(mycss_values_background_size_entry_t* bg_size_entry, mycss_callback_serialization_f callback, void* context)
+{
+    if(bg_size_entry->scale) {
+        const char* text_value = mycss_property_index_type_value[bg_size_entry->scale];
+        callback(text_value, strlen(text_value), context);
+    }
+    else {
+        if(bg_size_entry->width) {
+            mycss_values_serialization_type_length_percentage(bg_size_entry->width, callback, context);
+        }
+        
+        if(bg_size_entry->height) {
+            callback(" ", 1, context);
+            
+            mycss_values_serialization_type_length_percentage(bg_size_entry->height, callback, context);
         }
     }
 }

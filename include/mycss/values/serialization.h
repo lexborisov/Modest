@@ -36,12 +36,14 @@ void mycss_values_serialization_length(mycss_values_length_t* value, mycss_callb
 void mycss_values_serialization_angle(mycss_values_angle_t* value, mycss_callback_serialization_f callback, void* context);
 void mycss_values_serialization_resolution(mycss_values_resolution_t* value, mycss_callback_serialization_f callback, void* context);
 void mycss_values_serialization_percentage(mycss_values_percentage_t* value, mycss_callback_serialization_f callback, void* context);
+void mycss_values_serialization_type_length_percentage(mycss_values_type_length_percentage_entry_t* value, mycss_callback_serialization_f callback, void* context);
 void mycss_values_serialization_color(mycss_values_color_t* value, mycss_callback_serialization_f callback, void* context);
 void mycss_values_serialization_color_alpha(mycss_values_color_alpha_value_t* value, mycss_callback_serialization_f callback, void* context);
 void mycss_values_serialization_text_decoration_line(mycss_values_text_decoration_line_t value, mycss_callback_serialization_f callback, void* context);
 void mycss_values_serialization_text_decoration_skip(mycss_values_text_decoration_skip_t value, mycss_callback_serialization_f callback, void* context);
 void mycss_values_serialization_url(mycss_values_url_t* url, mycss_callback_serialization_f callback, void* context);
 void mycss_values_serialization_image(mycss_values_image_t* image, mycss_callback_serialization_f callback, void* context);
+void mycss_values_serialization_background_size_entry(mycss_values_background_size_entry_t* bg_size_entry, mycss_callback_serialization_f callback, void* context);
 
 #ifdef __cplusplus
 } /* extern "C" */

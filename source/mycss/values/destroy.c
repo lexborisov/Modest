@@ -567,4 +567,61 @@ mycss_values_background_position_t * mycss_values_destroy_background_position(my
     return value;
 }
 
+mycss_values_background_size_list_t * mycss_values_destroy_background_size(mycss_entry_t* entry, mycss_values_background_size_list_t* value, bool self_destroy)
+{
+    if(value == NULL)
+        return NULL;
+    
+    for(size_t i = 0; i < value->entries_length; i++) {
+        if(value->entries[i].width) {
+            if(value->entries[i].width->percentage)
+                mycss_values_destroy(entry, (void*)value->entries[i].width->percentage);
+            
+            mycss_values_destroy(entry, (void*)value->entries[i].width);
+        }
+        
+        if(value->entries[i].height) {
+            if(value->entries[i].height->percentage)
+                mycss_values_destroy(entry, (void*)value->entries[i].height->percentage);
+            
+            mycss_values_destroy(entry, (void*)value->entries[i].height);
+        }
+    }
+    
+    mycss_values_destroy(entry, (void*)value->entries);
+    
+    if(self_destroy) {
+        mycss_values_destroy(entry, (void*)value);
+        return NULL;
+    }
+    
+    return value;
+}
+
+mycss_values_background_list_t * mycss_values_destroy_background(mycss_entry_t* entry, mycss_values_background_list_t* value, bool self_destroy)
+{
+    if(value == NULL)
+        return NULL;
+    
+    for(size_t i = 0; i < value->entries_length; i++) {
+        mycss_values_destroy_color(entry, value->entries[i].color->value, true);
+        mycss_values_destroy_image(entry, value->entries[i].image->value, true);
+        mycss_values_destroy_background_position(entry, value->entries[i].position->value, true);
+        mycss_values_destroy_background_size(entry, value->entries[i].size->value, true);
+        mycss_values_destroy_background_repeat(entry, value->entries[i].repeat->value, true);
+        mycss_values_destroy_type_list(entry, value->entries[i].attachment->value, true);
+        mycss_values_destroy_type_list(entry, value->entries[i].clip->value, true);
+        mycss_values_destroy_type_list(entry, value->entries[i].origin->value, true);
+    }
+    
+    mycss_values_destroy(entry, (void*)value->entries);
+    
+    if(self_destroy) {
+        mycss_values_destroy(entry, (void*)value);
+        return NULL;
+    }
+    
+    return value;
+}
+
 

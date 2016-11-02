@@ -1069,7 +1069,32 @@ bool mycss_property_shared_background_clip(mycss_entry_t* entry, mycss_token_t* 
     return false;
 }
 
-
+bool mycss_property_shared_background_size(mycss_entry_t* entry, mycss_token_t* token, void* value, unsigned int* value_type, myhtml_string_t* str)
+{
+    if(mycss_property_shared_length_percentage(entry, token, value, value_type, str))
+        return true;
+    
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return false;
+    
+    if(str->data == NULL)
+        mycss_token_data_to_string(entry, token, str, true, false);
+    
+    *value_type = mycss_property_value_type_by_name(str->data, str->length);
+    
+    switch (*value_type) {
+        case MyCSS_PROPERTY_BACKGROUND_SIZE_AUTO:
+        case MyCSS_PROPERTY_BACKGROUND_SIZE_COVER:
+        case MyCSS_PROPERTY_BACKGROUND_SIZE_CONTAIN:
+            return true;
+            
+        default:
+            *value_type = MyCSS_PROPERTY_VALUE_UNDEF;
+            break;
+    }
+    
+    return false;
+}
 
 
 

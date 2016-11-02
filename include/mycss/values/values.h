@@ -64,6 +64,10 @@ typedef struct mycss_values_color mycss_values_color_t;
 typedef struct mycss_values_background_repeat_list mycss_values_background_repeat_list_t;
 typedef struct mycss_values_background_repeat mycss_values_background_repeat_t;
 typedef struct mycss_values_background_position mycss_values_background_position_t;
+typedef struct mycss_values_background_size_list mycss_values_background_size_list_t;
+typedef struct mycss_values_background_size_entry mycss_values_background_size_entry_t;
+typedef struct mycss_values_background mycss_values_background_t;
+typedef struct mycss_values_background_list mycss_values_background_list_t;
 
 typedef struct mycss_values_color_stop mycss_values_color_stop_t;
 typedef struct mycss_values_color_stop_list mycss_values_color_stop_list_t;
@@ -72,7 +76,6 @@ typedef struct mycss_values_font_family_entry mycss_values_font_family_entry_t;
 typedef struct mycss_values_font_family mycss_values_font_family_t;
 typedef struct mycss_values_font mycss_values_font_t;
 
-typedef struct mycss_values_void_list mycss_values_void_list_t;
 typedef struct mycss_values_type_length_percentage_entry mycss_values_type_length_percentage_entry_t;
 typedef struct mycss_values_type_list mycss_values_type_list_t;
 typedef struct mycss_values_shorthand_two_type mycss_values_shorthand_two_type_t;
@@ -117,11 +120,6 @@ struct mycss_values_type_length_percentage_entry {
     };
     
     unsigned int type;
-};
-
-struct mycss_values_void_list {
-    void* entries;
-    size_t entries_length;
 };
 
 struct mycss_values_number {
@@ -450,6 +448,22 @@ struct mycss_values_text_decoration {
 /*
  Background
  */
+struct mycss_values_background {
+    mycss_declaration_entry_t* image;
+    mycss_declaration_entry_t* position;
+    mycss_declaration_entry_t* size;
+    mycss_declaration_entry_t* repeat;
+    mycss_declaration_entry_t* attachment;
+    mycss_declaration_entry_t* origin;
+    mycss_declaration_entry_t* clip;
+    mycss_declaration_entry_t* color;
+};
+
+struct mycss_values_background_list {
+    mycss_values_background_t* entries;
+    size_t entries_length;
+};
+
 struct mycss_values_background_repeat {
     mycss_property_background_t horizontal;
     mycss_property_background_t vertical;
@@ -467,6 +481,17 @@ struct mycss_values_background_position {
     mycss_values_type_length_percentage_entry_t four;
 };
 
+struct mycss_values_background_size_entry {
+    unsigned int scale;
+    mycss_values_type_length_percentage_entry_t* width;
+    mycss_values_type_length_percentage_entry_t* height;
+};
+
+struct mycss_values_background_size_list {
+    mycss_values_background_size_entry_t* entries;
+    size_t entries_length;
+};
+
 void * mycss_values_create(mycss_entry_t* entry, size_t size);
 void * mycss_values_destroy(mycss_entry_t* entry, void* value);
 void * mycss_values_realloc(mycss_entry_t* entry, void* value, size_t old_size, size_t up_to);
@@ -478,6 +503,10 @@ void mycss_values_entry_set(mycss_entry_t* entry, void** value);
 unsigned int * mycss_values_type_list_add_entry(mycss_entry_t* entry, mycss_values_type_list_t *list);
 mycss_values_image_t * mycss_values_image_list_add_entry(mycss_entry_t* entry, mycss_values_image_list_t *bg_image);
 mycss_values_background_repeat_t * mycss_values_background_repeat_list_add_entry(mycss_entry_t* entry, mycss_values_background_repeat_list_t *list);
+mycss_values_background_size_entry_t * mycss_values_background_size_list_add_entry(mycss_entry_t* entry, mycss_values_background_size_list_t *list);
+
+mycss_values_background_t * mycss_values_background_list_add_entry(mycss_entry_t* entry, mycss_values_background_list_t *list);
+mycss_values_background_t * mycss_values_background_list_current_entry(mycss_values_background_list_t *list);
 
 #ifdef __cplusplus
 } /* extern "C" */

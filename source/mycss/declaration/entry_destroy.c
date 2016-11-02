@@ -137,6 +137,19 @@ mycss_declaration_entry_t * mycss_declaration_entry_destroy_border_bottom_left_r
     return decl_entry;
 }
 
+
+mycss_declaration_entry_t * mycss_declaration_entry_destroy_background(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy)
+{
+    decl_entry->value = mycss_values_destroy_background(declaration->ref_entry, decl_entry->value, true);
+    
+    if(self_destroy) {
+        mcobject_free(declaration->mcobject_entries, decl_entry);
+        return NULL;
+    }
+    
+    return decl_entry;
+}
+
 mycss_declaration_entry_t * mycss_declaration_entry_destroy_background_image(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy)
 {
     decl_entry->value = mycss_values_destroy_image_list(declaration->ref_entry, decl_entry->value, true);
@@ -164,6 +177,18 @@ mycss_declaration_entry_t * mycss_declaration_entry_destroy_background_repeat(my
 mycss_declaration_entry_t * mycss_declaration_entry_destroy_background_position(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy)
 {
     decl_entry->value = mycss_values_destroy_background_position(declaration->ref_entry, decl_entry->value, true);
+    
+    if(self_destroy) {
+        mcobject_free(declaration->mcobject_entries, decl_entry);
+        return NULL;
+    }
+    
+    return decl_entry;
+}
+
+mycss_declaration_entry_t * mycss_declaration_entry_destroy_background_size(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy)
+{
+    decl_entry->value = mycss_values_destroy_background_size(declaration->ref_entry, decl_entry->value, true);
     
     if(self_destroy) {
         mcobject_free(declaration->mcobject_entries, decl_entry);
