@@ -32,6 +32,15 @@ void mycss_property_serialization_type_name(mycss_property_type_t prop_type, myc
 
 void mycss_property_serialization_value(unsigned int value_type, void* value, mycss_callback_serialization_f callback, void* context)
 {
+    if(value == NULL) {
+        if(value_type < MyCSS_PROPERTY_VALUE_LAST_ENTRY) {
+            const char* text_value = mycss_property_index_type_value[value_type];
+            callback(text_value, strlen(text_value), context);
+        }
+        
+        return;
+    }
+    
     switch (value_type) {
         case MyCSS_PROPERTY_VALUE__LENGTH:
             mycss_values_serialization_length(value, callback, context);
@@ -47,6 +56,14 @@ void mycss_property_serialization_value(unsigned int value_type, void* value, my
             
         case MyCSS_PROPERTY_VALUE__COLOR:
             mycss_values_serialization_color(value, callback, context);
+            break;
+            
+        case MyCSS_PROPERTY_VALUE__IMAGE:
+            mycss_values_serialization_image(value, callback, context);
+            break;
+            
+        case MyCSS_PROPERTY_VALUE__URL:
+            mycss_values_serialization_url(value, callback, context);
             break;
             
         default:

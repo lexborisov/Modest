@@ -27,7 +27,7 @@
 #include <mycss/selectors/init.h>
 #include <mycss/declaration/init.h>
 #include <mycss/declaration/entry.h>
-#include "mycss/declaration/serialization.h"
+#include <mycss/declaration/serialization.h>
 
 myhtml_tree_t * parse_html(const char* data, size_t data_size)
 {
@@ -72,7 +72,7 @@ mycss_entry_t * create_css_parser(void)
 
 int main(int argc, const char * argv[])
 {
-    const char *html = "<div id=div1><div id=div2 style=\"width: 13px; height: 30.4em\"></div><ul style=\"height: 12px\"></ul></div>";
+    const char *html = "<div id=div1><div id=div2 style=\"width: 13px; height: 30.4em; background-image: none, cross-fade(32% image(rgba(12, 21, 32, 0.32)), red), image(image('dfdfdf', #fff), rgb(12 32 1 / 0.4)), string(this-is-string);\"></div><ul style=\"height: 12px\"></ul></div>";
     
     myhtml_tree_t *html_tree = parse_html(html, strlen(html));
     mycss_entry_t *css_entry = create_css_parser();

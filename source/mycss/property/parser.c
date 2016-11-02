@@ -779,14 +779,18 @@ bool mycss_property_parser_color(mycss_entry_t* entry, mycss_token_t* token, boo
     myhtml_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
+    bool parser_changed = false;
+    
     dec_entry->value = NULL;
     
-    if(mycss_property_shared_color(entry, token, &dec_entry->value, &dec_entry->value_type, &str))
+    if(mycss_property_shared_color(entry, token, &dec_entry->value, &dec_entry->value_type, &str, &parser_changed))
     {
-        if(dec_entry->value)
-            entry->parser = mycss_property_parser_color_after;
+        if(parser_changed) {
+            mycss_stack_push(entry->declaration->stack, NULL, mycss_property_parser_color_after);
+            return true;
+        }
         
-        return mycss_property_parser_destroy_string(&str, true);
+        return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
     }
     
     return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
@@ -797,12 +801,8 @@ bool mycss_property_parser_color_after(mycss_entry_t* entry, mycss_token_t* toke
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
-    
     if(mycss_property_shared_check_declaration_end(entry, token))
         return true;
-    
-    dec_entry->value = mycss_values_destroy(entry, dec_entry->value);
     
     return mycss_property_shared_switch_to_parse_error(entry);
 }
@@ -814,8 +814,9 @@ static mycss_declaration_entry_t * mycss_property_parser_border_color_step(mycss
     
     void *value = NULL;
     unsigned int value_type = 0;
+    bool parser_changed = false;
     
-    if(mycss_property_shared_color(entry, token, &value, &value_type, &str) ||
+    if(mycss_property_shared_color(entry, token, &value, &value_type, &str, &parser_changed) ||
        mycss_property_shared_default(entry, token, &value_type, &str))
     {
         mycss_declaration_entry_t* step_dec_entry = mycss_declaration_entry_create(entry->declaration, NULL);
@@ -824,11 +825,9 @@ static mycss_declaration_entry_t * mycss_property_parser_border_color_step(mycss
         step_dec_entry->value      = value;
         step_dec_entry->value_type = value_type;
         
-        if(entry->parser != mycss_property_parser_border_color) {
-            entry->declaration->entry_temp = entry->declaration->entry_last;
-            entry->declaration->entry_last = step_dec_entry;
-            
-            entry->parser_switch = mycss_property_parser_border_color_after;
+        if(parser_changed) {
+            mycss_stack_push(entry->declaration->stack, entry->declaration->entry_last->value, mycss_property_parser_border_color_after);
+            entry->declaration->entry_last->value = step_dec_entry->value;
         }
         
         myhtml_string_destroy(&str, false);
@@ -1873,6 +1872,442 @@ bool mycss_property_parser_text_align_last(mycss_entry_t* entry, mycss_token_t* 
     return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
 }
 
+/*
+ Background
+ */
+bool mycss_property_parser_background_end(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    return mycss_property_shared_switch_to_parse_error(entry);
+}
+
+bool mycss_property_parser_background(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_shared_switch_to_parse_error(entry);
+    
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    void *value = NULL;
+    unsigned int value_type = 0;
+    bool parser_changed = false;
+    
+    if(mycss_property_shared_image(entry, token, &value, &value_type, &str, &parser_changed))
+    {
+        mycss_declaration_entry_t* declr_image = mycss_declaration_entry_create(entry->declaration, NULL);
+        
+        declr_image->type       = MyCSS_PROPERTY_TYPE_BACKGROUND_IMAGE;
+        declr_image->value      = value;
+        declr_image->value_type = value_type;
+        
+        if(parser_changed) {
+            entry->declaration->entry_last = value;
+            entry->declaration->entry_temp = dec_entry;
+            
+            entry->parser_switch = mycss_property_parser_background_end;
+        }
+        
+        return mycss_property_parser_destroy_string(&str, true);
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+/*
+ * Background Attachment
+ */
+static bool mycss_property_parser_background_attachment_end(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    if(mycss_property_shared_check_declaration_end(entry, token)) {
+        return true;
+    }
+    
+    if(token->type == MyCSS_TOKEN_TYPE_COMMA) {
+        entry->parser = mycss_property_parser_background_attachment;
+        return true;
+    }
+    
+    return mycss_property_shared_switch_to_parse_error(entry);
+}
+
+bool mycss_property_parser_background_attachment(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    unsigned int value_type = 0;
+    
+    if(mycss_property_shared_background_attachment(entry, token, &value_type, &str))
+    {
+        if(dec_entry->value == NULL)
+            dec_entry->value = mycss_values_create(entry, sizeof(mycss_values_type_list_t));
+        
+        unsigned int *type = mycss_values_type_list_add_entry(entry, dec_entry->value);
+        *type = value_type;
+        
+        entry->parser = mycss_property_parser_background_attachment_end;
+        return mycss_property_parser_destroy_string(&str, true);
+    }
+    
+    if(mycss_property_shared_default(entry, token, &dec_entry->value_type, &str)) {
+        if(dec_entry->value == NULL)
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+/*
+ * Background Clip
+ */
+static bool mycss_property_parser_background_clip_end(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    if(mycss_property_shared_check_declaration_end(entry, token)) {
+        return true;
+    }
+    
+    if(token->type == MyCSS_TOKEN_TYPE_COMMA) {
+        entry->parser = mycss_property_parser_background_clip;
+        return true;
+    }
+    
+    return mycss_property_shared_switch_to_parse_error(entry);
+}
+
+bool mycss_property_parser_background_clip(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    unsigned int value_type = 0;
+    
+    if(mycss_property_shared_background_clip(entry, token, &value_type, &str))
+    {
+        if(dec_entry->value == NULL)
+            dec_entry->value = mycss_values_create(entry, sizeof(mycss_values_type_list_t));
+        
+        unsigned int *type = mycss_values_type_list_add_entry(entry, dec_entry->value);
+        *type = value_type;
+        
+        entry->parser = mycss_property_parser_background_clip_end;
+        return mycss_property_parser_destroy_string(&str, true);
+    }
+    
+    if(mycss_property_shared_default(entry, token, &dec_entry->value_type, &str)) {
+        if(dec_entry->value == NULL)
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+/*
+ * Background Image
+ */
+bool mycss_property_parser_background_image_end(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    if(mycss_property_shared_check_declaration_end(entry, token)) {
+        return true;
+    }
+    
+    if(token->type == MyCSS_TOKEN_TYPE_COMMA) {
+        entry->parser = mycss_property_parser_background_image;
+        return true;
+    }
+    
+    return mycss_property_shared_switch_to_parse_error(entry);
+}
+
+bool mycss_property_parser_background_image(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_values_image_t stat_image;
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    void *value = &stat_image;
+    unsigned int value_type = 0;
+    bool parser_changed = false;
+    
+    if(mycss_property_shared_image(entry, token, &value, &value_type, &str, &parser_changed))
+    {
+        if(dec_entry->value == NULL)
+            dec_entry->value = mycss_values_create(entry, sizeof(mycss_values_image_list_t));
+        
+        mycss_values_image_t *image = mycss_values_image_list_add_entry(entry, dec_entry->value);
+        *image = stat_image;
+        
+        if(dec_entry->value_type == MyCSS_PROPERTY_VALUE_UNDEF)
+            dec_entry->value_type = MyCSS_PROPERTY_VALUE__IMAGE_LIST;
+        
+        if(parser_changed) {
+            mycss_stack_push(entry->declaration->stack, dec_entry->value, mycss_property_parser_background_image_end);
+            dec_entry->value = image;
+            
+            return mycss_property_parser_destroy_string(&str, true);
+        }
+        
+        entry->parser = mycss_property_parser_background_image_end;
+        return mycss_property_parser_destroy_string(&str, true);
+    }
+    
+    if(mycss_property_shared_by_value_type(entry, token, &value_type, MyCSS_PROPERTY_BACKGROUND_IMAGE_NONE, &str))
+    {
+        if(dec_entry->value == NULL)
+            dec_entry->value = mycss_values_create(entry, sizeof(mycss_values_image_list_t));
+        
+        mycss_values_image_t *image = mycss_values_image_list_add_entry(entry, dec_entry->value);
+        image->type = MyCSS_PROPERTY_VALUE_NONE;
+        
+        if(dec_entry->value_type == MyCSS_PROPERTY_VALUE_UNDEF)
+            dec_entry->value_type = MyCSS_PROPERTY_VALUE__IMAGE_LIST;
+        
+        entry->parser = mycss_property_parser_background_image_end;
+        return mycss_property_parser_destroy_string(&str, true);
+    }
+    
+    if(mycss_property_shared_default(entry, token, &dec_entry->value_type, &str)) {
+        if(dec_entry->value == NULL)
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+/*
+ * Background Origin
+ */
+static bool mycss_property_parser_background_origin_end(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    if(mycss_property_shared_check_declaration_end(entry, token)) {
+        return true;
+    }
+    
+    if(token->type == MyCSS_TOKEN_TYPE_COMMA) {
+        entry->parser = mycss_property_parser_background_origin;
+        return true;
+    }
+    
+    return mycss_property_shared_switch_to_parse_error(entry);
+}
+
+bool mycss_property_parser_background_origin(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    unsigned int value_type = 0;
+    
+    if(mycss_property_shared_background_clip(entry, token, &value_type, &str))
+    {
+        if(dec_entry->value == NULL)
+            dec_entry->value = mycss_values_create(entry, sizeof(mycss_values_type_list_t));
+        
+        unsigned int *type = mycss_values_type_list_add_entry(entry, dec_entry->value);
+        *type = value_type;
+        
+        entry->parser = mycss_property_parser_background_origin_end;
+        return mycss_property_parser_destroy_string(&str, true);
+    }
+    
+    if(mycss_property_shared_default(entry, token, &dec_entry->value_type, &str)) {
+        if(dec_entry->value == NULL)
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+/*
+ * Background Position
+ */
+bool mycss_property_parser_background_position(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    void* value = NULL;
+    unsigned int value_type = 0;
+    
+    if(mycss_property_shared_background_position(entry, token, &value, &value_type, &str))
+    {
+        if(dec_entry->value == NULL)
+            dec_entry->value = mycss_values_create(entry, sizeof(mycss_values_background_position_t));
+        
+        mycss_values_background_position_t *position = (mycss_values_background_position_t*)dec_entry->value;
+        mycss_values_type_length_percentage_entry_t *pos_entry;
+        
+        if(position->one.type == 0)
+            pos_entry = &position->one;
+        else if(position->two.type == 0)
+            pos_entry = &position->two;
+        else if(position->three.type == 0)
+            pos_entry = &position->three;
+        else if(position->four.type == 0)
+            pos_entry = &position->four;
+        else
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+        
+        pos_entry->type = value_type;
+        
+        if(value_type == MyCSS_PROPERTY_VALUE__LENGTH)
+            pos_entry->length = value;
+        else if(value_type == MyCSS_PROPERTY_VALUE__PERCENTAGE)
+            pos_entry->percentage = value;
+        
+        return mycss_property_parser_destroy_string(&str, true);
+    }
+    
+    if(mycss_property_shared_default(entry, token, &dec_entry->value_type, &str)) {
+        if(dec_entry->value == NULL)
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+        
+        return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+    }
+    
+    if(mycss_property_parser_background_position_check(dec_entry->value)) {
+        mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+        return false;
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+/*
+ * Background Repeat
+ */
+static bool mycss_property_parser_background_repeat_end(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    if(mycss_property_shared_check_declaration_end(entry, token)) {
+        return true;
+    }
+    
+    if(token->type == MyCSS_TOKEN_TYPE_COMMA) {
+        entry->parser = mycss_property_parser_background_repeat;
+        return true;
+    }
+    
+    return mycss_property_shared_switch_to_parse_error(entry);
+}
+
+static bool mycss_property_parser_background_repeat_wait_two(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    if(mycss_property_shared_check_declaration_end(entry, token)) {
+        return true;
+    }
+    
+    if(token->type == MyCSS_TOKEN_TYPE_COMMA) {
+        entry->parser = mycss_property_parser_background_repeat;
+        return true;
+    }
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    unsigned int value_type = 0;
+    
+    if(mycss_property_shared_background_repeat_two(entry, token, &value_type, &str))
+    {
+        mycss_values_background_repeat_list_t *list = dec_entry->value;
+        
+        mycss_values_background_repeat_t *repeat = &list->entries[ (list->entries_length - 1) ];
+        repeat->vertical = value_type;
+        
+        entry->parser = mycss_property_parser_background_repeat_end;
+        return mycss_property_parser_destroy_string(&str, true);
+    }
+    
+    return mycss_property_shared_switch_to_parse_error(entry);
+}
+
+static void mycss_property_parser_background_repeat_create_entry(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, unsigned int value_type)
+{
+    if(dec_entry->value == NULL)
+        dec_entry->value = mycss_values_create(entry, sizeof(mycss_values_background_repeat_list_t));
+    
+    mycss_values_background_repeat_t *repeat = mycss_values_background_repeat_list_add_entry(entry, dec_entry->value);
+    repeat->horizontal = value_type;
+}
+
+bool mycss_property_parser_background_repeat(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    unsigned int value_type = 0;
+    
+    if(mycss_property_shared_background_repeat_one(entry, token, &value_type, &str))
+    {
+        mycss_property_parser_background_repeat_create_entry(entry, dec_entry, value_type);
+        
+        entry->parser = mycss_property_parser_background_repeat_end;
+        return mycss_property_parser_destroy_string(&str, true);
+    }
+    
+    if(mycss_property_shared_background_repeat_two(entry, token, &value_type, &str))
+    {
+        mycss_property_parser_background_repeat_create_entry(entry, dec_entry, value_type);
+        
+        entry->parser = mycss_property_parser_background_repeat_wait_two;
+        return mycss_property_parser_destroy_string(&str, true);
+    }
+    
+    if(mycss_property_shared_default(entry, token, &dec_entry->value_type, &str)) {
+        if(dec_entry->value == NULL)
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+/*
+ * Background Size
+ */
+bool mycss_property_parser_background_size(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_shared_switch_to_parse_error(entry);
+}
+
 /* not yet */
 bool mycss_property_parser_align_content(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
@@ -1940,46 +2375,6 @@ bool mycss_property_parser_appearance(mycss_entry_t* entry, mycss_token_t* token
 }
 
 bool mycss_property_parser_backface_visibility(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_background(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_background_attachment(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_background_clip(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_background_image(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_background_origin(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_background_position(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_background_repeat(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
-bool mycss_property_parser_background_size(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     return mycss_property_shared_switch_to_parse_error(entry);
 }

@@ -41,11 +41,15 @@ bool mycss_declaration_serialization_undef(mycss_entry_t* entry, mycss_declarati
 bool mycss_declaration_serialization_shorthand_four(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
 bool mycss_declaration_serialization_shorthand_two(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
 bool mycss_declaration_serialization_shorthand_two_type(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
+bool mycss_declaration_serialization_type_list(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
 bool mycss_declaration_serialization_text_decoration(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
 bool mycss_declaration_serialization_text_decoration_line(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
 bool mycss_declaration_serialization_text_decoration_skip(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
 bool mycss_declaration_serialization_font_family(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
 bool mycss_declaration_serialization_font(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
+bool mycss_declaration_serialization_background_image(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
+bool mycss_declaration_serialization_background_repeat(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
+bool mycss_declaration_serialization_background_position(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
 
 #ifdef __cplusplus
 } /* extern "C" */

@@ -41,6 +41,14 @@ mycss_status_t mycss_declaration_init(mycss_entry_t* entry, mycss_declaration_t*
     if(myhtml_status)
         return MyCSS_STATUS_ERROR_DECLARATION_ENTRY_INIT;
     
+    /* Stack */
+    declaration->stack = mycss_stack_create();
+    if(declaration->stack == NULL)
+        return MyCSS_STATUS_ERROR_MEMORY_ALLOCATION;
+    
+    if(mycss_stack_init(declaration->stack, 512))
+        return MyCSS_STATUS_ERROR_MEMORY_ALLOCATION;
+    
     return MyCSS_STATUS_OK;
 }
 
@@ -48,6 +56,8 @@ void mycss_declaration_clean(mycss_declaration_t* declaration)
 {
     declaration->entry = NULL;
     declaration->ending_token = MyCSS_TOKEN_TYPE_UNDEF;
+    
+    mycss_stack_clean(declaration->stack);
 }
 
 void mycss_declaration_clean_all(mycss_declaration_t* declaration)
@@ -56,6 +66,7 @@ void mycss_declaration_clean_all(mycss_declaration_t* declaration)
     declaration->ending_token = MyCSS_TOKEN_TYPE_UNDEF;
     
     mcobject_clean(declaration->mcobject_entries);
+    mycss_stack_clean(declaration->stack);
 }
 
 mycss_declaration_t * mycss_declaration_destroy(mycss_declaration_t* declaration, bool self_destroy)
@@ -64,6 +75,7 @@ mycss_declaration_t * mycss_declaration_destroy(mycss_declaration_t* declaration
         return NULL;
     
     declaration->mcobject_entries = mcobject_destroy(declaration->mcobject_entries, true);
+    declaration->stack = mycss_stack_destroy(declaration->stack, true);
     
     if(self_destroy) {
         myhtml_free(declaration);

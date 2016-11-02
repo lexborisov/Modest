@@ -31,7 +31,6 @@ extern "C" {
 #endif
 
 bool mycss_values_color_parser_undef(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
-bool mycss_values_color_parser_find_end(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_values_color_parser_rgb(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_values_color_parser_rgba(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_values_color_parser_rgb_before_g_percentage(mycss_entry_t* entry, mycss_token_t* token, bool last_response);

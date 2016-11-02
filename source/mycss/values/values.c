@@ -66,4 +66,58 @@ void * mycss_values_entry(mycss_entry_t* entry)
     return (*entry->values);
 }
 
+unsigned int * mycss_values_type_list_add_entry(mycss_entry_t* entry, mycss_values_type_list_t *list)
+{
+    if(list->entries == NULL) {
+        list->entries = mycss_values_create(entry, sizeof(unsigned int));
+        list->entries_length = 0;
+    }
+    else {
+        list->entries = mycss_values_realloc(entry, list->entries,
+                                             list->entries_length * sizeof(unsigned int),
+                                             sizeof(unsigned int));
+    }
+    
+    unsigned int *type = &list->entries[ list->entries_length ];
+    list->entries_length++;
+    
+    return type;
+}
+
+mycss_values_image_t * mycss_values_image_list_add_entry(mycss_entry_t* entry, mycss_values_image_list_t *bg_image)
+{
+    if(bg_image->images == NULL) {
+        bg_image->images = mycss_values_create(entry, sizeof(mycss_values_image_t));
+        bg_image->images_length = 0;
+    }
+    else {
+        bg_image->images = mycss_values_realloc(entry, bg_image->images,
+                                                bg_image->images_length * sizeof(mycss_values_image_t),
+                                                sizeof(mycss_values_image_t));
+    }
+    
+    mycss_values_image_t *image = &bg_image->images[ bg_image->images_length ];
+    bg_image->images_length++;
+    
+    return image;
+}
+
+mycss_values_background_repeat_t * mycss_values_background_repeat_list_add_entry(mycss_entry_t* entry, mycss_values_background_repeat_list_t *list)
+{
+    if(list->entries == NULL) {
+        list->entries = mycss_values_create(entry, sizeof(mycss_values_background_repeat_t));
+        list->entries_length = 0;
+    }
+    else {
+        list->entries = mycss_values_realloc(entry, list->entries,
+                                             list->entries_length * sizeof(mycss_values_background_repeat_t),
+                                             sizeof(mycss_values_background_repeat_t));
+    }
+    
+    mycss_values_background_repeat_t *repeat = &list->entries[ list->entries_length ];
+    list->entries_length++;
+    
+    return repeat;
+}
+
 

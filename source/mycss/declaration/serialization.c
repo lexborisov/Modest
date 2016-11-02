@@ -160,6 +160,29 @@ bool mycss_declaration_serialization_shorthand_two_type(mycss_entry_t* entry, my
     return true;
 }
 
+bool mycss_declaration_serialization_type_list(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
+                                               mycss_callback_serialization_f callback, void* context)
+{
+    if(dec_entry == NULL)
+        return false;
+    
+    if(dec_entry->value == NULL)
+        return mycss_declaration_serialization_undef(entry, dec_entry, callback, context);
+    
+    mycss_values_type_list_t *list = dec_entry->value;
+    
+    for(size_t i = 0; i < list->entries_length; i++) {
+        if(i)
+            callback(", ", 2, context);
+        
+        mycss_property_serialization_value(list->entries[i], NULL, callback, context);
+    }
+    
+    mycss_declaration_serialization_important_if_need(dec_entry, callback, context);
+    
+    return true;
+}
+
 bool mycss_declaration_serialization_text_decoration(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
                                                      mycss_callback_serialization_f callback, void* context)
 {
@@ -314,6 +337,108 @@ bool mycss_declaration_serialization_text_decoration_skip(mycss_entry_t* entry, 
         return mycss_declaration_serialization_undef(entry, dec_entry, callback, context);
     
     mycss_values_serialization_text_decoration_skip(*((mycss_values_text_decoration_skip_t*)dec_entry->value), callback, context);
+    mycss_declaration_serialization_important_if_need(dec_entry, callback, context);
+    
+    return true;
+}
+
+bool mycss_declaration_serialization_background_image(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
+                                                      mycss_callback_serialization_f callback, void* context)
+{
+    if(dec_entry == NULL)
+        return false;
+    
+    if(dec_entry->value == NULL)
+        return mycss_declaration_serialization_undef(entry, dec_entry, callback, context);
+    
+    mycss_values_image_list_t *list = dec_entry->value;
+    
+    for(size_t i = 0; i < list->images_length; i++) {
+        if(i)
+            callback(", ", 2, context);
+        
+        mycss_property_serialization_value(MyCSS_PROPERTY_VALUE__IMAGE, &list->images[i], callback, context);
+    }
+    
+    mycss_declaration_serialization_important_if_need(dec_entry, callback, context);
+    
+    return true;
+}
+
+bool mycss_declaration_serialization_background_repeat(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
+                                                       mycss_callback_serialization_f callback, void* context)
+{
+    if(dec_entry == NULL)
+        return false;
+    
+    if(dec_entry->value == NULL)
+        return mycss_declaration_serialization_undef(entry, dec_entry, callback, context);
+    
+    mycss_values_background_repeat_list_t *list = dec_entry->value;
+    
+    for(size_t i = 0; i < list->entries_length; i++) {
+        if(i)
+            callback(", ", 2, context);
+        
+        mycss_property_serialization_value(list->entries[i].horizontal, NULL, callback, context);
+        
+        if(list->entries[i].vertical) {
+            if(list->entries[i].horizontal)
+                callback(" ", 1, context);
+            
+            mycss_property_serialization_value(list->entries[i].vertical, NULL, callback, context);
+        }
+    }
+    
+    mycss_declaration_serialization_important_if_need(dec_entry, callback, context);
+    
+    return true;
+}
+
+bool mycss_declaration_serialization_background_position(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
+                                                         mycss_callback_serialization_f callback, void* context)
+{
+    if(dec_entry == NULL)
+        return false;
+    
+    if(dec_entry->value == NULL)
+        return mycss_declaration_serialization_undef(entry, dec_entry, callback, context);
+    
+    mycss_values_background_position_t *position = dec_entry->value;
+    bool o_e = false;
+    
+    if(position->one.type) {
+        o_e = true;
+        mycss_property_serialization_value(position->one.type, position->one.length, callback, context);
+    }
+    
+    if(position->two.type) {
+        if(o_e)
+            callback(" ", 1, context);
+        else
+            o_e = true;
+        
+        mycss_property_serialization_value(position->two.type, position->two.length, callback, context);
+    }
+    
+    if(position->three.type) {
+        if(o_e)
+            callback(" ", 1, context);
+        else
+            o_e = true;
+        
+        mycss_property_serialization_value(position->three.type, position->three.length, callback, context);
+    }
+    
+    if(position->four.type) {
+        if(o_e)
+            callback(" ", 1, context);
+        else
+            o_e = true;
+        
+        mycss_property_serialization_value(position->four.type, position->four.length, callback, context);
+    }
+    
     mycss_declaration_serialization_important_if_need(dec_entry, callback, context);
     
     return true;

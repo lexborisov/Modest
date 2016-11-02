@@ -574,7 +574,8 @@ size_t mycss_tokenizer_global_state_ident(mycss_entry_t* entry, mycss_token_t* t
         if(mycss_tokenizer_token_strcasecmp(entry, token, "url", 3) == 0) {
             css_offset++;
             
-            token->type = MyCSS_TOKEN_TYPE_URL;
+            token->begin = css_offset;
+            token->type  = MyCSS_TOKEN_TYPE_URL;
             entry->state = MyCSS_TOKENIZER_GLOBAL_STATE_URL;
         }
         else {

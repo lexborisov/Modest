@@ -109,6 +109,70 @@ bool mycss_property_shared_length(mycss_entry_t* entry, mycss_token_t* token, vo
     return true;
 }
 
+bool mycss_property_shared_resolution(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+{
+    if(token->type != MyCSS_TOKEN_TYPE_DIMENSION)
+        return false;
+    
+    if(str->data == NULL)
+        mycss_token_data_to_string(entry, token, str, true, false);
+    
+    double return_num; bool is_float;
+    size_t consume_length = mycss_convert_data_to_double(str->data, str->length, &return_num, &is_float);
+    
+    mycss_units_type_t type = mycss_units_type_by_name(&str->data[consume_length], (str->length - consume_length));
+    
+    switch (type) {
+        case MyCSS_UNIT_TYPE_DPI:
+        case MyCSS_UNIT_TYPE_DPCM:
+        case MyCSS_UNIT_TYPE_DPPX:
+            break;
+            
+        default:
+            return false;
+    }
+    
+    mycss_values_resolution_t *resolution = mycss_values_create(entry, sizeof(mycss_values_resolution_t));
+    
+    if(is_float)
+        resolution->f = (float)return_num;
+    else
+        resolution->i = (int)return_num;
+    
+    resolution->is_float = is_float;
+    resolution->type = type;
+    
+    *value = resolution;
+    *value_type = MyCSS_PROPERTY_VALUE__RESOLUTION;
+    
+    return true;
+}
+
+bool mycss_property_shared_custom_ident(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type)
+{
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return false;
+    
+    if(*value) {
+        mycss_values_custom_ident_t *custom_ident = *value;
+        mycss_token_data_to_string(entry, token, &custom_ident->str, true, false);
+        
+        if(value_type)
+            *value_type = MyCSS_PROPERTY_VALUE__CUSTOM_IDENT;
+    }
+    else {
+        mycss_values_custom_ident_t *custom_ident = mycss_values_create(entry, sizeof(mycss_values_custom_ident_t));
+        mycss_token_data_to_string(entry, token, &custom_ident->str, true, false);
+        
+        *value = custom_ident;
+        
+        if(value_type)
+            *value_type = MyCSS_PROPERTY_VALUE__CUSTOM_IDENT;
+    }
+    
+    return true;
+}
+
 bool mycss_property_shared_percentage(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_PERCENTAGE)
@@ -139,7 +203,7 @@ bool mycss_property_shared_length_percentage(mycss_entry_t* entry, mycss_token_t
     mycss_property_shared_percentage(entry, token, value, value_type, str);
 }
 
-bool mycss_property_shared_color(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_color(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str, bool* parser_changed)
 {
     switch (token->type) {
         case MyCSS_TOKEN_TYPE_FUNCTION:
@@ -154,7 +218,9 @@ bool mycss_property_shared_color(mycss_entry_t* entry, mycss_token_t* token, voi
                 *value = mycss_values_create(entry, sizeof(mycss_values_color_t));
                 *value_type = MyCSS_PROPERTY_VALUE__COLOR;
                 
+                *parser_changed = true;
                 entry->parser = color_entry->parser;
+                
                 return true;
             }
             
@@ -389,7 +455,7 @@ bool mycss_property_shared_by_value_type(mycss_entry_t* entry, mycss_token_t* to
     if(str->data == NULL)
         mycss_token_data_to_string(entry, token, str, true, false);
     
-    if(check_type != mycss_property_value_type_by_name(str->data, str->length)) {
+    if(check_type == mycss_property_value_type_by_name(str->data, str->length)) {
         *value_type = check_type;
         return true;
     }
@@ -798,6 +864,278 @@ bool mycss_property_shared_font_style(mycss_entry_t* entry, mycss_token_t* token
     return false;
 }
 
+bool mycss_property_shared_url(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_URL)
+    {
+        myhtml_string_t *new_str = mycss_values_create(entry, sizeof(myhtml_string_t));
+        mycss_token_data_to_string(entry, token, new_str, true, false);
+        
+        *value = new_str;
+        *value_type = MyCSS_PROPERTY_VALUE__URL;
+        
+        return true;
+    }
+    
+    if(token->type != MyCSS_TOKEN_TYPE_FUNCTION)
+        return false;
+    
+    if(str->length != 3)
+        return false;
+    
+    if(str->data == NULL)
+        mycss_token_data_to_string(entry, token, str, true, false);
+    
+    if(myhtml_strcasecmp(str->data, "url"))
+        return false;
+    
+    entry->parser = mycss_property_parser_url_string;
+    *value_type = MyCSS_PROPERTY_VALUE__URL;
+    
+    return true;
+}
 
+bool mycss_property_shared_image(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str, bool* parser_changed)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_URL)
+    {
+        mycss_values_image_t *image;
+        
+        if(*value)
+            image = *value;
+        else
+            *value = image = mycss_values_create(entry, sizeof(mycss_values_image_t));
+        
+        image->type = MyCSS_PROPERTY_VALUE__URL;
+        mycss_values_url_t *url = mycss_values_image_creator_url(entry, image);
+        
+        *value_type = MyCSS_PROPERTY_VALUE__IMAGE;
+        
+        mycss_token_data_to_string(entry, token, &url->str, true, false);
+        return true;
+    }
+    
+    if(token->type != MyCSS_TOKEN_TYPE_FUNCTION)
+        return false;
+    
+    if(str->data == NULL)
+        mycss_token_data_to_string(entry, token, str, true, false);
+    
+    const mycss_values_image_function_index_static_entry_t *func_entry = mycss_values_image_index_entry_by_name(str->data, str->length);
+    
+    if(func_entry == NULL || func_entry->type == MyCSS_PROPERTY_VALUE_UNDEF)
+        return false;
+    
+    mycss_values_image_t *image;
+    
+    if(*value)
+        image = *value;
+    else
+        *value = image = mycss_values_create(entry, sizeof(mycss_values_image_t));
+    
+    image->type = func_entry->type;
+    
+    *value_type = MyCSS_PROPERTY_VALUE__IMAGE;
+    func_entry->obj_creator(entry, image);
+    
+    *parser_changed = true;
+    entry->parser = func_entry->parser;
+    
+    return true;
+}
+
+bool mycss_property_shared_background_repeat_one(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str)
+{
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return false;
+    
+    if(str->data == NULL)
+        mycss_token_data_to_string(entry, token, str, true, false);
+    
+    *value_type = mycss_property_value_type_by_name(str->data, str->length);
+    
+    switch (*value_type) {
+        case MyCSS_PROPERTY_BACKGROUND_REPEAT_X:
+        case MyCSS_PROPERTY_BACKGROUND_REPEAT_Y:
+            return true;
+            
+        default:
+            *value_type = MyCSS_PROPERTY_VALUE_UNDEF;
+            break;
+    }
+    
+    return false;
+}
+
+bool mycss_property_shared_background_repeat_two(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str)
+{
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return false;
+    
+    if(str->data == NULL)
+        mycss_token_data_to_string(entry, token, str, true, false);
+    
+    *value_type = mycss_property_value_type_by_name(str->data, str->length);
+    
+    switch (*value_type) {
+        case MyCSS_PROPERTY_BACKGROUND_REPEAT:
+        case MyCSS_PROPERTY_BACKGROUND_SPACE:
+        case MyCSS_PROPERTY_BACKGROUND_ROUND:
+        case MyCSS_PROPERTY_BACKGROUND_NO_REPEAT:
+            return true;
+            
+        default:
+            *value_type = MyCSS_PROPERTY_VALUE_UNDEF;
+            break;
+    }
+    
+    return false;
+}
+
+bool mycss_property_shared_background_attachment(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str)
+{
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return false;
+    
+    if(str->data == NULL)
+        mycss_token_data_to_string(entry, token, str, true, false);
+    
+    *value_type = mycss_property_value_type_by_name(str->data, str->length);
+    
+    switch (*value_type) {
+        case MyCSS_PROPERTY_BACKGROUND_ATTACHMENT_FIXED:
+        case MyCSS_PROPERTY_BACKGROUND_ATTACHMENT_LOCAL:
+        case MyCSS_PROPERTY_BACKGROUND_ATTACHMENT_SCROLL:
+            return true;
+            
+        default:
+            *value_type = MyCSS_PROPERTY_VALUE_UNDEF;
+            break;
+    }
+    
+    return false;
+}
+
+bool mycss_property_shared_background_position(mycss_entry_t* entry, mycss_token_t* token, void* value, unsigned int* value_type, myhtml_string_t* str)
+{
+    if(mycss_property_shared_length_percentage(entry, token, value, value_type, str))
+        return true;
+    
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return false;
+    
+    if(str->data == NULL)
+        mycss_token_data_to_string(entry, token, str, true, false);
+    
+    *value_type = mycss_property_value_type_by_name(str->data, str->length);
+    
+    switch (*value_type) {
+        case MyCSS_PROPERTY_BACKGROUND_POSITION_LEFT:
+        case MyCSS_PROPERTY_BACKGROUND_POSITION_CENTER:
+        case MyCSS_PROPERTY_BACKGROUND_POSITION_RIGHT:
+        case MyCSS_PROPERTY_BACKGROUND_POSITION_TOP:
+        case MyCSS_PROPERTY_BACKGROUND_POSITION_BOTTOM:
+            return true;
+            
+        default:
+            *value_type = MyCSS_PROPERTY_VALUE_UNDEF;
+            break;
+    }
+    
+    return false;
+}
+
+bool mycss_property_shared_background_clip(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str)
+{
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return false;
+    
+    if(str->data == NULL)
+        mycss_token_data_to_string(entry, token, str, true, false);
+    
+    *value_type = mycss_property_value_type_by_name(str->data, str->length);
+    
+    switch (*value_type) {
+        case MyCSS_PROPERTY_BACKGROUND_CLIP_BORDER_BOX:
+        case MyCSS_PROPERTY_BACKGROUND_CLIP_PADDING_BOX:
+        case MyCSS_PROPERTY_BACKGROUND_CLIP_CONTENT_BOX:
+            return true;
+            
+        default:
+            *value_type = MyCSS_PROPERTY_VALUE_UNDEF;
+            break;
+    }
+    
+    return false;
+}
+
+
+
+
+
+
+
+
+
+
+bool mycss_property_shared_function_image(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+{
+    if(token->type != MyCSS_TOKEN_TYPE_FUNCTION)
+        return false;
+    
+    if(str->length != 5)
+        return false;
+    
+    if(str->data == NULL)
+        mycss_token_data_to_string(entry, token, str, true, false);
+    
+    if(myhtml_strcasecmp(str->data, "image"))
+        return false;
+    
+    entry->parser = NULL;
+    *value_type = MyCSS_PROPERTY_VALUE__URL;
+    
+    return true;
+}
+
+bool mycss_property_shared_function_image_set(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+{
+    if(token->type != MyCSS_TOKEN_TYPE_FUNCTION)
+        return false;
+    
+    if(str->length != 9)
+        return false;
+    
+    if(str->data == NULL)
+        mycss_token_data_to_string(entry, token, str, true, false);
+    
+    if(myhtml_strcasecmp(str->data, "image-set"))
+        return false;
+    
+    entry->parser = NULL;
+    *value_type = MyCSS_PROPERTY_VALUE__URL;
+    
+    return true;
+}
+
+bool mycss_property_shared_element(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+{
+    if(token->type != MyCSS_TOKEN_TYPE_FUNCTION)
+        return false;
+    
+    if(str->length != 10)
+        return false;
+    
+    if(str->data == NULL)
+        mycss_token_data_to_string(entry, token, str, true, false);
+    
+    if(myhtml_strcasecmp(str->data, "cross-fade"))
+        return false;
+    
+    entry->parser = NULL;
+    *value_type = MyCSS_PROPERTY_VALUE__URL;
+    
+    return true;
+}
 
 

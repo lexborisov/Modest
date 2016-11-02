@@ -23,6 +23,7 @@
 #pragma once
 
 #include <mycss/myosi.h>
+#include <mycss/stack.h>
 #include <mycss/values/units.h>
 #include <mycss/property/myosi.h>
 #include <myhtml/utils/mcobject.h>
@@ -48,6 +49,8 @@ struct mycss_declaration {
     mycss_declaration_entry_t** entry;
     mycss_declaration_entry_t*  entry_last;
     mycss_declaration_entry_t*  entry_temp;
+    
+    mycss_stack_t* stack;
     
     mycss_token_type_t ending_token;
     

@@ -26,12 +26,22 @@ bool mycss_values_color_parser_undef(mycss_entry_t* entry, mycss_token_t* token,
     return mycss_property_shared_switch_to_parse_error(entry);
 }
 
-bool mycss_values_color_parser_find_end(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+static void mycss_values_color_parser_switch_parser(mycss_entry_t* entry)
+{
+    mycss_stack_entry_t *stack_entry = mycss_stack_pop(entry->declaration->stack);
+    
+    if(stack_entry->value)
+        entry->declaration->entry_last->value = stack_entry->value;
+    
+    entry->parser = stack_entry->parser;
+}
+
+static bool mycss_values_color_parser_find_end(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    entry->parser = entry->parser_switch;
+    mycss_values_color_parser_switch_parser(entry);
     
     if(token->type == MyCSS_TOKEN_TYPE_RIGHT_PARENTHESIS)
         return true;
@@ -123,7 +133,7 @@ static bool mycss_values_color_parser_rgb_full(mycss_entry_t* entry, mycss_token
         entry->parser = mycss_values_color_parser_rgb_before_g_number;
     }
     else {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -138,7 +148,7 @@ bool mycss_values_color_parser_rgb(mycss_entry_t* entry, mycss_token_t* token, b
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     if(declr_entry->value == NULL) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -156,7 +166,7 @@ bool mycss_values_color_parser_rgba(mycss_entry_t* entry, mycss_token_t* token, 
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     if(declr_entry->value == NULL) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -184,7 +194,7 @@ bool mycss_values_color_parser_rgb_before_g_percentage(mycss_entry_t* entry, myc
             return false;
             
         default:
-            entry->parser = entry->parser_switch;
+            mycss_values_color_parser_switch_parser(entry);
             return false;
     }
 }
@@ -195,14 +205,14 @@ bool mycss_values_color_parser_rgb_g_percentage(mycss_entry_t* entry, mycss_toke
         return true;
     
     if(token->type != MyCSS_TOKEN_TYPE_PERCENTAGE) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     if(declr_entry->value == NULL) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -229,7 +239,7 @@ bool mycss_values_color_parser_rgb_before_b_percentage(mycss_entry_t* entry, myc
             return false;
             
         default:
-            entry->parser = entry->parser_switch;
+            mycss_values_color_parser_switch_parser(entry);
             return false;
     }
 }
@@ -244,7 +254,7 @@ bool mycss_values_color_parser_rgb_b_percentage(mycss_entry_t* entry, mycss_toke
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     if(declr_entry->value == NULL) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -266,7 +276,7 @@ bool mycss_values_color_parser_rgb_before_alpha_percentage(mycss_entry_t* entry,
             return true;
             
         case MyCSS_TOKEN_TYPE_RIGHT_PARENTHESIS:
-            entry->parser = entry->parser_switch;
+            mycss_values_color_parser_switch_parser(entry);
             return true;
             
         case MyCSS_TOKEN_TYPE_DELIM:
@@ -276,7 +286,7 @@ bool mycss_values_color_parser_rgb_before_alpha_percentage(mycss_entry_t* entry,
             }
             
         default:
-            entry->parser = entry->parser_switch;
+            mycss_values_color_parser_switch_parser(entry);
             return false;
     }
 }
@@ -289,7 +299,7 @@ bool mycss_values_color_parser_rgb_alpha_percentage(mycss_entry_t* entry, mycss_
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     if(declr_entry->value == NULL) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -304,7 +314,7 @@ bool mycss_values_color_parser_rgb_alpha_percentage(mycss_entry_t* entry, mycss_
         color->rgba_percentage.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
     }
     else {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -330,7 +340,7 @@ bool mycss_values_color_parser_rgb_before_g_number(mycss_entry_t* entry, mycss_t
             return false;
             
         default:
-            entry->parser = entry->parser_switch;
+            mycss_values_color_parser_switch_parser(entry);
             return false;
     }
 }
@@ -341,14 +351,14 @@ bool mycss_values_color_parser_rgb_g_number(mycss_entry_t* entry, mycss_token_t*
         return true;
     
     if(token->type != MyCSS_TOKEN_TYPE_NUMBER) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     if(declr_entry->value == NULL) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -374,7 +384,7 @@ bool mycss_values_color_parser_rgb_before_b_number(mycss_entry_t* entry, mycss_t
             return false;
             
         default:
-            entry->parser = entry->parser_switch;
+            mycss_values_color_parser_switch_parser(entry);
             return false;
     }
 }
@@ -385,14 +395,14 @@ bool mycss_values_color_parser_rgb_b_number(mycss_entry_t* entry, mycss_token_t*
         return true;
     
     if(token->type != MyCSS_TOKEN_TYPE_NUMBER) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     if(declr_entry->value == NULL) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -414,7 +424,7 @@ bool mycss_values_color_parser_rgb_before_alpha_number(mycss_entry_t* entry, myc
             return true;
             
         case MyCSS_TOKEN_TYPE_RIGHT_PARENTHESIS:
-            entry->parser = entry->parser_switch;
+            mycss_values_color_parser_switch_parser(entry);
             return true;
             
         case MyCSS_TOKEN_TYPE_DELIM:
@@ -424,7 +434,7 @@ bool mycss_values_color_parser_rgb_before_alpha_number(mycss_entry_t* entry, myc
             }
             
         default:
-            entry->parser = entry->parser_switch;
+            mycss_values_color_parser_switch_parser(entry);
             return false;
     }
 }
@@ -437,7 +447,7 @@ bool mycss_values_color_parser_rgb_alpha_number(mycss_entry_t* entry, mycss_toke
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     if(declr_entry->value == NULL) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -452,7 +462,7 @@ bool mycss_values_color_parser_rgb_alpha_number(mycss_entry_t* entry, mycss_toke
         color->rgba_number.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
     }
     else {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -467,7 +477,7 @@ static bool mycss_values_color_parser_hsla_full(mycss_entry_t* entry, mycss_toke
 {
     if(token->type == MyCSS_TOKEN_TYPE_DIMENSION) {
         if(mycss_values_color_parser_set_angle_value(entry, token, &color->hsla.hue.angle) == false) {
-            entry->parser = entry->parser_switch;
+            mycss_values_color_parser_switch_parser(entry);
             return false;
         }
         
@@ -479,7 +489,7 @@ static bool mycss_values_color_parser_hsla_full(mycss_entry_t* entry, mycss_toke
         color->type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
     }
     else {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -495,7 +505,7 @@ bool mycss_values_color_parser_hsl(mycss_entry_t* entry, mycss_token_t* token, b
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     if(declr_entry->value == NULL) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -513,7 +523,7 @@ bool mycss_values_color_parser_hsla(mycss_entry_t* entry, mycss_token_t* token, 
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     if(declr_entry->value == NULL) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -538,7 +548,7 @@ bool mycss_values_color_parser_hsl_before_saturation(mycss_entry_t* entry, mycss
             return false;
             
         default:
-            entry->parser = entry->parser_switch;
+            mycss_values_color_parser_switch_parser(entry);
             return false;
     }
 }
@@ -549,14 +559,14 @@ bool mycss_values_color_parser_hsl_saturation(mycss_entry_t* entry, mycss_token_
         return true;
     
     if(token->type != MyCSS_TOKEN_TYPE_PERCENTAGE) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     if(declr_entry->value == NULL) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -582,7 +592,7 @@ bool mycss_values_color_parser_hsl_before_lightness(mycss_entry_t* entry, mycss_
             return false;
             
         default:
-            entry->parser = entry->parser_switch;
+            mycss_values_color_parser_switch_parser(entry);
             return false;
     }
 }
@@ -593,14 +603,14 @@ bool mycss_values_color_parser_hsl_lightness(mycss_entry_t* entry, mycss_token_t
         return true;
     
     if(token->type != MyCSS_TOKEN_TYPE_PERCENTAGE) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     if(declr_entry->value == NULL) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -622,7 +632,7 @@ bool mycss_values_color_parser_hsl_before_alpha(mycss_entry_t* entry, mycss_toke
             return true;
             
         case MyCSS_TOKEN_TYPE_RIGHT_PARENTHESIS:
-            entry->parser = entry->parser_switch;
+            mycss_values_color_parser_switch_parser(entry);
             return true;
             
         case MyCSS_TOKEN_TYPE_DELIM:
@@ -632,7 +642,7 @@ bool mycss_values_color_parser_hsl_before_alpha(mycss_entry_t* entry, mycss_toke
             }
             
         default:
-            entry->parser = entry->parser_switch;
+            mycss_values_color_parser_switch_parser(entry);
             return false;
     }
 }
@@ -645,7 +655,7 @@ bool mycss_values_color_parser_hsl_alpha(mycss_entry_t* entry, mycss_token_t* to
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     if(declr_entry->value == NULL) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -660,7 +670,7 @@ bool mycss_values_color_parser_hsl_alpha(mycss_entry_t* entry, mycss_token_t* to
         color->hsla.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
     }
     else {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -759,7 +769,7 @@ static bool mycss_values_color_parser_hwb_hue(mycss_entry_t* entry, mycss_token_
 {
     if(token->type == MyCSS_TOKEN_TYPE_DIMENSION) {
         if(mycss_values_color_parser_set_angle_value(entry, token, &color->hwb.hue.angle) == false) {
-            entry->parser = entry->parser_switch;
+            mycss_values_color_parser_switch_parser(entry);
             return false;
         }
         
@@ -771,7 +781,7 @@ static bool mycss_values_color_parser_hwb_hue(mycss_entry_t* entry, mycss_token_
         color->type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
     }
     else {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -787,7 +797,7 @@ bool mycss_values_color_parser_hwb(mycss_entry_t* entry, mycss_token_t* token, b
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     if(declr_entry->value == NULL) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -812,7 +822,7 @@ bool mycss_values_color_parser_hwb_before_whiteness(mycss_entry_t* entry, mycss_
             return false;
             
         default:
-            entry->parser = entry->parser_switch;
+            mycss_values_color_parser_switch_parser(entry);
             return false;
     }
 }
@@ -827,7 +837,7 @@ bool mycss_values_color_parser_hwb_whiteness(mycss_entry_t* entry, mycss_token_t
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     if(declr_entry->value == NULL) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -853,7 +863,7 @@ bool mycss_values_color_parser_hwb_before_blackness(mycss_entry_t* entry, mycss_
             return false;
             
         default:
-            entry->parser = entry->parser_switch;
+            mycss_values_color_parser_switch_parser(entry);
             return false;
     }
 }
@@ -864,14 +874,14 @@ bool mycss_values_color_parser_hwb_blackness(mycss_entry_t* entry, mycss_token_t
         return true;
     
     if(token->type != MyCSS_TOKEN_TYPE_PERCENTAGE) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     if(declr_entry->value == NULL) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -893,7 +903,7 @@ bool mycss_values_color_parser_hwb_before_alpha(mycss_entry_t* entry, mycss_toke
             return true;
             
         case MyCSS_TOKEN_TYPE_RIGHT_PARENTHESIS:
-            entry->parser = entry->parser_switch;
+            mycss_values_color_parser_switch_parser(entry);
             return true;
             
         case MyCSS_TOKEN_TYPE_DELIM:
@@ -903,7 +913,7 @@ bool mycss_values_color_parser_hwb_before_alpha(mycss_entry_t* entry, mycss_toke
             }
             
         default:
-            entry->parser = entry->parser_switch;
+            mycss_values_color_parser_switch_parser(entry);
             return false;
     }
 }
@@ -916,7 +926,7 @@ bool mycss_values_color_parser_hwb_alpha(mycss_entry_t* entry, mycss_token_t* to
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     if(declr_entry->value == NULL) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -931,7 +941,7 @@ bool mycss_values_color_parser_hwb_alpha(mycss_entry_t* entry, mycss_token_t* to
         color->hwb.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
     }
     else {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -950,7 +960,7 @@ bool mycss_values_color_parser_gray(mycss_entry_t* entry, mycss_token_t* token, 
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     if(declr_entry->value == NULL) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -964,7 +974,7 @@ bool mycss_values_color_parser_gray(mycss_entry_t* entry, mycss_token_t* token, 
         entry->parser = mycss_values_color_parser_gray_before_alpha;
     }
     else {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -982,7 +992,7 @@ bool mycss_values_color_parser_gray_before_alpha(mycss_entry_t* entry, mycss_tok
             return true;
             
         case MyCSS_TOKEN_TYPE_RIGHT_PARENTHESIS:
-            entry->parser = entry->parser_switch;
+            mycss_values_color_parser_switch_parser(entry);
             return true;
             
         case MyCSS_TOKEN_TYPE_DELIM:
@@ -992,7 +1002,7 @@ bool mycss_values_color_parser_gray_before_alpha(mycss_entry_t* entry, mycss_tok
             }
             
         default:
-            entry->parser = entry->parser_switch;
+            mycss_values_color_parser_switch_parser(entry);
             return false;
     }
 }
@@ -1005,7 +1015,7 @@ bool mycss_values_color_parser_gray_alpha(mycss_entry_t* entry, mycss_token_t* t
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     if(declr_entry->value == NULL) {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     
@@ -1020,7 +1030,7 @@ bool mycss_values_color_parser_gray_alpha(mycss_entry_t* entry, mycss_token_t* t
         color->gray.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
     }
     else {
-        entry->parser = entry->parser_switch;
+        mycss_values_color_parser_switch_parser(entry);
         return false;
     }
     

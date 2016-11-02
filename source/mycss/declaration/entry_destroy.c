@@ -33,6 +33,18 @@ mycss_declaration_entry_t * mycss_declaration_entry_destroy_undef(mycss_declarat
     return decl_entry;
 }
 
+mycss_declaration_entry_t * mycss_declaration_entry_destroy_type_list(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy)
+{
+    decl_entry->value = mycss_values_destroy_type_list(declaration->ref_entry, decl_entry->value, true);
+    
+    if(self_destroy) {
+        mcobject_free(declaration->mcobject_entries, decl_entry);
+        return NULL;
+    }
+    
+    return decl_entry;
+}
+
 mycss_declaration_entry_t * mycss_declaration_entry_destroy_padding(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy)
 {
     decl_entry->value = mycss_values_destroy_shorthand_four(declaration->ref_entry, decl_entry->value, true);
@@ -116,6 +128,42 @@ mycss_declaration_entry_t * mycss_declaration_entry_destroy_border_bottom_right_
 mycss_declaration_entry_t * mycss_declaration_entry_destroy_border_bottom_left_radius(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy)
 {
     decl_entry->value = mycss_values_destroy_shorthand_two_type(declaration->ref_entry, decl_entry->value, true);
+    
+    if(self_destroy) {
+        mcobject_free(declaration->mcobject_entries, decl_entry);
+        return NULL;
+    }
+    
+    return decl_entry;
+}
+
+mycss_declaration_entry_t * mycss_declaration_entry_destroy_background_image(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy)
+{
+    decl_entry->value = mycss_values_destroy_image_list(declaration->ref_entry, decl_entry->value, true);
+    
+    if(self_destroy) {
+        mcobject_free(declaration->mcobject_entries, decl_entry);
+        return NULL;
+    }
+    
+    return decl_entry;
+}
+
+mycss_declaration_entry_t * mycss_declaration_entry_destroy_background_repeat(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy)
+{
+    decl_entry->value = mycss_values_destroy_background_repeat(declaration->ref_entry, decl_entry->value, true);
+    
+    if(self_destroy) {
+        mcobject_free(declaration->mcobject_entries, decl_entry);
+        return NULL;
+    }
+    
+    return decl_entry;
+}
+
+mycss_declaration_entry_t * mycss_declaration_entry_destroy_background_position(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy)
+{
+    decl_entry->value = mycss_values_destroy_background_position(declaration->ref_entry, decl_entry->value, true);
     
     if(self_destroy) {
         mcobject_free(declaration->mcobject_entries, decl_entry);

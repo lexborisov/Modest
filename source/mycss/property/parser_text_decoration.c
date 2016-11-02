@@ -80,6 +80,7 @@ bool mycss_property_parser_text_decoration(mycss_entry_t* entry, mycss_token_t* 
     void *value = NULL;
     unsigned int line_value = 0;
     unsigned int value_type = 0;
+    bool parser_changed = false;
     
     if(mycss_property_shared_text_decoration_style(entry, token, &value_type, &str))
     {
@@ -95,7 +96,7 @@ bool mycss_property_parser_text_decoration(mycss_entry_t* entry, mycss_token_t* 
         
         return mycss_property_parser_destroy_string(&str, true);
     }
-    else if(mycss_property_shared_color(entry, token, &value, &value_type, &str))
+    else if(mycss_property_shared_color(entry, token, &value, &value_type, &str, &parser_changed))
     {
         if(text_decoration->color) {
             mycss_property_destroy_text_decoration(entry, text_decoration);
@@ -104,11 +105,9 @@ bool mycss_property_parser_text_decoration(mycss_entry_t* entry, mycss_token_t* 
         
         text_decoration->color = mycss_declaration_entry_create(entry->declaration, NULL);
         
-        if(entry->parser != mycss_property_parser_text_decoration_color) {
-            entry->declaration->entry_last = text_decoration->color;
-            entry->declaration->entry_temp = dec_entry;
-            
-            entry->parser_switch = mycss_property_parser_text_decoration_after_color;
+        if(parser_changed) {
+            mycss_stack_push(entry->declaration->stack, dec_entry->value, mycss_property_parser_text_decoration_after_color);
+            entry->declaration->entry_last->value = text_decoration->color->value;
         }
         
         text_decoration->color->value = value;
@@ -204,10 +203,12 @@ bool mycss_property_parser_text_decoration_color(mycss_entry_t* entry, mycss_tok
     myhtml_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
-    if(mycss_property_shared_color(entry, token, &dec_entry->value, &dec_entry->value_type, &str))
+    bool parser_changed = false;
+    
+    if(mycss_property_shared_color(entry, token, &dec_entry->value, &dec_entry->value_type, &str, &parser_changed))
     {
-        if(entry->parser != mycss_property_parser_text_decoration_color)
-            entry->parser_switch = mycss_property_parser_text_decoration_color_after;
+        if(parser_changed)
+            mycss_stack_push(entry->declaration->stack, NULL, mycss_property_parser_text_decoration_color_after);
         
         return mycss_property_parser_destroy_string(&str, true);
     }

@@ -34,6 +34,22 @@
 extern "C" {
 #endif
 
+typedef struct mycss_values_gradient_side_or_corner mycss_values_gradient_side_or_corner_t;
+typedef struct mycss_values_gradient_linear mycss_values_gradient_linear_t;
+
+typedef struct mycss_values_cross_fade_mixing_image mycss_values_cross_fade_mixing_image_t;
+typedef struct mycss_values_cross_fade_final_image mycss_values_cross_fade_final_image_t;
+typedef struct mycss_values_cross_fade mycss_values_cross_fade_t;
+
+typedef struct mycss_values_image_image_set_option mycss_values_image_image_set_option_t;
+typedef struct mycss_values_image_image_set mycss_values_image_image_set_t;
+typedef struct mycss_values_image_image mycss_values_image_image_t;
+typedef struct mycss_values_image_list mycss_values_image_list_t;
+typedef struct mycss_values_image mycss_values_image_t;
+
+typedef struct mycss_values_url mycss_values_url_t;
+typedef struct mycss_values_element mycss_values_element_t;
+
 typedef struct mycss_values_text_decoration mycss_values_text_decoration_t;
 
 typedef struct mycss_values_color_alpha_value mycss_values_color_alpha_value_t;
@@ -45,10 +61,20 @@ typedef struct mycss_values_color_rgba_number mycss_values_color_rgba_number_t;
 typedef struct mycss_values_color_rgba_percentage mycss_values_color_rgba_percentage_t;
 typedef struct mycss_values_color mycss_values_color_t;
 
+typedef struct mycss_values_background_repeat_list mycss_values_background_repeat_list_t;
+typedef struct mycss_values_background_repeat mycss_values_background_repeat_t;
+typedef struct mycss_values_background_position mycss_values_background_position_t;
+
+typedef struct mycss_values_color_stop mycss_values_color_stop_t;
+typedef struct mycss_values_color_stop_list mycss_values_color_stop_list_t;
+
 typedef struct mycss_values_font_family_entry mycss_values_font_family_entry_t;
 typedef struct mycss_values_font_family mycss_values_font_family_t;
 typedef struct mycss_values_font mycss_values_font_t;
 
+typedef struct mycss_values_void_list mycss_values_void_list_t;
+typedef struct mycss_values_type_length_percentage_entry mycss_values_type_length_percentage_entry_t;
+typedef struct mycss_values_type_list mycss_values_type_list_t;
 typedef struct mycss_values_shorthand_two_type mycss_values_shorthand_two_type_t;
 typedef struct mycss_values_shorthand_four mycss_values_shorthand_four_t;
 typedef struct mycss_values_shorthand_two mycss_values_shorthand_two_t;
@@ -56,6 +82,8 @@ typedef struct mycss_values_percentage mycss_values_percentage_t;
 typedef struct mycss_values_length mycss_values_length_t;
 typedef struct mycss_values_number mycss_values_number_t;
 typedef struct mycss_values_angle mycss_values_angle_t;
+typedef struct mycss_values_resolution mycss_values_resolution_t;
+typedef struct mycss_values_custom_ident mycss_values_custom_ident_t;
 
 struct mycss_values_shorthand_two_type {
     void* one;
@@ -75,6 +103,25 @@ struct mycss_values_shorthand_four {
 struct mycss_values_shorthand_two {
     mycss_declaration_entry_t* one;
     mycss_declaration_entry_t* two;
+};
+
+struct mycss_values_type_list {
+    unsigned int* entries;
+    size_t entries_length;
+};
+
+struct mycss_values_type_length_percentage_entry {
+    union {
+        mycss_values_percentage_t* percentage;
+        mycss_values_length_t* length;
+    };
+    
+    unsigned int type;
+};
+
+struct mycss_values_void_list {
+    void* entries;
+    size_t entries_length;
 };
 
 struct mycss_values_number {
@@ -113,6 +160,20 @@ struct mycss_values_angle {
     
     bool is_float;
     mycss_units_type_t type;
+};
+
+struct mycss_values_resolution {
+    union {
+        int i;
+        float f;
+    };
+    
+    bool is_float;
+    mycss_units_type_t type;
+};
+
+struct mycss_values_custom_ident {
+    myhtml_string_t str;
 };
 
 /*
@@ -212,6 +273,119 @@ struct mycss_values_color {
     mycss_values_color_type_value_t type_value;
 };
 
+struct mycss_values_color_stop {
+    mycss_values_color_t color;
+    mycss_values_percentage_t* percentage;
+};
+
+struct mycss_values_color_stop_list {
+    mycss_values_color_stop_t* entries;
+    size_t entries_length;
+};
+
+/*
+ URL
+ */
+struct mycss_values_url {
+    myhtml_string_t str;
+};
+
+/*
+ Element
+ */
+struct mycss_values_element {
+    mycss_values_custom_ident_t custom_ident;
+    mycss_property_value_t type;
+};
+
+/*
+ Image
+ */
+struct mycss_values_image {
+    union {
+        mycss_values_url_t* url;
+        mycss_values_image_image_t* ii;
+        mycss_values_image_image_set_t* ii_set;
+        mycss_values_element_t* element;
+        mycss_values_cross_fade_t* cross_fade;
+    };
+    
+    mycss_property_value_t type;
+};
+
+struct mycss_values_image_list {
+    mycss_values_image_t* images;
+    size_t images_length;
+};
+
+/* image() */
+struct mycss_values_image_image {
+    myhtml_string_t* str;
+    mycss_values_image_t* image;
+    mycss_values_color_t* color;
+};
+
+/* image-set() */
+struct mycss_values_image_image_set_option {
+    myhtml_string_t* str;
+    mycss_values_image_t* image;
+    mycss_values_resolution_t* resolution;
+};
+
+struct mycss_values_image_image_set {
+    mycss_values_image_image_set_option_t* options;
+    size_t options_length;
+};
+
+/*
+ Cross fade
+ */
+struct mycss_values_cross_fade_mixing_image {
+    mycss_values_percentage_t* percentage;
+    mycss_values_image_t* image;
+};
+
+struct mycss_values_cross_fade_final_image {
+    mycss_values_image_t* image;
+    mycss_values_color_t* color;
+};
+
+struct mycss_values_cross_fade {
+    mycss_values_cross_fade_mixing_image_t mixing_image;
+    mycss_values_cross_fade_final_image_t final_image;
+};
+
+/* Not yet */
+/*
+ Gradients
+ */
+/* linear gradient */
+enum mycss_values_gradient_side_or_corner_type {
+    MyCSS_VALUES_GRADIENT_SIDE_OR_CORNER_TYPE_UNDEF  = 0x00,
+    MyCSS_VALUES_GRADIENT_SIDE_OR_CORNER_TYPE_LEFT   = 0x01,
+    MyCSS_VALUES_GRADIENT_SIDE_OR_CORNER_TYPE_RIGHT  = 0x02,
+    MyCSS_VALUES_GRADIENT_SIDE_OR_CORNER_TYPE_TOP    = 0x04,
+    MyCSS_VALUES_GRADIENT_SIDE_OR_CORNER_TYPE_BOTTOM = 0x08
+}
+typedef mycss_values_gradient_side_or_corner_type_t;
+
+struct mycss_values_gradient_side_or_corner {
+    mycss_values_gradient_side_or_corner_type_t side;
+    mycss_values_gradient_side_or_corner_type_t corner;
+};
+
+struct mycss_values_gradient_linear {
+    union {
+        mycss_values_angle_t angle;
+        mycss_values_gradient_side_or_corner_t side_or_corner;
+    };
+    
+    mycss_values_color_stop_list_t color_stop_list;
+};
+
+/* radial gradient */
+// ...
+
 /*
  Font
  */
@@ -273,6 +447,26 @@ struct mycss_values_text_decoration {
     mycss_declaration_entry_t* color;
 };
 
+/*
+ Background
+ */
+struct mycss_values_background_repeat {
+    mycss_property_background_t horizontal;
+    mycss_property_background_t vertical;
+};
+
+struct mycss_values_background_repeat_list {
+    mycss_values_background_repeat_t* entries;
+    size_t entries_length;
+};
+
+struct mycss_values_background_position {
+    mycss_values_type_length_percentage_entry_t one;
+    mycss_values_type_length_percentage_entry_t two;
+    mycss_values_type_length_percentage_entry_t three;
+    mycss_values_type_length_percentage_entry_t four;
+};
+
 void * mycss_values_create(mycss_entry_t* entry, size_t size);
 void * mycss_values_destroy(mycss_entry_t* entry, void* value);
 void * mycss_values_realloc(mycss_entry_t* entry, void* value, size_t old_size, size_t up_to);
@@ -280,6 +474,10 @@ void * mycss_values_clone(mycss_entry_t* entry, void* value);
 
 void * mycss_values_entry(mycss_entry_t* entry);
 void mycss_values_entry_set(mycss_entry_t* entry, void** value);
+
+unsigned int * mycss_values_type_list_add_entry(mycss_entry_t* entry, mycss_values_type_list_t *list);
+mycss_values_image_t * mycss_values_image_list_add_entry(mycss_entry_t* entry, mycss_values_image_list_t *bg_image);
+mycss_values_background_repeat_t * mycss_values_background_repeat_list_add_entry(mycss_entry_t* entry, mycss_values_background_repeat_list_t *list);
 
 #ifdef __cplusplus
 } /* extern "C" */

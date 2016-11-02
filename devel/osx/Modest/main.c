@@ -204,18 +204,18 @@ int main(int argc, const char * argv[]) {
     //char *css_f = "/new/C-git/bootstrap.css";
     
     char *html = "<fff>sdsd<aaaa id=hash class=best><div a1><menu class=\"lalala\" id=\"menu-id\" b1><span span1><div a2></div></div><menu class=\"be\" id=\"menu\" b1><span span2></aaaa><a href=\"\" sec></a><div div1><div div2></div><div div3></div><div div4></div></div><p p1><p p2><p p3><p p4>";
-    char *css = "div {font-family:Trebuchet MS}";
+    char *css = "div {background-origin: border-box, padding-box, content-box}";
     
     char *selector = "menu";
     
     modest_t *modest = modest_create();
     modest_init(modest);
     
-    myhtml_tree_t *myhtml_tree = myhtml(html_f, strlen(html_f), true, false, modest_callback_for_create_mnode, (void*)modest);
-    mycss_entry_t *mycss_entry = mycss(css_f, strlen(css_f), true, true);
+//    myhtml_tree_t *myhtml_tree = myhtml(html_f, strlen(html_f), true, false, modest_callback_for_create_mnode, (void*)modest);
+//    mycss_entry_t *mycss_entry = mycss(css_f, strlen(css_f), true, true);
     
-//    myhtml_tree_t *myhtml_tree = myhtml(html, strlen(html), false, true, modest_callback_for_create_mnode, (void*)modest);
-//    mycss_entry_t *mycss_entry = mycss(css, strlen(css), false, true);
+    myhtml_tree_t *myhtml_tree = myhtml(html, strlen(html), false, true, modest_callback_for_create_mnode, (void*)modest);
+    mycss_entry_t *mycss_entry = mycss(css, strlen(css), false, true);
     
     modest->myhtml_tree = myhtml_tree;
     modest->mycss_entry = mycss_entry;

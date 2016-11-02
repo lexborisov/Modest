@@ -36,6 +36,8 @@ mycss_values_number_t * mycss_values_destroy_number(mycss_entry_t* entry, mycss_
 mycss_values_length_t * mycss_values_destroy_length(mycss_entry_t* entry, mycss_values_length_t* value, bool self_destroy);
 mycss_values_percentage_t * mycss_values_destroy_percentage(mycss_entry_t* entry, mycss_values_percentage_t* value, bool self_destroy);
 mycss_values_angle_t * mycss_values_destroy_angle(mycss_entry_t* entry, mycss_values_angle_t* value, bool self_destroy);
+mycss_values_resolution_t * mycss_values_destroy_resolution(mycss_entry_t* entry, mycss_values_resolution_t* value, bool self_destroy);
+mycss_values_type_list_t * mycss_values_destroy_type_list(mycss_entry_t* entry, mycss_values_type_list_t* value, bool self_destroy);
 
 /* Color */
 mycss_values_color_alpha_value_t * mycss_values_destroy_color_alpha_value(mycss_entry_t* entry, mycss_values_color_alpha_value_t* value, bool self_destroy);
@@ -54,6 +56,18 @@ mycss_values_font_t * mycss_values_destroy_font(mycss_entry_t* entry, mycss_valu
 
 /* Text Decoration */
 mycss_values_text_decoration_t * mycss_values_destroy_text_decoration(mycss_entry_t* entry, mycss_values_text_decoration_t* value, bool self_destroy);
+
+/* Image */
+mycss_values_image_t * mycss_values_destroy_image(mycss_entry_t* entry, mycss_values_image_t* image, bool self_destroy);
+mycss_values_image_image_t * mycss_values_destroy_image_image(mycss_entry_t* entry, mycss_values_image_image_t* value, bool self_destroy);
+mycss_values_image_image_set_t * mycss_values_destroy_image_image_set(mycss_entry_t* entry, mycss_values_image_image_set_t* value, bool self_destroy);
+mycss_values_element_t * mycss_values_destroy_element(mycss_entry_t* entry, mycss_values_element_t* value, bool self_destroy);
+mycss_values_cross_fade_t * mycss_values_destroy_cross_fade(mycss_entry_t* entry, mycss_values_cross_fade_t* value, bool self_destroy);
+mycss_values_image_list_t * mycss_values_destroy_image_list(mycss_entry_t* entry, mycss_values_image_list_t* value, bool self_destroy);
+    
+/* Background */
+mycss_values_background_repeat_list_t * mycss_values_destroy_background_repeat(mycss_entry_t* entry, mycss_values_background_repeat_list_t* value, bool self_destroy);
+mycss_values_background_position_t * mycss_values_destroy_background_position(mycss_entry_t* entry, mycss_values_background_position_t* value, bool self_destroy);
 
 #ifdef __cplusplus
 } /* extern "C" */

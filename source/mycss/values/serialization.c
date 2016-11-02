@@ -29,6 +29,11 @@ static void mycss_values_serialization_to_callback(const char* data, size_t len,
         callback(data, len, context);
 }
 
+void mycss_values_serialization_string(myhtml_string_t* str, mycss_callback_serialization_f callback, void* context)
+{
+    callback(str->data, str->length, context);
+}
+
 void mycss_values_serialization_number(mycss_values_number_t* value, mycss_callback_serialization_f callback, void* context)
 {
     if(value == NULL)
@@ -69,6 +74,28 @@ void mycss_values_serialization_length(mycss_values_length_t* value, mycss_callb
 }
 
 void mycss_values_serialization_angle(mycss_values_angle_t* value, mycss_callback_serialization_f callback, void* context)
+{
+    if(value == NULL)
+        return;
+    
+    char buff[512];
+    
+    if(value->is_float) {
+        int len = snprintf(buff, 512, "%0.4f", value->f);
+        mycss_values_serialization_to_callback(buff, len, callback, context);
+    }
+    else {
+        int len = snprintf(buff, 512, "%d", value->i);
+        mycss_values_serialization_to_callback(buff, len, callback, context);
+    }
+    
+    if(value->type < MyCSS_UNIT_TYPE_LAST_ENTRY) {
+        const char* name = mycss_units_index_name[ value->type ];
+        callback(name, strlen(name), context);
+    }
+}
+
+void mycss_values_serialization_resolution(mycss_values_resolution_t* value, mycss_callback_serialization_f callback, void* context)
 {
     if(value == NULL)
         return;
@@ -376,5 +403,133 @@ void mycss_values_serialization_text_decoration_skip(mycss_values_text_decoratio
     }
 }
 
+void mycss_values_serialization_url(mycss_values_url_t* url, mycss_callback_serialization_f callback, void* context)
+{
+    callback("url(", 4, context);
+    callback(url->str.data, url->str.length, context);
+    callback(")", 1, context);
+}
+
+void mycss_values_serialization_image(mycss_values_image_t* image, mycss_callback_serialization_f callback, void* context)
+{
+    switch (image->type) {
+        case MyCSS_PROPERTY_VALUE__URL:
+            mycss_values_serialization_url(image->url, callback, context);
+            break;
+            
+        case MyCSS_PROPERTY_VALUE__IMAGE_FUNCTION: {
+            callback("image(", 6, context);
+            
+            bool o_e = false;
+            
+            if(image->ii->image) {
+                o_e = true;
+                mycss_values_serialization_image(image->ii->image, callback, context);
+            }
+            else if(image->ii->str) {
+                o_e = true;
+                
+                callback("\"", 1, context);
+                mycss_values_serialization_string(image->ii->str, callback, context);
+                callback("\"", 1, context);
+            }
+            
+            if(image->ii->color) {
+                if(o_e)
+                    callback(", ", 2, context);
+                
+                mycss_values_serialization_color(image->ii->color, callback, context);
+            }
+            
+            callback(")", 1, context);
+            break;
+        }
+            
+        case MyCSS_PROPERTY_VALUE__IMAGE_SET_FUNCTION: {
+            callback("image-set(", 10, context);
+            
+            bool o_e = false;
+            
+            for(size_t i = 0; i < image->ii_set->options_length; i++)
+            {
+                mycss_values_image_image_set_option_t* option = &image->ii_set->options[i];
+                
+                if(option->image) {
+                    o_e = true;
+                    mycss_values_serialization_image(option->image, callback, context);
+                }
+                else if(option->str) {
+                    o_e = true;
+                    
+                    callback("\"", 1, context);
+                    mycss_values_serialization_string(option->str, callback, context);
+                    callback("\"", 1, context);
+                }
+                
+                if(option->resolution) {
+                    if(o_e)
+                        callback(" ", 1, context);
+                    
+                    mycss_values_serialization_resolution(option->resolution, callback, context);
+                }
+            }
+            
+            callback(")", 1, context);
+            break;
+        }
+            
+        case MyCSS_PROPERTY_VALUE__ELEMENT_FUNCTION: {
+            callback("string(", 7, context);
+            
+            mycss_values_serialization_string(&image->element->custom_ident.str, callback, context);
+            
+            if(image->element->type) {
+                callback(", ", 2, context);
+                
+                const char* text_value = mycss_property_index_type_value[image->element->type];
+                callback(text_value, strlen(text_value), context);
+            }
+            
+            callback(")", 1, context);
+            break;
+        }
+            
+        case MyCSS_PROPERTY_VALUE__CROSS_FADE_FUNCTION: {
+            callback("cross-fade(", 11, context);
+            
+            if(image->cross_fade->mixing_image.percentage) {
+                mycss_values_serialization_percentage(image->cross_fade->mixing_image.percentage, callback, context);
+            }
+            
+            if(image->cross_fade->mixing_image.image) {
+                if(image->cross_fade->mixing_image.percentage)
+                    callback(" ", 1, context);
+                
+                mycss_values_serialization_image(image->cross_fade->mixing_image.image, callback, context);
+            }
+            
+            mycss_values_serialization_string(&image->element->custom_ident.str, callback, context);
+            
+            if(image->cross_fade->final_image.image) {
+                callback(", ", 2, context);
+                mycss_values_serialization_image(image->cross_fade->final_image.image, callback, context);
+            }
+            else if(image->cross_fade->final_image.color) {
+                callback(", ", 2, context);
+                mycss_values_serialization_color(image->cross_fade->final_image.color, callback, context);
+            }
+            
+            callback(")", 1, context);
+            break;
+        }
+            
+        default: {
+            const char* text_value = mycss_property_index_type_value[image->type];
+            callback(text_value, strlen(text_value), context);
+            
+            break;
+        }
+    }
+}
 
 

@@ -33,6 +33,7 @@ extern "C" {
 #endif
 
 /* custom added */
+bool mycss_property_parser_background_position_check(mycss_values_background_position_t *position);
 bool mycss_property_parser_destroy_string(myhtml_string_t* str, bool return_value);
 bool mycss_property_parser_switcher_to_find_important(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_property_parser_text_decoration_line_not_none(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
@@ -44,6 +45,24 @@ bool mycss_property_parser_text_decoration_after_color(mycss_entry_t* entry, myc
 bool mycss_property_parser_text_decoration_after_line(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_property_parser_color_after(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_property_parser_border_color_after(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_url_end(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_url_string(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+
+bool mycss_property_parser_image_function_image(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_image_function_image_wait_comma(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_image_function_image_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_image_function_image_end(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_image_function_image_set(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_image_function_image_set_resolution(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_image_function_image_set_resolution_wait_end(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_image_function_string(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_image_function_string_wait_comma(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_image_function_string_wait_ident(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_image_function_cross_fade(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_image_function_cross_fade_mixing_after_percentage(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_image_function_cross_fade_mixing_after(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_image_function_cross_fade_final(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_image_function_cross_fade_end(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 
 /* all generated */
 bool mycss_property_parser_undef(mycss_entry_t* entry, mycss_token_t* token, bool last_response);

@@ -31,6 +31,7 @@ extern "C" {
 #endif
 
 mycss_declaration_entry_t * mycss_declaration_entry_destroy_undef(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy);
+mycss_declaration_entry_t * mycss_declaration_entry_destroy_type_list(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy);
 mycss_declaration_entry_t * mycss_declaration_entry_destroy_padding(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy);
 mycss_declaration_entry_t * mycss_declaration_entry_destroy_margin(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy);
 mycss_declaration_entry_t * mycss_declaration_entry_destroy_border_width(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy);
@@ -41,6 +42,9 @@ mycss_declaration_entry_t * mycss_declaration_entry_destroy_border_top_right_rad
 mycss_declaration_entry_t * mycss_declaration_entry_destroy_border_top_left_radius(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy);
 mycss_declaration_entry_t * mycss_declaration_entry_destroy_border_bottom_right_radius(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy);
 mycss_declaration_entry_t * mycss_declaration_entry_destroy_border_bottom_left_radius(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy);
+mycss_declaration_entry_t * mycss_declaration_entry_destroy_background_image(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy);
+mycss_declaration_entry_t * mycss_declaration_entry_destroy_background_repeat(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy);
+mycss_declaration_entry_t * mycss_declaration_entry_destroy_background_position(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy);
 
 #ifdef __cplusplus
 } /* extern "C" */
