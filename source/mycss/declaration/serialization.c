@@ -312,6 +312,79 @@ bool mycss_declaration_serialization_font(mycss_entry_t* entry, mycss_declaratio
     return true;
 }
 
+bool mycss_declaration_serialization_border_radius(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
+                                                   mycss_callback_serialization_f callback, void* context)
+{
+    if(dec_entry == NULL)
+        return false;
+    
+    if(dec_entry->value == NULL)
+        return mycss_declaration_serialization_undef(entry, dec_entry, callback, context);
+    
+    mycss_values_shorthand_four_t *value = (mycss_values_shorthand_four_t*)dec_entry->value;
+    mycss_values_shorthand_two_type_t *short_two_type;
+    
+    bool o_e = false;
+    
+    if(value->one) {
+        o_e = true;
+        short_two_type = value->one->value;
+        mycss_property_serialization_value(short_two_type->type_one, short_two_type->one, callback, context);
+    }
+    
+    if(value->two) {
+        if(o_e) callback(" ", 1, context); else o_e = true;
+        
+        short_two_type = value->two->value;
+        mycss_property_serialization_value(short_two_type->type_one, short_two_type->one, callback, context);
+    }
+    
+    if(value->three) {
+        if(o_e) callback(" ", 1, context); else o_e = true;
+        
+        short_two_type = value->three->value;
+        mycss_property_serialization_value(short_two_type->type_one, short_two_type->one, callback, context);
+    }
+    
+    if(value->four) {
+        if(o_e) callback(" ", 1, context); else o_e = true;
+        
+        short_two_type = value->four->value;
+        mycss_property_serialization_value(short_two_type->type_one, short_two_type->one, callback, context);
+    }
+    
+    callback(" / ", 3, context);
+    
+    if(value->one && ((mycss_values_shorthand_two_type_t*)(value->one->value))->two) {
+        o_e = true;
+        short_two_type = value->one->value;
+        mycss_property_serialization_value(short_two_type->type_two, short_two_type->two, callback, context);
+    }
+    
+    if(value->two && ((mycss_values_shorthand_two_type_t*)(value->two->value))->two) {
+        if(o_e) callback(" ", 1, context); else o_e = true;
+        
+        short_two_type = value->two->value;
+        mycss_property_serialization_value(short_two_type->type_two, short_two_type->two, callback, context);
+    }
+    
+    if(value->three && ((mycss_values_shorthand_two_type_t*)(value->three->value))->two) {
+        if(o_e) callback(" ", 1, context); else o_e = true;
+        
+        short_two_type = value->three->value;
+        mycss_property_serialization_value(short_two_type->type_two, short_two_type->two, callback, context);
+    }
+    
+    if(value->four && ((mycss_values_shorthand_two_type_t*)(value->four->value))->two) {
+        if(o_e) callback(" ", 1, context); else o_e = true;
+        
+        short_two_type = value->four->value;
+        mycss_property_serialization_value(short_two_type->type_two, short_two_type->two, callback, context);
+    }
+    
+    return true;
+}
+
 bool mycss_declaration_serialization_text_decoration_line(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
                                                         mycss_callback_serialization_f callback, void* context)
 {

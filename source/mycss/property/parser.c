@@ -620,9 +620,160 @@ bool mycss_property_parser_border_left_style(mycss_entry_t* entry, mycss_token_t
 }
 
 /* border radius */
+static mycss_declaration_entry_t * mycss_property_parser_border_radius_shared(mycss_entry_t* entry, mycss_token_t* token, myhtml_string_t* str)
+{
+    void *value = NULL;
+    unsigned int value_type = 0;
+    
+    if(mycss_property_shared_length_percentage(entry, token, &value, &value_type, str))
+    {
+        mycss_declaration_entry_t* decl = mycss_declaration_entry_create(entry->declaration, NULL);
+        
+        mycss_values_shorthand_two_type_t *short_two_type = mycss_values_create(entry, sizeof(mycss_values_shorthand_two_type_t));
+        
+        short_two_type->one = value;
+        short_two_type->type_one = value_type;
+        
+        decl->value = short_two_type;
+        return decl;
+    }
+    
+    return NULL;
+}
+
+static bool mycss_property_parser_border_radius_two_shared(mycss_entry_t* entry, mycss_token_t* token,
+                                                    mycss_values_shorthand_two_type_t *short_two_type, myhtml_string_t* str)
+{
+    if(mycss_property_shared_length_percentage(entry, token, &short_two_type->two, &short_two_type->type_two, str)) {
+        return true;
+    }
+    
+    return false;
+}
+
+bool mycss_property_parser_border_radius_two(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    mycss_values_shorthand_four_t *value = dec_entry->value;
+    
+    if(mycss_property_shared_check_declaration_end(entry, token)) {
+        return true;
+    }
+    
+    myhtml_string_t str = {0};
+    
+    if(((mycss_values_shorthand_two_type_t*)(value->one->value))->two == NULL)
+    {
+        if(mycss_property_parser_border_radius_two_shared(entry, token, value->one->value, &str))
+            return mycss_property_parser_destroy_string(&str, true);
+    }
+    else if(value->two && ((mycss_values_shorthand_two_type_t*)(value->two->value))->two == NULL)
+    {
+        if(mycss_property_parser_border_radius_two_shared(entry, token, value->two->value, &str))
+            return mycss_property_parser_destroy_string(&str, true);
+    }
+    else if(value->three && ((mycss_values_shorthand_two_type_t*)(value->three->value))->two == NULL)
+    {
+        if(mycss_property_parser_border_radius_two_shared(entry, token, value->three->value, &str))
+            return mycss_property_parser_destroy_string(&str, true);
+    }
+    else if(value->four && ((mycss_values_shorthand_two_type_t*)(value->four->value))->two == NULL)
+    {
+        if(mycss_property_parser_border_radius_two_shared(entry, token, value->four->value, &str))
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+static bool mycss_property_parser_border_wait_two(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    if(mycss_property_shared_check_declaration_end(entry, token)) {
+        return mycss_property_shared_switch_to_find_important(entry);
+    }
+    
+    if(token->type == MyCSS_TOKEN_TYPE_DELIM && *token->data == '/') {
+        entry->parser = mycss_property_parser_border_radius_two;
+        return true;
+    }
+    
+    return mycss_property_shared_switch_to_parse_error(entry);
+}
+
 bool mycss_property_parser_border_radius(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
-    return mycss_property_shared_switch_to_parse_error(entry);
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(dec_entry->value == NULL)
+        dec_entry->value = mycss_values_create(entry, sizeof(mycss_values_shorthand_four_t));
+    
+    mycss_values_shorthand_four_t *value = dec_entry->value;
+    
+    if(mycss_property_shared_check_declaration_end(entry, token))
+    {
+        if(value->one == NULL)
+            return mycss_property_shared_switch_to_parse_error(entry);
+        
+        return true;
+    }
+    
+    myhtml_string_t str = {0};
+    
+    if(value->one == NULL)
+    {
+        if((value->one = mycss_property_parser_border_radius_shared(entry, token, &str))) {
+            value->one->type = MyCSS_PROPERTY_TYPE_BORDER_TOP_LEFT_RADIUS;
+            return mycss_property_parser_destroy_string(&str, true);
+        }
+        
+        unsigned int value_type = 0;
+        
+        if(mycss_property_shared_default(entry, token, &value_type, &str)) {
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+        }
+    }
+    else if(value->two == NULL)
+    {
+        if((value->two = mycss_property_parser_border_radius_shared(entry, token, &str))) {
+            value->two->type = MyCSS_PROPERTY_TYPE_BORDER_TOP_RIGHT_RADIUS;
+            return mycss_property_parser_destroy_string(&str, true);
+        }
+    }
+    else if(value->three == NULL)
+    {
+        if((value->three = mycss_property_parser_border_radius_shared(entry, token, &str))) {
+            value->three->type = MyCSS_PROPERTY_TYPE_BORDER_BOTTOM_RIGHT_RADIUS;
+            return mycss_property_parser_destroy_string(&str, true);
+        }
+    }
+    else if(value->four == NULL)
+    {
+        if((value->four = mycss_property_parser_border_radius_shared(entry, token, &str))) {
+            value->four->type = MyCSS_PROPERTY_TYPE_BORDER_BOTTOM_LEFT_RADIUS;
+            
+            entry->parser = mycss_property_parser_border_wait_two;
+            return mycss_property_parser_destroy_string(&str, true);
+        }
+    }
+    
+    if(token->type == MyCSS_TOKEN_TYPE_DELIM && *token->data == '/') {
+        if(value->one == NULL)
+            return mycss_property_shared_switch_to_parse_error(entry);
+        
+        entry->parser = mycss_property_parser_border_wait_two;
+        return mycss_property_parser_destroy_string(&str, true);
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
 }
 
 bool mycss_property_parser_border_top_right_radius(mycss_entry_t* entry, mycss_token_t* token, bool last_response)

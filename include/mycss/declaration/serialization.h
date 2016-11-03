@@ -42,6 +42,7 @@ bool mycss_declaration_serialization_shorthand_four(mycss_entry_t* entry, mycss_
 bool mycss_declaration_serialization_shorthand_two(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
 bool mycss_declaration_serialization_shorthand_two_type(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
 bool mycss_declaration_serialization_type_list(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
+bool mycss_declaration_serialization_border_radius(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
 bool mycss_declaration_serialization_text_decoration(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
 bool mycss_declaration_serialization_text_decoration_line(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
 bool mycss_declaration_serialization_text_decoration_skip(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);

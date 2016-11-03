@@ -69,7 +69,7 @@ static mycss_declaration_serialization_f mycss_declaration_serialization_map_by_
 	mycss_declaration_serialization_undef,
 	mycss_declaration_serialization_undef,
 	mycss_declaration_serialization_undef,
-	mycss_declaration_serialization_undef,
+	mycss_declaration_serialization_border_radius,
 	mycss_declaration_serialization_undef,
 	mycss_declaration_serialization_undef,
 	mycss_declaration_serialization_undef,
