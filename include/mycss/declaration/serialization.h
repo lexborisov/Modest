@@ -37,6 +37,8 @@ typedef bool (*mycss_declaration_serialization_f)(mycss_entry_t* entry, mycss_de
 bool mycss_declaration_serialization_entry(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
 void mycss_declaration_serialization_entries(mycss_entry_t* entry, mycss_declaration_entry_t* first_dec_entry, mycss_callback_serialization_f callback, void* context);
 bool mycss_declaration_serialization_entry_only_value(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,mycss_callback_serialization_f callback, void* context);
+bool mycss_declaration_serialization_entry_by_type(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_property_type_t property_type, mycss_callback_serialization_f callback, void* context);
+bool mycss_declaration_serialization_entry_only_value_by_type(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_property_type_t property_type, mycss_callback_serialization_f callback, void* context);
 
 bool mycss_declaration_serialization_undef(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
 bool mycss_declaration_serialization_shorthand_four(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);

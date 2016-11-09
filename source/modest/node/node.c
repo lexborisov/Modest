@@ -37,19 +37,19 @@ modest_status_t modest_node_init(modest_t* modest, modest_node_t *mnode)
 {
     mnode->stylesheet = modest_style_sheet_create(modest);
     if(mnode->stylesheet == NULL)
-        return MODEST_STATUS_OK;
+        return MODEST_STATUS_ERROR_MEMORY_ALLOCATION;
     
     modest_status_t status = modest_style_sheet_init(modest, mnode->stylesheet);
     if(status)
-        return MODEST_STATUS_OK;
+        return MODEST_STATUS_ERROR;
     
     mnode->raw_style = modest_style_raw_create(modest);
     if(mnode->raw_style == NULL)
-        return MODEST_STATUS_OK;
+        return MODEST_STATUS_ERROR_MEMORY_ALLOCATION;
     
     status = modest_style_raw_init(modest, mnode->raw_style);
     if(status)
-        return MODEST_STATUS_OK;
+        return MODEST_STATUS_ERROR;
     
     return MODEST_STATUS_OK;
 }

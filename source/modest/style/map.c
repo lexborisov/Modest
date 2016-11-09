@@ -77,50 +77,33 @@ void modest_style_map_collate_declaration_padding(modest_t* modest, myhtml_tree_
     if(node->data == NULL || decl->value == NULL)
         return;
     
-    mycss_values_shorthand_four_t val_four = *((mycss_values_shorthand_four_t*)(decl->value));
+    mycss_values_shorthand_four_t *val_four = (mycss_values_shorthand_four_t*)decl->value;
     mycss_declaration_t* declaration = modest->mycss_entry->declaration;
     
-    if(val_four.two == NULL) {
-        mycss_declaration_entry_important_set(val_four.one, decl->is_important);
-        
-        val_four.two   = mycss_declaration_entry_clone(declaration, val_four.one, true);
-        val_four.three = mycss_declaration_entry_clone(declaration, val_four.one, true);
-        val_four.four  = mycss_declaration_entry_clone(declaration, val_four.one, true);
-        
-        mycss_declaration_entry_type_set(val_four.two, MyCSS_PROPERTY_TYPE_PADDING_RIGHT);
-        mycss_declaration_entry_type_set(val_four.three, MyCSS_PROPERTY_TYPE_PADDING_BOTTOM);
-        mycss_declaration_entry_type_set(val_four.four, MyCSS_PROPERTY_TYPE_PADDING_LEFT);
+    if(val_four->two == NULL) {
+        modest_style_map_collate_declaration_padding_top(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_padding_right(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_padding_bottom(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_padding_left(modest, node, val_four->one, spec);
     }
-    else if(val_four.three == NULL) {
-        mycss_declaration_entry_important_set(val_four.one, decl->is_important);
-        mycss_declaration_entry_important_set(val_four.two, decl->is_important);
-        
-        val_four.three = mycss_declaration_entry_clone(declaration, val_four.one, true);
-        val_four.four  = mycss_declaration_entry_clone(declaration, val_four.two, true);
-        
-        mycss_declaration_entry_type_set(val_four.three, MyCSS_PROPERTY_TYPE_PADDING_BOTTOM);
-        mycss_declaration_entry_type_set(val_four.four, MyCSS_PROPERTY_TYPE_PADDING_LEFT);
+    else if(val_four->three == NULL) {
+        modest_style_map_collate_declaration_padding_top(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_padding_right(modest, node, val_four->two, spec);
+        modest_style_map_collate_declaration_padding_bottom(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_padding_left(modest, node, val_four->two, spec);
     }
-    else if(val_four.four == NULL) {
-        mycss_declaration_entry_important_set(val_four.one, decl->is_important);
-        mycss_declaration_entry_important_set(val_four.two, decl->is_important);
-        mycss_declaration_entry_important_set(val_four.three, decl->is_important);
-        
-        val_four.four = mycss_declaration_entry_clone(declaration, val_four.two, true);
-        
-        mycss_declaration_entry_type_set(val_four.four, MyCSS_PROPERTY_TYPE_PADDING_LEFT);
+    else if(val_four->four == NULL) {
+        modest_style_map_collate_declaration_padding_top(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_padding_right(modest, node, val_four->two, spec);
+        modest_style_map_collate_declaration_padding_bottom(modest, node, val_four->three, spec);
+        modest_style_map_collate_declaration_padding_left(modest, node, val_four->two, spec);
     }
     else {
-        mycss_declaration_entry_important_set(val_four.one, decl->is_important);
-        mycss_declaration_entry_important_set(val_four.two, decl->is_important);
-        mycss_declaration_entry_important_set(val_four.three, decl->is_important);
-        mycss_declaration_entry_important_set(val_four.four, decl->is_important);
+        modest_style_map_collate_declaration_padding_top(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_padding_right(modest, node, val_four->two, spec);
+        modest_style_map_collate_declaration_padding_bottom(modest, node, val_four->three, spec);
+        modest_style_map_collate_declaration_padding_left(modest, node, val_four->four, spec);
     }
-    
-    modest_style_map_collate_declaration_padding_top(modest, node, val_four.one, spec);
-    modest_style_map_collate_declaration_padding_right(modest, node, val_four.two, spec);
-    modest_style_map_collate_declaration_padding_bottom(modest, node, val_four.three, spec);
-    modest_style_map_collate_declaration_padding_left(modest, node, val_four.four, spec);
 }
 
 void modest_style_map_collate_declaration_padding_top(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
@@ -205,50 +188,33 @@ void modest_style_map_collate_declaration_margin(modest_t* modest, myhtml_tree_n
     if(node->data == NULL || decl->value == NULL)
         return;
     
-    mycss_values_shorthand_four_t val_four = *((mycss_values_shorthand_four_t*)(decl->value));
+    mycss_values_shorthand_four_t *val_four = (mycss_values_shorthand_four_t*)decl->value;
     mycss_declaration_t* declaration = modest->mycss_entry->declaration;
     
-    if(val_four.two == NULL) {
-        mycss_declaration_entry_important_set(val_four.one, decl->is_important);
-        
-        val_four.two   = mycss_declaration_entry_clone(declaration, val_four.one, true);
-        val_four.three = mycss_declaration_entry_clone(declaration, val_four.one, true);
-        val_four.four  = mycss_declaration_entry_clone(declaration, val_four.one, true);
-        
-        mycss_declaration_entry_type_set(val_four.two, MyCSS_PROPERTY_TYPE_MARGIN_RIGHT);
-        mycss_declaration_entry_type_set(val_four.three, MyCSS_PROPERTY_TYPE_MARGIN_BOTTOM);
-        mycss_declaration_entry_type_set(val_four.four, MyCSS_PROPERTY_TYPE_MARGIN_LEFT);
+    if(val_four->two == NULL) {
+        modest_style_map_collate_declaration_margin_top(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_margin_right(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_margin_bottom(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_margin_left(modest, node, val_four->one, spec);
     }
-    else if(val_four.three == NULL) {
-        mycss_declaration_entry_important_set(val_four.one, decl->is_important);
-        mycss_declaration_entry_important_set(val_four.two, decl->is_important);
-        
-        val_four.three = mycss_declaration_entry_clone(declaration, val_four.one, true);
-        val_four.four  = mycss_declaration_entry_clone(declaration, val_four.two, true);
-        
-        mycss_declaration_entry_type_set(val_four.three, MyCSS_PROPERTY_TYPE_MARGIN_BOTTOM);
-        mycss_declaration_entry_type_set(val_four.four, MyCSS_PROPERTY_TYPE_MARGIN_LEFT);
+    else if(val_four->three == NULL) {
+        modest_style_map_collate_declaration_margin_top(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_margin_right(modest, node, val_four->two, spec);
+        modest_style_map_collate_declaration_margin_bottom(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_margin_left(modest, node, val_four->two, spec);
     }
-    else if(val_four.four == NULL) {
-        mycss_declaration_entry_important_set(val_four.one, decl->is_important);
-        mycss_declaration_entry_important_set(val_four.two, decl->is_important);
-        mycss_declaration_entry_important_set(val_four.three, decl->is_important);
-        
-        val_four.four = mycss_declaration_entry_clone(declaration, val_four.two, true);
-        
-        mycss_declaration_entry_type_set(val_four.four, MyCSS_PROPERTY_TYPE_MARGIN_LEFT);
+    else if(val_four->four == NULL) {
+        modest_style_map_collate_declaration_margin_top(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_margin_right(modest, node, val_four->two, spec);
+        modest_style_map_collate_declaration_margin_bottom(modest, node, val_four->three, spec);
+        modest_style_map_collate_declaration_margin_left(modest, node, val_four->two, spec);
     }
     else {
-        mycss_declaration_entry_important_set(val_four.one, decl->is_important);
-        mycss_declaration_entry_important_set(val_four.two, decl->is_important);
-        mycss_declaration_entry_important_set(val_four.three, decl->is_important);
-        mycss_declaration_entry_important_set(val_four.four, decl->is_important);
+        modest_style_map_collate_declaration_margin_top(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_margin_right(modest, node, val_four->two, spec);
+        modest_style_map_collate_declaration_margin_bottom(modest, node, val_four->three, spec);
+        modest_style_map_collate_declaration_margin_left(modest, node, val_four->four, spec);
     }
-    
-    modest_style_map_collate_declaration_margin_top(modest, node, val_four.one, spec);
-    modest_style_map_collate_declaration_margin_right(modest, node, val_four.two, spec);
-    modest_style_map_collate_declaration_margin_bottom(modest, node, val_four.three, spec);
-    modest_style_map_collate_declaration_margin_left(modest, node, val_four.four, spec);
 }
 
 void modest_style_map_collate_declaration_margin_bottom(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
@@ -353,50 +319,33 @@ void modest_style_map_collate_declaration_border_width(modest_t* modest, myhtml_
     if(node->data == NULL || decl->value == NULL)
         return;
     
-    mycss_values_shorthand_four_t val_four = *((mycss_values_shorthand_four_t*)(decl->value));
+    mycss_values_shorthand_four_t *val_four = (mycss_values_shorthand_four_t*)decl->value;
     mycss_declaration_t* declaration = modest->mycss_entry->declaration;
     
-    if(val_four.two == NULL) {
-        mycss_declaration_entry_important_set(val_four.one, decl->is_important);
-        
-        val_four.two   = mycss_declaration_entry_clone(declaration, val_four.one, true);
-        val_four.three = mycss_declaration_entry_clone(declaration, val_four.one, true);
-        val_four.four  = mycss_declaration_entry_clone(declaration, val_four.one, true);
-        
-        mycss_declaration_entry_type_set(val_four.two, MyCSS_PROPERTY_TYPE_BORDER_RIGHT_WIDTH);
-        mycss_declaration_entry_type_set(val_four.three, MyCSS_PROPERTY_TYPE_BORDER_BOTTOM_WIDTH);
-        mycss_declaration_entry_type_set(val_four.four, MyCSS_PROPERTY_TYPE_BORDER_LEFT_WIDTH);
+    if(val_four->two == NULL) {
+        modest_style_map_collate_declaration_border_top_width(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_border_right_width(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_border_bottom_width(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_border_left_width(modest, node, val_four->one, spec);
     }
-    else if(val_four.three == NULL) {
-        mycss_declaration_entry_important_set(val_four.one, decl->is_important);
-        mycss_declaration_entry_important_set(val_four.two, decl->is_important);
-        
-        val_four.three = mycss_declaration_entry_clone(declaration, val_four.one, true);
-        val_four.four  = mycss_declaration_entry_clone(declaration, val_four.two, true);
-        
-        mycss_declaration_entry_type_set(val_four.three, MyCSS_PROPERTY_TYPE_BORDER_BOTTOM_WIDTH);
-        mycss_declaration_entry_type_set(val_four.four, MyCSS_PROPERTY_TYPE_BORDER_LEFT_WIDTH);
+    else if(val_four->three == NULL) {
+        modest_style_map_collate_declaration_border_top_width(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_border_right_width(modest, node, val_four->two, spec);
+        modest_style_map_collate_declaration_border_bottom_width(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_border_left_width(modest, node, val_four->two, spec);
     }
-    else if(val_four.four == NULL) {
-        mycss_declaration_entry_important_set(val_four.one, decl->is_important);
-        mycss_declaration_entry_important_set(val_four.two, decl->is_important);
-        mycss_declaration_entry_important_set(val_four.three, decl->is_important);
-        
-        val_four.four = mycss_declaration_entry_clone(declaration, val_four.two, true);
-        
-        mycss_declaration_entry_type_set(val_four.four, MyCSS_PROPERTY_TYPE_BORDER_LEFT_WIDTH);
+    else if(val_four->four == NULL) {
+        modest_style_map_collate_declaration_border_top_width(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_border_right_width(modest, node, val_four->two, spec);
+        modest_style_map_collate_declaration_border_bottom_width(modest, node, val_four->three, spec);
+        modest_style_map_collate_declaration_border_left_width(modest, node, val_four->two, spec);
     }
     else {
-        mycss_declaration_entry_important_set(val_four.one, decl->is_important);
-        mycss_declaration_entry_important_set(val_four.two, decl->is_important);
-        mycss_declaration_entry_important_set(val_four.three, decl->is_important);
-        mycss_declaration_entry_important_set(val_four.four, decl->is_important);
+        modest_style_map_collate_declaration_border_top_width(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_border_right_width(modest, node, val_four->two, spec);
+        modest_style_map_collate_declaration_border_bottom_width(modest, node, val_four->three, spec);
+        modest_style_map_collate_declaration_border_left_width(modest, node, val_four->four, spec);
     }
-    
-    modest_style_map_collate_declaration_border_top_width(modest, node, val_four.one, spec);
-    modest_style_map_collate_declaration_border_right_width(modest, node, val_four.two, spec);
-    modest_style_map_collate_declaration_border_bottom_width(modest, node, val_four.three, spec);
-    modest_style_map_collate_declaration_border_left_width(modest, node, val_four.four, spec);
 }
 
 void modest_style_map_collate_declaration_border_top_width(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
@@ -481,50 +430,33 @@ void modest_style_map_collate_declaration_border_style(modest_t* modest, myhtml_
     if(node->data == NULL || decl->value == NULL)
         return;
     
-    mycss_values_shorthand_four_t val_four = *((mycss_values_shorthand_four_t*)(decl->value));
+    mycss_values_shorthand_four_t *val_four = (mycss_values_shorthand_four_t*)decl->value;
     mycss_declaration_t* declaration = modest->mycss_entry->declaration;
     
-    if(val_four.two == NULL) {
-        mycss_declaration_entry_important_set(val_four.one, decl->is_important);
-        
-        val_four.two   = mycss_declaration_entry_clone(declaration, val_four.one, true);
-        val_four.three = mycss_declaration_entry_clone(declaration, val_four.one, true);
-        val_four.four  = mycss_declaration_entry_clone(declaration, val_four.one, true);
-        
-        mycss_declaration_entry_type_set(val_four.two, MyCSS_PROPERTY_TYPE_BORDER_RIGHT_STYLE);
-        mycss_declaration_entry_type_set(val_four.three, MyCSS_PROPERTY_TYPE_BORDER_BOTTOM_STYLE);
-        mycss_declaration_entry_type_set(val_four.four, MyCSS_PROPERTY_TYPE_BORDER_LEFT_STYLE);
+    if(val_four->two == NULL) {
+        modest_style_map_collate_declaration_border_top_style(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_border_right_style(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_border_bottom_style(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_border_left_style(modest, node, val_four->one, spec);
     }
-    else if(val_four.three == NULL) {
-        mycss_declaration_entry_important_set(val_four.one, decl->is_important);
-        mycss_declaration_entry_important_set(val_four.two, decl->is_important);
-        
-        val_four.three = mycss_declaration_entry_clone(declaration, val_four.one, true);
-        val_four.four  = mycss_declaration_entry_clone(declaration, val_four.two, true);
-        
-        mycss_declaration_entry_type_set(val_four.three, MyCSS_PROPERTY_TYPE_BORDER_BOTTOM_STYLE);
-        mycss_declaration_entry_type_set(val_four.four, MyCSS_PROPERTY_TYPE_BORDER_LEFT_STYLE);
+    else if(val_four->three == NULL) {
+        modest_style_map_collate_declaration_border_top_style(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_border_right_style(modest, node, val_four->two, spec);
+        modest_style_map_collate_declaration_border_bottom_style(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_border_left_style(modest, node, val_four->two, spec);
     }
-    else if(val_four.four == NULL) {
-        mycss_declaration_entry_important_set(val_four.one, decl->is_important);
-        mycss_declaration_entry_important_set(val_four.two, decl->is_important);
-        mycss_declaration_entry_important_set(val_four.three, decl->is_important);
-        
-        val_four.four = mycss_declaration_entry_clone(declaration, val_four.two, true);
-        
-        mycss_declaration_entry_type_set(val_four.four, MyCSS_PROPERTY_TYPE_BORDER_LEFT_STYLE);
+    else if(val_four->four == NULL) {
+        modest_style_map_collate_declaration_border_top_style(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_border_right_style(modest, node, val_four->two, spec);
+        modest_style_map_collate_declaration_border_bottom_style(modest, node, val_four->three, spec);
+        modest_style_map_collate_declaration_border_left_style(modest, node, val_four->two, spec);
     }
     else {
-        mycss_declaration_entry_important_set(val_four.one, decl->is_important);
-        mycss_declaration_entry_important_set(val_four.two, decl->is_important);
-        mycss_declaration_entry_important_set(val_four.three, decl->is_important);
-        mycss_declaration_entry_important_set(val_four.four, decl->is_important);
+        modest_style_map_collate_declaration_border_top_style(modest, node, val_four->one, spec);
+        modest_style_map_collate_declaration_border_right_style(modest, node, val_four->two, spec);
+        modest_style_map_collate_declaration_border_bottom_style(modest, node, val_four->three, spec);
+        modest_style_map_collate_declaration_border_left_style(modest, node, val_four->four, spec);
     }
-    
-    modest_style_map_collate_declaration_border_top_style(modest, node, val_four.one, spec);
-    modest_style_map_collate_declaration_border_right_style(modest, node, val_four.two, spec);
-    modest_style_map_collate_declaration_border_bottom_style(modest, node, val_four.three, spec);
-    modest_style_map_collate_declaration_border_left_style(modest, node, val_four.four, spec);
 }
 
 void modest_style_map_collate_declaration_border_top_style(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)

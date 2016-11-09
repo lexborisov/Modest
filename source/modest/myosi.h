@@ -45,7 +45,8 @@ extern "C" {
 */
 enum modest_status {
     MODEST_STATUS_OK                      = 0x000000,
-    MODEST_STATUS_ERROR_MEMORY_ALLOCATION = 0x020000
+    MODEST_STATUS_ERROR                   = 0x020000,
+    MODEST_STATUS_ERROR_MEMORY_ALLOCATION = 0x020001
 }
 typedef modest_status_t;
 

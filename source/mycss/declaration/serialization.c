@@ -50,6 +50,31 @@ bool mycss_declaration_serialization_entry_only_value(mycss_entry_t* entry, mycs
     return mycss_declaration_serialization_map_by_type[ dec_entry->type ](entry, dec_entry, callback, context);
 }
 
+bool mycss_declaration_serialization_entry_by_type(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
+                                                   mycss_property_type_t property_type,
+                                                   mycss_callback_serialization_f callback, void* context)
+{
+    if(dec_entry == NULL || property_type >= MyCSS_PROPERTY_TYPE_LAST_ENTRY)
+        return false;
+    
+    mycss_property_serialization_type_name(property_type, callback, context);
+    
+    callback(": ", 2, context);
+    
+    return mycss_declaration_serialization_map_by_type[ property_type ](entry, dec_entry, callback, context);
+}
+
+bool mycss_declaration_serialization_entry_only_value_by_type(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
+                                                              mycss_property_type_t property_type,
+                                                              mycss_callback_serialization_f callback, void* context)
+{
+    if(dec_entry == NULL || property_type >= MyCSS_PROPERTY_TYPE_LAST_ENTRY)
+        return false;
+    
+    return mycss_declaration_serialization_map_by_type[ property_type ](entry, dec_entry, callback, context);
+}
+
+
 void mycss_declaration_serialization_entries(mycss_entry_t* entry, mycss_declaration_entry_t* first_dec_entry,
                                              mycss_callback_serialization_f callback, void* context)
 {
