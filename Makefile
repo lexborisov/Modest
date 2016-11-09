@@ -1,5 +1,6 @@
 TARGET := source
 SRCDIR := source
+TSTDIR := test
 
 CC ?= gcc
 
@@ -40,7 +41,7 @@ endif
 
 SRCS := 
 HDRS := 
-EXTDIRS := examples
+EXTDIRS := examples test
 
 all: create shared static
 	for f in $(EXTDIRS); do $(MAKE) -C $$f all; done
@@ -74,4 +75,7 @@ clone: create clean_include myhtml_clone mycss_clone modest_clone myfont_clone
 	find include -name "*.h" -exec sed -i '.bak' -E 's/^[ \t]*#[ \t]*include[ \t]*"([^"]+)"/#include <\1>/g' {} \;
 	find include -name "*.h.bak" -exec rm -f {} \;
 
-.PHONY: all clean clone
+test:
+	test/mycss/declaration test/mycss/data/declaration
+
+.PHONY: all clean clone test
