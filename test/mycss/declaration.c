@@ -229,7 +229,7 @@ test_stat_t test_read_dir(const char* dir_path, test_read_dir_callback_f callbac
             result_stat.total++;
             printf("%zu) %s: ", result_stat.total, ent->d_name);
             
-            if(callback(path, (ent->d_namlen + path_len + 1), context)) {
+            if(callback(path, (strlen(ent->d_name) + path_len + 1), context)) {
                 result_stat.good++;
             }
         }
