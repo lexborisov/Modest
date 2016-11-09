@@ -48,6 +48,7 @@ mycss_stack_t * mycss_stack_destroy(mycss_stack_t *stack, bool self_destroy);
 
 mycss_status_t mycss_stack_push(mycss_stack_t *stack, void* value, mycss_parser_token_f parser);
 mycss_stack_entry_t * mycss_stack_pop(mycss_stack_t *stack);
+mycss_stack_entry_t * mycss_stack_current(mycss_stack_t *stack);
 
 #ifdef __cplusplus
 } /* extern "C" */

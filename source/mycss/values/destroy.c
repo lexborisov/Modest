@@ -624,4 +624,29 @@ mycss_values_background_list_t * mycss_values_destroy_background(mycss_entry_t* 
     return value;
 }
 
+/*
+ * Border
+ */
+mycss_values_border_t * mycss_values_destroy_border(mycss_entry_t* entry, mycss_values_border_t* value, bool self_destroy)
+{
+    if(value == NULL)
+        return NULL;
+    
+    if(value->width)
+        value->width = mycss_declaration_entry_destroy(entry->declaration, value->width, true);
+    
+    if(value->style)
+        value->style = mycss_declaration_entry_destroy(entry->declaration, value->style, true);
+    
+    if(value->color)
+        value->color = mycss_declaration_entry_destroy(entry->declaration, value->color, true);
+    
+    if(self_destroy) {
+        mycss_values_destroy(entry, (void*)value);
+        return NULL;
+    }
+    
+    return value;
+}
+
 

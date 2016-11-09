@@ -94,6 +94,18 @@ mycss_declaration_entry_t * mycss_declaration_entry_destroy_font(mycss_declarati
     return decl_entry;
 }
 
+mycss_declaration_entry_t * mycss_declaration_entry_destroy_border_x(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy)
+{
+    decl_entry->value = mycss_values_destroy_border(declaration->ref_entry, decl_entry->value, true);
+    
+    if(self_destroy) {
+        mcobject_free(declaration->mcobject_entries, decl_entry);
+        return NULL;
+    }
+    
+    return decl_entry;
+}
+
 mycss_declaration_entry_t * mycss_declaration_entry_destroy_border_top_right_radius(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy)
 {
     decl_entry->value = mycss_values_destroy_shorthand_two_type(declaration->ref_entry, decl_entry->value, true);

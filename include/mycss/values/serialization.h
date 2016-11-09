@@ -44,6 +44,7 @@ void mycss_values_serialization_text_decoration_skip(mycss_values_text_decoratio
 void mycss_values_serialization_url(mycss_values_url_t* url, mycss_callback_serialization_f callback, void* context);
 void mycss_values_serialization_image(mycss_values_image_t* image, mycss_callback_serialization_f callback, void* context);
 void mycss_values_serialization_background_size_entry(mycss_values_background_size_entry_t* bg_size_entry, mycss_callback_serialization_f callback, void* context);
+void mycss_values_serialization_border(mycss_values_border_t* border, mycss_callback_serialization_f callback, void* context);
 
 #ifdef __cplusplus
 } /* extern "C" */

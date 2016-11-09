@@ -5,7 +5,7 @@ SUBDIRS := .
 HDRS += $(foreach dir,$(SUBDIRS),$(find_files_h))
 SRCS += $(foreach dir,$(SUBDIRS),$(find_files_c))
 
-modest_clone: MyFONT_DIR_$(SUBDIRS)
+myfont_clone: MyFONT_DIR_$(SUBDIRS)
 	mkdir -p $(INCLUDE_TMP)/myfont
 	cp $(SRCDIR)/myfont/*.h $(INCLUDE_TMP)/myfont
 

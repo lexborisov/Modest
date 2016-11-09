@@ -36,6 +36,7 @@ typedef bool (*mycss_declaration_serialization_f)(mycss_entry_t* entry, mycss_de
 
 bool mycss_declaration_serialization_entry(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
 void mycss_declaration_serialization_entries(mycss_entry_t* entry, mycss_declaration_entry_t* first_dec_entry, mycss_callback_serialization_f callback, void* context);
+bool mycss_declaration_serialization_entry_only_value(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,mycss_callback_serialization_f callback, void* context);
 
 bool mycss_declaration_serialization_undef(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
 bool mycss_declaration_serialization_shorthand_four(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
@@ -53,6 +54,7 @@ bool mycss_declaration_serialization_background_image(mycss_entry_t* entry, mycs
 bool mycss_declaration_serialization_background_repeat(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
 bool mycss_declaration_serialization_background_position(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
 bool mycss_declaration_serialization_background_size(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
+bool mycss_declaration_serialization_border_x(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context);
 
 #ifdef __cplusplus
 } /* extern "C" */

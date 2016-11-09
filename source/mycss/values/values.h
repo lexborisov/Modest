@@ -69,6 +69,8 @@ typedef struct mycss_values_background_size_entry mycss_values_background_size_e
 typedef struct mycss_values_background mycss_values_background_t;
 typedef struct mycss_values_background_list mycss_values_background_list_t;
 
+typedef struct mycss_values_border mycss_values_border_t;
+
 typedef struct mycss_values_color_stop mycss_values_color_stop_t;
 typedef struct mycss_values_color_stop_list mycss_values_color_stop_list_t;
 
@@ -441,6 +443,15 @@ typedef mycss_values_text_decoration_skip_t;
 
 struct mycss_values_text_decoration {
     mycss_declaration_entry_t* line;
+    mycss_declaration_entry_t* style;
+    mycss_declaration_entry_t* color;
+};
+
+/*
+ Border
+ */
+struct mycss_values_border {
+    mycss_declaration_entry_t* width;
     mycss_declaration_entry_t* style;
     mycss_declaration_entry_t* color;
 };

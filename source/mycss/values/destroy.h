@@ -71,6 +71,9 @@ mycss_values_background_repeat_list_t * mycss_values_destroy_background_repeat(m
 mycss_values_background_position_t * mycss_values_destroy_background_position(mycss_entry_t* entry, mycss_values_background_position_t* value, bool self_destroy);
 mycss_values_background_size_list_t * mycss_values_destroy_background_size(mycss_entry_t* entry, mycss_values_background_size_list_t* value, bool self_destroy);
 
+/* Border */
+mycss_values_border_t * mycss_values_destroy_border(mycss_entry_t* entry, mycss_values_border_t* value, bool self_destroy);
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

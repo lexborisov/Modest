@@ -90,4 +90,11 @@ mycss_stack_entry_t * mycss_stack_pop(mycss_stack_t *stack)
     return &stack->entries[ stack->entries_length ];
 }
 
+mycss_stack_entry_t * mycss_stack_current(mycss_stack_t *stack)
+{
+    if(stack->entries_length == 0)
+        return NULL;
+    
+    return &stack->entries[ (stack->entries_length - 1) ];
+}
 

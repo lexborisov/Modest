@@ -185,7 +185,7 @@ bool mycss_parser_token_drop_at_rule(mycss_entry_t* entry, mycss_token_t* token,
         case MyCSS_TOKEN_TYPE_LEFT_CURLY_BRACKET:
             entry->parser = mycss_parser_token_drop_at_rule_component_value;
             
-            mycss_entry_parser_list_push(entry, NULL, NULL, entry->parser_ending_token, false);
+            mycss_entry_parser_list_push(entry, mycss_parser_token, NULL, entry->parser_ending_token, false);
             entry->parser_ending_token = MyCSS_TOKEN_TYPE_RIGHT_CURLY_BRACKET;
             
             break;
@@ -201,45 +201,49 @@ bool mycss_parser_token_drop_at_rule(mycss_entry_t* entry, mycss_token_t* token,
 bool mycss_parser_token_drop_at_rule_component_value(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     switch (token->type) {
-        case MyCSS_TOKEN_TYPE_FUNCTION: {
+        case MyCSS_TOKEN_TYPE_FUNCTION:
             mycss_entry_parser_list_push(entry, mycss_parser_token_drop_at_rule_component_value, NULL, entry->parser_ending_token, true);
             entry->parser_ending_token = MyCSS_TOKEN_TYPE_RIGHT_PARENTHESIS;
             
             break;
-        }
-        case MyCSS_TOKEN_TYPE_LEFT_CURLY_BRACKET: {
+            
+        case MyCSS_TOKEN_TYPE_LEFT_CURLY_BRACKET:
             mycss_entry_parser_list_push(entry, mycss_parser_token_drop_at_rule_component_value, NULL, entry->parser_ending_token, true);
             entry->parser_ending_token = MyCSS_TOKEN_TYPE_RIGHT_CURLY_BRACKET;
             
             break;
-        }
-        case MyCSS_TOKEN_TYPE_LEFT_SQUARE_BRACKET: {
+            
+        case MyCSS_TOKEN_TYPE_LEFT_SQUARE_BRACKET:
             mycss_entry_parser_list_push(entry, mycss_parser_token_drop_at_rule_component_value, NULL, entry->parser_ending_token, true);
             entry->parser_ending_token = MyCSS_TOKEN_TYPE_RIGHT_SQUARE_BRACKET;
             
             break;
-        }
-        case MyCSS_TOKEN_TYPE_LEFT_PARENTHESIS: {
+            
+        case MyCSS_TOKEN_TYPE_LEFT_PARENTHESIS:
             mycss_entry_parser_list_push(entry, mycss_parser_token_drop_at_rule_component_value, NULL, entry->parser_ending_token, true);
             entry->parser_ending_token = MyCSS_TOKEN_TYPE_RIGHT_PARENTHESIS;
             
             break;
-        }
-        case MyCSS_TOKEN_TYPE_SEMICOLON: {
-            if(mycss_entry_parser_list_current_parser(entry))
-                mycss_entry_parser_list_pop(entry);
             
-            break;
-        }
-        default: {
+        case MyCSS_TOKEN_TYPE_RIGHT_PARENTHESIS:
+        case MyCSS_TOKEN_TYPE_RIGHT_SQUARE_BRACKET:
+        case MyCSS_TOKEN_TYPE_RIGHT_CURLY_BRACKET:
             if(mycss_entry_parser_list_current_is_local(entry) &&
                token->type == entry->parser_ending_token)
             {
                 mycss_entry_parser_list_pop(entry);
+                
+                if(token->type == MyCSS_TOKEN_TYPE_RIGHT_CURLY_BRACKET &&
+                   mycss_entry_parser_list_current_is_local(entry) == false)
+                {
+                    mycss_entry_parser_list_pop(entry);
+                }
             }
             
             break;
-        }
+            
+        default:
+            break;
     }
     
     return true;

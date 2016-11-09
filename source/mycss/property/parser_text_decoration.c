@@ -20,6 +20,16 @@
 
 #include "mycss/property/parser.h"
 
+static void mycss_property_parser_text_decoration_parser_switch(mycss_entry_t* entry)
+{
+    mycss_stack_entry_t *stack_entry = mycss_stack_pop(entry->declaration->stack);
+    
+    if(stack_entry->value)
+        entry->declaration->entry_last = stack_entry->value;
+    
+    entry->parser = stack_entry->parser;
+}
+
 void * mycss_property_destroy_text_decoration(mycss_entry_t* entry, void* value)
 {
     if(value == NULL)
@@ -132,10 +142,8 @@ bool mycss_property_parser_text_decoration(mycss_entry_t* entry, mycss_token_t* 
             
             text_decoration->line->value = new_value;
             
+            mycss_stack_push(entry->declaration->stack, dec_entry, mycss_property_parser_text_decoration_after_line);
             entry->declaration->entry_last = text_decoration->line;
-            entry->declaration->entry_temp = dec_entry;
-            
-            entry->parser_switch = mycss_property_parser_text_decoration_after_line;
         }
         else {
             text_decoration->line->value_type = value_type;
@@ -149,7 +157,7 @@ bool mycss_property_parser_text_decoration(mycss_entry_t* entry, mycss_token_t* 
 
 bool mycss_property_parser_text_decoration_after_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
-    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last = entry->declaration->entry_temp;
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_check_declaration_end(entry, token))
     {
@@ -173,7 +181,7 @@ bool mycss_property_parser_text_decoration_after_color(mycss_entry_t* entry, myc
 
 bool mycss_property_parser_text_decoration_after_line(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
-    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last = entry->declaration->entry_temp;
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_check_declaration_end(entry, token))
     {
@@ -251,7 +259,7 @@ bool mycss_property_parser_text_decoration_skip(mycss_entry_t* entry, mycss_toke
             
             dec_entry->value = new_value;
             
-            entry->parser_switch = mycss_property_parser_text_decoration_skip_after;
+            mycss_stack_push(entry->declaration->stack, dec_entry, mycss_property_parser_text_decoration_skip_after);
         }
         
         return mycss_property_parser_destroy_string(&str, true);
@@ -266,7 +274,7 @@ bool mycss_property_parser_text_decoration_skip_not_none(mycss_entry_t* entry, m
         return true;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT) {
-        entry->parser = entry->parser_switch;
+        mycss_property_parser_text_decoration_parser_switch(entry);
         return false;
     }
     
@@ -276,7 +284,7 @@ bool mycss_property_parser_text_decoration_skip_not_none(mycss_entry_t* entry, m
     if(mycss_property_shared_text_decoration_skip(entry, token, (unsigned int*)dec_entry->value, &dec_entry->value_type, &str, false))
         return mycss_property_parser_destroy_string(&str, true);
     
-    entry->parser = entry->parser_switch;
+    mycss_property_parser_text_decoration_parser_switch(entry);
     return mycss_property_parser_destroy_string(&str, false);
 }
 
@@ -331,7 +339,7 @@ bool mycss_property_parser_text_decoration_line(mycss_entry_t* entry, mycss_toke
             
             dec_entry->value = new_value;
             
-            entry->parser_switch = mycss_property_parser_text_decoration_line_after;
+            mycss_stack_push(entry->declaration->stack, dec_entry, mycss_property_parser_text_decoration_line_after);
         }
         
         return mycss_property_parser_destroy_string(&str, true);
@@ -346,7 +354,7 @@ bool mycss_property_parser_text_decoration_line_not_none(mycss_entry_t* entry, m
         return true;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT) {
-        entry->parser = entry->parser_switch;
+        mycss_property_parser_text_decoration_parser_switch(entry);
         return false;
     }
     
@@ -356,7 +364,7 @@ bool mycss_property_parser_text_decoration_line_not_none(mycss_entry_t* entry, m
     if(mycss_property_shared_text_decoration_line(entry, token, (unsigned int*)dec_entry->value, &dec_entry->value_type, &str, false))
         return mycss_property_parser_destroy_string(&str, true);
     
-    entry->parser = entry->parser_switch;
+    mycss_property_parser_text_decoration_parser_switch(entry);
     return mycss_property_parser_destroy_string(&str, false);
 }
 

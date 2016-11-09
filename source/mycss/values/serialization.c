@@ -571,4 +571,24 @@ void mycss_values_serialization_background_size_entry(mycss_values_background_si
     }
 }
 
+void mycss_values_serialization_border(mycss_values_border_t* border, mycss_callback_serialization_f callback, void* context)
+{
+    bool o_e = false;
+    
+    if(border->width) {
+        o_e = true;
+        mycss_declaration_serialization_entry_only_value(NULL, border->width, callback, context);
+    }
+    
+    if(border->style) {
+        if(o_e) callback(" ", 1, context); else o_e = true;
+        mycss_declaration_serialization_entry_only_value(NULL, border->style, callback, context);
+    }
+    
+    if(border->color) {
+        if(o_e) callback(" ", 1, context); else o_e = true;
+        mycss_declaration_serialization_entry_only_value(NULL, border->color, callback, context);
+    }
+}
+
 

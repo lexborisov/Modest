@@ -41,6 +41,15 @@ bool mycss_declaration_serialization_entry(mycss_entry_t* entry, mycss_declarati
     return mycss_declaration_serialization_map_by_type[ dec_entry->type ](entry, dec_entry, callback, context);
 }
 
+bool mycss_declaration_serialization_entry_only_value(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
+                                                      mycss_callback_serialization_f callback, void* context)
+{
+    if(dec_entry == NULL)
+        return false;
+    
+    return mycss_declaration_serialization_map_by_type[ dec_entry->type ](entry, dec_entry, callback, context);
+}
+
 void mycss_declaration_serialization_entries(mycss_entry_t* entry, mycss_declaration_entry_t* first_dec_entry,
                                              mycss_callback_serialization_f callback, void* context)
 {
@@ -326,42 +335,45 @@ bool mycss_declaration_serialization_border_radius(mycss_entry_t* entry, mycss_d
     
     bool o_e = false;
     
-    if(value->one) {
+    if(value->one && ((mycss_values_shorthand_two_type_t*)(value->one->value))->one) {
         o_e = true;
         short_two_type = value->one->value;
         mycss_property_serialization_value(short_two_type->type_one, short_two_type->one, callback, context);
     }
     
-    if(value->two) {
+    if(value->two && ((mycss_values_shorthand_two_type_t*)(value->two->value))->one) {
         if(o_e) callback(" ", 1, context); else o_e = true;
         
         short_two_type = value->two->value;
         mycss_property_serialization_value(short_two_type->type_one, short_two_type->one, callback, context);
     }
     
-    if(value->three) {
+    if(value->three && ((mycss_values_shorthand_two_type_t*)(value->three->value))->one) {
         if(o_e) callback(" ", 1, context); else o_e = true;
         
         short_two_type = value->three->value;
         mycss_property_serialization_value(short_two_type->type_one, short_two_type->one, callback, context);
     }
     
-    if(value->four) {
+    if(value->four && ((mycss_values_shorthand_two_type_t*)(value->four->value))->one) {
         if(o_e) callback(" ", 1, context); else o_e = true;
         
         short_two_type = value->four->value;
         mycss_property_serialization_value(short_two_type->type_one, short_two_type->one, callback, context);
     }
     
-    callback(" / ", 3, context);
+    o_e = false;
     
     if(value->one && ((mycss_values_shorthand_two_type_t*)(value->one->value))->two) {
+        callback(" / ", 3, context);
         o_e = true;
+        
         short_two_type = value->one->value;
         mycss_property_serialization_value(short_two_type->type_two, short_two_type->two, callback, context);
     }
     
     if(value->two && ((mycss_values_shorthand_two_type_t*)(value->two->value))->two) {
+        if(o_e == false) callback(" / ", 3, context);
         if(o_e) callback(" ", 1, context); else o_e = true;
         
         short_two_type = value->two->value;
@@ -369,6 +381,7 @@ bool mycss_declaration_serialization_border_radius(mycss_entry_t* entry, mycss_d
     }
     
     if(value->three && ((mycss_values_shorthand_two_type_t*)(value->three->value))->two) {
+        if(o_e == false) callback(" / ", 3, context);
         if(o_e) callback(" ", 1, context); else o_e = true;
         
         short_two_type = value->three->value;
@@ -376,6 +389,7 @@ bool mycss_declaration_serialization_border_radius(mycss_entry_t* entry, mycss_d
     }
     
     if(value->four && ((mycss_values_shorthand_two_type_t*)(value->four->value))->two) {
+        if(o_e == false) callback(" / ", 3, context);
         if(o_e) callback(" ", 1, context); else o_e = true;
         
         short_two_type = value->four->value;
@@ -587,6 +601,21 @@ bool mycss_declaration_serialization_background_size(mycss_entry_t* entry, mycss
         mycss_values_serialization_background_size_entry(&list->entries[i], callback, context);
     }
     
+    mycss_declaration_serialization_important_if_need(dec_entry, callback, context);
+    
+    return true;
+}
+
+bool mycss_declaration_serialization_border_x(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
+                                              mycss_callback_serialization_f callback, void* context)
+{
+    if(dec_entry == NULL)
+        return false;
+    
+    if(dec_entry->value == NULL)
+        return mycss_declaration_serialization_undef(entry, dec_entry, callback, context);
+    
+    mycss_values_serialization_border(dec_entry->value, callback, context);
     mycss_declaration_serialization_important_if_need(dec_entry, callback, context);
     
     return true;
