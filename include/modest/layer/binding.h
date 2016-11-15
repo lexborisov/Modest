@@ -18,22 +18,24 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#ifndef MODEST_LAYER_TREE_H
-#define MODEST_LAYER_TREE_H
+#ifndef MODEST_LAYER_BINDING_H
+#define MODEST_LAYER_BINDING_H
 #pragma once
 
 #include <modest/myosi.h>
 #include <modest/modest.h>
-#include <modest/style/type.h>
+#include <modest/node/node.h>
+
+#include <myhtml/tree.h>
 
 #ifdef __cplusplus
-extern "C" {
+//extern "C" {
 #endif
-    
-    
-    
+
+modest_layer_t * modest_layer_binding(modest_t* modest, myhtml_tree_t* html_tree);
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
 
-#endif /* MODEST_LAYER_TREE_H */
+#endif /* MODEST_LAYER_BINDING_H */

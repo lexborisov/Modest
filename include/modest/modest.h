@@ -23,6 +23,7 @@
 #pragma once
 
 #include <modest/myosi.h>
+#include <modest/layer/layer.h>
 #include <myhtml/utils/mcobject.h>
 #include <myhtml/utils/mcobject_async.h>
 #include <myhtml/utils/mchar_async.h>
@@ -45,6 +46,8 @@ struct modest {
     size_t mraw_style_node_id;
     
     mcobject_t* mraw_style_declaration_obj;
+    
+    modest_layout_t* layout;
     
     /* refs */
     myhtml_tree_t* myhtml_tree;
