@@ -785,6 +785,38 @@ void modest_style_map_collate_declaration_border(modest_t* modest, myhtml_tree_n
 {
 }
 
+void modest_style_map_collate_declaration_border_block_end(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
+void modest_style_map_collate_declaration_border_block_end_color(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
+void modest_style_map_collate_declaration_border_block_end_style(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
+void modest_style_map_collate_declaration_border_block_end_width(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
+void modest_style_map_collate_declaration_border_block_start(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
+void modest_style_map_collate_declaration_border_block_start_color(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
+void modest_style_map_collate_declaration_border_block_start_style(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
+void modest_style_map_collate_declaration_border_block_start_width(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
 void modest_style_map_collate_declaration_border_bottom(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
 {
 }
@@ -826,6 +858,38 @@ void modest_style_map_collate_declaration_border_image_slice(modest_t* modest, m
 }
 
 void modest_style_map_collate_declaration_border_image_width(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
+void modest_style_map_collate_declaration_border_inline_end(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
+void modest_style_map_collate_declaration_border_inline_end_color(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
+void modest_style_map_collate_declaration_border_inline_end_style(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
+void modest_style_map_collate_declaration_border_inline_end_width(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
+void modest_style_map_collate_declaration_border_inline_start(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
+void modest_style_map_collate_declaration_border_inline_start_color(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
+void modest_style_map_collate_declaration_border_inline_start_style(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
+void modest_style_map_collate_declaration_border_inline_start_width(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
 {
 }
 
@@ -1201,6 +1265,22 @@ void modest_style_map_collate_declaration_list_style_type(modest_t* modest, myht
 {
 }
 
+void modest_style_map_collate_declaration_margin_block_end(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
+void modest_style_map_collate_declaration_margin_block_start(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
+void modest_style_map_collate_declaration_margin_inline_end(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
+void modest_style_map_collate_declaration_margin_inline_start(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
 void modest_style_map_collate_declaration_marker(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
 {
 }
@@ -1318,6 +1398,22 @@ void modest_style_map_collate_declaration_overflow_x(modest_t* modest, myhtml_tr
 }
 
 void modest_style_map_collate_declaration_overflow_y(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
+void modest_style_map_collate_declaration_padding_block_end(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
+void modest_style_map_collate_declaration_padding_block_start(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
+void modest_style_map_collate_declaration_padding_inline_end(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
+{
+}
+
+void modest_style_map_collate_declaration_padding_inline_start(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, modest_style_raw_specificity_t* spec)
 {
 }
 

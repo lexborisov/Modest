@@ -19,3 +19,25 @@
 */
 
 #include "modest/layer/layer.h"
+
+modest_layer_t * modest_layer_create(modest_layout_t* layout)
+{
+    void *layer = mcobject_malloc(layout->mc_nodes, NULL);
+    
+    if(layer) {
+        memset(layer, 0, sizeof(modest_layer_t));
+    }
+    
+    return layer;
+}
+
+void modest_layer_clean(modest_layer_t* layer)
+{
+    memset(layer, 0, sizeof(modest_layer_t));
+}
+
+modest_layer_t * modest_layer_destroy(modest_layout_t* layout, modest_layer_t* layer)
+{
+    mcobject_free(layout->mc_nodes, layer);
+    return NULL;
+}

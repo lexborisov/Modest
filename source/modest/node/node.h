@@ -25,6 +25,7 @@
 #include "modest/myosi.h"
 #include "modest/modest.h"
 #include "modest/style/raw.h"
+#include "modest/layer/layer.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -33,6 +34,7 @@ extern "C" {
 struct modest_node {
     modest_style_sheet_t* stylesheet;
     modest_style_raw_t* raw_style;
+    modest_layer_t* layer;
 };
 
 modest_node_t * modest_node_create(modest_t* modest);

@@ -215,7 +215,7 @@ bool mycss_property_parser_padding_X(mycss_entry_t* entry, mycss_token_t* token,
     myhtml_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
-    if(mycss_property_shared_length(entry, token, &dec_entry->value, &dec_entry->value_type, &str) ||
+    if(mycss_property_shared_length_percentage(entry, token, &dec_entry->value, &dec_entry->value_type, &str) ||
        mycss_property_shared_default(entry, token, &dec_entry->value_type, &str))
     {
         return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
@@ -240,6 +240,27 @@ bool mycss_property_parser_padding_right(mycss_entry_t* entry, mycss_token_t* to
 }
 
 bool mycss_property_parser_padding_top(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_padding_X(entry, token, last_response);
+}
+
+/* padding logical */
+bool mycss_property_parser_padding_block_start(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_padding_X(entry, token, last_response);
+}
+
+bool mycss_property_parser_padding_block_end(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_padding_X(entry, token, last_response);
+}
+
+bool mycss_property_parser_padding_inline_start(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_padding_X(entry, token, last_response);
+}
+
+bool mycss_property_parser_padding_inline_end(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     return mycss_property_parser_padding_X(entry, token, last_response);
 }
@@ -353,6 +374,27 @@ bool mycss_property_parser_margin_right(mycss_entry_t* entry, mycss_token_t* tok
 }
 
 bool mycss_property_parser_margin_top(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_margin_X(entry, token, last_response);
+}
+
+/* margin logical */
+bool mycss_property_parser_margin_block_start(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_margin_X(entry, token, last_response);
+}
+
+bool mycss_property_parser_margin_block_end(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_margin_X(entry, token, last_response);
+}
+
+bool mycss_property_parser_margin_inline_start(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_margin_X(entry, token, last_response);
+}
+
+bool mycss_property_parser_margin_inline_end(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     return mycss_property_parser_margin_X(entry, token, last_response);
 }
@@ -574,6 +616,27 @@ bool mycss_property_parser_border_left(mycss_entry_t* entry, mycss_token_t* toke
     return mycss_property_parser_border_top(entry, token, last_response);
 }
 
+/* border logical */
+bool mycss_property_parser_border_block_start(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_border(entry, token, last_response);
+}
+
+bool mycss_property_parser_border_block_end(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_border(entry, token, last_response);
+}
+
+bool mycss_property_parser_border_inline_start(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_border(entry, token, last_response);
+}
+
+bool mycss_property_parser_border_inline_end(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_border(entry, token, last_response);
+}
+
 /* border width */
 bool mycss_property_parser_border_width(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
@@ -659,6 +722,27 @@ bool mycss_property_parser_border_left_width(mycss_entry_t* entry, mycss_token_t
     return mycss_property_parser_border_top_width(entry, token, last_response);
 }
 
+/* border width logical */
+bool mycss_property_parser_border_block_start_width(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_border_width(entry, token, last_response);
+}
+
+bool mycss_property_parser_border_block_end_width(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_border_width(entry, token, last_response);
+}
+
+bool mycss_property_parser_border_inline_start_width(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_border_width(entry, token, last_response);
+}
+
+bool mycss_property_parser_border_inline_end_width(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_border_width(entry, token, last_response);
+}
+
 /* border style */
 bool mycss_property_parser_border_style(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
@@ -742,6 +826,27 @@ bool mycss_property_parser_border_bottom_style(mycss_entry_t* entry, mycss_token
 bool mycss_property_parser_border_left_style(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     return mycss_property_parser_border_top_style(entry, token, last_response);
+}
+
+/* border style logical */
+bool mycss_property_parser_border_block_start_style(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_border_style(entry, token, last_response);
+}
+
+bool mycss_property_parser_border_block_end_style(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_border_style(entry, token, last_response);
+}
+
+bool mycss_property_parser_border_inline_start_style(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_border_style(entry, token, last_response);
+}
+
+bool mycss_property_parser_border_inline_end_style(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_border_style(entry, token, last_response);
 }
 
 /* border radius */
@@ -1073,6 +1178,27 @@ bool mycss_property_parser_border_bottom_color(mycss_entry_t* entry, mycss_token
 }
 
 bool mycss_property_parser_border_left_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_color(entry, token, last_response);
+}
+
+/* border color logical */
+bool mycss_property_parser_border_block_start_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_color(entry, token, last_response);
+}
+
+bool mycss_property_parser_border_block_end_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_color(entry, token, last_response);
+}
+
+bool mycss_property_parser_border_inline_start_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_color(entry, token, last_response);
+}
+
+bool mycss_property_parser_border_inline_end_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     return mycss_property_parser_color(entry, token, last_response);
 }
@@ -2501,6 +2627,103 @@ bool mycss_property_parser_unicode_bidi(mycss_entry_t* entry, mycss_token_t* tok
     return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
 }
 
+bool mycss_property_parser_writing_mode(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return mycss_property_shared_switch_to_parse_error(entry);
+    
+    mycss_token_data_to_string(entry, token, &str, true, false);
+    dec_entry->value_type = mycss_property_value_type_by_name(str.data, str.length);
+    
+    switch (dec_entry->value_type) {
+        case MyCSS_PROPERTY_WRITING_MODE_HORIZONTAL_TB:
+        case MyCSS_PROPERTY_WRITING_MODE_VERTICAL_LR:
+        case MyCSS_PROPERTY_WRITING_MODE_VERTICAL_RL:
+        case MyCSS_PROPERTY_WRITING_MODE_SIDEWAYS_LR:
+        case MyCSS_PROPERTY_WRITING_MODE_SIDEWAYS_RL:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+            
+        default:
+            break;
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+bool mycss_property_parser_text_orientation(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return mycss_property_shared_switch_to_parse_error(entry);
+    
+    mycss_token_data_to_string(entry, token, &str, true, false);
+    dec_entry->value_type = mycss_property_value_type_by_name(str.data, str.length);
+    
+    switch (dec_entry->value_type) {
+        case MyCSS_PROPERTY_TEXT_ORIENTATION_MIXED:
+        case MyCSS_PROPERTY_TEXT_ORIENTATION_UPRIGHT:
+        case MyCSS_PROPERTY_TEXT_ORIENTATION_SIDEWAYS:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+            
+        default:
+            break;
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+bool mycss_property_parser_glyph_orientation_vertical(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+    
+    myhtml_string_t str = {0};
+    mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
+    
+    if(token->type != MyCSS_TOKEN_TYPE_IDENT)
+        return mycss_property_shared_switch_to_parse_error(entry);
+    
+    mycss_token_data_to_string(entry, token, &str, true, false);
+    dec_entry->value_type = mycss_property_value_type_by_name(str.data, str.length);
+    
+    switch (dec_entry->value_type) {
+        case MyCSS_PROPERTY_GLYPH_ORIENTATION_VERTICAL_AUTO:
+        case MyCSS_PROPERTY_GLYPH_ORIENTATION_VERTICAL_0DEG:
+        case MyCSS_PROPERTY_GLYPH_ORIENTATION_VERTICAL_90DEG:
+        case MyCSS_PROPERTY_GLYPH_ORIENTATION_VERTICAL_0:
+        case MyCSS_PROPERTY_GLYPH_ORIENTATION_VERTICAL_90:
+            /* default values */
+        case MyCSS_PROPERTY_VALUE_INHERIT:
+        case MyCSS_PROPERTY_VALUE_INITIAL:
+        case MyCSS_PROPERTY_VALUE_UNSET:
+            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+            
+        default:
+            break;
+    }
+    
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
 /* not yet */
 bool mycss_property_parser_align_content(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
@@ -2887,11 +3110,6 @@ bool mycss_property_parser_font_variant_position(mycss_entry_t* entry, mycss_tok
     return mycss_property_shared_switch_to_parse_error(entry);
 }
 
-bool mycss_property_parser_glyph_orientation_vertical(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
 bool mycss_property_parser_hanging_punctuation(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     return mycss_property_shared_switch_to_parse_error(entry);
@@ -3262,11 +3480,6 @@ bool mycss_property_parser_text_indent(mycss_entry_t* entry, mycss_token_t* toke
     return mycss_property_shared_switch_to_parse_error(entry);
 }
 
-bool mycss_property_parser_text_orientation(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
 bool mycss_property_parser_text_overflow(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     return mycss_property_shared_switch_to_parse_error(entry);
@@ -3406,11 +3619,5 @@ bool mycss_property_parser_wrap_through(mycss_entry_t* entry, mycss_token_t* tok
 {
     return mycss_property_shared_switch_to_parse_error(entry);
 }
-
-bool mycss_property_parser_writing_mode(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    return mycss_property_shared_switch_to_parse_error(entry);
-}
-
 
 

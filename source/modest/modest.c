@@ -95,6 +95,15 @@ modest_status_t modest_init(modest_t* modest)
     if(myhtml_status)
         return MODEST_STATUS_OK;
     
+    /* layers */
+    modest->layout = modest_layers_create();
+    if(modest->layout == NULL)
+        return MODEST_STATUS_ERROR_MEMORY_ALLOCATION;
+    
+    modest_status_t modest_status = modest_layers_init(modest->layout);
+    if(modest_status)
+        return MODEST_STATUS_ERROR;
+    
     return MODEST_STATUS_OK;
 }
 
@@ -102,6 +111,7 @@ void modest_clean(modest_t* modest)
 {
     mcobject_async_clean(modest->mnode_obj);
     mcobject_async_clean(modest->mstylesheet_obj);
+    modest_layers_clean_all(modest->layout);
 }
 
 modest_t * modest_destroy(modest_t* modest, bool self_destroy)
@@ -111,6 +121,7 @@ modest_t * modest_destroy(modest_t* modest, bool self_destroy)
     
     modest->mnode_obj = mcobject_async_destroy(modest->mnode_obj, true);
     modest->mstylesheet_obj = mcobject_async_destroy(modest->mstylesheet_obj, true);
+    modest->layout = modest_layers_destroy(modest->layout, true);
     
     if(self_destroy) {
         myhtml_free(modest);

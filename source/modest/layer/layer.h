@@ -23,14 +23,37 @@
 #pragma once
 
 #include "modest/myosi.h"
-#include "modest/modest.h"
-#include "modest/style/type.h"
+#include "myhtml/utils/mcobject.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+typedef struct modest_layer modest_layer_t;
+typedef struct modest_layout modest_layout_t;
 
+struct modest_layer {
+    
+    
+    /* navigation */
+    modest_layer_t* next;
+    modest_layer_t* prev;
+    modest_layer_t* child;
+    modest_layer_t* parent;
+};
+
+struct modest_layout {
+    mcobject_t* mc_nodes;
+};
+
+modest_layout_t * modest_layers_create(void);
+modest_status_t modest_layers_init(modest_layout_t* layout);
+void modest_layers_clean_all(modest_layout_t* layout);
+modest_layout_t * modest_layers_destroy(modest_layout_t* layout, bool self_destroy);
+
+modest_layer_t * modest_layer_create(modest_layout_t* layout);
+void modest_layer_clean(modest_layer_t* layer);
+modest_layer_t * modest_layer_destroy(modest_layout_t* layout, modest_layer_t* layer);
 
 #ifdef __cplusplus
 } /* extern "C" */

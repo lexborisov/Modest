@@ -18,6 +18,17 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#include "modest/layer/tree.h"
+#include "modest/layer/binding.h"
 
+modest_layer_t * modest_layer_binding(modest_t* modest, myhtml_tree_t* html_tree)
+{
+    modest_layer_t *root = modest_layer_create(modest->layout);
+    return root;
+}
 
+void modest_layer_binding_html_node(modest_t* modest, myhtml_tree_node_t* html_node)
+{
+    modest_node_t *m_node = html_node->data;
+    
+    //m_node->layer
+}
