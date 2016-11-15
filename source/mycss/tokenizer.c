@@ -24,8 +24,8 @@
 
 mycss_status_t mycss_tokenizer_chunk(mycss_entry_t* entry, const char* css, size_t css_length)
 {
-    entry->current_buffer = myhtml_incomming_buffer_add(entry->current_buffer, entry->mcobject_incoming_buffer,
-                                                        css, css_length);
+    entry->current_buffer = myhtml_incoming_buffer_add(entry->current_buffer, entry->mcobject_incoming_buffer,
+                                                       css, css_length);
     
     if(entry->current_buffer == NULL)
         return MyCSS_STATUS_ERROR_TOKENIZER_INCOMING_BUFFER_ADD;
