@@ -22,7 +22,7 @@
 #define MyHTML_MyCSS_DECLARATION_SERIALIZATION_RESOURCES_H
 #pragma once
 
-static mycss_declaration_serialization_f mycss_declaration_serialization_map_by_type[] = 
+static mycss_declaration_serialization_f mycss_declaration_serialization_map_by_type[MyCSS_PROPERTY_TYPE_LAST_ENTRY] = 
 {
 	mycss_declaration_serialization_undef,
 	mycss_declaration_serialization_undef,
@@ -281,7 +281,6 @@ static mycss_declaration_serialization_f mycss_declaration_serialization_map_by_
 	mycss_declaration_serialization_undef,
 	mycss_declaration_serialization_text_decoration_line,
 	mycss_declaration_serialization_text_decoration_skip,
-	mycss_declaration_serialization_undef,
 	mycss_declaration_serialization_undef,
 	mycss_declaration_serialization_undef,
 	mycss_declaration_serialization_undef,

@@ -77,5 +77,6 @@ clone: create clean_include myhtml_clone mycss_clone modest_clone myfont_clone
 
 test:
 	test/mycss/declaration test/mycss/data/declaration
+	test/myhtml/utils/avl_tree
 
 .PHONY: all clean clone test

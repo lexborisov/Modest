@@ -2055,7 +2055,7 @@ bool mycss_property_parser_font_step_one(mycss_entry_t* entry, mycss_token_t* to
     
     if(mycss_property_shared_font_style(entry, token, &value_type, &str))
     {
-        if(font->style)
+        if(   font->style)
             return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
         
         font->style = mycss_declaration_entry_create(entry->declaration, NULL);

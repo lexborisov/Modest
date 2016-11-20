@@ -30,7 +30,6 @@
 extern "C" {
 #endif
 
-typedef struct modest_style_raw modest_style_raw_t;
 typedef struct modest_style_raw_declaration modest_style_raw_declaration_t;
 typedef struct modest_style_raw_specificity modest_style_raw_specificity_t;
 
@@ -45,45 +44,6 @@ struct modest_style_raw_declaration {
     mycss_declaration_entry_t* declaration;
     modest_style_raw_specificity_t spec;
 };
-
-struct modest_style_raw {
-    modest_style_raw_declaration_t* width;
-    modest_style_raw_declaration_t* height;
-    
-    modest_style_raw_declaration_t* padding_top;
-    modest_style_raw_declaration_t* padding_right;
-    modest_style_raw_declaration_t* padding_bottom;
-    modest_style_raw_declaration_t* padding_left;
-    modest_style_raw_declaration_t* margin_top;
-    modest_style_raw_declaration_t* margin_right;
-    modest_style_raw_declaration_t* margin_bottom;
-    modest_style_raw_declaration_t* margin_left;
-    
-    modest_style_raw_declaration_t* display;
-    
-    modest_style_raw_declaration_t* border_top_width;
-    modest_style_raw_declaration_t* border_right_width;
-    modest_style_raw_declaration_t* border_bottom_width;
-    modest_style_raw_declaration_t* border_left_width;
-    
-    modest_style_raw_declaration_t* border_top_style;
-    modest_style_raw_declaration_t* border_right_style;
-    modest_style_raw_declaration_t* border_bottom_style;
-    modest_style_raw_declaration_t* border_left_style;
-    
-    modest_style_raw_declaration_t* box_sizing;
-    
-    modest_style_raw_declaration_t* vertical_align;
-    modest_style_raw_declaration_t* line_height;
-    
-    modest_style_raw_declaration_t* text_decoration_line;
-    modest_style_raw_declaration_t* text_decoration_style;
-    modest_style_raw_declaration_t* text_decoration_skip;
-    modest_style_raw_declaration_t* text_decoration_color;
-};
-
-modest_style_raw_t * modest_style_raw_create(modest_t* modest);
-modest_status_t modest_style_raw_init(modest_t* modest, modest_style_raw_t* raw_style);
 
 modest_style_raw_declaration_t * modest_style_raw_declaration_create(modest_t* modest);
 

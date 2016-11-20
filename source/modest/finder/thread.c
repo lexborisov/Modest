@@ -126,7 +126,9 @@ void modest_finder_thread_collate_node(modest_t* modest, myhtml_tree_node_t* nod
     modest_finder_thread_declaration_t* dec = entry->declaration;
     
     while(dec) {
-        modest_style_map_collate_declaration(modest, node, dec->entry, &dec->raw_spec);
+        if(dec->entry)
+            modest_style_map_collate_declaration(modest, node, dec->entry, dec->entry->type, &dec->raw_spec);
+        
         dec = dec->next;
     }
 }

@@ -18,6 +18,7 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
+
 #include <modest/modest.h>
 #include <modest/finder/finder.h>
 #include <modest/finder/thread.h>
@@ -112,7 +113,7 @@ void print_tree(modest_t* modest, myhtml_tree_t* myhtml_tree, myhtml_tree_node_t
         if(m_node) {
             printf(" {");
             
-            modest_node_raw_serialization(mycss_entry, m_node, serialization_callback, NULL);
+            modest_node_raw_serialization(modest, m_node, serialization_callback, NULL);
             
             printf("}\n");
         }

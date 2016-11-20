@@ -70,22 +70,6 @@ modest_status_t modest_init(modest_t* modest)
     modest->mstyle_type_node_id = mchar_async_node_add(modest->mstyle_type_obj);
     
     
-    /* Modest raw style */
-    modest->mraw_style_obj = mcobject_async_create();
-    if(modest->mraw_style_obj == NULL)
-        return MODEST_STATUS_OK;
-    
-    mcstatus = mcobject_async_init(modest->mraw_style_obj, 128, 1024, sizeof(modest_style_raw_t));
-    if(mcstatus)
-        return MODEST_STATUS_OK;
-    
-    /* base object node for all modest raw style objects */
-    modest->mraw_style_node_id = mcobject_async_node_add(modest->mraw_style_obj, &mcstatus);
-    
-    if(mcstatus)
-        return MODEST_STATUS_OK;
-    
-    
     /* for raw declaration style */
     modest->mraw_style_declaration_obj = mcobject_create();
     if(modest->mraw_style_declaration_obj == NULL)
@@ -102,6 +86,14 @@ modest_status_t modest_init(modest_t* modest)
     
     modest_status_t modest_status = modest_layers_init(modest->layout);
     if(modest_status)
+        return MODEST_STATUS_ERROR;
+    
+    modest->style_avl_tree = myhtml_utils_avl_tree_create();
+    if(modest->style_avl_tree == NULL)
+        return MODEST_STATUS_ERROR_MEMORY_ALLOCATION;
+    
+    myhtml_status = myhtml_utils_avl_tree_init(modest->style_avl_tree);
+    if(myhtml_status)
         return MODEST_STATUS_ERROR;
     
     return MODEST_STATUS_OK;

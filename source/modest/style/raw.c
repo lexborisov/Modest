@@ -20,23 +20,6 @@
 
 #include "modest/style/raw.h"
 
-modest_style_raw_t * modest_style_raw_create(modest_t* modest)
-{
-    modest_style_raw_t* raw_style = (modest_style_raw_t*)mcobject_async_malloc(modest->mraw_style_obj, modest->mraw_style_node_id, NULL);
-    
-    if(raw_style == NULL)
-        return NULL;
-    
-    memset(raw_style, 0, sizeof(modest_style_raw_t));
-    
-    return raw_style;
-}
-
-modest_status_t modest_style_raw_init(modest_t* modest, modest_style_raw_t* raw_style)
-{
-    return MODEST_STATUS_OK;
-}
-
 modest_style_raw_declaration_t * modest_style_raw_declaration_create(modest_t* modest)
 {
     modest_style_raw_declaration_t* raw_decl = (modest_style_raw_declaration_t*)mcobject_malloc(modest->mraw_style_declaration_obj, NULL);
@@ -48,4 +31,5 @@ modest_style_raw_declaration_t * modest_style_raw_declaration_create(modest_t* m
     
     return raw_decl;
 }
+
 

@@ -32,7 +32,15 @@
 extern "C" {
 #endif
 
-bool modest_node_raw_serialization(mycss_entry_t* mycss_entry, modest_node_t* mnode, mycss_callback_serialization_f callback, void* context);
+struct modest_node_serialization_context {
+    modest_t* modest;
+    mycss_callback_serialization_f callback;
+    void* context;
+    bool is_use;
+}
+typedef modest_node_serialization_context_t;
+
+bool modest_node_raw_serialization(modest_t* modest, modest_node_t* mnode, mycss_callback_serialization_f callback, void* context);
 
 #ifdef __cplusplus
 } /* extern "C" */

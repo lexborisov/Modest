@@ -328,8 +328,7 @@ static const char * mycss_property_index_type_name[] =
 	"wrap-flow",
 	"wrap-through",
 	"writing-mode",
-	"z-index",
-	""
+	"z-index"
 };
 
 static const char * mycss_property_index_type_value[] = 
@@ -692,6 +691,7 @@ static const char * mycss_property_index_type_value[] =
 	"titling-caps",
 	"top",
 	"traditional",
+	"transparent",
 	"triangle",
 	"ultra-condensed",
 	"ultra-expanded",

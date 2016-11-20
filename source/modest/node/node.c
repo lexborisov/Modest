@@ -43,15 +43,52 @@ modest_status_t modest_node_init(modest_t* modest, modest_node_t *mnode)
     if(status)
         return MODEST_STATUS_ERROR;
     
-    mnode->raw_style = modest_style_raw_create(modest);
-    if(mnode->raw_style == NULL)
-        return MODEST_STATUS_ERROR_MEMORY_ALLOCATION;
-    
-    status = modest_style_raw_init(modest, mnode->raw_style);
-    if(status)
-        return MODEST_STATUS_ERROR;
-    
     return MODEST_STATUS_OK;
 }
+
+#ifdef MODEST_NODE_FULL_RAW
+
+mycss_declaration_entry_t * modest_node_declaration_by_type(modest_t* modest, modest_node_t *mnode, mycss_property_type_t type)
+{
+    if(mnode->raw_declaration[ type ])
+        return mnode->raw_declaration[ type ]->declaration;
+    
+    return NULL;
+}
+
+modest_style_raw_declaration_t * modest_node_raw_declaration_by_type(modest_t* modest, modest_node_t *mnode, mycss_property_type_t type)
+{
+    return mnode->raw_declaration[ type ];
+}
+
+void modest_node_raw_declaration_set_by_type(modest_t* modest, modest_node_t *mnode, mycss_property_type_t type, modest_style_raw_declaration_t *raw_declr)
+{
+    mnode->raw_declaration[ type ] = raw_declr;
+}
+
+#else
+
+mycss_declaration_entry_t * modest_node_declaration_by_type(modest_t* modest, modest_node_t *mnode, mycss_property_type_t type)
+{
+    myhtml_utils_avl_tree_node_t *find_node = myhtml_utils_avl_tree_search_by_type(modest->style_avl_tree, mnode->avl_tree_node, type);
+    
+    if(find_node)
+        return ((modest_style_raw_declaration_t*)find_node->value)->declaration;
+    
+    return NULL;
+}
+
+modest_style_raw_declaration_t * modest_node_raw_declaration_by_type(modest_t* modest, modest_node_t *mnode, mycss_property_type_t type)
+{
+    myhtml_utils_avl_tree_node_t *find_node = myhtml_utils_avl_tree_search_by_type(modest->style_avl_tree, mnode->avl_tree_node, type);
+    return (find_node ? find_node->value : NULL);
+}
+
+void modest_node_raw_declaration_set_by_type(modest_t* modest, modest_node_t *mnode, mycss_property_type_t type, modest_style_raw_declaration_t *raw_declr)
+{
+    myhtml_utils_avl_tree_add(modest->style_avl_tree, &mnode->avl_tree_node, type, raw_declr);
+}
+
+#endif /* MODEST_NODE_FULL_RAW */
 
 

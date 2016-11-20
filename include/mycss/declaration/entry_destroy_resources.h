@@ -22,7 +22,7 @@
 #define MyCSS_DECLARATION_ENTRY_DESTROY_RESOURCES_H
 #pragma once
 
-static mycss_callback_declaration_destroy_f mycss_declaration_entry_destroy_map_by_type[] = 
+static mycss_callback_declaration_destroy_f mycss_declaration_entry_destroy_map_by_type[MyCSS_PROPERTY_TYPE_LAST_ENTRY] = 
 {
 	mycss_declaration_entry_destroy_undef,
 	mycss_declaration_entry_destroy_undef,
@@ -226,7 +226,6 @@ static mycss_callback_declaration_destroy_f mycss_declaration_entry_destroy_map_
 	mycss_declaration_entry_destroy_undef,
 	mycss_declaration_entry_destroy_undef,
 	mycss_declaration_entry_destroy_padding,
-	mycss_declaration_entry_destroy_undef,
 	mycss_declaration_entry_destroy_undef,
 	mycss_declaration_entry_destroy_undef,
 	mycss_declaration_entry_destroy_undef,

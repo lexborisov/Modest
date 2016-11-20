@@ -14,7 +14,7 @@ CFLAGS += $(MODEST_OPTIMIZATION_LEVEL) -Wno-unused-variable -fPIC --std=c99 -I..
 
 MODEST_BUILD_WITHOUT_THREADS ?= NO
 ifeq ($(MODEST_BUILD_WITHOUT_THREADS),YES)
-    $(info Build Examples without POSIX Threads)
+    $(info Build Tests without POSIX Threads)
 else
     $(info Build Examples with POSIX Threads)
 	CFLAGS += -pthread
@@ -32,7 +32,7 @@ endif
 find_files_h = $(wildcard $(dir)/*.h)
 find_files_c = $(wildcard $(dir)/*.c)
 
-SUBDIRS := mycss
+SUBDIRS := mycss myhtml/utils
 HDRS += $(foreach dir,$(SUBDIRS),$(find_files_h))
 SRCS += $(foreach dir,$(SUBDIRS),$(find_files_c))
 #SRCS_FN += $(foreach dir,$(SUBDIRS),$(notdir $(find_files_c)))

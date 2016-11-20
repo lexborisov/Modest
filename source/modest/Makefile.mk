@@ -1,7 +1,7 @@
 find_files_h = $(wildcard $(SRCDIR)/modest/$(dir)/*.h)
 find_files_c = $(wildcard $(SRCDIR)/modest/$(dir)/*.c)
 
-SUBDIRS := . finder style node layer render
+SUBDIRS := . finder style node layer render utils
 HDRS += $(foreach dir,$(SUBDIRS),$(find_files_h))
 SRCS += $(foreach dir,$(SUBDIRS),$(find_files_c))
 

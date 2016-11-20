@@ -38,8 +38,9 @@ typedef struct mycss_declaration mycss_declaration_t;
 typedef mycss_declaration_entry_t * (*mycss_callback_declaration_destroy_f)(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy);
 
 enum mycss_declaration_flags {
-    MyCSS_DECLARATION_FLAGS_UNDEF = 0x00,
-    MyCSS_DECLARATION_FLAGS_BAD   = 0x01
+    MyCSS_DECLARATION_FLAGS_UNDEF     = 0x00,
+    MyCSS_DECLARATION_FLAGS_BAD       = 0x01,
+    MyCSS_DECLARATION_FLAGS_READ_ONLY = 0x02
 }
 typedef mycss_declaration_flags_t;
 

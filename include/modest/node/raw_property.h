@@ -28,7 +28,7 @@
 extern "C" {
 #endif
 
-#define modest_node_raw_property(mnode, property) (mnode->raw_style == NULL || mnode->raw_style->property == NULL ? NULL : mnode->raw_style->property->declaration)
+#define modest_node_raw_property(mnode, property_type) (mnode->raw_style == NULL || mnode->raw_declaration[property_type] == NULL ? NULL : mnode->raw_declaration[property_type]->declaration)
 
 
 #ifdef __cplusplus

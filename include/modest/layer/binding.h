@@ -29,7 +29,7 @@
 #include <myhtml/tree.h>
 
 #ifdef __cplusplus
-//extern "C" {
+extern "C" {
 #endif
 
 modest_layer_t * modest_layer_binding(modest_t* modest, myhtml_tree_t* html_tree);

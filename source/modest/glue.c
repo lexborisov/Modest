@@ -34,7 +34,7 @@ void modest_glue_callback_myhtml_insert_node(myhtml_tree_t* tree, myhtml_tree_no
     
     modest_node_init(modest, m_node);
     
-    node->data = (void*)m_node;
+    node->data = m_node;
 }
 
 

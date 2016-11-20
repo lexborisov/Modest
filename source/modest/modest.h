@@ -27,6 +27,7 @@
 #include "myhtml/utils/mcobject.h"
 #include "myhtml/utils/mcobject_async.h"
 #include "myhtml/utils/mchar_async.h"
+#include "myhtml/utils/avl_tree.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -42,12 +43,11 @@ struct modest {
     mchar_async_t* mstyle_type_obj;
     size_t mstyle_type_node_id;
     
-    mcobject_async_t* mraw_style_obj;
-    size_t mraw_style_node_id;
-    
     mcobject_t* mraw_style_declaration_obj;
     
     modest_layout_t* layout;
+    
+    myhtml_utils_avl_tree_t* style_avl_tree;
     
     /* refs */
     myhtml_tree_t* myhtml_tree;

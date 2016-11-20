@@ -26,6 +26,7 @@
 #include "modest/modest.h"
 #include "modest/style/raw.h"
 #include "modest/layer/layer.h"
+#include "myhtml/utils/avl_tree.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -33,12 +34,22 @@ extern "C" {
 
 struct modest_node {
     modest_style_sheet_t* stylesheet;
-    modest_style_raw_t* raw_style;
+#ifndef MODEST_NODE_FULL_RAW
+    myhtml_utils_avl_tree_node_t *avl_tree_node;
+#else
+    modest_style_raw_declaration_t * raw_declaration[MyCSS_PROPERTY_TYPE_LAST_ENTRY];
+#endif /* MODEST_NODE_FULL_RAW */
+    
     modest_layer_t* layer;
 };
 
 modest_node_t * modest_node_create(modest_t* modest);
 modest_status_t modest_node_init(modest_t* modest, modest_node_t *mnode);
+
+mycss_declaration_entry_t * modest_node_declaration_by_type(modest_t* modest, modest_node_t *mnode, mycss_property_type_t type);
+
+modest_style_raw_declaration_t * modest_node_raw_declaration_by_type(modest_t* modest, modest_node_t *mnode, mycss_property_type_t type);
+void modest_node_raw_declaration_set_by_type(modest_t* modest, modest_node_t *mnode, mycss_property_type_t type, modest_style_raw_declaration_t *raw_declr);
 
 #ifdef __cplusplus
 } /* extern "C" */
