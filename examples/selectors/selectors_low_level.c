@@ -93,12 +93,19 @@ int main(int argc, const char * argv[])
     mycss_selectors_serialization_list(mycss_entry_selectors(css_entry), list, serialization_callback, NULL);
     fprintf(stdout, "\n");
     
-    printf("\nFound result:\n");
-    for(size_t i = 0; i < collection->length; i++) {
-        fprintf(stdout, "\t");
-        myhtml_tree_print_node(html_tree, collection->list[i], stdout);
+    if(collection) {
+        printf("\nFound result:\n");
+        
+        for(size_t i = 0; i < collection->length; i++) {
+            fprintf(stdout, "\t");
+            myhtml_tree_print_node(html_tree, collection->list[i], stdout);
+        }
+        
+        fprintf(stdout, "\n");
     }
-    fprintf(stdout, "\n");
+    else {
+        printf("\nFound result: empty\n");
+    }
     
     // destroy all
     mycss_selectors_list_destroy(mycss_entry_selectors(css_entry), list, true);
