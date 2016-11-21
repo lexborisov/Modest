@@ -81,10 +81,8 @@ int main(int argc, const char * argv[])
     modest_finder_t *finder = modest_finder_create_simple(html_tree, NULL);
     
     mycss_selectors_list_t *list = mycss_selectors_parse(css_entry->selectors, MyHTML_ENCODING_UTF_8, selector, strlen(selector), &out_status);
-    myhtml_collection_t *collection = modest_finder_by_selectors_list(finder, list, html_tree->node_html, NULL);
     
-    /* destroy Modest finder */
-    modest_finder_destroy(finder, true);
+    myhtml_collection_t *collection = modest_finder_by_selectors_list(finder, list, html_tree->node_html, NULL);
     
     /* print result */
     fprintf(stdout, "HTML Tree:\n");
@@ -103,6 +101,12 @@ int main(int argc, const char * argv[])
     fprintf(stdout, "\n");
     
     // destroy all
+    mycss_selectors_list_destroy(css_entry->selectors, list, true);
+    myhtml_collection_destroy(collection);
+    
+    /* destroy Modest finder */
+    modest_finder_destroy(finder, true);
+    
     mycss_t *mycss = css_entry->mycss;
     mycss_entry_destroy(css_entry, true);
     mycss_destroy(mycss, true);

@@ -53,7 +53,7 @@ void modest_node_raw_serialization_callback(myhtml_utils_avl_tree_node_t* node, 
     modest_node_serialization_context_t *ctx = context;
     
     modest_style_raw_declaration_t *raw_declr = node->value;
-    modest_node_raw_serialization_declaration(ctx->modest->mycss_entry, raw_declr->declaration, node->type, ctx->callback, ctx->context, &ctx->is_use);
+    modest_node_raw_serialization_declaration(ctx->modest->mycss_entry, raw_declr->declaration, (mycss_property_type_t)node->type, ctx->callback, ctx->context, &ctx->is_use);
 }
 
 bool modest_node_raw_serialization(modest_t* modest, modest_node_t* mnode, mycss_callback_serialization_f callback, void* context)

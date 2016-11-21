@@ -46,14 +46,10 @@ mycss_selectors_list_t * mycss_selectors_list_destroy(mycss_selectors_t* selecto
             mycss_selectors_entry_t *sel_entry = selectors_list->entries_list[i].entry;
             
             while(sel_entry) {
-                if(sel_entry->next) {
-                    sel_entry = sel_entry->next;
-                    mycss_selectors_entry_destroy(entry->selectors, sel_entry->prev, true);
-                }
-                else {
-                    mycss_selectors_entry_destroy(entry->selectors, sel_entry, true);
-                    break;
-                }
+                mycss_selectors_entry_t *sel_entry_next = sel_entry->next;
+                mycss_selectors_entry_destroy(entry->selectors, sel_entry, true);
+                
+                sel_entry = sel_entry_next;
             }
         }
         

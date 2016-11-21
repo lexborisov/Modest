@@ -115,6 +115,7 @@ mycss_status_t mycss_entry_init(mycss_t* mycss, mycss_entry_t* entry)
 
 mycss_status_t mycss_entry_clean(mycss_entry_t* entry)
 {
+    mcobject_clean(entry->mcobject_incoming_buffer);
     mycss_entry_parser_list_clean(entry->parser_list);
     
     /* CSS Modules */
