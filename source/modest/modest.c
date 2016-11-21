@@ -104,6 +104,7 @@ void modest_clean(modest_t* modest)
     mcobject_async_clean(modest->mnode_obj);
     mcobject_async_clean(modest->mstylesheet_obj);
     modest_layers_clean_all(modest->layout);
+    myhtml_utils_avl_tree_clean(modest->style_avl_tree);
 }
 
 modest_t * modest_destroy(modest_t* modest, bool self_destroy)
@@ -114,6 +115,7 @@ modest_t * modest_destroy(modest_t* modest, bool self_destroy)
     modest->mnode_obj = mcobject_async_destroy(modest->mnode_obj, true);
     modest->mstylesheet_obj = mcobject_async_destroy(modest->mstylesheet_obj, true);
     modest->layout = modest_layers_destroy(modest->layout, true);
+    modest->style_avl_tree = myhtml_utils_avl_tree_destroy(modest->style_avl_tree, true);
     
     if(self_destroy) {
         myhtml_free(modest);
