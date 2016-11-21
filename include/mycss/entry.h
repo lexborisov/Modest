@@ -119,6 +119,9 @@ mycss_entry_t * mycss_entry_destroy(mycss_entry_t* entry, bool self_destroy);
 
 void mycss_entry_end(mycss_entry_t* entry);
 
+/* api */
+mycss_selectors_t * mycss_entry_selectors(mycss_entry_t* entry);
+
 mycss_token_ready_callback_f mycss_entry_token_ready_callback(mycss_entry_t* entry, mycss_token_ready_callback_f callback_f);
 
 size_t mycss_entry_token_count(mycss_entry_t* entry);

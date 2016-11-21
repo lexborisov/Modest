@@ -80,7 +80,7 @@ int main(int argc, const char * argv[])
     mycss_status_t out_status;
     modest_finder_t *finder = modest_finder_create_simple(html_tree, NULL);
     
-    mycss_selectors_list_t *list = mycss_selectors_parse(css_entry->selectors, MyHTML_ENCODING_UTF_8, selector, strlen(selector), &out_status);
+    mycss_selectors_list_t *list = mycss_selectors_parse(mycss_entry_selectors(css_entry), MyHTML_ENCODING_UTF_8, selector, strlen(selector), &out_status);
     
     myhtml_collection_t *collection = modest_finder_by_selectors_list(finder, list, html_tree->node_html, NULL);
     
@@ -90,7 +90,7 @@ int main(int argc, const char * argv[])
     fprintf(stdout, "\n");
     
     fprintf(stdout, "Selector:\n\t");
-    mycss_selectors_serialization_list(css_entry->selectors, list, serialization_callback, NULL);
+    mycss_selectors_serialization_list(mycss_entry_selectors(css_entry), list, serialization_callback, NULL);
     fprintf(stdout, "\n");
     
     printf("\nFound result:\n");
@@ -101,7 +101,7 @@ int main(int argc, const char * argv[])
     fprintf(stdout, "\n");
     
     // destroy all
-    mycss_selectors_list_destroy(css_entry->selectors, list, true);
+    mycss_selectors_list_destroy(mycss_entry_selectors(css_entry), list, true);
     myhtml_collection_destroy(collection);
     
     /* destroy Modest finder */
