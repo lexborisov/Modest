@@ -97,9 +97,8 @@ gcc -Wall -Werror -O2 your_program.c /path/to/libmodest_static.a -o your_program
 
 None
 
-## In other languages, external bindings
-
-Send pull request if you create any bindings
+## External Bindings and Wrappers
+* [Crystal wrapper](https://github.com/kostya/modest) for CSS Selectors (Modest Finder)
 
 ## Examples
 
