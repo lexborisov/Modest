@@ -257,8 +257,6 @@ void avl_tree_test_5(void)
     
     myhtml_utils_avl_tree_delete(avl_tree, &root_node, 4);
     
-    printf("");
-    
     avl_tree = myhtml_utils_avl_tree_destroy(avl_tree, true);
 }
 
