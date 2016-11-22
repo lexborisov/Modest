@@ -165,28 +165,28 @@ modest_finder_t * modest_finder_by_stylesheet(myhtml_tree_t* myhtml_tree, mycss_
     return finder;
 }
 
-myhtml_collection_t * modest_finder_by_selectors_list(modest_finder_t* finder, mycss_selectors_list_t *selector_list,
-                                                      myhtml_tree_node_t* base_node, myhtml_collection_t* collection)
+modest_status_t modest_finder_by_selectors_list(modest_finder_t* finder, mycss_selectors_list_t* selector_list,
+                                                myhtml_tree_node_t* scope_node, myhtml_collection_t** collection)
 {
-    if(finder == NULL || selector_list == NULL || base_node == NULL)
-        return NULL;
+    if(finder == NULL || selector_list == NULL || scope_node == NULL || collection == NULL)
+        return MODEST_STATUS_ERROR;
     
-    if(collection == NULL) {
+    if(*collection == NULL) {
         myhtml_status_t status;
-        collection = myhtml_collection_create(4096, &status);
+        *collection = myhtml_collection_create(4096, &status);
         
         if(status)
-            return NULL;
+            return MODEST_STATUS_ERROR_MEMORY_ALLOCATION;
     }
     
     for(size_t i = 0; i < selector_list->entries_list_length; i++) {
         mycss_selectors_specificity_t spec = selector_list->entries_list[i].specificity;
         
-        modest_finder_node_combinator_begin(finder, base_node, selector_list, selector_list->entries_list[i].entry, &spec,
-                                            modest_finder_callback_found_with_collection, collection);
+        modest_finder_node_combinator_begin(finder, scope_node, selector_list, selector_list->entries_list[i].entry, &spec,
+                                            modest_finder_callback_found_with_collection, *collection);
     }
     
-    return collection;
+    return MODEST_STATUS_OK;
 }
 
 void modest_finder_begin(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector)

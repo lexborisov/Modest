@@ -61,8 +61,8 @@ void modest_finder_begin(modest_finder_t* finder, myhtml_tree_node_t* base_node,
 modest_finder_t * modest_finder_by_stylesheet(myhtml_tree_t* myhtml_tree, mycss_stylesheet_t *stylesheet,
                                               myhtml_collection_t** collection, myhtml_tree_node_t* base_node, mycss_selectors_list_t* selector_list);
 
-myhtml_collection_t * modest_finder_by_selectors_list(modest_finder_t* finder, mycss_selectors_list_t *sel_list,
-                                                      myhtml_tree_node_t* base_node, myhtml_collection_t* collection);
+modest_status_t modest_finder_by_selectors_list(modest_finder_t* finder, mycss_selectors_list_t* selector_list,
+                                                myhtml_tree_node_t* scope_node, myhtml_collection_t** collection);
 
 /* process */
 myhtml_tree_node_t * modest_finder_node_combinator_begin(modest_finder_t* finder, myhtml_tree_node_t* base_node,

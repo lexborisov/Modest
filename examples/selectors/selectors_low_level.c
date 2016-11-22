@@ -82,7 +82,8 @@ int main(int argc, const char * argv[])
     
     mycss_selectors_list_t *list = mycss_selectors_parse(mycss_entry_selectors(css_entry), MyHTML_ENCODING_UTF_8, selector, strlen(selector), &out_status);
     
-    myhtml_collection_t *collection = modest_finder_by_selectors_list(finder, list, html_tree->node_html, NULL);
+    myhtml_collection_t *collection = NULL;
+    modest_finder_by_selectors_list(finder, list, html_tree->node_html, &collection);
     
     /* print result */
     fprintf(stdout, "HTML Tree:\n");
