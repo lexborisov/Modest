@@ -82,6 +82,11 @@ int main(int argc, const char * argv[])
     
     mycss_selectors_list_t *list = mycss_selectors_parse(mycss_entry_selectors(css_entry), MyHTML_ENCODING_UTF_8, selector, strlen(selector), &out_status);
     
+    if(list == NULL || (list->flags & MyCSS_SELECTORS_FLAGS_SELECTOR_BAD)) {
+        fprintf(stderr, "Bad CSS Selectors\n");
+        exit(EXIT_FAILURE);
+    }
+    
     myhtml_collection_t *collection = NULL;
     modest_finder_by_selectors_list(finder, html_tree, html_tree->node_html, list, &collection);
     
