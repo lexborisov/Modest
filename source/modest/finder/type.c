@@ -92,7 +92,7 @@ bool modest_finder_selector_type_attribute(modest_finder_t* finder, myhtml_tree_
     
     mycss_selectors_object_attribute_t *sel_attr = mycss_selector_value_attribute(selector->value);
     
-    if(sel_attr) {
+    if(sel_attr && sel_attr->value) {
         if(sel_attr->match < MyCSS_SELECTORS_MATCH_LAST_ENTRY)
             return modest_finder_static_selector_match_map[sel_attr->match](node->token->attr_first,
                                                                             selector->key->data, selector->key->length,
