@@ -69,6 +69,10 @@ mycss_entry_t * create_css_parser(void)
     return entry;
 }
 
+void serialization_bad_selectors(const char* buffer, size_t size, void* ctx) {
+    printf("%.*s", (int)size, buffer);
+}
+
 int main(int argc, const char * argv[])
 {
     const char *html = "<div><p id=p1><p id=p2><p id=p3><a>link</a><p id=p4><p id=p5><p id=p6></div>";
@@ -84,6 +88,12 @@ int main(int argc, const char * argv[])
     
     if(list == NULL || (list->flags & MyCSS_SELECTORS_FLAGS_SELECTOR_BAD)) {
         fprintf(stderr, "Bad CSS Selectors\n");
+        
+        if(list) {
+            mycss_selectors_serialization_list(mycss_entry_selectors(css_entry), list, serialization_bad_selectors, NULL);
+            printf("\n");
+        }
+        
         exit(EXIT_FAILURE);
     }
     
