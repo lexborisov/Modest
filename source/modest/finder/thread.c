@@ -139,6 +139,11 @@ modest_status_t modest_finder_thread_process(modest_t* modest, modest_finder_thr
     finder_thread->base_node = scope_node;
     finder_thread->selector_list = selector_list;
     
+    if(finder_thread->finder == NULL)
+        return MODEST_STATUS_ERROR;
+    
+    finder_thread->finder->html_tree = myhtml_tree;
+    
     mythread_resume_all(finder_thread->thread);
     modest_finder_thread_wait_for_all_done(finder_thread);
     

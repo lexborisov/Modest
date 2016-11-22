@@ -38,12 +38,12 @@ typedef myhtml_tree_node_t * (*modest_finder_selector_combinator_f)(modest_finde
 
 /* init */
 modest_finder_t * modest_finder_create(void);
-modest_status_t modest_finder_init(modest_finder_t* finder, myhtml_tree_t* myhtml_tree, mycss_stylesheet_t *stylesheet);
+modest_status_t modest_finder_init(modest_finder_t* finder);
 void modest_finder_clean(modest_finder_t* finder);
 modest_finder_t * modest_finder_destroy(modest_finder_t* finder, bool self_destroy);
 
 /* simple api */
-modest_finder_t * modest_finder_create_simple(myhtml_tree_t* myhtml_tree, mycss_stylesheet_t *stylesheet);
+modest_finder_t * modest_finder_create_simple(void);
 
 /* callbacks */
 void modest_finder_callback_found_with_collection(modest_finder_t* finder, myhtml_tree_node_t* node,
@@ -57,12 +57,11 @@ void modest_finder_callback_found_with_bool(modest_finder_t* finder, myhtml_tree
 void modest_finder_specificity_inc(mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec);
 
 /* base api */
-void modest_finder_begin(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector);
 modest_finder_t * modest_finder_by_stylesheet(myhtml_tree_t* myhtml_tree, mycss_stylesheet_t *stylesheet,
                                               myhtml_collection_t** collection, myhtml_tree_node_t* base_node, mycss_selectors_list_t* selector_list);
 
-modest_status_t modest_finder_by_selectors_list(modest_finder_t* finder, mycss_selectors_list_t* selector_list,
-                                                myhtml_tree_node_t* scope_node, myhtml_collection_t** collection);
+modest_status_t modest_finder_by_selectors_list(modest_finder_t* finder, myhtml_tree_t* myhtml_tree, myhtml_tree_node_t* scope_node,
+                                                mycss_selectors_list_t* selector_list, myhtml_collection_t** collection);
 
 /* process */
 myhtml_tree_node_t * modest_finder_node_combinator_begin(modest_finder_t* finder, myhtml_tree_node_t* base_node,

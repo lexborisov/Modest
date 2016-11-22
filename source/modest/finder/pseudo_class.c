@@ -759,7 +759,7 @@ bool modest_finder_selector_sub_type_pseudo_class_required(modest_finder_t* find
 
 bool modest_finder_selector_sub_type_pseudo_class_root(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
-    if(finder->tree->node_html == base_node)
+    if(finder->html_tree && finder->html_tree->node_html == base_node)
         return true;
     
     return false;

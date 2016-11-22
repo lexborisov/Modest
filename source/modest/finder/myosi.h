@@ -37,8 +37,7 @@ typedef void (*modest_finder_callback_f)(modest_finder_t* finder, myhtml_tree_no
 typedef bool (*modest_finder_match_f)(myhtml_token_attr_t* attr, const char* key, size_t key_len, const char* value, size_t value_len, bool case_sensitive);
 
 struct modest_finder {
-    myhtml_tree_t* tree;
-    mycss_stylesheet_t* stylesheet;
+    myhtml_tree_t* html_tree;
 };
 
 typedef struct modest_finder_thread_declaration modest_finder_thread_declaration_t;

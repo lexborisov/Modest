@@ -39,10 +39,12 @@ bool modest_finder_selector_type_element(modest_finder_t* finder, myhtml_tree_no
     if(str->length == 1 && *str->data == '*')
         return true;
     
-    myhtml_tag_id_t tag_id = myhtml_tag_id_by_name(finder->tree, str->data, str->length);
-    
-    if(tag_id == node->tag_id)
-        return true;
+    if(finder->html_tree) {
+        myhtml_tag_id_t tag_id = myhtml_tag_id_by_name(finder->html_tree, str->data, str->length);
+        
+        if(tag_id == node->tag_id)
+            return true;
+    }
     
     return false;
 }
@@ -52,10 +54,14 @@ bool modest_finder_selector_type_id(modest_finder_t* finder, myhtml_tree_node_t*
     if(node->token == NULL)
         return false;
     
-    return modest_finder_match_attribute_eq(node->token->attr_first,
-                                            "id", 2,
-                                            selector->key->data, selector->key->length,
-                                            (finder->tree->compat_mode != MyHTML_TREE_COMPAT_MODE_QUIRKS));
+    if(finder->html_tree) {
+        return modest_finder_match_attribute_eq(node->token->attr_first,
+                                                "id", 2,
+                                                selector->key->data, selector->key->length,
+                                                (finder->html_tree->compat_mode != MyHTML_TREE_COMPAT_MODE_QUIRKS));
+    }
+    
+    return false;
 }
 
 bool modest_finder_selector_type_class(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
@@ -63,10 +69,14 @@ bool modest_finder_selector_type_class(modest_finder_t* finder, myhtml_tree_node
     if(node->token == NULL)
         return false;
     
-    return modest_finder_match_attribute_ws(node->token->attr_first,
-                                            "class", 5,
-                                            selector->key->data, selector->key->length,
-                                            (finder->tree->compat_mode != MyHTML_TREE_COMPAT_MODE_QUIRKS));
+    if(finder->html_tree) {
+        return modest_finder_match_attribute_ws(node->token->attr_first,
+                                                "class", 5,
+                                                selector->key->data, selector->key->length,
+                                                (finder->html_tree->compat_mode != MyHTML_TREE_COMPAT_MODE_QUIRKS));
+    }
+    
+    return false;
 }
 
 bool modest_finder_selector_type_attribute(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)

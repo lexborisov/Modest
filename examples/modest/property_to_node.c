@@ -161,7 +161,7 @@ int main(int argc, const char * argv[])
      Init Finder for comparison selectors and tree nodes
      */
     modest_finder_t* finder = modest_finder_create();
-    status = modest_finder_init(finder, modest->myhtml_tree, stylesheet);
+    status = modest_finder_init(finder);
     
     modest_finder_thread_t *finder_thread = modest_finder_thread_create();
     modest_finder_thread_init(finder, finder_thread, 2);

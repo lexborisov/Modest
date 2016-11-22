@@ -78,12 +78,12 @@ int main(int argc, const char * argv[])
     mycss_entry_t *css_entry = create_css_parser();
     
     mycss_status_t out_status;
-    modest_finder_t *finder = modest_finder_create_simple(html_tree, NULL);
+    modest_finder_t *finder = modest_finder_create_simple();
     
     mycss_selectors_list_t *list = mycss_selectors_parse(mycss_entry_selectors(css_entry), MyHTML_ENCODING_UTF_8, selector, strlen(selector), &out_status);
     
     myhtml_collection_t *collection = NULL;
-    modest_finder_by_selectors_list(finder, list, html_tree->node_html, &collection);
+    modest_finder_by_selectors_list(finder, html_tree, html_tree->node_html, list, &collection);
     
     /* print result */
     fprintf(stdout, "HTML Tree:\n");
