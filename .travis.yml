@@ -1,14 +1,12 @@
 language: c
-sudo: false
 compiler:
   - clang
   - gcc
 install: false
-script: make -j2 && make clean
 
 env:
   global:
-   - secure: "T8QtPe/pHf+5OQ384D9CD7//f/r/BwIzxzIUuJ6MzPiRQ1mxic9InSYu4OGQXDWRugNtiKmF9wxrQStsyv7yfzlciHG7tpGPh/2fd4SizJeC9QtP0nUHL0KoluIZh5yaGOfrCnNErIuw0i9LG6Jhg1nJVuKlw/SGtaYwE0i/7JpUraPhuDH/H8sPzJRjvg+37W9rHhEOVCC8OTLoPm2op91p1daHR6J8bVZfiACBUsCYQp+jOcScFlVgg9RbwhQzQZRZp7aIQZZ8jZBx0CTx2v4QL2eY0O0SwXv6wW2VkZJS7ux4G/9yNy+P+QivT484h9CPQgTDGEsJfBA9QzZHgsu9anBfygMBe8oX8TscBFbN7EgOWDQIKAfwLgCmPnr4atG+kfQ/W3A2uhcJ4qKAbVZ+EgAMCw1sUfHN3Kp7PorD+N5lkfaBPvXcXvlKox2aRCkC+pSDnIJ17vEnK1sDBkegFVhxll4mqQd8qjFOw713cXRmRqTyQYfhrERjOhs9wpVOI8ILyLbyv8IcV1+MSS59rQy8G3I+9WowrP6v2vlDTbbskrZAhOLLBrICsTxR50SK84+mCQUt+KjX7P9xlKdIqeXaFFvN8DLk72OIxSCjrg1dNvjgl5s4iVk7n3uT/p/XvafZSB0S/tQMIUDiKw8fHOs5fIZJy6j6F+VX09s="
+   - secure: "gNSRCjo+hi14yLpCDEmwZfzy0DFoOR+9BmkdpJhTK8NjUvIy+RmFtXgT98QHgh+fow8v/YXl8hSnyDT2+oSmsKN9P113ssgYihwoB4IuIBLSIrAf9KPfhIh6LZC23lKltQUrP9yPo3jzdD1dte1xv2tKRImDZ1Cze987EjDBbSwuVP/Gj3JlWMAafEPrh48jCM/O4DXR4podcd1biXbyX8+lbYJSFVaIq0SuagzK5Kjv8nDAFYlNk27RdhQGemmZOsM5xQM4PpgKpcQVHh0YuObCryf/O+orCDh7dOu9QlbMijabYxz/Jx7fZ1mLQGm7Kj6ETdCcf80MrrDechjJgh7uyFE/+VPDfkdaSCm1vMJCNBRgFSM0bxXqtLAyNs9TNOIJ3TUv3M4eN98Feh7I3ip9eTU/0R36HKU7sk+yotmOuAMDaMikbTQ2UuHekKev3TD0dA5O6xatyDF3jCnTJ+8aYQ096A79ZSabWUiLe6IyV/NauqSfY+mOz2NA+TxqzW92HqStdvmeOuSqCGdkGi3o2z77jEez795l2bqnIziuZhojfxjtvc/ryaZaBMYWqjSlOzRcix/SwIt8ccDCXJ4F/aNi16mYuDdL5c2mQaxtZ5Xz1IZduU87f6pWHdhLPoRMqpd/XChJVwKSFxbKmRWynUfHTcwJePSSyn5GRNA="
 
 addons:
   coverity_scan:
@@ -16,5 +14,8 @@ addons:
       name: "lexborisov/Modest"
       description: "Build submitted via Travis CI"
     notification_email: lex.borisov@gmail.com
+    build_command_prepend: ""
     build_command:   "make -j4"
     branch_pattern: coverity_scan
+
+script: make -j4
