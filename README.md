@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/lexborisov/Modest.svg?branch=master)](https://travis-ci.org/lexborisov/Modest)
 [![Codewake](https://www.codewake.com/badges/ask_question.svg)](https://www.codewake.com/p/modest)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/11105/badge.svg)](https://scan.coverity.com/projects/lexborisov-modest)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=L59E49K2NVUHE)
 
 Modest is a fast HTML Render implemented as a pure C99 library with no outside dependencies.
 
