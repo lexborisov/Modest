@@ -142,6 +142,7 @@ mycss_declaration_entry_t * mycss_declaration_parse(mycss_declaration_t* declara
         if(out_status)
             *out_status = status;
         
+        entry->token_ready_callback = tmp_token_ready_callback;
         return NULL;
     }
     

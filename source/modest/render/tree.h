@@ -18,24 +18,34 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#ifndef MODEST_LAYER_BINDING_H
-#define MODEST_LAYER_BINDING_H
+#ifndef MODEST_RENDER_TREE_H
+#define MODEST_RENDER_TREE_H
 #pragma once
 
-#include "modest/myosi.h"
-#include "modest/modest.h"
-#include "modest/node/node.h"
+typedef struct modest_render_tree modest_render_tree_t;
 
-#include "myhtml/tree.h"
+#include "modest/modest.h"
+#include "myhtml/utils/mcobject.h"
+#include "modest/render/tree_node.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-modest_layer_t * modest_layer_binding(modest_t* modest, myhtml_tree_t* html_tree);
+struct modest_render_tree {
+    mcobject_t* mc_nodes;
+};
+
+modest_render_tree_t * modest_render_tree_create(void);
+modest_status_t modest_render_tree_init(modest_render_tree_t* render_tree);
+void modest_render_tree_clean_all(modest_render_tree_t* render_tree);
+modest_render_tree_t * modest_render_tree_destroy(modest_render_tree_t* render_tree, bool self_destroy);
+
+void modest_render_tree_serialization(myhtml_tree_t* html_tree, modest_render_tree_t* tree,
+                                      modest_render_tree_node_t* scope_node, mycss_callback_serialization_f callback, void* context);
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
 
-#endif /* MODEST_LAYER_BINDING_H */
+#endif /* MODEST_RENDER_TREE_H */

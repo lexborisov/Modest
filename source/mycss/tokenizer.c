@@ -124,6 +124,9 @@ size_t mycss_tokenizer_state_set_current_buffer_for_continue(mycss_entry_t* entr
     while(buffer && buffer->offset > position)
         buffer = buffer->prev;
     
+    if(buffer == NULL)
+        return 0;
+    
     entry->current_buffer = buffer;
     
     return (position - buffer->offset);

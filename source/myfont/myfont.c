@@ -22,11 +22,12 @@
 
 const char myfont_table_name[][5] = {
     "cmap", "head", "hhea", "hmtx", "maxp", "name",
-    "OS/2", "post", "cvt ", "fpgm", "glyf", "loca",
-    "prep", "CFF ", "VORG", "EBDT", "EBLC", "EBSC",
-    "BASE", "GDEF", "GPOS", "GSUB", "JSTF", "DSIG",
-    "gasp", "hdmx", "kern", "LTSH", "PCLT", "VDMX",
-    "vhea", "vmtx"
+    "OS/2", "post", "cvt" , "fpgm", "glyf", "loca",
+    "prep", "gasp", "CFF" , "VORG", "SVG" , "EBDT",
+    "EBLC", "EBSC", "CBDT", "CBLC", "BASE", "GDEF",
+    "GPOS", "GSUB", "JSTF", "MATH", "DSIG", "hdmx",
+    "kern", "LTSH", "PCLT", "VDMX", "vhea", "vmtx",
+    "COLR", "CPAL"
 };
 
 myfont_font_t * myfont_create(void)
@@ -152,7 +153,7 @@ myfont_status_t myfont_load(myfont_font_t *mf, const char *filepath)
     if(mf->file_size < 12)
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
-    uint8_t *data = (uint8_t*)mf->file_data;
+    uint8_t *data = mf->file_data;
     
     mf->header.version_major = myfont_read_u16(&data);
     mf->header.version_minor = myfont_read_u16(&data);
@@ -286,7 +287,7 @@ void myfont_font_print_exists_table(myfont_font_t *mf, FILE *file)
 {
     size_t i;
     for(i = 0; i < MyFONT_TKEY_LAST_KEY; i++)
-    {
+    { 
         if(mf->cache.tables_offset[i]) {
             fprintf(file, "%s = %u\n", myfont_table_name[i], mf->cache.tables_offset[i]);
         }

@@ -228,6 +228,10 @@ bool mycss_selectors_serialization_selector(mycss_selectors_t* selectors, mycss_
                     break;
                 }
                     
+                case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_UNKNOWN:
+                    callback("^UST", 4, context);
+                    break;
+                    
                 default:
                     break;
             }
@@ -262,9 +266,6 @@ bool mycss_selectors_serialization_selector(mycss_selectors_t* selectors, mycss_
             break;
         }
     };
-    
-    if(selector->sub_type == MyCSS_SELECTORS_SUB_TYPE_UNKNOWN)
-        callback("^UST", 4, context);
     
     if(selector->flags & MyCSS_SELECTORS_FLAGS_SELECTOR_BAD)
         callback("^B", 2, context);

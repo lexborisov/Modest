@@ -137,10 +137,10 @@ bool mycss_selectors_function_parser_not_or_matches_or_current_parser(mycss_entr
     selectors_list = mycss_selectors_parser_check_selector_list(selectors, selectors_list);
     
     if(selectors_list == NULL) {
-        if(selectors->entry_last)
+        if(selectors->entry_last) {
             selectors->entry_last->value = NULL;
-        
-        selectors->entry_last->flags |= MyCSS_SELECTORS_FLAGS_SELECTOR_BAD;
+            selectors->entry_last->flags |= MyCSS_SELECTORS_FLAGS_SELECTOR_BAD;
+        }
     }
     else if((selectors_list->flags & MyCSS_SELECTORS_FLAGS_SELECTOR_BAD) && selectors->entry_last) {
         selectors->entry_last->flags |= MyCSS_SELECTORS_FLAGS_SELECTOR_BAD;
@@ -198,10 +198,10 @@ bool mycss_selectors_function_parser_has(mycss_entry_t* entry, mycss_token_t* to
     selectors_list = mycss_selectors_parser_check_selector_list(selectors, selectors_list);
     
     if(selectors_list == NULL) {
-        if(selectors->entry_last)
+        if(selectors->entry_last) {
             selectors->entry_last->value = NULL;
-        
-        selectors->entry_last->flags |= MyCSS_SELECTORS_FLAGS_SELECTOR_BAD;
+            selectors->entry_last->flags |= MyCSS_SELECTORS_FLAGS_SELECTOR_BAD;
+        }
     }
     else if((selectors_list->flags & MyCSS_SELECTORS_FLAGS_SELECTOR_BAD) && selectors->entry_last) {
         selectors->entry_last->flags |= MyCSS_SELECTORS_FLAGS_SELECTOR_BAD;
@@ -324,9 +324,8 @@ bool mycss_selectors_function_parser_nth_with_selectors_need_of_after(mycss_entr
     if(selectors_list == NULL) {
         if(selectors->entry_last) {
             mycss_selector_value_an_plus_b(selectors->entry_last->value)->of = NULL;
+            selectors->entry_last->flags |= MyCSS_SELECTORS_FLAGS_SELECTOR_BAD;
         }
-        
-        selectors->entry_last->flags |= MyCSS_SELECTORS_FLAGS_SELECTOR_BAD;
     }
     else if((selectors_list->flags & MyCSS_SELECTORS_FLAGS_SELECTOR_BAD) && selectors->entry_last) {
         selectors->entry_last->flags |= MyCSS_SELECTORS_FLAGS_SELECTOR_BAD;

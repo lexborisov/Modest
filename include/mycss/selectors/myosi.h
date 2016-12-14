@@ -213,7 +213,7 @@ struct mycss_selectors {
 
 struct mycss_selectors_entry {
     mycss_selectors_type_t type;
-    int sub_type;
+    unsigned int sub_type;
     mycss_selectors_flags_t flags;
     
     mycss_namespace_entry_t* ns_entry;

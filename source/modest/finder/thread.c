@@ -227,6 +227,7 @@ modest_finder_thread_context_t * modest_finder_thread_create_context(modest_find
                 mcobject_async_node_delete(finder_thread->entry_obj, ctx[i].entry_node_id);
             }
             
+            myhtml_free(ctx);
             return NULL;
         }
     }
@@ -246,6 +247,7 @@ modest_finder_thread_context_t * modest_finder_thread_create_context(modest_find
                 mcobject_async_node_delete(finder_thread->declaration_obj, ctx[i].declaration_node_id);
             }
             
+            myhtml_free(ctx);
             return NULL;
         }
     }

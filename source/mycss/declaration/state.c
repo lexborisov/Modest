@@ -74,7 +74,7 @@ bool mycss_declaration_state_ident(mycss_entry_t* entry, mycss_token_t* token, b
 bool mycss_declaration_state_colon_before_important(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
-        return token;
+        return true;
     else if(token->type == MyCSS_TOKEN_TYPE_SEMICOLON) {
         entry->parser = mycss_declaration_state_data;
         return true;

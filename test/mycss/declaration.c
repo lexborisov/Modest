@@ -65,10 +65,23 @@ test_res_t test_load_file(const char* filename)
         exit(EXIT_FAILURE);
     }
 
-    fseek(fh, 0L, SEEK_END);
+    if(fseek(fh, 0L, SEEK_END) != 0) {
+        fprintf(stderr, "Can't set position (fseek) in file: %s\n", filename);
+        exit(EXIT_FAILURE);
+    }
+    
     long size = ftell(fh);
-    fseek(fh, 0L, SEEK_SET);
+    
+    if(fseek(fh, 0L, SEEK_SET) != 0) {
+        fprintf(stderr, "Can't set position (fseek) in file: %s\n", filename);
+        exit(EXIT_FAILURE);
+    }
 
+    if(size <= 0) {
+        fprintf(stderr, "Can't get file size or file is empty: %s\n", filename);
+        exit(EXIT_FAILURE);
+    }
+    
     char *file_data = (char*)malloc(size + 1);
     if(file_data == NULL) {
         fprintf(stderr, "Can't allocate mem for file: %s\n", filename);
@@ -82,10 +95,6 @@ test_res_t test_load_file(const char* filename)
     }
 
     fclose(fh);
-
-    if(size < 0) {
-        size = 0;
-    }
     
     return (test_res_t){file_data, (size_t)size};
 }
@@ -221,7 +230,10 @@ test_stat_t test_read_dir(const char* dir_path, test_read_dir_callback_f callbac
         {
             sprintf(&path[path_len], "/%s", ent->d_name);
 
-            stat(path, &path_stat);
+            if(stat(path, &path_stat) != 0) {
+                fprintf(stderr, "Can't get status for file: %s\n", path);
+                exit(EXIT_FAILURE);
+            }
 
             if(ent->d_name[0] == '.' || S_ISDIR(path_stat.st_mode))
                 continue;

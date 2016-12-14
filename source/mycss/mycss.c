@@ -203,9 +203,6 @@ myhtml_encoding_t mycss_encoding_check_charset_rule(const char* css, size_t size
     size_t begin = 10;
     size_t length = begin;
     
-    if(begin >= size)
-        return MyHTML_ENCODING_UTF_8;
-    
     while(length < size) {
         if(css[length] == '"')
         {
