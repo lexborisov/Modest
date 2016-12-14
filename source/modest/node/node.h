@@ -25,7 +25,7 @@
 #include "modest/myosi.h"
 #include "modest/modest.h"
 #include "modest/style/raw.h"
-#include "modest/layer/layer.h"
+#include "modest/render/tree_node.h"
 #include "myhtml/utils/avl_tree.h"
 
 #ifdef __cplusplus
@@ -40,7 +40,7 @@ struct modest_node {
     modest_style_raw_declaration_t * raw_declaration[MyCSS_PROPERTY_TYPE_LAST_ENTRY];
 #endif /* MODEST_NODE_FULL_RAW */
     
-    modest_layer_t* layer;
+    modest_render_tree_node_t* render_node;
 };
 
 modest_node_t * modest_node_create(modest_t* modest);

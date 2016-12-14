@@ -18,22 +18,29 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#ifndef MODEST_RENDER_BEGIN_H
-#define MODEST_RENDER_BEGIN_H
+#ifndef MODEST_RENDER_BINDING_H
+#define MODEST_RENDER_BINDING_H
 #pragma once
 
+#include "modest/myosi.h"
 #include "modest/modest.h"
-#include "modest/style/type.h"
+#include "modest/node/node.h"
 #include "modest/render/tree.h"
+#include "modest/render/tree_node.h"
+#include "modest/declaration.h"
+
+#include "myhtml/tree.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-
-
+modest_render_tree_node_t * modest_render_binding(modest_t* modest, modest_render_tree_t* render_tree, myhtml_tree_t* html_tree);
+modest_render_tree_node_t * modest_layer_binding_node(modest_t* modest, modest_render_tree_t* render_tree,
+                                                      modest_render_tree_node_t* render_root, myhtml_tree_node_t* html_node);
+    
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
 
-#endif /* MODEST_RENDER_BEGIN_H */
+#endif /* MODEST_RENDER_BINDING_H */

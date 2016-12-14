@@ -18,17 +18,25 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#include "modest/layer/binding.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-modest_layer_t * modest_layer_binding(modest_t* modest, myhtml_tree_t* html_tree)
-{
-    modest_layer_t *root = modest_layer_create(modest->layout);
-    return root;
-}
+#include <mycss/api.h>
 
-void modest_layer_binding_html_node(modest_t* modest, myhtml_tree_node_t* html_node)
+int main(int argc, const char * argv[])
 {
-    modest_node_t *m_node = html_node->data;
+    char *css = "@charset \"cp1251\"; #best-id {}";
     
-    //m_node->layer
+    myhtml_encoding_t encoding = mycss_encoding_check_charset_rule(css, strlen(css));
+    
+    if(encoding == MyHTML_ENCODING_WINDOWS_1251)
+        printf("Detected Encoding: windows-1251\n");
+    else
+        printf("Detected Encoding: something wrong\n");
+    
+    return 0;
 }
+
+
+

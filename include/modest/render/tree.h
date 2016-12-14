@@ -18,22 +18,34 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#ifndef MODEST_RENDER_BEGIN_H
-#define MODEST_RENDER_BEGIN_H
+#ifndef MODEST_RENDER_TREE_H
+#define MODEST_RENDER_TREE_H
 #pragma once
 
-#include "modest/modest.h"
-#include "modest/style/type.h"
-#include "modest/render/tree.h"
+typedef struct modest_render_tree modest_render_tree_t;
+
+#include <modest/modest.h>
+#include <myhtml/utils/mcobject.h>
+#include <modest/render/tree_node.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+struct modest_render_tree {
+    mcobject_t* mc_nodes;
+};
 
+modest_render_tree_t * modest_render_tree_create(void);
+modest_status_t modest_render_tree_init(modest_render_tree_t* render_tree);
+void modest_render_tree_clean_all(modest_render_tree_t* render_tree);
+modest_render_tree_t * modest_render_tree_destroy(modest_render_tree_t* render_tree, bool self_destroy);
+
+void modest_render_tree_serialization(myhtml_tree_t* html_tree, modest_render_tree_t* tree,
+                                      modest_render_tree_node_t* scope_node, mycss_callback_serialization_f callback, void* context);
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
 
-#endif /* MODEST_RENDER_BEGIN_H */
+#endif /* MODEST_RENDER_TREE_H */
