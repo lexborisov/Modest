@@ -37,7 +37,7 @@ size_t mycss_convert_data_to_double(const char *data, size_t size, double *retur
     *return_num = 0.0f;
     
     switch (data[offset]) {
-        case '-': is_negative = true;
+        case '-': is_negative = true; /* fall through */
         case '+': offset++;
     }
     
@@ -108,7 +108,7 @@ size_t mycss_convert_data_to_double(const char *data, size_t size, double *retur
     {
         ++offset;
         
-        if(offset >= size || ((data[offset] != '-' || data[offset] != '+') &&
+        if(offset >= size || ((data[offset] != '-' || data[offset] != '+') ||
                               (data[offset] < '0' || data[offset] > '9'))) {
             offset--;
         }
@@ -117,7 +117,7 @@ size_t mycss_convert_data_to_double(const char *data, size_t size, double *retur
             is_negative = false;
             
             switch(data[offset]) {
-                case '-': is_negative = true;
+                case '-': is_negative = true; /* fall through */
                 case '+': offset++;
             }
             

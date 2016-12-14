@@ -284,6 +284,7 @@ bool mycss_values_color_parser_rgb_before_alpha_percentage(mycss_entry_t* entry,
                 entry->parser = mycss_values_color_parser_rgb_alpha_percentage;
                 return true;
             }
+            /* fall through */
             
         default:
             mycss_values_color_parser_switch_parser(entry);
@@ -432,6 +433,7 @@ bool mycss_values_color_parser_rgb_before_alpha_number(mycss_entry_t* entry, myc
                 entry->parser = mycss_values_color_parser_rgb_alpha_number;
                 return true;
             }
+            /* fall through */
             
         default:
             mycss_values_color_parser_switch_parser(entry);
@@ -640,6 +642,7 @@ bool mycss_values_color_parser_hsl_before_alpha(mycss_entry_t* entry, mycss_toke
                 entry->parser = mycss_values_color_parser_hsl_alpha;
                 return true;
             }
+            /* fall through */
             
         default:
             mycss_values_color_parser_switch_parser(entry);
@@ -911,6 +914,7 @@ bool mycss_values_color_parser_hwb_before_alpha(mycss_entry_t* entry, mycss_toke
                 entry->parser = mycss_values_color_parser_hwb_alpha;
                 return true;
             }
+            /* fall through */
             
         default:
             mycss_values_color_parser_switch_parser(entry);
@@ -1000,6 +1004,7 @@ bool mycss_values_color_parser_gray_before_alpha(mycss_entry_t* entry, mycss_tok
                 entry->parser = mycss_values_color_parser_gray_alpha;
                 return true;
             }
+            /* fall through */
             
         default:
             mycss_values_color_parser_switch_parser(entry);

@@ -157,7 +157,7 @@ void print_tree_after_all(modest_t* modest, myhtml_tree_t* myhtml_tree, myhtml_t
         if(m_node) {
             printf("\tstyles: ");
             
-            modest_node_raw_serialization(mycss_entry, m_node, serialization_callback, NULL);
+            modest_node_raw_serialization(modest, m_node, serialization_callback, NULL);
             
             printf("\n");
         }
@@ -206,15 +206,7 @@ int main(int argc, const char * argv[]) {
     //char *css_f = "/new/C-git/bootstrap.css";
     
     char *html = "<fff>sdsd<aaaa id=hash class=best><div a1><menu class=\"lalala\" id=\"menu-id\" b1><span span1><div a2></div></div><menu class=\"be\" id=\"menu\" b1><span span2></aaaa><a href=\"\" sec></a><div div1><div div2></div><div div3></div><div div4></div></div><p p1><p p2><p p3><p p4>";
-    char *css = "hr { \
-    color: gray; \
-    border-style: inset; \
-    border-width: 1px; \
-    margin-block-start: 0.5em; \
-    margin-inline-end: auto; \
-    margin-block-end: 0.5em; \
-    margin-inline-start: auto; \
-}";
+    char *css = "div {color: yellowgreen}";
     
     char *selector = "menu";
     
@@ -247,7 +239,7 @@ int main(int argc, const char * argv[]) {
     
     
     modest_finder_t* finder = modest_finder_create();
-    modest_finder_init(finder, myhtml_tree, stylesheet);
+    modest_finder_init(finder);
     
     /* threads */
     modest_finder_thread_t *finder_thread = modest_finder_thread_create();
@@ -262,13 +254,6 @@ int main(int argc, const char * argv[]) {
     uint64_t parse_stop = myhtml_hperf_clock(NULL);
     
     //print_tree_after_all(modest, myhtml_tree, myhtml_tree->node_html, mycss_entry);
-    
-    
-    
-    
-    
-    
-    
     
     printf("\n\n------------\nInformation:\n");
     printf("\tTicks/sec: %llu\n", (unsigned long long) myhtml_hperf_res(NULL));

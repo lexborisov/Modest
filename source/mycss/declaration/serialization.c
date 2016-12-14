@@ -335,9 +335,7 @@ bool mycss_declaration_serialization_font(mycss_entry_t* entry, mycss_declaratio
     }
     
     if(font->family) {
-        if(set_ws == false)
-            set_ws = true;
-        else
+        if(set_ws == true)
             callback(" ", 1, context);
         
         mycss_declaration_serialization_font_family(entry, font->family, callback, context);
@@ -381,7 +379,7 @@ bool mycss_declaration_serialization_border_radius(mycss_entry_t* entry, mycss_d
     }
     
     if(value->four && ((mycss_values_shorthand_two_type_t*)(value->four->value))->one) {
-        if(o_e) callback(" ", 1, context); else o_e = true;
+        if(o_e) callback(" ", 1, context);
         
         short_two_type = value->four->value;
         mycss_property_serialization_value(short_two_type->type_one, short_two_type->one, callback, context);
@@ -399,7 +397,9 @@ bool mycss_declaration_serialization_border_radius(mycss_entry_t* entry, mycss_d
     
     if(value->two && ((mycss_values_shorthand_two_type_t*)(value->two->value))->two) {
         if(o_e == false) callback(" / ", 3, context);
-        if(o_e) callback(" ", 1, context); else o_e = true;
+        else callback(" ", 1, context);
+        
+        o_e = true;
         
         short_two_type = value->two->value;
         mycss_property_serialization_value(short_two_type->type_two, short_two_type->two, callback, context);
@@ -407,7 +407,9 @@ bool mycss_declaration_serialization_border_radius(mycss_entry_t* entry, mycss_d
     
     if(value->three && ((mycss_values_shorthand_two_type_t*)(value->three->value))->two) {
         if(o_e == false) callback(" / ", 3, context);
-        if(o_e) callback(" ", 1, context); else o_e = true;
+        else callback(" ", 1, context);
+        
+        o_e = true;
         
         short_two_type = value->three->value;
         mycss_property_serialization_value(short_two_type->type_two, short_two_type->two, callback, context);
@@ -415,7 +417,7 @@ bool mycss_declaration_serialization_border_radius(mycss_entry_t* entry, mycss_d
     
     if(value->four && ((mycss_values_shorthand_two_type_t*)(value->four->value))->two) {
         if(o_e == false) callback(" / ", 3, context);
-        if(o_e) callback(" ", 1, context); else o_e = true;
+        else callback(" ", 1, context);
         
         short_two_type = value->four->value;
         mycss_property_serialization_value(short_two_type->type_two, short_two_type->two, callback, context);
@@ -599,7 +601,8 @@ bool mycss_declaration_serialization_background_position(mycss_entry_t* entry, m
     }
     
     if(position->four.type) {
-        if(o_e) callback(" ", 1, context); else o_e = true;
+        if(o_e) callback(" ", 1, context);
+        
         mycss_property_serialization_value(position->four.type, position->four.length, callback, context);
     }
     

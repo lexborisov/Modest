@@ -569,7 +569,7 @@ bool modest_finder_selector_sub_type_pseudo_class_empty(modest_finder_t* finder,
 
 bool modest_finder_selector_sub_type_pseudo_class_enabled(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
-    return ~modest_finder_selector_sub_type_pseudo_class_disabled(finder, base_node, selector, spec);
+    return !modest_finder_selector_sub_type_pseudo_class_disabled(finder, base_node, selector, spec);
 }
 
 bool modest_finder_selector_sub_type_pseudo_class_first_child(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
@@ -692,7 +692,7 @@ bool modest_finder_selector_sub_type_pseudo_class_optional(modest_finder_t* find
        base_node->tag_id == MyHTML_TAG_TEXTAREA)
     {
         if(base_node->token)
-            return ~modest_finder_match_attribute_only_key(base_node->token->attr_first, "required", 8);
+            return !modest_finder_match_attribute_only_key(base_node->token->attr_first, "required", 8);
         else
             return true;
     }
@@ -738,7 +738,7 @@ bool modest_finder_selector_sub_type_pseudo_class_read_write(modest_finder_t* fi
         if(modest_finder_match_attribute_only_key(base_node->token->attr_first, "readonly", 8))
             return false;
         
-        return ~modest_finder_selector_sub_type_pseudo_class_disabled(finder, base_node, selector, spec);
+        return !modest_finder_selector_sub_type_pseudo_class_disabled(finder, base_node, selector, spec);
     }
     
     return false;

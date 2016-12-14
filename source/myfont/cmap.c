@@ -232,7 +232,7 @@ myfont_status_t myfont_load_table_cmap(myfont_font_t *mf)
     if(table_offset == 0)
         return MyFONT_STATUS_OK;
     
-    if(mf->file_size < (table_offset + 4))
+    if((table_offset + 4) > mf->file_size)
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     /* get current data */

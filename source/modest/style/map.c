@@ -57,7 +57,6 @@ void modest_style_map_collate_declaration_padding(modest_t* modest, myhtml_tree_
         return;
     
     mycss_values_shorthand_four_t *val_four = (mycss_values_shorthand_four_t*)decl->value;
-    mycss_declaration_t* declaration = modest->mycss_entry->declaration;
     
     if(val_four->two == NULL) {
         modest_style_map_collate_declaration_for_all(modest, node, val_four->one, MyCSS_PROPERTY_TYPE_PADDING_TOP, spec);
@@ -92,7 +91,6 @@ void modest_style_map_collate_declaration_margin(modest_t* modest, myhtml_tree_n
         return;
     
     mycss_values_shorthand_four_t *val_four = (mycss_values_shorthand_four_t*)decl->value;
-    mycss_declaration_t* declaration = modest->mycss_entry->declaration;
     
     if(val_four->two == NULL) {
         modest_style_map_collate_declaration_for_all(modest, node, val_four->one, MyCSS_PROPERTY_TYPE_MARGIN_LEFT, spec);
@@ -127,7 +125,6 @@ void modest_style_map_collate_declaration_border_width(modest_t* modest, myhtml_
         return;
     
     mycss_values_shorthand_four_t *val_four = (mycss_values_shorthand_four_t*)decl->value;
-    mycss_declaration_t* declaration = modest->mycss_entry->declaration;
     
     if(val_four->two == NULL) {
         modest_style_map_collate_declaration_for_all(modest, node, val_four->one, MyCSS_PROPERTY_TYPE_BORDER_TOP_WIDTH, spec);

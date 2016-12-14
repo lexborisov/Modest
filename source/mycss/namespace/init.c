@@ -112,9 +112,15 @@ void mycss_namespace_entry_append_to_current(mycss_namespace_t* ns, mycss_namesp
 
 mycss_status_t mycss_namespace_stylesheet_init(mycss_namespace_stylesheet_t* ns_stylesheet, mycss_entry_t* entry)
 {
-    ns_stylesheet->name_tree     = mctree_create(14);
+    ns_stylesheet->name_tree = mctree_create(14);
+    if(ns_stylesheet->name_tree == NULL)
+        return MyCSS_STATUS_ERROR_NAMESPACE_CREATE;
+    
     ns_stylesheet->ns_id_counter = 0;
+    
     ns_stylesheet->entry_default = mycss_namespace_entry_create(entry->ns);
+    if(ns_stylesheet->entry_default == NULL)
+        return MyCSS_STATUS_ERROR_NAMESPACE_ENTRIES_CREATE;
     
     mycss_namespace_entry_clean(ns_stylesheet->entry_default);
     mycss_namespace_entry_clean(&ns_stylesheet->entry_undef);
@@ -131,9 +137,6 @@ mycss_status_t mycss_namespace_stylesheet_init(mycss_namespace_stylesheet_t* ns_
     
     myhtml_string_append(ns_stylesheet->entry_any.name, "*", 1);
     ns_stylesheet->entry_any.ns_id = MyHTML_NAMESPACE_ANY;
-    
-    if(ns_stylesheet->entry_default == NULL)
-        return MyCSS_STATUS_ERROR_NAMESPACE_ENTRIES_CREATE;
     
     mycss_namespace_stylesheet_init_default(ns_stylesheet, entry, NULL, 0, MyHTML_NAMESPACE_ANY);
     

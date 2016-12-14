@@ -72,6 +72,9 @@ void mycss_namespace_parser_end(mycss_entry_t* entry, mycss_token_t* token)
 
 void mycss_namespace_parser_expectations_error(mycss_entry_t* entry, mycss_token_t* token)
 {
+    if(entry->ns->entry_last == NULL)
+        return;
+    
     mycss_namespace_entry_t *ns_entry = entry->ns->entry_last;
     mycss_namespace_entry_destroy(ns_entry, entry, false);
     
@@ -83,10 +86,7 @@ void mycss_namespace_parser_expectations_error(mycss_entry_t* entry, mycss_token
         entry->ns->entry_last = NULL;
     }
     
-    if(ns_entry)
-        mcobject_free(entry->ns->mcobject_entries, ns_entry);
-    
-    printf("Expectations error: Namespace!\n");
+    mcobject_free(entry->ns->mcobject_entries, ns_entry);
 }
 
 

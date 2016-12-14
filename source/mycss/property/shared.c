@@ -375,6 +375,7 @@ bool mycss_property_shared_text_decoration_line(mycss_entry_t* entry, mycss_toke
                 *value_type = text_dec_type;
                 return true;
             }
+            /* fall through */
             
         default:
             *value_type = MyCSS_PROPERTY_VALUE_UNDEF;

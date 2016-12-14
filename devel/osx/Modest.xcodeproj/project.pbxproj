@@ -18,6 +18,7 @@
 		0E0C91961DB1064E007A0501 /* serialization.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E0C91941DB1064E007A0501 /* serialization.c */; };
 		0E0C91991DB107E7007A0501 /* property.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E0C91971DB107E7007A0501 /* property.c */; };
 		0E0C919C1DB10866007A0501 /* raw_property.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E0C919A1DB10866007A0501 /* raw_property.c */; };
+		0E0D5D011E003A5E00EBFDD6 /* avl_tree.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E0D5CFF1E003A5E00EBFDD6 /* avl_tree.c */; };
 		0E4B525C1DC13BBB0095026A /* parser_text_decoration.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E4B525A1DC13BBB0095026A /* parser_text_decoration.c */; };
 		0E5AA4BD1DA9689700FF5358 /* shared.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E5AA4BB1DA9689700FF5358 /* shared.c */; };
 		0E5E2AAB1DC53CC1007836AB /* entry_destroy.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E5E2AA91DC53CC1007836AB /* entry_destroy.c */; };
@@ -161,6 +162,8 @@
 		0E0C91981DB107E7007A0501 /* property.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = property.h; path = ../../../source/modest/node/property.h; sourceTree = "<group>"; };
 		0E0C919A1DB10866007A0501 /* raw_property.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = raw_property.c; path = ../../../source/modest/node/raw_property.c; sourceTree = "<group>"; };
 		0E0C919B1DB10866007A0501 /* raw_property.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = raw_property.h; path = ../../../source/modest/node/raw_property.h; sourceTree = "<group>"; };
+		0E0D5CFF1E003A5E00EBFDD6 /* avl_tree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = avl_tree.c; sourceTree = "<group>"; };
+		0E0D5D001E003A5E00EBFDD6 /* avl_tree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avl_tree.h; sourceTree = "<group>"; };
 		0E4B525A1DC13BBB0095026A /* parser_text_decoration.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = parser_text_decoration.c; sourceTree = "<group>"; };
 		0E5AA4BB1DA9689700FF5358 /* shared.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = shared.c; sourceTree = "<group>"; };
 		0E5AA4BC1DA9689700FF5358 /* shared.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shared.h; sourceTree = "<group>"; };
@@ -771,6 +774,8 @@
 		0E750FD71D9AF27F00337E9B /* utils */ = {
 			isa = PBXGroup;
 			children = (
+				0E0D5CFF1E003A5E00EBFDD6 /* avl_tree.c */,
+				0E0D5D001E003A5E00EBFDD6 /* avl_tree.h */,
 				0E750FD91D9AF27F00337E9B /* mchar_async.h */,
 				0E750FD81D9AF27F00337E9B /* mchar_async.c */,
 				0E750FDA1D9AF27F00337E9B /* mcobject.c */,
@@ -928,6 +933,7 @@
 				0E818EF61DAE6F8F005B0C77 /* serialization.c in Sources */,
 				0E0239811D9FE8EC0084A81A /* type.c in Sources */,
 				0E750F811D9AF27200337E9B /* check.c in Sources */,
+				0E0D5D011E003A5E00EBFDD6 /* avl_tree.c in Sources */,
 				0E750EF91D9AF25300337E9B /* match.c in Sources */,
 				0E7F78351DD3E0D5003B6053 /* begin.c in Sources */,
 				0E750F9E1D9AF27200337E9B /* consume.c in Sources */,
@@ -1031,7 +1037,7 @@
 		0E750EE71D9AF1D500337E9B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				HEADER_SEARCH_PATHS = ../../source;
 				OTHER_CFLAGS = (
 					"-DMyHTML_WITH_PERF",

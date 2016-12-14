@@ -63,7 +63,7 @@ mycss_values_color_id_t mycss_values_color_id_by_name(const char *name, size_t l
 
 const char * mycss_values_color_name_by_id(mycss_values_color_id_t color_id, size_t *length)
 {
-    if(color_id > MyCSS_VALUES_COLOR_ID_LAST_ENTRY) {
+    if(color_id >= MyCSS_VALUES_COLOR_ID_LAST_ENTRY) {
         if(length)
             *length = 0;
         
@@ -119,7 +119,7 @@ mycss_values_color_function_id_t mycss_values_color_function_id_by_name(const ch
 
 const char * mycss_values_color_function_name_by_id(mycss_values_color_function_id_t color_function_id, size_t *length)
 {
-    if(color_function_id > MyCSS_VALUES_COLOR_FUNCTION_ID_LAST_ENTRY) {
+    if(color_function_id >= MyCSS_VALUES_COLOR_FUNCTION_ID_LAST_ENTRY) {
         if(length)
             *length = 0;
         
