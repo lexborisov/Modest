@@ -18,7 +18,7 @@ The current version is 0.0.4 - devel
 
 ## Introduction
 
-[Introduction]
+[Introduction](https://lexborisov.github.io/Modest/)
 
 ## Dependencies
 
@@ -52,5 +52,4 @@ You should have received a copy of the GNU Lesser General Public License along w
 See the [LICENSE] file.
 
 
-[Introduction]: http://lexborisov.github.io/myhtml/
 [LICENSE]: https://github.com/lexborisov/myhtml/blob/master/LICENSE
