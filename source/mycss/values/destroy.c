@@ -357,7 +357,7 @@ mycss_values_url_t * mycss_values_destroy_url(mycss_entry_t* entry, mycss_values
         return NULL;
     
     if(value->str.data)
-        mycss_values_destroy_string(entry, &value->str, true);
+        mycss_values_destroy_string(entry, &value->str, false);
     
     if(self_destroy) {
         mycss_values_destroy(entry, (void*)value);
@@ -603,15 +603,27 @@ mycss_values_background_list_t * mycss_values_destroy_background(mycss_entry_t* 
     if(value == NULL)
         return NULL;
     
+    mycss_values_background_t* bg_entry;
+    
     for(size_t i = 0; i < value->entries_length; i++) {
-        mycss_values_destroy_color(entry, value->entries[i].color->value, true);
-        mycss_values_destroy_image(entry, value->entries[i].image->value, true);
-        mycss_values_destroy_background_position(entry, value->entries[i].position->value, true);
-        mycss_values_destroy_background_size(entry, value->entries[i].size->value, true);
-        mycss_values_destroy_background_repeat(entry, value->entries[i].repeat->value, true);
-        mycss_values_destroy_type_list(entry, value->entries[i].attachment->value, true);
-        mycss_values_destroy_type_list(entry, value->entries[i].clip->value, true);
-        mycss_values_destroy_type_list(entry, value->entries[i].origin->value, true);
+        bg_entry = &value->entries[i];
+        
+        if(bg_entry->color)
+            mycss_values_destroy_color(entry, bg_entry->color->value, true);
+        if(bg_entry->image)
+            mycss_values_destroy_image(entry, bg_entry->image->value, true);
+        if(bg_entry->position)
+            mycss_values_destroy_background_position(entry, bg_entry->position->value, true);
+        if(bg_entry->size)
+            mycss_values_destroy_background_size(entry, bg_entry->size->value, true);
+        if(bg_entry->repeat)
+            mycss_values_destroy_background_repeat(entry, bg_entry->repeat->value, true);
+        if(bg_entry->attachment)
+            mycss_values_destroy_type_list(entry, bg_entry->attachment->value, true);
+        if(bg_entry->clip)
+            mycss_values_destroy_type_list(entry, bg_entry->clip->value, true);
+        if(bg_entry->origin)
+            mycss_values_destroy_type_list(entry, bg_entry->origin->value, true);
     }
     
     mycss_values_destroy(entry, (void*)value->entries);

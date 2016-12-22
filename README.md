@@ -4,7 +4,7 @@
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/11105/badge.svg)](https://scan.coverity.com/projects/lexborisov-modest)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=L59E49K2NVUHE)
 
-Modest is a fast HTML Render implemented as a pure C99 library with no outside dependencies.
+Modest is a fast HTML Render implemented as a pure C99 library with no outside dependencies. Based on [MyHTML](https://github.com/lexborisov/myhtml).
 
 * Mailing List: [https://groups.google.com/forum/#!forum/modest-engine](https://groups.google.com/forum/#!forum/modest-engine)
 * IRC: [#modest-engine on `irc.freenode.net <http://freenode.net>`](http://webchat.freenode.net?channels=%23modest-engine)

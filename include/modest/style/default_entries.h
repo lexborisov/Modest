@@ -23,7 +23,7 @@
 #pragma once
 
 static mycss_declaration_entry_t modest_style_default_entry_display_none = {
-    MyCSS_PROPERTY_TYPE_HEIGHT,
+    MyCSS_PROPERTY_TYPE_DISPLAY,
     MyCSS_PROPERTY_DISPLAY_NONE,
     NULL,
     false,
@@ -32,7 +32,7 @@ static mycss_declaration_entry_t modest_style_default_entry_display_none = {
 };
 
 static mycss_declaration_entry_t modest_style_default_entry_display_block = {
-    MyCSS_PROPERTY_TYPE_HEIGHT,
+    MyCSS_PROPERTY_TYPE_DISPLAY,
     MyCSS_PROPERTY_DISPLAY_BLOCK,
     NULL,
     false,

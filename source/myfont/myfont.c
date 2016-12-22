@@ -135,13 +135,17 @@ myfont_status_t myfont_load(myfont_font_t *mf, const char *filepath)
     
     if(file_size > 0)
         mf->file_size = (size_t)file_size;
-    else
+    else {
+        fclose(fh);
         return MyFONT_STATUS_ERROR_FILE_TOO_SMALL;
+    }
     
     mf->file_data = (uint8_t*)myhtml_malloc(file_size);
     
-    if(mf->file_data == NULL)
+    if(mf->file_data == NULL) {
+        fclose(fh);
         return MyFONT_STATUS_ERROR_MEMORY_ALLOCATION;
+    }
     
     if(fread(mf->file_data, 1, file_size, fh) != file_size) {
         fclose(fh);

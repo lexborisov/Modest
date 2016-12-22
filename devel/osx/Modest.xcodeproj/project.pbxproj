@@ -871,7 +871,7 @@
 		0E750ED71D9AF1D500337E9B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Alexander Borisov";
 				TargetAttributes = {
 					0E750EDE1D9AF1D500337E9B = {
@@ -1071,8 +1071,10 @@
 		0E750EE71D9AF1D500337E9B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ENABLE_TESTABILITY = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				HEADER_SEARCH_PATHS = ../../source;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
 					"-DMyHTML_WITH_PERF",
 					"-DMyHTML_FORCE_RDTSC",

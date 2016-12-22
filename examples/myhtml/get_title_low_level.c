@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <myhtml/myhtml.h>
+#include <myhtml/serialization.h>
 
 struct res_html {
     char  *html;
@@ -96,16 +97,19 @@ int main(int argc, const char * argv[])
     myhtml_parse(tree, MyHTML_ENCODING_UTF_8, res.html, res.size);
     
     // get title from index
-    if(tree->indexes)
-    {
-        myhtml_tag_index_node_t *node_index = myhtml_tag_index_first(tree->indexes->tags, MyHTML_TAG_TITLE);
+    myhtml_collection_t *titles_list = myhtml_get_nodes_by_tag_id(tree, NULL, MyHTML_TAG_TITLE, NULL);
+    
+    if(titles_list && titles_list->length != 0 && titles_list->list[0]->child) {
+        myhtml_string_raw_t str = {0};
+        myhtml_serialization_node(tree, titles_list->list[0]->child, &str);
         
-        if(node_index && node_index->node) {
-            myhtml_tree_print_by_node(tree, node_index->node, stdout, 0);
-        }
+        printf("%s\n", str.data);
+        
+        myhtml_string_raw_destroy(&str, false);
     }
     
     // release resources
+    myhtml_collection_destroy(titles_list);
     myhtml_tree_destroy(tree);
     myhtml_destroy(myhtml);
     

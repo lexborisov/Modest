@@ -108,8 +108,9 @@ size_t mycss_convert_data_to_double(const char *data, size_t size, double *retur
     {
         ++offset;
         
-        if(offset >= size || ((data[offset] != '-' || data[offset] != '+') ||
-                              (data[offset] < '0' || data[offset] > '9'))) {
+        if(offset >= size || (data[offset] != '-' && data[offset] != '+' &&
+                              (data[offset] < '0' || data[offset] > '9')))
+        {
             offset--;
         }
         else {
