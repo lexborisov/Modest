@@ -9,6 +9,7 @@ Modest is a fast HTML Render implemented as a pure C99 library with no outside d
 * Mailing List: [https://groups.google.com/forum/#!forum/modest-engine](https://groups.google.com/forum/#!forum/modest-engine)
 * IRC: [#modest-engine on `irc.freenode.net <http://freenode.net>`](http://webchat.freenode.net?channels=%23modest-engine)
 * Or you can ask questions on [stackoverflow.com](https://stackoverflow.com/questions/ask?tags=modest) by modest tag
+* Public [tracker by trello](https://trello.com/b/sdqpT8Ep/modest)
 
 ## Now
 
