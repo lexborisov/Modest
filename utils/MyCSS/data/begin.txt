@@ -1,0 +1,16 @@
+<begin> = <namespace> | <simple-selector>
+
+<namespace> = <at-keyword-token value="namespace" ws> <namespace_prefix>? [ <string-token ws> | <url-token ws> ] <delim-token value=";" ws>
+<namespace_prefix> = <ident-token ws>
+
+<simple-selector> = <type-selector> | <id-selector> | <class-selector> | <attribute-selector> | <pseudo-class-selector> | <pseudo-element-selector>
+<type-selector> = <wq-name> | <ns-prefix>? <delim-token value="*">
+<ns-prefix> = <ident-token>? <delim-token value="|">
+<wq-name> = <ns-prefix>? <ident-token ws>
+<id-selector> = <hash-token ws>
+<class-selector> = <delim-token value="."> <ident-token ws>
+<attribute-selector> = <[-token ws> <wq-name> <]-token ws> | <[-token ws> <wq-name> <attr-matcher> [ <string-token ws> | <ident-token ws> ] <attr-modifier>? <]-token ws>
+<attr-matcher> = <delim-token value="=" ws> | <include-match-token ws> | <dash-match-token ws> | <prefix-match-token ws> | <suffix-match-token ws> | <substring-match-token ws>
+<attr-modifier> = <delim-token value="i" ws>
+<pseudo-class-selector> = <delim-token value=":"> <ident-token ws> | <delim-token value=":"> <function-token> <any-value> <)-token ws>
+<pseudo-element-selector> = <delim-token value=":"> <pseudo-class-selector>

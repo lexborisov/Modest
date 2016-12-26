@@ -1,0 +1,24 @@
+<selector-list> = <complex-selector-list>
+<complex-selector-list> = <complex-selector>#
+<compound-selector-list> = <compound-selector>#
+<simple-selector-list> = <simple-selector>#
+<relative-selector-list> = <relative-selector>#
+<complex-selector> = <compound-selector> [ <combinator>? <compound-selector> ]*
+<relative-selector> = <combinator>? <complex-selector>
+<combinator> = <delim-token value=">"> <delim-token value=">" ws func=selector_combinator_greater_than> | <delim-token value=">" ws func=selector_combinator_greater_than> | <delim-token value="+" ws func=selector_combinator_plus> | <delim-token value="~" ws func=selector_combinator_tilde> | <column-token ws func=selector_combinator_column>
+<compound-selector> = <simple-selector>+
+
+<simple-selector> = <type-selector> | <id-selector> | <class-selector> | <attribute-selector> | <pseudo-class-selector> | <pseudo-element-selector>
+<type-selector> = <ident-token func=selector_ident_type>? <delim-token value="|" func=selector_namespace> <ident-token ws func=selector_after_namespace> | <ident-token func=selector_ident_type> | <ident-token func=selector_ident_type>? <delim-token value="|" func=selector_namespace> <delim-token value="*" func=selector_after_namespace> | <delim-token value="*" func=selector_ident_type>
+<wq-name-type> = <ident-token func=selector_ident_type>? <delim-token value="|" func=selector_namespace> <delim-token value="*" func=selector_after_namespace> | <delim-token value="*" func=selector_ident_type>
+<wq-name-attr> = <ident-token func=selector_ident_attr>? <delim-token value="|" func=selector_namespace> <ident-token ws func=selector_after_namespace> | <ident-token func=selector_ident_attr> <whitespace-token ws>?
+<id-selector> = <hash-token ws func=selector_id>
+<class-selector> = <delim-token value="."> <ident-token ws func=selector_class>
+<attribute-value> = [ <string-token ws func=selector_value> | <ident-token ws func=selector_value> ]
+<attribute-selector> = <[-token ws> <wq-name-attr> <]-token ws func=selector_end> | <[-token ws> <wq-name-attr> <attr-matcher> <attribute-value> <attr-modifier>? <]-token ws func=selector_end>
+<attr-matcher> = <delim-token value="=" ws func=selector_matcher_eq> | <include-match-token ws func=selector_matcher_include> | <dash-match-token ws func=selector_matcher_dash> | <prefix-match-token ws func=selector_matcher_prefix> | <suffix-match-token ws func=selector_matcher_suffix> | <substring-match-token ws func=selector_matcher_substring>
+<attr-modifier> = <ident-token value="i" ws func=selector_modifier>
+<pseudo-class-selector> = <colon-token> <ident-token ws func=selector_pseudo_class> | <colon-token> <function-token func=selector_function> <)-token ws func=selector_function_end>
+<pseudo-element-selector> = <colon-token> <colon-token>? [ <ident-token ws func=selector_pseudo_class> | <function-token func=selector_function> <)-token ws func=selector_function_end> ]
+
+

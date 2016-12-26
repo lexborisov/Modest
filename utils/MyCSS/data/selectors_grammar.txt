@@ -1,0 +1,44 @@
+<selector-list> = <complex-selector-list>
+
+<complex-selector-list> = <complex-selector>#
+
+<compound-selector-list> = <compound-selector>#
+
+<simple-selector-list> = <simple-selector>#
+
+<relative-selector-list> = <relative-selector>#
+
+<complex-selector> = <compound-selector> [ <combinator>? <compound-selector> ]*
+
+<relative-selector> = <combinator>? <complex-selector>
+
+<combinator> = '>>' | '>' | '+' | '~' | <column-token>
+
+<compound-selector> = <simple-selector>+
+
+<simple-selector> = <type-selector> | <id-selector> |
+                    <class-selector> | <attribute-selector> |
+                    <pseudo-class-selector> | <pseudo-element-selector>
+
+<type-selector> = <wq-name> | <ns-prefix> '*'
+
+<ns-prefix> = <ident-token>? '|'
+
+<wq-name> = <ns-prefix>? <ident-token>
+
+<id-selector> = <hash-token>
+
+<class-selector> = '.' <ident-token>
+
+<attribute-selector> = '[' <wq-name> ']' |
+                       '[' <wq-name> <attr-matcher> [ <string-token> | <ident-token> ] <attr-modifier>? ']'
+
+<attr-matcher> = '=' | <include-match-token> | <dash-match-token> | <prefix-match-token> |
+                 <suffix-match-token> | <substring-match-token>
+
+<attr-modifier> = 'i'
+
+<pseudo-class-selector> = ':' <ident-token> |
+                          ':' <function-token> <any-value> ')'
+
+<pseudo-element-selector> = ':' <pseudo-class-selector>

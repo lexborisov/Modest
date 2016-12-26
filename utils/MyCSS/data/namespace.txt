@@ -1,0 +1,2 @@
+<namespace> = <at-keyword-token value="namespace" ws func=namespace_begin> <namespace_prefix>? [ <string-token ws func=namespace_url> | <url-token ws func=namespace_url> ] <semicolon-token ws func=namespace_end>
+<namespace_prefix> = <ident-token ws func=namespace_name>

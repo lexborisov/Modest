@@ -1,0 +1,18 @@
+<media-query> = <media-condition> | [ <ident-token value="not" ws> | <ident-token value="only" ws> ]? <media-type> [ <ident-token value="and" ws> <media-condition-without-or> ]?
+<media-type> = <ident-token ws>
+
+<media-condition> = <media-not> | <media-and> | <media-or> | <media-in-parens>
+<media-condition-without-or> = <media-not> | <media-and> | <media-in-parens>
+<media-not> = <ident-token value="not" ws> <media-in-parens>
+<media-and> = <media-in-parens> [ <ident-token value="and" ws> <media-in-parens> ]+
+<media-or> = <media-in-parens> [ <ident-token value="or" ws> <media-in-parens> ]+
+<media-in-parens> = <(-token ws> <)-token ws> | <media-feature> | <general-enclosed>
+
+<media-feature> = <(-token ws> [ <mf-plain> | <mf-boolean> | <mf-range> ] <)-token ws>
+<mf-plain> = <mf-name> <colon-token> <mf-value>
+<mf-boolean> = <mf-name>
+<mf-range> = <mf-name> [ <delim-token value="<"> | <delim-token value=">"> ]? <delim-token value="=">? <mf-value> | <mf-value> [ <delim-token value="<"> | <delim-token value=">"> ]? <delim-token value="=">? <mf-name> | <mf-value> <delim-token value="<"> <delim-token value="=">? <mf-name> <delim-token value="<"> <delim-token value="=">? <mf-value> | <mf-value> <delim-token value="<"> <delim-token value="=">? <mf-name> <delim-token value=">"> <delim-token value="=">? <mf-value>
+<mf-name> = <ident-token>
+<mf-value> = <number-token ws> | <dimension-token ws> | <ident-token ws> | <number-token ws>
+
+<general-enclosed> = <function-token> <)-token> | <(-token ws> <ident-token> <)-token ws>
