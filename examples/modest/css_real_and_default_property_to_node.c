@@ -110,6 +110,8 @@ int main(int argc, const char * argv[])
     modest_t *modest = modest_create();
     modest_status_t status = modest_init(modest);
     
+    check_status("Can't init Modest object\n");
+    
     /* parse HTML, CSS */
     modest->myhtml_tree = parse_html(html, strlen(html), modest_glue_callback_myhtml_insert_node, (void*)modest);
     modest->mycss_entry = parse_css(css, strlen(css));
@@ -121,6 +123,8 @@ int main(int argc, const char * argv[])
     modest_finder_t* finder = modest_finder_create();
     status = modest_finder_init(finder);
     
+    check_status("Can't init Modest Finder object\n");
+    
     /* create and init Thread Finder with two thread */
     modest_finder_thread_t *finder_thread = modest_finder_thread_create();
     modest_finder_thread_init(finder, finder_thread, 2);
@@ -128,6 +132,8 @@ int main(int argc, const char * argv[])
     /* comparison selectors and tree nodes */
     status = modest_finder_thread_process(modest, finder_thread, modest->myhtml_tree,
                                           modest->myhtml_tree->node_html, stylesheet->sel_list_first);
+    
+    check_status("Can't find by selectors with thread\n");
     
     /* print result */
     /* print selector */
