@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Modest is an open source HTML renderer in pure C programming language by Alexander Borisov</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <script src="js/jquery-2.2.1.min.js"></script>
+    <script src="js/work.js"></script>
+  </head>
+  <body>
+    <section class="page-header">
+      <h2 class="project-tagline">Modest — development of an open source HTML renderer in pure C programming language</h2>
+      <a href="https://github.com/lexborisov/modest" class="btn">View on GitHub</a>
+      <a href="https://github.com/lexborisov/modest/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/lexborisov/modest/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <p>Hi, there!</p>
+
+<p>My name is <a href="https://www.facebook.com/lastmac">Alexander Borisov</a>, and I am the developer of <a href="https://github.com/lexborisov/Modest">Modest</a>, an open source HTML renderer in pure C programming language, without dependencies.</p>
+
+<h3><a id="about" class="anchor" href="#about" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>About the Project</h3>
+
+<p>Project Paradigms:</p>
+<ul>
+<li>Embeddable</li>
+<li>Speed</li>
+<li>Resource light</li>
+</ul>
+
+<p>
+One of the resulting products of this project will be a fast, light, yet fully functional browser. OK, let us take things step by step.</p>
+
+<h3><a id="embeddable" class="anchor" href="#embeddable" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Embeddable</h3>
+
+<p>
+Modest is being developed using the pure C99, without dependencies, and will benefit from the following unique features:</p>
+
+<b>Easy to port to any platform</b>
+<p>
+Thanks to the C99 programming language, there are no outside dependencies, and therefore the project can be easily ported to any platform where C is available, and as we all know, C is actually available everywhere.<br>
+Moreover, Modest is being developed in such a way that in case of compilation on a specific platform it can be easily adapted to that platform.</p>
+
+
+<b>Binding for third party programming languages</b>
+<p>
+The engine uses a simple API to provide binding for third party programming languages. This helps create fully functional HTML Render with your favorite programming languages, such as Python, Perl, Rust, JS and so on.</p>
+
+<p>Besides this, the API provides the control and interference features at every step of HTML rendering.
+All this provides a unique capacity to control the HTML Tree, Render Tree, and Layers, without unwanted intercalations.</p>
+
+<p>For instance, you can create interfaces, games, applications using your favorite programming languages, and use all the power of HTML/CSS/DOM Events.
+Of course, when talking about embedded code, we first think about TV sets and other IoT devices.</p>
+
+<h3><a id="speed" class="anchor" href="#speed" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Speed</h3>
+
+<p>As Modest is an embedding-oriented solution for third party applications, one of the key criteria is its operational speed.
+And the project has something special to be proud of:</p>
+
+<ul>
+<li>Today, Modest has the fastest fully functional HTML parser with multi-thread parsing capability</li>
+<li>Very fast CSS parser with output to C structures (this means not only the AST Tree)</li>
+<li>Very fast search using CSS Selectors</li>
+<li>And so on</li>
+</ul>
+
+<p>
+Despite the high operational speed, Modest is being developed with code openness and clearness in mind. And it provides opportunities to maintain and develop further the entire project with ease. And I am not making any pre-optimizations, thus keeping more ways open for the project to grow.</p>
+
+<h3><a id="resource" class="anchor" href="#resource" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Resource light</h3>
+
+<p>
+When embedding a third party code to our own, we used to hope it would be “normal”, it would not eat up all available resources, and it would really be “modest”.
+It is a real challenge to create a fully functioning HTML Render with low resource consumption. This requires a serious approach.
+That is why you need to learn carefully any specifications, and understand not only how to use them at the moment, but also what features developers might include in the future.</p>
+
+<p>
+As the developer of this product, I can guarantee as minimal use of resources as possible. The whole development is being made while always keeping in mind two parameters: memory and CPU (speed)</p>
+
+
+<h3><a id="status" class="anchor" href="#status" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Current Status of the Project</h3>
+
+<p>
+Right at the moment, the project has the following components implemented:</p>
+
+<ul>
+<li><a href="https://github.com/lexborisov/myhtml">MyHTML</a> — HTML parser, manipulations with HTML Tree, encoding conversion, and so on. This is the basic project that Modest is based on.</li>
+<li><a href="https://github.com/lexborisov/mycss">MyCSS</a> — CSS parser (Selectors, Values, Namespace, Property), getting resulting structures, С structures for further manipulation.</li>
+<li>MyFONT — parser of .otf and .fft fonts. Getting metrics for glyphs: width, height, baseline, x-height, etc.</li>
+<li>Finder — search and comparison of CSS and HTML</li>
+<li>+ much supplementary code</li>
+</ul>
+
+<p>
+At the moment, Modest can be used for:</p>
+
+<ul>
+<li>Parsing and manipulations with <a href="https://github.com/lexborisov/Modest/tree/master/examples/myhtml">HTML</a>, <a href="https://github.com/lexborisov/Modest/tree/master/examples/mycss">CSS</a>, <a href="https://github.com/lexborisov/Modest/tree/master/examples/myfont">Font</a></li>
+<li><a href="https://github.com/lexborisov/Modest/tree/master/examples/modest">Search for HTML modes by CSS Selectors</a></li>
+<li>Getting CSS properties defined in HTML node</li>
+<li><a href="https://github.com/lexborisov/Modest/tree/master/examples">and more</a></li>
+</ul>
+
+<p>
+At the moment, almost everything is ready for tree rendering (Render Tree, Layers). However, before I start to compute HTML, I have to stabilize the current code, find architectural bugs, and make general improvements.
+I think I will start making the rendering tree and layers in the very beginning of 2017.</p>
+
+
+<h3><a id="help" class="anchor" href="#help" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Help for the Project</h3>
+
+<p>
+The entire project is being developed by myself, with a little help from the community (issues, bugs, and so on), but the project needs developers and testers.
+Now I am looking for options to attract investors or companies interested in this project, and ready to support it.</p>
+
+<p style="padding-top: 20px;"><b>Thanks for attention!</b> Hope you'll enjoy it!</p>
+
+<p>
+P.S.: There are many ideas around, and I have more than enough fuel!</p>
+
+<p style="padding-top: 10px;">
+Yours sincerely, <br><a href="mailto:lex.borisov@gmail.com">Alexander Borisov</a></p>
+
+
+<h4>See prev article: <a href="http://lexborisov.github.io/benchmark-html-persers/">Benchmark. Analyzing and Testing Current HTML Parsers</a></h4>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/lexborisov/modest">Modest</a> is maintained by <a href="https://github.com/lexborisov">lexborisov</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+ 
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-74753465-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+</html>

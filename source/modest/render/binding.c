@@ -33,8 +33,6 @@ modest_render_tree_node_t * modest_render_binding(modest_t* modest, modest_rende
     myhtml_tree_node_t* html_node = html_tree->node_html;
     myhtml_tree_node_t* html_scope = html_node;
     
-    modest_node_t *m_node = html_node->data;
-    
     modest_render_tree_node_t *render_root = modest_render_binding_create_viewport(modest, render_tree);
     modest_render_tree_node_t *render_node = render_root;
     

@@ -32,7 +32,7 @@ endif
 find_files_h = $(wildcard $(dir)/*.h)
 find_files_c = $(wildcard $(dir)/*.c)
 
-SUBDIRS := selectors declarations font modest mycss myhtml
+SUBDIRS := selectors declarations myfont modest mycss myhtml
 HDRS += $(foreach dir,$(SUBDIRS),$(find_files_h))
 SRCS += $(foreach dir,$(SUBDIRS),$(find_files_c))
 

@@ -29,15 +29,6 @@
 #include "myhtml/encoding.h"
 #include "myfont/myfont.h"
 #include "modest/node/serialization.h"
-#include "myhtml/utils/avl_tree.h"
-#include "mycss/declaration/default.h"
-#include "modest/glue.h"
-
-#include "modest/render/tree.h"
-#include "modest/render/binding.h"
-
-#include "myhtml/url.h"
-#include "myhtml/url/parser.h"
 
 struct res_data {
     char *data;
@@ -88,7 +79,13 @@ myhtml_tree_t * myhtml(const char* data, size_t data_size, bool is_file, bool pr
     
     if(is_file) {
         struct res_data res = load_data(data);
-        myhtml_parse(tree, MyHTML_ENCODING_UTF_8, res.data, res.size);
+        
+        myhtml_encoding_t encoding = myhtml_encoding_prescan_stream_to_determine_encoding(res.data, res.size);
+        
+        if(encoding == MyHTML_ENCODING_NOT_DETERMINED)
+            encoding = MyHTML_ENCODING_UTF_8;
+        
+        myhtml_parse(tree, encoding, res.data, res.size);
         free(res.data);
     }
     else {
@@ -161,9 +158,9 @@ void print_tree_after_all(modest_t* modest, myhtml_tree_t* myhtml_tree, myhtml_t
     while(node) {
         modest_node_t *m_node = (modest_node_t*)node->data;
         
-        if(m_node && m_node->avl_tree_node) {
-            myhtml_tree_print_node(myhtml_tree, node, stdout);
-            
+        myhtml_tree_print_node(myhtml_tree, node, stdout);
+        
+        if(m_node) {
             printf("\tstyles: ");
             
             modest_node_raw_serialization(modest, m_node, serialization_callback, NULL);
@@ -187,56 +184,49 @@ void print_tree_after_all(modest_t* modest, myhtml_tree_t* myhtml_tree, myhtml_t
 
 size_t count = 0;
 
+void modest_callback_for_create_mnode(myhtml_tree_t* tree, myhtml_tree_node_t* node, void* ctx)
+{
+    if(node->tag_id == MyHTML_TAG__TEXT) {
+        return;
+    }
+    
+    modest_t *modest = (modest_t*)ctx;
+    
+    /* create modest node */
+    modest_node_t *m_node = modest_node_create(modest);
+    if(m_node == NULL)
+        return;
+    
+    modest_node_init(modest, m_node);
+    
+    node->data = (void*)m_node;
+}
+
 int main(int argc, const char * argv[]) {
     setbuf(stdout, NULL);
     
-//    myhtml_utils_avl_tree_t *stree = myhtml_utils_avl_tree_create();
-//    myhtml_utils_avl_tree_init(stree);
-//    myhtml_utils_avl_tree_node_t *root_node = NULL;
-//    
-//    uint64_t parse_tree_start = myhtml_hperf_clock(NULL);
-//    
-//    for(size_t i = 0; i < 25000; i++) {
-//        myhtml_utils_avl_tree_add(stree, &root_node, i, (void*)(i));
-//    }
-//    
-//    uint64_t parse_tree_stop = myhtml_hperf_clock(NULL);
-//    
-//    //myhtml_utils_avl_tree_add(stree, &root_node, 1, (void*)(1));
-//    //myhtml_utils_avl_tree_add(stree, &root_node, 2, (void*)(2));
-//    //myhtml_utils_avl_tree_add(stree, &root_node, 3, (void*)(3));
-//    //myhtml_utils_avl_tree_add(stree, &root_node, 4, (void*)(4));
-//    //myhtml_utils_avl_tree_add(stree, &root_node, 5, (void*)(5));
-//    //myhtml_utils_avl_tree_node_t *delete_node = myhtml_utils_avl_tree_delete(stree, &root_node, 1);
-//    
-//    uint64_t find_tree_start = myhtml_hperf_clock(NULL);
-//    myhtml_utils_avl_tree_node_t *find_node = myhtml_utils_avl_tree_search_by_type(stree, root_node, 1);
-//    uint64_t find_tree_stop = myhtml_hperf_clock(NULL);
-//    
-//    myhtml_hperf_print("\tAVL-Tree", parse_tree_start, parse_tree_stop, stdout);
-//    myhtml_hperf_print("\tAVL-Tree find", find_tree_start, find_tree_stop, stdout);
-//    
-//    return;
-    
+    //char *html_f = "/new/C-git/lexbor/test/test.html";
     char *html_f = "/new/C-git/habr/1.html";
-    char *css_f = "/new/C-git/habr/1_glob.css";
-    //char *css_f = "/new/C-git/bootstrap.css";
+    //char *html_f = "/new/C-git/HTML_BENTCHMARK/booking.com.html";
+    
+    //char *css_f = "/new/C-git/habr/1_glob.css";
+    char *css_f = "/new/C-git/CSS_BENCHMARK/baseguide.css";
     
     //char *css_f = "/new/C-git/bootstrap.css";
     
-    char *html = "<fff>sdsd</fff><aaaa id=hash class=best><div a1><a href=\"/search?sdsd=dfdf\"><menu class=\"lalala\" id=\"menu-id\" b1><span span1><div a2></div></div><menu class=\"be\" id=\"menu\" b1><span span2></aaaa><a href=\"\" sec></a><div div1><a href=\"asdad/search?sdsd=dfdf&offset=234&hhh=4\"><div div2></div><div div3></div><div div4></div></div><p p1><p p2><p p3><p p4>";
-    char *css = "fff > :first-child {display: none}";
+    char *html = "Привет UTF8! <br><br>";
+    char *css = ".radio input[type=\"radio\"]:checked + label::before {} .checkbox input[type=\"checkbox\"]:checked + label::before {}";
     
     char *selector = "menu";
     
     modest_t *modest = modest_create();
     modest_init(modest);
     
-//    myhtml_tree_t *myhtml_tree = myhtml(html_f, strlen(html_f), true, false, modest_callback_for_create_mnode, (void*)modest);
-//    mycss_entry_t *mycss_entry = mycss(css_f, strlen(css_f), true, false);
+    myhtml_tree_t *myhtml_tree = myhtml(html_f, strlen(html_f), true, false, modest_callback_for_create_mnode, (void*)modest);
+    mycss_entry_t *mycss_entry = mycss(css_f, strlen(css_f), true, false);
     
-    myhtml_tree_t *myhtml_tree = myhtml(html, strlen(html), false, true, modest_glue_callback_myhtml_insert_node, (void*)modest);
-    mycss_entry_t *mycss_entry = mycss(css, strlen(css), false, false);
+//    myhtml_tree_t *myhtml_tree = myhtml(html, strlen(html), false, true, modest_callback_for_create_mnode, (void*)modest);
+//    mycss_entry_t *mycss_entry = mycss(css, strlen(css), false, false);
     
     modest->myhtml_tree = myhtml_tree;
     modest->mycss_entry = mycss_entry;
@@ -256,30 +246,19 @@ int main(int argc, const char * argv[]) {
     modest_finder_t* finder = modest_finder_create();
     modest_finder_init(finder);
     
-    /* threads */
+//     threads 
     modest_finder_thread_t *finder_thread = modest_finder_thread_create();
-    modest_finder_thread_init(finder, finder_thread, 8);
+    modest_finder_thread_init(finder, finder_thread, 4);
     
-    modest_finder_thread_process(modest, finder_thread, myhtml_tree, myhtml_tree->node_html, stylesheet->sel_list_first);
+    modest_finder_thread_process(modest, finder_thread, myhtml_tree->node_html, stylesheet->sel_list_first);
     
-    //finder_thread = modest_finder_thread_destroy(finder_thread, true);
-    //finder = modest_finder_destroy(finder, true);
+    finder_thread = modest_finder_thread_destroy(finder_thread, true);
+    finder = modest_finder_destroy(finder, true);
     
     
     uint64_t parse_stop = myhtml_hperf_clock(NULL);
     
-    print_tree_after_all(modest, myhtml_tree, myhtml_tree->node_html, mycss_entry);
-    
-    
-    modest_render_tree_t *render_tree = modest_render_tree_create();
-    modest_render_tree_init(render_tree);
-    modest_render_tree_node_t *viewport = modest_render_binding(modest, render_tree, myhtml_tree);
-    
-    modest_render_tree_serialization(myhtml_tree, render_tree, viewport, serialization_callback, NULL);
-    
-    //myhtml_url_parser_begin(NULL, NULL, NULL, 0);
-    //myhtml_url_parse(NULL, NULL, 0);
-    
+//    print_tree_after_all(modest, myhtml_tree, myhtml_tree->node_html, mycss_entry);
     
     printf("\n\n------------\nInformation:\n");
     printf("\tTicks/sec: %llu\n", (unsigned long long) myhtml_hperf_res(NULL));
@@ -309,16 +288,6 @@ int main(int argc, const char * argv[]) {
     
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
 
 
 

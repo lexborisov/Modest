@@ -89,6 +89,8 @@ struct myhtml_tree_node {
     
     myhtml_token_node_t* token;
     void* data;
+    
+    myhtml_tree_t* tree;
 };
 
 enum myhtml_tree_compat_mode {
@@ -118,10 +120,6 @@ struct myhtml_tree_doctype {
     char* attr_name;
     char* attr_public;
     char* attr_system;
-};
-
-struct myhtml_tree_indexes {
-    myhtml_tag_index_t* tags;
 };
 
 struct myhtml_tree_list {
@@ -181,10 +179,11 @@ struct myhtml_tree {
     mythread_queue_t*            queue;
     myhtml_tag_t*                tags;
     void*                        modest;
+    void*                        context;
     
     // init id's
-    size_t                  mcasync_token_id;
-    size_t                  mcasync_attr_id;
+    size_t                  mcasync_rules_token_id;
+    size_t                  mcasync_rules_attr_id;
     size_t                  mcasync_tree_id;
     size_t                  mchar_node_id;
     myhtml_token_attr_t*    attr_current;
@@ -195,8 +194,6 @@ struct myhtml_tree {
     mcobject_t*                mcobject_incoming_buf;
     myhtml_incoming_buffer_t*  incoming_buf;
     myhtml_incoming_buffer_t*  incoming_buf_first;
-    
-    myhtml_tree_indexes_t* indexes;
     
     // ref for nodes
     myhtml_tree_node_t*   document;
@@ -230,6 +227,7 @@ struct myhtml_tree {
     volatile myhtml_tree_parse_flags_t parse_flags;
     bool                               foster_parenting;
     size_t                             global_offset;
+    myhtml_status_t                    tokenizer_status;
     
     myhtml_encoding_t            encoding;
     myhtml_encoding_t            encoding_usereq;
@@ -262,7 +260,6 @@ void myhtml_tree_parse_flags_set(myhtml_tree_t* tree, myhtml_tree_parse_flags_t 
 
 myhtml_t * myhtml_tree_get_myhtml(myhtml_tree_t* tree);
 myhtml_tag_t * myhtml_tree_get_tag(myhtml_tree_t* tree);
-myhtml_tag_index_t * myhtml_tree_get_tag_index(myhtml_tree_t* tree);
 myhtml_tree_node_t * myhtml_tree_get_document(myhtml_tree_t* tree);
 myhtml_tree_node_t * myhtml_tree_get_node_html(myhtml_tree_t* tree);
 myhtml_tree_node_t * myhtml_tree_get_node_head(myhtml_tree_t* tree);
@@ -331,11 +328,11 @@ bool myhtml_tree_open_elements_find_reverse(myhtml_tree_t* tree, myhtml_tree_nod
 myhtml_tree_node_t * myhtml_tree_open_elements_find_by_tag_idx(myhtml_tree_t* tree, myhtml_tag_id_t tag_idx, myhtml_namespace_t mynamespace, size_t* return_index);
 myhtml_tree_node_t * myhtml_tree_open_elements_find_by_tag_idx_reverse(myhtml_tree_t* tree, myhtml_tag_id_t tag_idx, myhtml_namespace_t mynamespace, size_t* return_index);
 myhtml_tree_node_t * myhtml_tree_element_in_scope(myhtml_tree_t* tree, myhtml_tag_id_t tag_idx, myhtml_namespace_t mynamespace, enum myhtml_tag_categories category);
-bool myhtml_tree_element_in_scope_by_node(myhtml_tree_t* tree, myhtml_tree_node_t* node, enum myhtml_tag_categories category);
+bool myhtml_tree_element_in_scope_by_node(myhtml_tree_node_t* node, enum myhtml_tag_categories category);
 void myhtml_tree_generate_implied_end_tags(myhtml_tree_t* tree, myhtml_tag_id_t exclude_tag_idx, myhtml_namespace_t mynamespace);
 void myhtml_tree_generate_all_implied_end_tags(myhtml_tree_t* tree, myhtml_tag_id_t exclude_tag_idx, myhtml_namespace_t mynamespace);
 myhtml_tree_node_t * myhtml_tree_appropriate_place_inserting(myhtml_tree_t* tree, myhtml_tree_node_t* override_target, enum myhtml_tree_insertion_mode* mode);
-myhtml_tree_node_t * myhtml_tree_appropriate_place_inserting_in_tree(myhtml_tree_t* tree, myhtml_tree_node_t* target, enum myhtml_tree_insertion_mode* mode);
+myhtml_tree_node_t * myhtml_tree_appropriate_place_inserting_in_tree(myhtml_tree_node_t* target, enum myhtml_tree_insertion_mode* mode);
 
 // template insertion
 myhtml_tree_insertion_list_t * myhtml_tree_template_insertion_init(myhtml_tree_t* tree);
@@ -347,55 +344,47 @@ void myhtml_tree_template_insertion_pop(myhtml_tree_t* tree);
 
 void myhtml_tree_reset_insertion_mode_appropriately(myhtml_tree_t* tree);
 
-bool myhtml_tree_adoption_agency_algorithm(myhtml_tree_t* tree, myhtml_tag_id_t subject_tag_idx);
+bool myhtml_tree_adoption_agency_algorithm(myhtml_tree_t* tree, myhtml_token_node_t* token, myhtml_tag_id_t subject_tag_idx);
 size_t myhtml_tree_template_insertion_length(myhtml_tree_t* tree);
 
 // other for a tree
 myhtml_tree_node_t * myhtml_tree_node_create(myhtml_tree_t* tree);
-void myhtml_tree_node_delete(myhtml_tree_t* tree, myhtml_tree_node_t* node);
-void myhtml_tree_node_delete_recursive(myhtml_tree_t* tree, myhtml_tree_node_t* node);
+void myhtml_tree_node_delete(myhtml_tree_node_t* node);
+void myhtml_tree_node_delete_recursive(myhtml_tree_node_t* node);
 void myhtml_tree_node_clean(myhtml_tree_node_t* tree_node);
-void myhtml_tree_node_free(myhtml_tree_t* tree, myhtml_tree_node_t* node);
-myhtml_tree_node_t * myhtml_tree_node_clone(myhtml_tree_t* tree, myhtml_tree_node_t* node);
+void myhtml_tree_node_free(myhtml_tree_node_t* node);
+myhtml_tree_node_t * myhtml_tree_node_clone(myhtml_tree_node_t* node);
 
 void myhtml_tree_print_node(myhtml_tree_t* tree, myhtml_tree_node_t* node, FILE* out);
 void myhtml_tree_print_node_children(myhtml_tree_t* tree, myhtml_tree_node_t* node, FILE* out, size_t inc);
 void myhtml_tree_print_by_node(myhtml_tree_t* tree, myhtml_tree_node_t* node, FILE* out, size_t inc);
 
-void myhtml_tree_node_add_child(myhtml_tree_t* myhtml_tree, myhtml_tree_node_t* root, myhtml_tree_node_t* node);
-void myhtml_tree_node_insert_before(myhtml_tree_t* myhtml_tree, myhtml_tree_node_t* root, myhtml_tree_node_t* node);
-void myhtml_tree_node_insert_after(myhtml_tree_t* myhtml_tree, myhtml_tree_node_t* root, myhtml_tree_node_t* node);
-void myhtml_tree_node_insert_by_mode(myhtml_tree_t* tree, myhtml_tree_node_t* adjusted_location, myhtml_tree_node_t* node, enum myhtml_tree_insertion_mode mode);
-myhtml_tree_node_t * myhtml_tree_node_remove(myhtml_tree_t* tree, myhtml_tree_node_t* node);
+void myhtml_tree_node_add_child(myhtml_tree_node_t* root, myhtml_tree_node_t* node);
+void myhtml_tree_node_insert_before(myhtml_tree_node_t* root, myhtml_tree_node_t* node);
+void myhtml_tree_node_insert_after(myhtml_tree_node_t* root, myhtml_tree_node_t* node);
+void myhtml_tree_node_insert_by_mode(myhtml_tree_node_t* adjusted_location, myhtml_tree_node_t* node, enum myhtml_tree_insertion_mode mode);
+myhtml_tree_node_t * myhtml_tree_node_remove(myhtml_tree_node_t* node);
 
 myhtml_tree_node_t * myhtml_tree_node_insert_html_element(myhtml_tree_t* tree, myhtml_token_node_t* token);
 myhtml_tree_node_t * myhtml_tree_node_insert_foreign_element(myhtml_tree_t* tree, myhtml_token_node_t* token);
-myhtml_tree_node_t * myhtml_tree_node_insert_by_token(myhtml_tree_t* tree, myhtml_token_node_t* token, enum myhtml_namespace ns);
-myhtml_tree_node_t * myhtml_tree_node_insert(myhtml_tree_t* tree, myhtml_tag_id_t tag_idx, enum myhtml_namespace ns);
+myhtml_tree_node_t * myhtml_tree_node_insert_by_token(myhtml_tree_t* tree, myhtml_token_node_t* token, myhtml_namespace_t ns);
+myhtml_tree_node_t * myhtml_tree_node_insert(myhtml_tree_t* tree, myhtml_tag_id_t tag_idx, myhtml_namespace_t ns);
 myhtml_tree_node_t * myhtml_tree_node_insert_by_node(myhtml_tree_t* tree, myhtml_tree_node_t* idx);
 myhtml_tree_node_t * myhtml_tree_node_insert_comment(myhtml_tree_t* tree, myhtml_token_node_t* token, myhtml_tree_node_t* parent);
 myhtml_tree_node_t * myhtml_tree_node_insert_doctype(myhtml_tree_t* tree, myhtml_token_node_t* token);
-myhtml_tree_node_t * myhtml_tree_node_insert_root(myhtml_tree_t* tree, myhtml_token_node_t* token, enum myhtml_namespace ns);
+myhtml_tree_node_t * myhtml_tree_node_insert_root(myhtml_tree_t* tree, myhtml_token_node_t* token, myhtml_namespace_t ns);
 myhtml_tree_node_t * myhtml_tree_node_insert_text(myhtml_tree_t* tree, myhtml_token_node_t* token);
 myhtml_tree_node_t * myhtml_tree_node_find_parent_by_tag_id(myhtml_tree_node_t* node, myhtml_tag_id_t tag_id);
-
-// indexes
-myhtml_tree_indexes_t * myhtml_tree_index_create(myhtml_tree_t* tree, myhtml_tag_t* tags);
-void myhtml_tree_index_clean(myhtml_tree_t* tree, myhtml_tag_t* tags);
-myhtml_tree_indexes_t * myhtml_tree_index_destroy(myhtml_tree_t* tree, myhtml_tag_t* tags);
-
-void myhtml_tree_index_append(myhtml_tree_t* tree, myhtml_tree_node_t* node);
-myhtml_tree_node_t * myhtml_tree_index_get(myhtml_tree_t* tree, myhtml_tag_id_t tag_id);
 
 // other
 void myhtml_tree_wait_for_last_done_token(myhtml_tree_t* tree, myhtml_token_node_t* token_for_wait);
 
-void myhtml_tree_tags_close_p(myhtml_tree_t* tree);
+void myhtml_tree_tags_close_p(myhtml_tree_t* tree, myhtml_token_node_t* token);
 myhtml_tree_node_t * myhtml_tree_generic_raw_text_element_parsing_algorithm(myhtml_tree_t* tree, myhtml_token_node_t* token_node);
 void myhtml_tree_clear_stack_back_table_context(myhtml_tree_t* tree);
 void myhtml_tree_clear_stack_back_table_body_context(myhtml_tree_t* tree);
 void myhtml_tree_clear_stack_back_table_row_context(myhtml_tree_t* tree);
-void myhtml_tree_close_cell(myhtml_tree_t* tree, myhtml_tree_node_t* tr_or_th_node);
+void myhtml_tree_close_cell(myhtml_tree_t* tree, myhtml_tree_node_t* tr_or_th_node, myhtml_token_node_t* token);
 
 bool myhtml_tree_is_mathml_integration_point(myhtml_tree_t* tree, myhtml_tree_node_t* node);
 bool myhtml_tree_is_html_integration_point(myhtml_tree_t* tree, myhtml_tree_node_t* node);

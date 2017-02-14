@@ -33,39 +33,37 @@ modest_status_t modest_init(modest_t* modest)
     /* Modest nodes */
     modest->mnode_obj = mcobject_async_create();
     if(modest->mnode_obj == NULL)
-        return MODEST_STATUS_OK;
+        return MODEST_STATUS_ERROR_MNODE_CREATE;
     
     mcobject_async_status_t mcstatus = mcobject_async_init(modest->mnode_obj, 128, 1024, sizeof(modest_node_t));
     if(mcstatus)
-        return MODEST_STATUS_OK;
+        return MODEST_STATUS_ERROR_MNODE_INIT;
     
     /* base object node for all modest node objects */
     modest->mnode_node_id = mcobject_async_node_add(modest->mnode_obj, &mcstatus);
-    
     if(mcstatus)
-        return MODEST_STATUS_OK;
+        return MODEST_STATUS_ERROR_MNODE_NODE_ADD;
     
     
     /* Modest stylesheet */
     modest->mstylesheet_obj = mcobject_async_create();
     if(modest->mstylesheet_obj == NULL)
-        return MODEST_STATUS_OK;
+        return MODEST_STATUS_ERROR_STYLESHEET_CREATE;
     
     mcstatus = mcobject_async_init(modest->mstylesheet_obj, 128, 1024, sizeof(modest_style_sheet_t));
     if(mcstatus)
-        return MODEST_STATUS_OK;
+        return MODEST_STATUS_ERROR_STYLESHEET_INIT;
     
     /* base object node for all modest stylesheet objects */
     modest->mstylesheet_node_id = mcobject_async_node_add(modest->mstylesheet_obj, &mcstatus);
-    
     if(mcstatus)
-        return MODEST_STATUS_OK;
+        return MODEST_STATUS_ERROR_STYLESHEET_NODE_ADD;
     
     
     /* Modest style type */
     modest->mstyle_type_obj = mchar_async_create(12, (4096 * 5));
     if(modest->mstyle_type_obj == NULL)
-        return MODEST_STATUS_OK;
+        return MODEST_STATUS_ERROR_STYLE_TYPE_CREATE;
     
     modest->mstyle_type_node_id = mchar_async_node_add(modest->mstyle_type_obj);
     
@@ -73,20 +71,21 @@ modest_status_t modest_init(modest_t* modest)
     /* for raw declaration style */
     modest->mraw_style_declaration_obj = mcobject_create();
     if(modest->mraw_style_declaration_obj == NULL)
-        return MODEST_STATUS_OK;
+        return MODEST_STATUS_ERROR_STYLE_DECLARATION_CREATE;
     
     myhtml_status_t myhtml_status = mcobject_init(modest->mraw_style_declaration_obj, 256, sizeof(modest_style_raw_declaration_t));
     if(myhtml_status)
-        return MODEST_STATUS_OK;
+        return MODEST_STATUS_ERROR_STYLE_DECLARATION_INIT;
+    
     
     /* styles tree */
     modest->style_avl_tree = myhtml_utils_avl_tree_create();
     if(modest->style_avl_tree == NULL)
-        return MODEST_STATUS_ERROR_MEMORY_ALLOCATION;
+        return MODEST_STATUS_ERROR_AVL_TREE_CREATE;
     
     myhtml_status = myhtml_utils_avl_tree_init(modest->style_avl_tree);
     if(myhtml_status)
-        return MODEST_STATUS_ERROR;
+        return MODEST_STATUS_ERROR_AVL_TREE_INIT;
     
     return MODEST_STATUS_OK;
 }

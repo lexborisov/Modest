@@ -1,113 +1,40 @@
-# Modest C/C++ HTML Render
+# Modest — a pure C HTML renderer
 
 [![Build Status](https://travis-ci.org/lexborisov/Modest.svg?branch=master)](https://travis-ci.org/lexborisov/Modest)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/11105/badge.svg)](https://scan.coverity.com/projects/lexborisov-modest)
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=L59E49K2NVUHE)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=L59E49K2NVUHE)
 
-Modest is a fast HTML Render implemented as a pure C99 library with no outside dependencies.
+Modest is a fast HTML renderer implemented as a pure C99 library with no outside dependencies.
+
+* Mailing List: [https://groups.google.com/forum/#!forum/modest-engine](https://groups.google.com/forum/#!forum/modest-engine)
+* IRC: [#modest-engine on `irc.freenode.net <http://freenode.net>`](http://webchat.freenode.net?channels=%23modest-engine)
+* Or you can ask questions on [stackoverflow.com](https://stackoverflow.com/questions/ask?tags=modest) by modest tag
+* Public [tracker by trello](https://trello.com/b/sdqpT8Ep/modest)
 
 ## Now
 
 ```text
-The current version is 0.0.4 - devel
+The current version is 0.0.5 - devel
 ```
-
-## Features
-
-Render is in development. Now available:
-
-- Search nodes by Selectors 
-- See Features of [MyHTML]
-- See Features of [MyCSS]
 
 ## Introduction
 
-[Introduction]
-
-## Support & Сommunity
-[![Codewake](https://www.codewake.com/badges/ask_question.svg)](https://www.codewake.com/p/modest)
-[![Gitter](https://badges.gitter.im/gitterHQ/gitter.svg)](https://gitter.im/Modest-Engine/Lobby)
-
-You can ask questions on [stackoverflow.com](https://stackoverflow.com/questions/ask?tags=modest) by modest tag
-
-## Build and Installation
-
-**Make**
-
-```bash
-make
-```
-
-If successful copy lib/* and include/* at the right place for you
-
-Flags that can be passed to make:
-- `MODEST_OPTIMIZATION_LEVEL=-O2` set compiler optimization level. Default: -O2
-- `MODEST_BUILD_WITHOUT_THREADS=YES` build without POSIX Threads. Default: NO
-
-*for example*
-```bash
-make MODEST_BUILD_WITHOUT_THREADS=NO
-```
-
-```bash
-cp lib/* /usr/local/lib
-cp -r include/* /usr/local/include
-```
-
-**CMake**
-
-In modest/project directory:
-
-```bash
-cmake .
-make
-sudo make install
-```
-
-Flags that can be passed to CMake:
-- `MODEST_OPTIMIZATION_LEVEL=-O2` set compiler optimization level. Default: -O2
-- `CMAKE_INSTALL_LIBDIR=lib` set path to install created library. Default: lib
-- `MODEST_BUILD_SHARED=ON` build shared library. Default: ON
-- `MODEST_BUILD_STATIC=ON` build static library. Default: ON
-- `MODEST_INSTALL_HEADER=OFF` install header files. Default OFF
-- `MODEST_BUILD_WITHOUT_THREADS=YES` build without POSIX Threads. Default: NO
-- `MODEST_EXTERN_MALLOC=my_malloc_func` set extern malloc function. Default: UNDEFINED
-- `MODEST_EXTERN_REALLOC=my_realloc_func` set extern realloc function. Default: UNDEFINED
-- `MODEST_EXTERN_CALLOC=my_calloc_func` set extern calloc function. Default: UNDEFINED
-- `MODEST_EXTERN_FREE=my_free_func` set extern free function. Default: UNDEFINED
-
-*for example*
-```bash
-cmake . -DCMAKE_INSTALL_LIBDIR=lib64 -DMODEST_INSTALL_HEADER=ON
-```
-
-
-## Build with your program
-
-I advise to build using clang, but decided to show examples of gcc
-
-**for example**
-
-*build with shared library*
-```bash
-gcc -Wall -Werror -O2 -lmodest your_program.c -o your_program
-```
-
-*build with static library*
-```bash
-gcc -Wall -Werror -O2 your_program.c /path/to/libmodest_static.a -o your_program
-```
+[Introduction](https://lexborisov.github.io/Modest/)
 
 ## Dependencies
 
 None
+
+## Installation
+
+See [INSTALL.md](https://github.com/lexborisov/Modest/blob/master/INSTALL.md)
 
 ## External Bindings and Wrappers
 * [Crystal wrapper](https://github.com/kostya/modest) for CSS Selectors (Modest Finder)
 
 ## Examples
 
-See [examples] directory
+See [examples](https://github.com/lexborisov/modest/tree/master/examples) directory
 
 ## AUTHOR
 
@@ -126,11 +53,4 @@ You should have received a copy of the GNU Lesser General Public License along w
 See the [LICENSE] file.
 
 
-[high]: https://github.com/lexborisov/modest/blob/master/include/myhtml/api.h
-[low]: https://github.com/lexborisov/modest/tree/master/include/myhtml
-[examples]: https://github.com/lexborisov/modest/tree/master/examples
-[MyHTML]: https://github.com/lexborisov/myhtml
-[MyCSS]: https://github.com/lexborisov/mycss
-[CHANGELOG.md]: https://github.com/lexborisov/modest/blob/master/CHANGELOG.md
-[Introduction]: http://lexborisov.github.io/myhtml/
 [LICENSE]: https://github.com/lexborisov/myhtml/blob/master/LICENSE

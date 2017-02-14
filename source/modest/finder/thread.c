@@ -133,7 +133,7 @@ void modest_finder_thread_collate_node(modest_t* modest, myhtml_tree_node_t* nod
     }
 }
 
-modest_status_t modest_finder_thread_process(modest_t* modest, modest_finder_thread_t* finder_thread, myhtml_tree_t* myhtml_tree,
+modest_status_t modest_finder_thread_process(modest_t* modest, modest_finder_thread_t* finder_thread,
                                              myhtml_tree_node_t* scope_node, mycss_selectors_list_t* selector_list)
 {
     finder_thread->base_node = scope_node;
@@ -141,8 +141,6 @@ modest_status_t modest_finder_thread_process(modest_t* modest, modest_finder_thr
     
     if(finder_thread->finder == NULL)
         return MODEST_STATUS_ERROR;
-    
-    finder_thread->finder->html_tree = myhtml_tree;
     
     mythread_resume_all(finder_thread->thread);
     modest_finder_thread_wait_for_all_done(finder_thread);

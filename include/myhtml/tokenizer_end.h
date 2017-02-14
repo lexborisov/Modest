@@ -43,6 +43,7 @@ size_t myhtml_tokenizer_end_state_before_attribute_value(myhtml_tree_t* tree, my
 size_t myhtml_tokenizer_end_state_attribute_value_double_quoted(myhtml_tree_t* tree, myhtml_token_node_t* token_node, const char* html, size_t html_offset, size_t html_size);
 size_t myhtml_tokenizer_end_state_attribute_value_single_quoted(myhtml_tree_t* tree, myhtml_token_node_t* token_node, const char* html, size_t html_offset, size_t html_size);
 size_t myhtml_tokenizer_end_state_attribute_value_unquoted(myhtml_tree_t* tree, myhtml_token_node_t* token_node, const char* html, size_t html_offset, size_t html_size);
+size_t myhtml_tokenizer_end_state_after_attribute_value_quoted(myhtml_tree_t* tree, myhtml_token_node_t* token_node, const char* html, size_t html_offset, size_t html_size);
 size_t myhtml_tokenizer_end_state_comment_start(myhtml_tree_t* tree, myhtml_token_node_t* token_node, const char* html, size_t html_offset, size_t html_size);
 size_t myhtml_tokenizer_end_state_comment_start_dash(myhtml_tree_t* tree, myhtml_token_node_t* token_node, const char* html, size_t html_offset, size_t html_size);
 size_t myhtml_tokenizer_end_state_comment(myhtml_tree_t* tree, myhtml_token_node_t* token_node, const char* html, size_t html_offset, size_t html_size);
@@ -94,6 +95,7 @@ size_t myhtml_tokenizer_end_state_script_data_double_escaped_dash(myhtml_tree_t*
 size_t myhtml_tokenizer_end_state_script_data_double_escaped_dash_dash(myhtml_tree_t* tree, myhtml_token_node_t* token_node, const char* html, size_t html_offset, size_t html_size);
 size_t myhtml_tokenizer_end_state_script_data_double_escaped_less_than_sign(myhtml_tree_t* tree, myhtml_token_node_t* token_node, const char* html, size_t html_offset, size_t html_size);
 size_t myhtml_tokenizer_end_state_script_data_double_escape_end(myhtml_tree_t* tree, myhtml_token_node_t* token_node, const char* html, size_t html_offset, size_t html_size);
+size_t myhtml_tokenizer_end_state_parse_error_stop(myhtml_tree_t* tree, myhtml_token_node_t* token_node, const char* html, size_t html_offset, size_t html_size);
 
 #ifdef __cplusplus
 } /* extern "C" */

@@ -2042,7 +2042,7 @@ bool mycss_property_parser_font_step_one(mycss_entry_t* entry, mycss_token_t* to
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(dec_entry->value == NULL)
-        mycss_property_shared_switch_to_parse_error(entry);
+        return mycss_property_shared_switch_to_parse_error(entry);
     
     void *value = NULL;
     unsigned int value_type = 0;
@@ -2126,7 +2126,7 @@ bool mycss_property_parser_font(mycss_entry_t* entry, mycss_token_t* token, bool
     dec_entry->value = mycss_values_create(entry, sizeof(mycss_values_font_t));
     
     if(dec_entry->value == NULL)
-        mycss_property_shared_switch_to_parse_error(entry);
+        return mycss_property_shared_switch_to_parse_error(entry);
     
     void *value = NULL;
     unsigned int value_type = 0;

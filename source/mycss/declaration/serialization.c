@@ -510,7 +510,7 @@ bool mycss_declaration_serialization_background(mycss_entry_t* entry, mycss_decl
         }
         
         if(bg->origin) {
-            if(o_e) callback(" ", 1, context); else o_e = true;
+            if(o_e) callback(" ", 1, context);
             mycss_declaration_serialization_type_list(entry, bg->origin, callback, context);
         }
     }

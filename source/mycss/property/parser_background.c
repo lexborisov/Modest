@@ -512,7 +512,7 @@ bool mycss_property_parser_background(mycss_entry_t* entry, mycss_token_t* token
         if(background->image->value == NULL)
             background->image->value = mycss_values_create(entry, sizeof(mycss_values_image_list_t));
         
-        background->repeat->type = MyCSS_PROPERTY_TYPE_BACKGROUND_IMAGE;
+        background->image->type = MyCSS_PROPERTY_TYPE_BACKGROUND_IMAGE;
         
         mycss_values_image_t *image = mycss_values_image_list_add_entry(entry, background->image->value);
         image->type = MyCSS_PROPERTY_VALUE_NONE;
@@ -603,7 +603,6 @@ bool mycss_property_parser_background(mycss_entry_t* entry, mycss_token_t* token
             mycss_stack_push(entry->declaration->stack, dec_entry->value, mycss_property_parser_background_step_end);
             dec_entry->value = value;
             
-            mycss_stack_push(entry->declaration->stack, NULL, mycss_property_parser_color_after);
             return mycss_property_parser_destroy_string(&str, true);
         }
         

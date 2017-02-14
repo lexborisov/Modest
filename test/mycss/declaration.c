@@ -340,7 +340,7 @@ myhtml_string_raw_t test_process_result_from_node(test_data_t *test_data, myhtml
 {
     myhtml_string_raw_t str = {0};
     
-    if(myhtml_serialization_node_buffer(test_data->tree, node->child, &str) == false) {
+    if(myhtml_serialization_node_buffer(node->child, &str) == false) {
         fprintf(stderr, "Could serialization HTML node\n");
         exit(EXIT_FAILURE);
     }
