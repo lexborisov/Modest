@@ -32,7 +32,7 @@ endif
 find_files_h = $(wildcard $(dir)/*.h)
 find_files_c = $(wildcard $(dir)/*.c)
 
-SUBDIRS := mycss myhtml/utils
+SUBDIRS := mycss myhtml myhtml/utils 
 HDRS += $(foreach dir,$(SUBDIRS),$(find_files_h))
 SRCS += $(foreach dir,$(SUBDIRS),$(find_files_c))
 #SRCS_FN += $(foreach dir,$(SUBDIRS),$(notdir $(find_files_c)))

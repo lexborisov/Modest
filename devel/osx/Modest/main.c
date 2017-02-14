@@ -79,7 +79,13 @@ myhtml_tree_t * myhtml(const char* data, size_t data_size, bool is_file, bool pr
     
     if(is_file) {
         struct res_data res = load_data(data);
-        myhtml_parse(tree, MyHTML_ENCODING_UTF_8, res.data, res.size);
+        
+        myhtml_encoding_t encoding = myhtml_encoding_prescan_stream_to_determine_encoding(res.data, res.size);
+        
+        if(encoding == MyHTML_ENCODING_NOT_DETERMINED)
+            encoding = MyHTML_ENCODING_UTF_8;
+        
+        myhtml_parse(tree, encoding, res.data, res.size);
         free(res.data);
     }
     else {
@@ -199,13 +205,16 @@ void modest_callback_for_create_mnode(myhtml_tree_t* tree, myhtml_tree_node_t* n
 int main(int argc, const char * argv[]) {
     setbuf(stdout, NULL);
     
+    //char *html_f = "/new/C-git/lexbor/test/test.html";
     char *html_f = "/new/C-git/habr/1.html";
+    //char *html_f = "/new/C-git/HTML_BENTCHMARK/booking.com.html";
+    
     //char *css_f = "/new/C-git/habr/1_glob.css";
     char *css_f = "/new/C-git/CSS_BENCHMARK/baseguide.css";
     
     //char *css_f = "/new/C-git/bootstrap.css";
     
-    char *html = "<fff>sdsd<aaaa id=hash class=best><div a1><menu class=\"lalala\" id=\"menu-id\" b1><span span1><div a2></div></div><menu class=\"be\" id=\"menu\" b1><span span2></aaaa><a href=\"\" sec></a><div div1><div div2></div><div div3></div><div div4></div></div><p p1><p p2><p p3><p p4>";
+    char *html = "Привет UTF8! <br><br>";
     char *css = ".radio input[type=\"radio\"]:checked + label::before {} .checkbox input[type=\"checkbox\"]:checked + label::before {}";
     
     char *selector = "menu";
@@ -214,10 +223,10 @@ int main(int argc, const char * argv[]) {
     modest_init(modest);
     
     myhtml_tree_t *myhtml_tree = myhtml(html_f, strlen(html_f), true, false, modest_callback_for_create_mnode, (void*)modest);
-    mycss_entry_t *mycss_entry = mycss(css_f, strlen(css_f), true, true);
+    mycss_entry_t *mycss_entry = mycss(css_f, strlen(css_f), true, false);
     
 //    myhtml_tree_t *myhtml_tree = myhtml(html, strlen(html), false, true, modest_callback_for_create_mnode, (void*)modest);
-//    mycss_entry_t *mycss_entry = mycss(css, strlen(css), false, true);
+//    mycss_entry_t *mycss_entry = mycss(css, strlen(css), false, false);
     
     modest->myhtml_tree = myhtml_tree;
     modest->mycss_entry = mycss_entry;
@@ -230,10 +239,6 @@ int main(int argc, const char * argv[]) {
     
     
     
-    
-    
-    
-    
     /* full api */
     uint64_t parse_start = myhtml_hperf_clock(NULL);
     
@@ -241,19 +246,19 @@ int main(int argc, const char * argv[]) {
     modest_finder_t* finder = modest_finder_create();
     modest_finder_init(finder);
     
-    /* threads */
+//     threads 
     modest_finder_thread_t *finder_thread = modest_finder_thread_create();
     modest_finder_thread_init(finder, finder_thread, 4);
     
-    modest_finder_thread_process(modest, finder_thread, myhtml_tree, myhtml_tree->node_html, stylesheet->sel_list_first);
+    modest_finder_thread_process(modest, finder_thread, myhtml_tree->node_html, stylesheet->sel_list_first);
     
-    //finder_thread = modest_finder_thread_destroy(finder_thread, true);
-    //finder = modest_finder_destroy(finder, true);
+    finder_thread = modest_finder_thread_destroy(finder_thread, true);
+    finder = modest_finder_destroy(finder, true);
     
     
     uint64_t parse_stop = myhtml_hperf_clock(NULL);
     
-    //print_tree_after_all(modest, myhtml_tree, myhtml_tree->node_html, mycss_entry);
+//    print_tree_after_all(modest, myhtml_tree, myhtml_tree->node_html, mycss_entry);
     
     printf("\n\n------------\nInformation:\n");
     printf("\tTicks/sec: %llu\n", (unsigned long long) myhtml_hperf_res(NULL));
@@ -283,9 +288,6 @@ int main(int argc, const char * argv[]) {
     
     return 0;
 }
-
-
-
 
 
 

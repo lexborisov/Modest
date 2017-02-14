@@ -14,7 +14,7 @@ Modest is a fast HTML Render implemented as a pure C99 library with no outside d
 ## Now
 
 ```text
-The current version is 0.0.4 - devel
+The current version is 0.0.5 - devel
 ```
 
 ## Introduction

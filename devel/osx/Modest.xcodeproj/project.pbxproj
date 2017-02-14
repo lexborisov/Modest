@@ -19,6 +19,7 @@
 		0E0C91991DB107E7007A0501 /* property.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E0C91971DB107E7007A0501 /* property.c */; };
 		0E0C919C1DB10866007A0501 /* raw_property.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E0C919A1DB10866007A0501 /* raw_property.c */; };
 		0E0D5D011E003A5E00EBFDD6 /* avl_tree.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E0D5CFF1E003A5E00EBFDD6 /* avl_tree.c */; };
+		0E0D738C1E2F67DB00FC97DE /* mhash.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E0D738A1E2F67DB00FC97DE /* mhash.c */; };
 		0E4B525C1DC13BBB0095026A /* parser_text_decoration.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E4B525A1DC13BBB0095026A /* parser_text_decoration.c */; };
 		0E5AA4BD1DA9689700FF5358 /* shared.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E5AA4BB1DA9689700FF5358 /* shared.c */; };
 		0E5E2AAB1DC53CC1007836AB /* entry_destroy.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E5E2AA91DC53CC1007836AB /* entry_destroy.c */; };
@@ -168,6 +169,8 @@
 		0E0C919B1DB10866007A0501 /* raw_property.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = raw_property.h; path = ../../../source/modest/node/raw_property.h; sourceTree = "<group>"; };
 		0E0D5CFF1E003A5E00EBFDD6 /* avl_tree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = avl_tree.c; sourceTree = "<group>"; };
 		0E0D5D001E003A5E00EBFDD6 /* avl_tree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avl_tree.h; sourceTree = "<group>"; };
+		0E0D738A1E2F67DB00FC97DE /* mhash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mhash.c; sourceTree = "<group>"; };
+		0E0D738B1E2F67DB00FC97DE /* mhash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mhash.h; sourceTree = "<group>"; };
 		0E4B525A1DC13BBB0095026A /* parser_text_decoration.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = parser_text_decoration.c; sourceTree = "<group>"; };
 		0E5AA4BB1DA9689700FF5358 /* shared.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = shared.c; sourceTree = "<group>"; };
 		0E5AA4BC1DA9689700FF5358 /* shared.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shared.h; sourceTree = "<group>"; };
@@ -545,14 +548,14 @@
 				0E750FC91D9AF27F00337E9B /* thread.c */,
 				0E750FCC1D9AF27F00337E9B /* token.h */,
 				0E750FCB1D9AF27F00337E9B /* token.c */,
+				0E750FD41D9AF27F00337E9B /* tokenizer.h */,
+				0E750FD31D9AF27F00337E9B /* tokenizer.c */,
 				0E750FCE1D9AF27F00337E9B /* tokenizer_doctype.h */,
 				0E750FCD1D9AF27F00337E9B /* tokenizer_doctype.c */,
 				0E750FD01D9AF27F00337E9B /* tokenizer_end.h */,
 				0E750FCF1D9AF27F00337E9B /* tokenizer_end.c */,
 				0E750FD21D9AF27F00337E9B /* tokenizer_script.h */,
 				0E750FD11D9AF27F00337E9B /* tokenizer_script.c */,
-				0E750FD41D9AF27F00337E9B /* tokenizer.h */,
-				0E750FD31D9AF27F00337E9B /* tokenizer.c */,
 				0E750FD61D9AF27F00337E9B /* tree.h */,
 				0E750FD51D9AF27F00337E9B /* tree.c */,
 				0E750FE61D9AF27F00337E9B /* utils.h */,
@@ -687,11 +690,11 @@
 		0E750F391D9AF27200337E9B /* media */ = {
 			isa = PBXGroup;
 			children = (
-				0E750F3A1D9AF27200337E9B /* init.c */,
-				0E750F3B1D9AF27200337E9B /* init.h */,
 				0E750F3C1D9AF27200337E9B /* myosi.h */,
-				0E750F3D1D9AF27200337E9B /* state.c */,
+				0E750F3B1D9AF27200337E9B /* init.h */,
+				0E750F3A1D9AF27200337E9B /* init.c */,
 				0E750F3E1D9AF27200337E9B /* state.h */,
+				0E750F3D1D9AF27200337E9B /* state.c */,
 			);
 			name = media;
 			path = ../../source/mycss/media;
@@ -801,8 +804,10 @@
 		0E750FD71D9AF27F00337E9B /* utils */ = {
 			isa = PBXGroup;
 			children = (
-				0E0D5CFF1E003A5E00EBFDD6 /* avl_tree.c */,
+				0E0D738B1E2F67DB00FC97DE /* mhash.h */,
+				0E0D738A1E2F67DB00FC97DE /* mhash.c */,
 				0E0D5D001E003A5E00EBFDD6 /* avl_tree.h */,
+				0E0D5CFF1E003A5E00EBFDD6 /* avl_tree.c */,
 				0E750FD91D9AF27F00337E9B /* mchar_async.h */,
 				0E750FD81D9AF27F00337E9B /* mchar_async.c */,
 				0E750FDA1D9AF27F00337E9B /* mcobject.c */,
@@ -959,6 +964,7 @@
 				0E750F251D9AF26300337E9B /* vmtx.c in Sources */,
 				0E750F801D9AF27200337E9B /* an_plus_b.c in Sources */,
 				0E750FEF1D9AF27F00337E9B /* myosi.c in Sources */,
+				0E0D738C1E2F67DB00FC97DE /* mhash.c in Sources */,
 				0E750F9B1D9AF27200337E9B /* tokenizer_end.c in Sources */,
 				0E750F851D9AF27200337E9B /* parser.c in Sources */,
 				0E750F871D9AF27200337E9B /* entry.c in Sources */,

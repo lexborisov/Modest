@@ -28,9 +28,6 @@ modest_finder_t * modest_finder_create(void)
 
 modest_status_t modest_finder_init(modest_finder_t* finder)
 {
-    //finder->tree = NULL;
-    //finder->stylesheet = NULL;
-    
     return MODEST_STATUS_OK;
 }
 
@@ -63,16 +60,6 @@ modest_finder_t * modest_finder_create_simple(void)
         return modest_finder_destroy(finder, true);
     
     return finder;
-}
-
-myhtml_tree_t * modest_finder_html_tree(modest_finder_t* finder)
-{
-    return finder->html_tree;
-}
-
-void modest_finder_html_tree_set(modest_finder_t* finder, myhtml_tree_t* myhtml_tree)
-{
-    finder->html_tree = myhtml_tree;
 }
 
 void modest_finder_callback_found_with_collection(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_list_t* selector_list, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec, void* ctx)
@@ -117,11 +104,9 @@ void modest_finder_specificity_inc(mycss_selectors_entry_t* selector, mycss_sele
     }
 }
 
-modest_finder_t * modest_finder_by_stylesheet(myhtml_tree_t* myhtml_tree, mycss_stylesheet_t *stylesheet,
-                                              myhtml_collection_t** collection, myhtml_tree_node_t* base_node,
-                                              mycss_selectors_list_t* selector_list)
+modest_finder_t * modest_finder_by_stylesheet(mycss_stylesheet_t *stylesheet, myhtml_collection_t** collection, myhtml_tree_node_t* base_node)
 {
-    if(collection == NULL)
+    if(collection == NULL || base_node == NULL || stylesheet == NULL)
         return NULL;
     
     modest_finder_t *finder = modest_finder_create();
@@ -148,21 +133,7 @@ modest_finder_t * modest_finder_by_stylesheet(myhtml_tree_t* myhtml_tree, mycss_
     else
         myhtml_collection_clean(*collection);
     
-    if(base_node == NULL) {
-        if(myhtml_tree->node_html)
-            base_node = myhtml_tree->node_html;
-        else
-            return finder;
-    }
-    
-    if(selector_list == NULL) {
-        if(stylesheet->sel_list_first)
-            selector_list = stylesheet->sel_list_first;
-        else
-            return finder;
-    }
-    
-    finder->html_tree = myhtml_tree;
+    mycss_selectors_list_t *selector_list = stylesheet->sel_list_first;
     
     while(selector_list) {
         for(size_t i = 0; i < selector_list->entries_list_length; i++) {
@@ -177,11 +148,10 @@ modest_finder_t * modest_finder_by_stylesheet(myhtml_tree_t* myhtml_tree, mycss_
     return finder;
 }
 
-modest_status_t modest_finder_by_selectors_list(modest_finder_t* finder,
-                                                myhtml_tree_t* myhtml_tree, myhtml_tree_node_t* scope_node,
+modest_status_t modest_finder_by_selectors_list(modest_finder_t* finder, myhtml_tree_node_t* scope_node,
                                                 mycss_selectors_list_t* selector_list, myhtml_collection_t** collection)
 {
-    if(finder == NULL || myhtml_tree == NULL || selector_list == NULL || scope_node == NULL || collection == NULL)
+    if(finder == NULL || selector_list == NULL || scope_node == NULL || collection == NULL)
         return MODEST_STATUS_ERROR;
     
     if(*collection == NULL) {
@@ -191,8 +161,6 @@ modest_status_t modest_finder_by_selectors_list(modest_finder_t* finder,
         if(status)
             return MODEST_STATUS_ERROR_MEMORY_ALLOCATION;
     }
-    
-    finder->html_tree = myhtml_tree;
     
     for(size_t i = 0; i < selector_list->entries_list_length; i++) {
         mycss_selectors_specificity_t spec = selector_list->entries_list[i].specificity;

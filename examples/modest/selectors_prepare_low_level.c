@@ -92,10 +92,10 @@ mycss_selectors_list_t * prepare_selector(mycss_entry_t *css_entry, const char* 
     return list;
 }
 
-myhtml_collection_t * find_by_selectors_list(modest_finder_t *finder, myhtml_tree_t* html_tree, mycss_selectors_list_t *list)
+myhtml_collection_t * find_by_selectors_list(modest_finder_t *finder, myhtml_tree_node_t *scope, mycss_selectors_list_t *list)
 {
     myhtml_collection_t *collection = NULL;
-    modest_finder_by_selectors_list(finder, html_tree, html_tree->node_html, list, &collection);
+    modest_finder_by_selectors_list(finder, scope, list, &collection);
     
     return collection;
 }
@@ -107,7 +107,7 @@ void print_found_result(const char* caption, myhtml_tree_t* html_tree, myhtml_co
         
         for(size_t i = 0; i < collection->length; i++) {
             printf("\t");
-            myhtml_serialization_node_callback(html_tree, collection->list[i], serialization_callback, NULL);
+            myhtml_serialization_node_callback(collection->list[i], serialization_callback, NULL);
         }
         
         printf("\n");
@@ -141,9 +141,9 @@ int main(int argc, const char * argv[])
     mycss_selectors_list_t *selectors_list = prepare_selector(css_entry, selector, strlen(selector));
     
     /* find nodes by selector */
-    myhtml_collection_t *collection_first  = find_by_selectors_list(finder, tree_first, selectors_list);
-    myhtml_collection_t *collection_second = find_by_selectors_list(finder, tree_second, selectors_list);
-    myhtml_collection_t *collection_third  = find_by_selectors_list(finder, tree_third, selectors_list);
+    myhtml_collection_t *collection_first  = find_by_selectors_list(finder, tree_first->node_html, selectors_list);
+    myhtml_collection_t *collection_second = find_by_selectors_list(finder, tree_second->node_html, selectors_list);
+    myhtml_collection_t *collection_third  = find_by_selectors_list(finder, tree_third->node_html, selectors_list);
     
     /* print all */
     /* print selector */
@@ -153,9 +153,9 @@ int main(int argc, const char * argv[])
     
     /* print trees */
     printf("Incoming trees:\n");
-    printf("First:\n\t");    myhtml_serialization_tree_callback(tree_first , tree_first->node_html , serialization_callback, NULL);
-    printf("\nSecond:\n\t"); myhtml_serialization_tree_callback(tree_second, tree_second->node_html, serialization_callback, NULL);
-    printf("\nThird:\n\t");  myhtml_serialization_tree_callback(tree_third , tree_third->node_html , serialization_callback, NULL);
+    printf("First:\n\t");    myhtml_serialization_tree_callback(tree_first->node_html , serialization_callback, NULL);
+    printf("\nSecond:\n\t"); myhtml_serialization_tree_callback(tree_second->node_html, serialization_callback, NULL);
+    printf("\nThird:\n\t");  myhtml_serialization_tree_callback(tree_third->node_html , serialization_callback, NULL);
     
     /* print found result */
     printf("\n\nFound:\n");

@@ -104,8 +104,7 @@ void print_found_result(myhtml_tree_t* html_tree, myhtml_collection_t *collectio
     if(collection) {
         for(size_t i = 0; i < collection->length; i++) {
             printf("\n\t");
-            myhtml_serialization_node_callback(html_tree, collection->list[i],
-                                               serialization_callback, NULL);
+            myhtml_serialization_node_callback(collection->list[i], serialization_callback, NULL);
         }
         
         printf("\n");
@@ -132,8 +131,7 @@ int main(int argc, const char * argv[])
     
     /* find nodes by selector */
     myhtml_collection_t *collection = NULL;
-    modest_finder_by_selectors_list(finder, html_tree, html_tree->node_html,
-                                    selectors_list, &collection);
+    modest_finder_by_selectors_list(finder, html_tree->node_html, selectors_list, &collection);
     
     /* print result */
     /* print selector */
@@ -144,8 +142,7 @@ int main(int argc, const char * argv[])
     
     /* print tree */
     printf("Incoming tree:\n\t");
-    myhtml_serialization_tree_callback(html_tree, html_tree->node_html,
-                                       serialization_callback, NULL);
+    myhtml_serialization_tree_callback(html_tree->node_html, serialization_callback, NULL);
     
     /* print found result */
     printf("\n\nFound nodes:");

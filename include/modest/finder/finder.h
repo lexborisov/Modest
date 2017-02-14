@@ -57,10 +57,9 @@ void modest_finder_callback_found_with_bool(modest_finder_t* finder, myhtml_tree
 void modest_finder_specificity_inc(mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec);
 
 /* base api */
-modest_finder_t * modest_finder_by_stylesheet(myhtml_tree_t* myhtml_tree, mycss_stylesheet_t *stylesheet,
-                                              myhtml_collection_t** collection, myhtml_tree_node_t* base_node, mycss_selectors_list_t* selector_list);
+modest_finder_t * modest_finder_by_stylesheet(mycss_stylesheet_t *stylesheet, myhtml_collection_t** collection, myhtml_tree_node_t* base_node);
 
-modest_status_t modest_finder_by_selectors_list(modest_finder_t* finder, myhtml_tree_t* myhtml_tree, myhtml_tree_node_t* scope_node,
+modest_status_t modest_finder_by_selectors_list(modest_finder_t* finder, myhtml_tree_node_t* scope_node,
                                                 mycss_selectors_list_t* selector_list, myhtml_collection_t** collection);
 
 /* process */

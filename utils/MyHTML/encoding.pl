@@ -30,8 +30,6 @@ sub for_json {
 	foreach my $name (sort {$a cmp $b} keys %$json_obj) {
 		print_res($json_obj->{$name}, $name, $myhtml_encoding_list);
 	}
-	
-	print_links($myhtml_encoding_list);
 }
 
 sub for_single_byte {
@@ -100,32 +98,6 @@ sub for_txt_files {
 		#print "$name\n";
 	}
 	closedir $dh;
-}
-
-sub print_links {
-	my ($myhtml_encoding_list) = @_;
-	
-	print "enum myhtml_encoding_list {\n";
-    print "\tMyHTML_ENCODING_DEFAULT          = 0x00,\n";
-	print "\tMyHTML_ENCODING_AUTO             = 0x01,\n";
-	print "\tMyHTML_ENCODING_CUSTOM           = 0x02,\n";
-    print "\tMyHTML_ENCODING_UTF_8            = 0x00,\n";
-	print "\tMyHTML_ENCODING_UTF_16LE         = 0x04,\n";
-	print "\tMyHTML_ENCODING_UTF_16BE         = 0x05,\n";
-	print "\tMyHTML_ENCODING_X_USER_DEFINED   = 0x06,\n";
-	
-	my $i = 7; my @links = (0, 0);
-	foreach my $id (sort {$a cmp $b} keys %$myhtml_encoding_list) {
-		print "\t$id = ", sprintf("0x%02x", $i), ",\n";
-		$i++;
-		
-		push @links, "myhtml_encoding_decode_". $myhtml_encoding_list->{$id};
-	}
-	
-	print "\tMyHTML_ENCODING_LAST_ENTRY = ", sprintf("0x%02x\n", $i);
-	print "};\n\n";
-	
-	print join(", ", @links), "\n";
 }
 
 sub read_file {

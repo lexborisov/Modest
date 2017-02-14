@@ -80,7 +80,7 @@ void print_result(modest_t* modest, myhtml_tree_t* myhtml_tree, myhtml_tree_node
     /* traversal of the tree without recursion */
     while(node) {
         modest_node_t *m_node = (modest_node_t*)node->data;
-        myhtml_serialization_node_callback(myhtml_tree, node, serialization_callback, NULL);
+        myhtml_serialization_node_callback(node, serialization_callback, NULL);
         
         if(m_node) {
             printf(": {");
@@ -133,8 +133,7 @@ int main(int argc, const char * argv[])
     modest_finder_thread_init(finder, finder_thread, 2);
     
     /* comparison selectors and tree nodes */
-    status = modest_finder_thread_process(modest, finder_thread, modest->myhtml_tree,
-                                          modest->myhtml_tree->node_html, stylesheet->sel_list_first);
+    status = modest_finder_thread_process(modest, finder_thread, modest->myhtml_tree->node_html, stylesheet->sel_list_first);
     
     check_status("Can't find by selectors with thread\n");
     
@@ -146,7 +145,7 @@ int main(int argc, const char * argv[])
     
     /* print trees */
     printf("Incoming tree:\n\t");
-    myhtml_serialization_tree_callback(modest->myhtml_tree, modest->myhtml_tree->node_html, serialization_callback, NULL);
+    myhtml_serialization_tree_callback(modest->myhtml_tree->node_html, serialization_callback, NULL);
     
     /* print nodes with style */
     printf("\n\nResult:\n");

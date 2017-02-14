@@ -106,7 +106,7 @@ void parse_style_of_node_and_print(myhtml_tree_t *html_tree, mycss_entry_t *css_
             
             if(dec_entry) {
                 printf("Node:\n\t");
-                myhtml_serialization_tree_callback(html_tree, node, serialization_callback, NULL);
+                myhtml_serialization_tree_callback(node, serialization_callback, NULL);
                 printf("\nDeclaration:\n");
                 print_entries(css_entry, dec_entry);
                 printf("\n\n");
@@ -136,8 +136,7 @@ int main(int argc, const char * argv[])
     
     /* print tree */
     printf("HTML:\n\t");
-    myhtml_serialization_tree_callback(html_tree, html_tree->node_html,
-                                       serialization_callback, NULL);
+    myhtml_serialization_tree_callback(html_tree->node_html, serialization_callback, NULL);
     printf("\n\n");
     
     /* find, parse and print style attributes */
