@@ -2081,6 +2081,23 @@ myhtml_encoding_name_by_id(myhtml_encoding_t encoding, size_t *length);
 myhtml_encoding_t
 myhtml_encoding_prescan_stream_to_determine_encoding(const char *data, size_t data_size);
 
+/**
+ * Extracting character encoding from string. Find "charset=" and see encoding. 
+ * For example: "text/html; charset=windows-1251". Return MyHTML_ENCODING_WINDOWS_1251
+ *
+ *
+ * See https://html.spec.whatwg.org/multipage/infrastructure.html#algorithm-for-extracting-a-character-encoding-from-a-meta-element
+ *
+ * @param[in]  data
+ * @param[in]  data length
+ * @param[out] return encoding
+ *
+ * @return true if encoding found
+ */
+bool
+myhtml_encoding_extracting_character_encoding_from_charset(const char *data, size_t data_size,
+                                                           myhtml_encoding_t *encoding);
+
 /***********************************************************************************
  *
  * MyHTML_STRING
