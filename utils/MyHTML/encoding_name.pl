@@ -168,13 +168,13 @@ sub print_enum {
 	print "enum myhtml_encoding_list {\n\t";
         
         my @vals;
-        push @vals, ["MyHTML_ENCODING_DEFAULT", "0x00"];
-	push @vals, ["MyHTML_ENCODING_AUTO", "0x01"];
-	push @vals, ["MyHTML_ENCODING_NOT_DETERMINED", "0x02"];
-        push @vals, ["MyHTML_ENCODING_UTF_8", "0x00"];
-	push @vals, ["MyHTML_ENCODING_UTF_16LE", "0x04"];
-	push @vals, ["MyHTML_ENCODING_UTF_16BE", "0x05"];
-	push @vals, ["MyHTML_ENCODING_X_USER_DEFINED", "0x06"];
+        push @vals, ["MyHTML_ENCODING_DEFAULT", "0x00", "utf_8"];
+	push @vals, ["MyHTML_ENCODING_AUTO", "0x01", "NULL"];
+	push @vals, ["MyHTML_ENCODING_NOT_DETERMINED", "0x02", "NULL"];
+        push @vals, ["MyHTML_ENCODING_UTF_8", "0x00", "utf_8"];
+	push @vals, ["MyHTML_ENCODING_UTF_16LE", "0x04", "utf_16le"];
+	push @vals, ["MyHTML_ENCODING_UTF_16BE", "0x05", , "utf_16be"];
+	push @vals, ["MyHTML_ENCODING_X_USER_DEFINED", "0x06", "x_user_defined"];
 	
 	my $i = 7; 
 	foreach my $id (sort {$a cmp $b} keys %$index) {
@@ -184,18 +184,27 @@ sub print_enum {
                 next if $id =~ /UTF_16BE$/i;
                 next if $id =~ /X_USER_DEFINED$/i;
                 
-                push @vals, ["MyHTML_ENCODING_". uc($id), sprintf("0x%02x", $i)];
+                push @vals, ["MyHTML_ENCODING_". uc($id), sprintf("0x%02x", $i), lc($id)];
                 
 		$i++;
 	}
 	
-        push @vals, ["MyHTML_ENCODING_LAST_ENTRY", sprintf("0x%02x", $i)];
+        push @vals, ["MyHTML_ENCODING_LAST_ENTRY", sprintf("0x%02x", $i), "NULL"];
         
         print join(",\n\t", @{MyHTML::Base->format_list_text(\@vals, "= ")}), "\n";
         
 	print "}\ntypedef myhtml_encoding_t;\n\n";
         
-        shift @vals;
+        print "static const myhtml_encoding_custom_f myhtml_encoding_function_index[] = \n{\n";
+        foreach my $entry (@vals) {
+                if($entry->[2] eq "NULL") {
+                        print "\t",  $entry->[2], ",\n";
+                } else {
+                        print "\t",  "myhtml_encoding_decode_", $entry->[2], ",\t// ", $entry->[0], "\n";
+                }
+        }
+        
+        print "};\n";
         
         print "static const myhtml_encoding_entry_name_index_t myhtml_encoding_entry_name_index_static_list_index[(MyHTML_ENCODING_LAST_ENTRY + 1)] =\n{\n";
         
