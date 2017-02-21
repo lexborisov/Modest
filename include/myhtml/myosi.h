@@ -31,7 +31,7 @@
 
 #define MyHTML_VERSION_MAJOR 3
 #define MyHTML_VERSION_MINOR 0
-#define MyHTML_VERSION_PATCH 1
+#define MyHTML_VERSION_PATCH 2
 
 #if (defined(_WIN32) || defined(_WIN64)) && !defined(__WINPTHREADS_VERSION)
 #define IS_OS_WINDOWS
@@ -77,6 +77,13 @@ extern "C" {
     #define myhtml_free MyHTML_EXTERN_FREE
 #else
     #define myhtml_free myhtml_mem_free
+#endif
+
+/* Format */
+#ifdef IS_OS_WINDOWS
+    #define MyHTML_FMT_Z "%Iu"
+#else
+    #define MyHTML_FMT_Z "%zu"
 #endif
 
 /* Debug */
