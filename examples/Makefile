@@ -10,7 +10,11 @@ INCLUDE_TMP := include
 MODEST_OPTIMIZATION_LEVEL ?= -O2
 
 CFLAGS ?= -Wall -Werror
-CFLAGS += $(MODEST_OPTIMIZATION_LEVEL) -Wno-unused-variable -fPIC --std=c99 -I../include
+CFLAGS += $(MODEST_OPTIMIZATION_LEVEL) -Wno-unused-variable --std=c99 -I../include
+
+ifneq ($(OS),Windows_NT)
+    CFLAGS += -fPIC
+endif
 
 MODEST_BUILD_WITHOUT_THREADS ?= NO
 ifeq ($(MODEST_BUILD_WITHOUT_THREADS),YES)
