@@ -14,7 +14,11 @@ BIN_TMP := bin
 MODEST_OPTIMIZATION_LEVEL ?= -O2
 
 CFLAGS ?= -Wall -Werror
-CFLAGS += $(MODEST_OPTIMIZATION_LEVEL) -Wno-unused-variable -fPIC --std=c99 -I$(SRCDIR)
+CFLAGS += $(MODEST_OPTIMIZATION_LEVEL) -Wno-unused-variable --std=c99 -I$(SRCDIR)
+
+ifneq ($(OS),Windows_NT)
+    CFLAGS += -fPIC
+endif
 
 ifdef MODEST_BUILD_DEBUG
 	CFLAGS += -g
