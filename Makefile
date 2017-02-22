@@ -7,6 +7,7 @@ CC ?= gcc
 LIBNAME := modest
 LIBPOSTFIX := .so
 LIBSTATIC_POSTFIX  := _static
+IMP_FLAG :=
 LIB_TMP := lib
 INCLUDE_TMP := include
 BIN_TMP := bin
@@ -34,6 +35,8 @@ else
 endif
 
 ifeq ($(OS),Windows_NT)
+    LIBPOSTFIX := .dll
+    IMP_FLAG := -Wl,--out-implib,$(LIB_TMP)/lib$(LIBNAME).dll.a
 else
 	UNAM := $(shell uname -s)
 	ifeq ($(UNAM),Darwin)
@@ -58,7 +61,7 @@ include $(TARGET)/modest/Makefile.mk
 OBJS := $(patsubst %.c,%.o,$(SRCS))
 
 shared: $(OBJS)
-	$(CC) -shared $(LDFLAGS) $(OBJS) -o $(LIB_TMP)/lib$(LIBNAME)$(LIBPOSTFIX)
+	$(CC) -shared $(IMP_FLAG) $(LDFLAGS) $(OBJS) -o $(LIB_TMP)/lib$(LIBNAME)$(LIBPOSTFIX)
 
 static: shared
 	$(AR) crus $(LIB_TMP)/lib$(LIBNAME)$(LIBSTATIC_POSTFIX).a $(OBJS)
