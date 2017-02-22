@@ -24,6 +24,8 @@
 
 #include <mycss/api.h>
 
+#include "example.h"
+
 mycss_token_t * token_ready_callback(mycss_entry_t* entry, mycss_token_t* token)
 {
     myhtml_string_t str;
@@ -43,9 +45,9 @@ mycss_token_t * token_ready_callback(mycss_entry_t* entry, mycss_token_t* token)
                                                  &start, &end);
 
         if(end)
-            printf("Unicode range U+%s: %zu-%zu\n", myhtml_string_data(&str), start, end);
+            printf("Unicode range U+%s: " MyHTML_FMT_Z "-" MyHTML_FMT_Z "\n", myhtml_string_data(&str), start, end);
         else
-            printf("Unicode range U+%s: %zu\n", myhtml_string_data(&str), start);
+            printf("Unicode range U+%s: " MyHTML_FMT_Z "\n", myhtml_string_data(&str), start);
     }
 
     myhtml_string_destroy(&str, false);

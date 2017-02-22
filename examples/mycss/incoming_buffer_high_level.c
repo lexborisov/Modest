@@ -24,6 +24,8 @@
 
 #include <mycss/api.h>
 
+#include "example.h"
+
 // see tokenizer_buffer_high_level
 
 mycss_token_t * token_ready_callback(mycss_entry_t* entry, mycss_token_t* token)
@@ -32,7 +34,7 @@ mycss_token_t * token_ready_callback(mycss_entry_t* entry, mycss_token_t* token)
     size_t tokens_count = mycss_entry_token_count(entry);
     mycss_token_type_t token_type = mycss_token_type(token);
 
-    printf("Token %zu; %s; \"", tokens_count, mycss_token_name_by_type(token_type));
+    printf("Token " MyHTML_FMT_Z "; %s; \"", tokens_count, mycss_token_name_by_type(token_type));
 
     // print data
     myhtml_incoming_buffer_t *buffer = mycss_entry_incoming_buffer_current(entry);

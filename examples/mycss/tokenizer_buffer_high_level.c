@@ -24,6 +24,8 @@
 
 #include <mycss/api.h>
 
+#include "example.h"
+
 mycss_token_t * token_ready_callback(mycss_entry_t* entry, mycss_token_t* token)
 {
     // print token name
@@ -33,7 +35,7 @@ mycss_token_t * token_ready_callback(mycss_entry_t* entry, mycss_token_t* token)
     myhtml_string_t str;
     mycss_token_data_to_string(entry, token, &str, true);
 
-    printf("Token %zu; %s; \"%s\"\n", tokens_count,
+    printf("Token " MyHTML_FMT_Z "; %s; \"%s\"\n", tokens_count,
            mycss_token_name_by_type(token_type),
            myhtml_string_data(&str));
 
