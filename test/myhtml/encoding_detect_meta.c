@@ -60,7 +60,7 @@ test_res_t test_load_file(const char* filename)
     
     size_t nread = fread(file_data, 1, size, fh);
     if (nread != size) {
-        fprintf(stderr, "Could not read %ld bytes (%zu bytes done)\n", size, nread);
+        fprintf(stderr, "Could not read %ld bytes (" MyHTML_FMT_Z " bytes done)\n", size, nread);
         exit(EXIT_FAILURE);
     }
     

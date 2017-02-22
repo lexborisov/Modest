@@ -25,7 +25,7 @@
 #include <myfont/myfont.h>
 #include <myhtml/encoding.h>
 
-void usage(const char *path, float font_size, unsigned long codepoint)
+void usage(const char *path, float font_size, size_t codepoint)
 {
     printf("Usage:\n");
     printf("\tprogram [char in UTF-8] [font fize in px] [font path]\n");
@@ -38,7 +38,7 @@ int main(int argc, const char * argv[])
     const char *path = "../third_party/font/Arkhip.ttf";
     float font_size = 200.0f;
     
-    unsigned long codepoint;
+    size_t codepoint;
     myhtml_encoding_ascii_utf_8_to_codepoint((unsigned char*)"x", &codepoint);
     
     if (argc == 2) {
@@ -102,7 +102,7 @@ int main(int argc, const char * argv[])
     printf("Font file: %s\n", path);
     printf("Font size: %.fpx\n\n", font_size);
     
-    printf("Metrics for code point %lu (%s):\n", codepoint, data);
+    printf("Metrics for code point " MyHTML_FMT_Z " (%s):\n", codepoint, data);
     printf("\tBaseline: %.05f\n", baseline);
     printf("\tAscender: %.05f\n", ascender);
     printf("\tDescender: %.05f\n", descender);

@@ -24,6 +24,8 @@
 
 #include <mycss/mycss.h>
 
+#include "example.h"
+
 struct res_data {
     char  *data;
     size_t size;
@@ -62,7 +64,7 @@ struct res_data load_data_file(const char* filename)
     
     size_t nread = fread(data, 1, size, fh);
     if (nread != size) {
-        fprintf(stderr, "could not read %ld bytes (%zu bytes done)\n", size, nread);
+        fprintf(stderr, "could not read %ld bytes (" MyHTML_FMT_Z " bytes done)\n", size, nread);
         exit(EXIT_FAILURE);
     }
     

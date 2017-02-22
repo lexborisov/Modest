@@ -90,7 +90,7 @@ test_res_t test_load_file(const char* filename)
 
     size_t nread = fread(file_data, 1, size, fh);
     if (nread != size) {
-        fprintf(stderr, "Could not read %ld bytes (%zu bytes done)\n", size, nread);
+        fprintf(stderr, "Could not read %ld bytes (" MyHTML_FMT_Z " bytes done)\n", size, nread);
         exit(EXIT_FAILURE);
     }
 
@@ -239,7 +239,7 @@ test_stat_t test_read_dir(const char* dir_path, test_read_dir_callback_f callbac
                 continue;
             
             result_stat.total++;
-            printf("%zu) %s: ", result_stat.total, ent->d_name);
+            printf(MyHTML_FMT_Z ") %s: ", result_stat.total, ent->d_name);
             
             if(callback(path, (strlen(ent->d_name) + path_len + 1), context)) {
                 result_stat.good++;
@@ -283,7 +283,7 @@ bool test_process_callback(const char* filename, size_t filename_len, void* cont
         printf("\tResult: ");
     }
     
-    printf("count(%zu) good(%zu) bad(%zu)\n", result_stat.total, result_stat.good, (result_stat.total - result_stat.good));
+    printf("count(" MyHTML_FMT_Z ") good(" MyHTML_FMT_Z ") bad(" MyHTML_FMT_Z ")\n", result_stat.total, result_stat.good, (result_stat.total - result_stat.good));
     
     test_data->stat.good += result_stat.good;
     test_data->stat.total += result_stat.total;
@@ -398,7 +398,7 @@ int main(int argc, const char * argv[])
     test_read_dir(argv[1], test_process_callback, &test_data);
     
     size_t bad_count = (test_data.stat.total - test_data.stat.good);
-    printf("\nTotal: %zu; Good: %zu; Bad: %zu\n", test_data.stat.total, test_data.stat.good, bad_count);
+    printf("\nTotal: " MyHTML_FMT_Z "; Good: " MyHTML_FMT_Z "; Bad: " MyHTML_FMT_Z "\n", test_data.stat.total, test_data.stat.good, bad_count);
     
     test_declaration_destroy_myhtml(test_data.tree);
     test_declaration_destroy_mycss(test_data.entry);
