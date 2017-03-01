@@ -95,7 +95,7 @@ set(INSTALL_DLL_EXE_DIR "bin")
 
 option(MODEST_BUILD_SHARED "Build shared library" ON)
 option(MODEST_BUILD_STATIC "Build static library" ON)
-option(MODEST_INSTALL_HEADER "Install header files" OFF)
+option(MODEST_INSTALL_HEADER "Install header files" ON)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${MODEST_OPTIMIZATION_LEVEL}")
 

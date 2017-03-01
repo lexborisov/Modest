@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -18,43 +18,20 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#ifndef MyHTML_URL_H
-#define MyHTML_URL_H
-#pragma once
+#include "myunicode/myosi.h"
 
-#ifdef __cplusplus
-//extern "C" {
-#endif
-    
-#include "myhtml/myosi.h"
-#include "myhtml/mystring.h"
-#include "myhtml/url/scheme.h"
+void * myunicode_callback_malloc(size_t size, void* ctx)
+{
+    return myhtml_malloc(size);
+}
 
-typedef struct myhtml_url myhtml_url_t;
+void * myunicode_callback_realloc(void* value, size_t size, void* ctx)
+{
+    return myhtml_realloc(value, size);
+}
 
-struct myhtml_url {
-    const myhtml_url_scheme_entry_t* scheme;
-    
-    char* href;
-    char* origin;
-    char* protocol;
-    char* username;
-    char* password;
-    char* host;
-    char* hostname;
-    char* port;
-    char* pathname;
-    char* search;
-    char* hash;
-    
-    mchar_async_t* mchar;
-    size_t node_idx;
-};
-
-myhtml_status_t myhtml_url_parse(myhtml_url_t* url, mchar_async_t* mchar, size_t node_id);
-
-#ifdef __cplusplus
-} /* extern "C" */
-#endif
-
-#endif /* MyHTML_URL_H */
+void * myunicode_callback_free(void* value, void* ctx)
+{
+    free(value);
+    return NULL;
+}

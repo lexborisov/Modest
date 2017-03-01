@@ -62,6 +62,7 @@ my $utils_data = $utils->read_tmpl("url_resources.h");
 $utils->save_src("resources.h", $utils_data,
 	{
 		BODY =>
+                        get_text_data(creare_for_query(), "myhtml_url_resources_static_map_query_charset") .
                         get_text_data(creare_for_forbidden_host_code_point(), "myhtml_url_resources_static_map_forbidden_host_code_point") .
                         "/* A C0 control is a code point in the range U+0000 to U+001F, inclusive. The C0 control percent-encode set are C0 controls and all code points greater than U+007E. */\n".
                         get_text_data(creare_for_simple(), "myhtml_url_resources_static_map_C0") .
@@ -71,6 +72,26 @@ $utils->save_src("resources.h", $utils_data,
 			get_text_data(creare_for_userinfo(), "myhtml_url_resources_static_map_userinfo")
 	}
 );
+
+sub creare_for_query {
+	my @data;
+	
+	for my $codepoint (0..255) {
+		my $char = chr($codepoint);
+		
+                # less than 0x21, greater than 0x7E, or is 0x22, 0x23, 0x3C, or 0x3E
+		if ($codepoint < 33 || $codepoint > 126 || $codepoint == 0x22 ||
+                    $codepoint == 0x23 || $codepoint == 0x3C || $codepoint == 0x3E) 
+		{
+                        push @data, "0x00";
+		}
+		else {
+                        push @data, sprintf("0x%02x", $codepoint);
+		}
+	}
+	
+	return \@data;
+}
 
 sub creare_for_forbidden_host_code_point {
 	my @data;

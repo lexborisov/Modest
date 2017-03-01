@@ -178,7 +178,7 @@ myhtml_status_t myhtml_tokenizer_end(myhtml_tree_t* tree)
     {
         mythread_queue_list_entry_wait_for_done(tree->myhtml->thread, tree->queue_entry);
         tree->queue_entry = mythread_queue_list_entry_delete(tree->myhtml->thread, tree->queue_entry, false);
-        
+        /* Further, any work with tree... */
         if(mythread_queue_list_get_count(tree->myhtml->thread->context) == 0) {
             myhtml_tokenizer_pause(tree);
         }

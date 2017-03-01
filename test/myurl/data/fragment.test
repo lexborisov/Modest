@@ -1,0 +1,25 @@
+type 1
+
+%URL:http://example.com#hash
+%EXPECT:http://example.com/#hash
+
+%URL:http://example.com/#hash
+%EXPECT:http://example.com/#hash
+
+%URL:http://example.com/path#hash
+%EXPECT:http://example.com/path#hash
+
+%URL:http://example.com/path/#hash
+%EXPECT:http://example.com/path/#hash
+
+%URL:http://example.com/path/#hash万
+%EXPECT:http://example.com/path/#hash%E4%B8%87
+
+%URL:http://example.com/path/#ha万sh
+%EXPECT:http://example.com/path/#ha%E4%B8%87sh
+
+%URL:http://example.com/?abc#hash
+%EXPECT:http://example.com/?abc#hash
+
+%URL:http://example.com/?abc#hash-link
+%EXPECT:http://example.com/?abc#hash-link

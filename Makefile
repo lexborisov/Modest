@@ -56,6 +56,7 @@ all: create shared static
 include $(TARGET)/myhtml/Makefile.mk
 include $(TARGET)/mycss/Makefile.mk
 include $(TARGET)/myfont/Makefile.mk
+include $(TARGET)/myurl/Makefile.mk
 include $(TARGET)/modest/Makefile.mk
 
 OBJS := $(patsubst %.c,%.o,$(SRCS))
@@ -78,7 +79,7 @@ clean:
 clean_include:
 	rm -rf $(INCLUDE_TMP)
 
-clone: create clean_include myhtml_clone mycss_clone modest_clone myfont_clone
+clone: create clean_include myhtml_clone mycss_clone modest_clone myfont_clone myurl_clone
 	find include -name "*.h" -exec sed -i '.bak' -E 's/^[ \t]*#[ \t]*include[ \t]*"([^"]+)"/#include <\1>/g' {} \;
 	find include -name "*.h.bak" -exec rm -f {} \;
 
@@ -86,5 +87,6 @@ test:
 	test/mycss/declaration test/mycss/data/declaration
 	test/myhtml/utils/avl_tree
 	test/myhtml/encoding_detect_meta test/myhtml/data/encoding/detect_meta.html
+	test/myurl/url test/myurl/data
 
 .PHONY: all clean clone test

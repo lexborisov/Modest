@@ -1,0 +1,28 @@
+type 1
+
+%URL:mailto:addr1
+%EXPECT:mailto:addr1
+
+%URL:mailto:addr1@foo.com
+%EXPECT:mailto:addr1@foo.com
+
+%URL:mailto:addr1 	 
+%EXPECT:mailto:addr1
+
+%URL:mailto:addr1?to=jon
+%EXPECT:mailto:addr1?to=jon
+
+%URL:mailto:addr1,addr2
+%EXPECT:mailto:addr1,addr2
+
+%URL:mailto:addr1, addr2
+%EXPECT:mailto:addr1, addr2
+
+%URL:mailto:addr1%2caddr2
+%EXPECT:mailto:addr1%2caddr2
+
+%URL:mailto:������
+%EXPECT:mailto:%EF%BF%BD%EF%BF%BD%EF%BF%BD%EF%BF%BD%EF%BF%BD%EF%BF%BD
+
+%URL:mailto:addr1?
+%EXPECT:mailto:addr1?

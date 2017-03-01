@@ -38,7 +38,7 @@ Flags that can be passed to CMake:
 - `CMAKE_INSTALL_LIBDIR=lib` set path to install created library. Default: lib
 - `MODEST_BUILD_SHARED=ON` build shared library. Default: ON
 - `MODEST_BUILD_STATIC=ON` build static library. Default: ON
-- `MODEST_INSTALL_HEADER=OFF` install header files. Default OFF
+- `MODEST_INSTALL_HEADER=OFF` install header files. Default ON
 - `MODEST_BUILD_WITHOUT_THREADS=YES` build without POSIX Threads. Default: NO
 - `MODEST_EXTERN_MALLOC=my_malloc_func` set extern malloc function. Default: UNDEFINED
 - `MODEST_EXTERN_REALLOC=my_realloc_func` set extern realloc function. Default: UNDEFINED

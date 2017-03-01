@@ -1,0 +1,19 @@
+type 1
+
+%URL:http://example.com/
+%EXPECT:http://example.com/
+
+%URL:http://example.com./
+%EXPECT:http://example.com./
+
+%URL:http://.
+%EXPECT:http://./
+
+%URL:http://./
+%EXPECT:http://./
+
+%URL:https://a.
+%EXPECT:https://a./
+
+%URL:http://+-****/
+%EXPECT:http://+-****/

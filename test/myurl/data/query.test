@@ -1,0 +1,26 @@
+type 1
+
+%URL:http://example.com?abc
+%EXPECT:http://example.com/?abc
+
+%URL:http://example.com/?abc
+%EXPECT:http://example.com/?abc
+
+%URL:http://example.com/?key=value
+%EXPECT:http://example.com/?key=value
+
+%URL:http://example.com/?key=value&hohoho=hahaha
+%EXPECT:http://example.com/?key=value&hohoho=hahaha
+
+%URL:http://example.com/?key=val ue
+%EXPECT:http://example.com/?key=val%20ue
+
+%URL:http://example.com/?key=val万ue
+%EXPECT:http://example.com/?key=val%E4%B8%87ue
+
+%URL:http://example.com/?key=v
+al万u	e
+%EXPECT:http://example.com/?key=val%E4%B8%87ue
+
+%URL:http://example.com/?abc#hash
+%EXPECT:http://example.com/?abc#hash

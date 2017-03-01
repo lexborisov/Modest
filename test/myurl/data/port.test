@@ -1,0 +1,34 @@
+type 1
+
+%URL:http://www.example.com:hahaha/
+%EXPECT:
+
+%URL:http://www.example.com: hah aha/
+%EXPECT:
+
+%URL:http://www.example.com:-1/
+%EXPECT:
+
+%URL:http://www.example.com:-1/
+%EXPECT:
+
+%URL:http://www.example.com:123/
+%EXPECT:http://www.example.com:123/
+
+%URL:http://www.example.com:80/
+%EXPECT:http://www.example.com/
+
+%URL:http://www.example.com:/
+%EXPECT:http://www.example.com/
+
+%URL:http://www.example.com:/
+%EXPECT:http://www.example.com/
+
+%URL:http://www.example.com:15615156165165165/
+%EXPECT:
+
+%URL:https://www.example.com:443/
+%EXPECT:https://www.example.com/
+
+%URL:https://www.example.com:442/
+%EXPECT:https://www.example.com:442/
