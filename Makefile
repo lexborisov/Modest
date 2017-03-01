@@ -62,7 +62,7 @@ include $(TARGET)/modest/Makefile.mk
 OBJS := $(patsubst %.c,%.o,$(SRCS))
 
 shared: $(OBJS)
-	$(CC) -shared $(IMP_FLAG) $(LDFLAGS) $(OBJS) -o $(LIB_TMP)/lib$(LIBNAME)$(LIBPOSTFIX)
+	$(CC) -shared $(IMP_FLAG) $(LDFLAGS) $(OBJS) -o $(LIB_TMP)/lib$(LIBNAME)$(LIBPOSTFIX) -lm
 
 static: shared
 	$(AR) crus $(LIB_TMP)/lib$(LIBNAME)$(LIBSTATIC_POSTFIX).a $(OBJS)
