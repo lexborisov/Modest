@@ -16,7 +16,7 @@ MODEST_OPTIMIZATION_LEVEL ?= -O2
 
 CFLAGS ?= -Wall -Werror
 CFLAGS += $(MODEST_OPTIMIZATION_LEVEL) -Wno-unused-variable --std=c99 -I$(SRCDIR)
-LDFLAGS += -lm
+LDFLAGS ?= -lm
 
 ifneq ($(OS),Windows_NT)
     CFLAGS += -fPIC
@@ -63,7 +63,7 @@ include $(TARGET)/modest/Makefile.mk
 OBJS := $(patsubst %.c,%.o,$(SRCS))
 
 shared: $(OBJS)
-	$(CC) -shared $(IMP_FLAG) $(LDFLAGS) $(OBJS) -o $(LIB_TMP)/lib$(LIBNAME)$(LIBPOSTFIX)
+	$(CC) -shared $(IMP_FLAG) $(OBJS) -o $(LIB_TMP)/lib$(LIBNAME)$(LIBPOSTFIX) $(LDFLAGS)
 
 static: shared
 	$(AR) crus $(LIB_TMP)/lib$(LIBNAME)$(LIBSTATIC_POSTFIX).a $(OBJS)
