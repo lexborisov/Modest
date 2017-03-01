@@ -22,13 +22,13 @@
 #define MyURL_H
 #pragma once
 
-#include "myurl/myosi.h"
-#include "myhtml/mystring.h"
-#include "myurl/scheme.h"
-#include "myurl/host.h"
-#include "myurl/path.h"
-#include "myurl/utils.h"
-#include "myurl/serialization.h"
+#include <myurl/myosi.h>
+#include <myhtml/mystring.h>
+#include <myurl/scheme.h>
+#include <myurl/host.h>
+#include <myurl/path.h>
+#include <myurl/utils.h>
+#include <myurl/serialization.h>
 
 #ifdef __cplusplus
 extern "C" {

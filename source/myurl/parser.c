@@ -212,7 +212,7 @@ size_t myurl_parser_state_scheme(myurl_t* url, myurl_entry_t* url_entry, myurl_e
     {
         /* 1 and 4 */
         if(myurl_parser_alphanumeric(data[data_length]) == false &&
-           data[data_length] != '+' && data[data_length] != '-' & data[data_length] != '.')
+           data[data_length] != '+' && data[data_length] != '-' && data[data_length] != '.')
         {
             /* 2 */
             if(data[data_length] == ':')

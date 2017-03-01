@@ -16,7 +16,6 @@ MODEST_OPTIMIZATION_LEVEL ?= -O2
 
 CFLAGS ?= -Wall -Werror
 CFLAGS += $(MODEST_OPTIMIZATION_LEVEL) -Wno-unused-variable --std=c99 -I$(SRCDIR)
-LDFLAGS ?= -lm
 
 ifneq ($(OS),Windows_NT)
     CFLAGS += -fPIC
@@ -57,16 +56,16 @@ all: create shared static
 include $(TARGET)/myhtml/Makefile.mk
 include $(TARGET)/mycss/Makefile.mk
 include $(TARGET)/myfont/Makefile.mk
-#include $(TARGET)/myurl/Makefile.mk
+include $(TARGET)/myurl/Makefile.mk
 include $(TARGET)/modest/Makefile.mk
 
 OBJS := $(patsubst %.c,%.o,$(SRCS))
 
 shared: $(OBJS)
-	$(CC) -shared $(IMP_FLAG) $(OBJS) -o $(LIB_TMP)/lib$(LIBNAME)$(LIBPOSTFIX) $(LDFLAGS)
+	$(CC) -shared $(IMP_FLAG) $(LDFLAGS) $(OBJS) -o $(LIB_TMP)/lib$(LIBNAME)$(LIBPOSTFIX)
 
 static: shared
-	$(AR) crus $(LIB_TMP)/lib$(LIBNAME)$(LIBSTATIC_POSTFIX).a $(OBJS)
+	$(AR) crus $(LIB_TMP)/lib$(LIBNAME)$(LIBSTATIC_POSTFIX).a $(OBJS) 
 
 create:
 	mkdir -p lib bin
@@ -80,7 +79,7 @@ clean:
 clean_include:
 	rm -rf $(INCLUDE_TMP)
 
-clone: create clean_include myhtml_clone mycss_clone modest_clone myfont_clone
+clone: create clean_include myhtml_clone mycss_clone modest_clone myfont_clone myurl_clone
 	find include -name "*.h" -exec sed -i '.bak' -E 's/^[ \t]*#[ \t]*include[ \t]*"([^"]+)"/#include <\1>/g' {} \;
 	find include -name "*.h.bak" -exec rm -f {} \;
 

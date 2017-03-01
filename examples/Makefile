@@ -3,7 +3,6 @@ SRCDIR := examples
 
 CC ?= gcc
 LIBS := ../lib/libmodest_static.a
-LDLIBS := $(LIBS)
 
 INCLUDE_TMP := include
 
@@ -31,12 +30,14 @@ else
 	else
 		CFLAGS += -D_POSIX_C_SOURCE=199309L
 	endif
+
+	LDLIBS += $(LIBS) -lm
 endif
 
 find_files_h = $(wildcard $(dir)/*.h)
 find_files_c = $(wildcard $(dir)/*.c)
 
-SUBDIRS := selectors declarations myfont modest mycss myhtml
+SUBDIRS := selectors declarations myfont modest mycss myhtml myurl
 HDRS += $(foreach dir,$(SUBDIRS),$(find_files_h))
 SRCS += $(foreach dir,$(SUBDIRS),$(find_files_c))
 
