@@ -23,6 +23,8 @@ else
 	CFLAGS += -pthread
 endif
 
+LDLIBS += $(LIBS)
+
 ifeq ($(OS),Windows_NT)
 else
 	UNAM := $(shell uname -s)
@@ -31,7 +33,7 @@ else
 		CFLAGS += -D_POSIX_C_SOURCE=199309L
 	endif
 
-	LDLIBS += $(LIBS) -lm
+	LDLIBS += -lm
 endif
 
 find_files_h = $(wildcard $(dir)/*.h)
