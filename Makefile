@@ -16,7 +16,6 @@ MODEST_OPTIMIZATION_LEVEL ?= -O2
 
 CFLAGS ?= -Wall -Werror
 CFLAGS += $(MODEST_OPTIMIZATION_LEVEL) -Wno-unused-variable --std=c99 -I$(SRCDIR)
-LDFLAGS ?= -lm
 
 ifneq ($(OS),Windows_NT)
     CFLAGS += -fPIC
@@ -32,7 +31,7 @@ ifeq ($(MODEST_BUILD_WITHOUT_THREADS),YES)
 	CFLAGS += -DMODEST_BUILD_WITHOUT_THREADS -DMyHTML_BUILD_WITHOUT_THREADS
 else
     $(info Build with POSIX Threads)
-	CFLAGS += -pthread
+	CFLAGS += -pthread -lm
 endif
 
 ifeq ($(OS),Windows_NT)
@@ -63,7 +62,7 @@ include $(TARGET)/modest/Makefile.mk
 OBJS := $(patsubst %.c,%.o,$(SRCS))
 
 shared: $(OBJS)
-	$(CC) -shared $(IMP_FLAG) $(OBJS) -o $(LIB_TMP)/lib$(LIBNAME)$(LIBPOSTFIX) $(LDFLAGS)
+	$(CC) -shared $(IMP_FLAG) $(OBJS) $(LDFLAGS) -o $(LIB_TMP)/lib$(LIBNAME)$(LIBPOSTFIX) 
 
 static: shared
 	$(AR) crus $(LIB_TMP)/lib$(LIBNAME)$(LIBSTATIC_POSTFIX).a $(OBJS)
