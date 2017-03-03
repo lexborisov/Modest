@@ -29,10 +29,10 @@ static modest_finder_thread_context_t * modest_finder_thread_create_context(mode
 /* basic functions */
 modest_finder_thread_t * modest_finder_thread_create(void)
 {
-    return (modest_finder_thread_t*)myhtml_calloc(1, sizeof(modest_finder_thread_t));
+    return (modest_finder_thread_t*)mycore_calloc(1, sizeof(modest_finder_thread_t));
 }
 
-modest_status_t modest_finder_thread_init(modest_finder_t* finder, modest_finder_thread_t* finder_thread, size_t thread_count)
+mystatus_t modest_finder_thread_init(modest_finder_t* finder, modest_finder_thread_t* finder_thread, size_t thread_count)
 {
     finder_thread->finder = finder;
     
@@ -64,7 +64,7 @@ modest_status_t modest_finder_thread_init(modest_finder_t* finder, modest_finder
     if(finder_thread->thread == NULL)
         return MODEST_STATUS_OK;
     
-    myhtml_status_t status = mythread_init(finder_thread->thread, "lastmac", thread_count);
+    mystatus_t status = mythread_init(finder_thread->thread, "lastmac", thread_count);
     if(status) {
         mythread_destroy(finder_thread->thread, NULL, true);
         return MODEST_STATUS_OK;
@@ -107,14 +107,14 @@ modest_finder_thread_t * modest_finder_thread_destroy(modest_finder_thread_t* fi
     }
     
     if(finder_thread->context_list) {
-        myhtml_free(finder_thread->context_list);
+        mycore_free(finder_thread->context_list);
         
         finder_thread->context_list = NULL;
         finder_thread->context_list_size = 0;
     }
     
     if(self_destroy) {
-        myhtml_free(finder_thread);
+        mycore_free(finder_thread);
         return NULL;
     }
     
@@ -133,7 +133,7 @@ void modest_finder_thread_collate_node(modest_t* modest, myhtml_tree_node_t* nod
     }
 }
 
-modest_status_t modest_finder_thread_process(modest_t* modest, modest_finder_thread_t* finder_thread,
+mystatus_t modest_finder_thread_process(modest_t* modest, modest_finder_thread_t* finder_thread,
                                              myhtml_tree_node_t* scope_node, mycss_selectors_list_t* selector_list)
 {
     finder_thread->base_node = scope_node;
@@ -198,7 +198,7 @@ void modest_finder_thread_wait_for_all_done(modest_finder_thread_t* finder_threa
     
     for (size_t idx = finder_thread->thread->pth_list_root; idx < finder_thread->thread->pth_list_size; idx++) {
         while((finder_thread->thread->pth_list[idx].data.opt & MyTHREAD_OPT_DONE) == 0) {
-            myhtml_thread_nanosleep(&tomeout);
+            mycore_thread_nanosleep(&tomeout);
         }
     }
 }
@@ -209,7 +209,7 @@ modest_finder_thread_context_t * modest_finder_thread_create_context(modest_find
     count++;
     finder_thread->context_list_size = count;
     
-    modest_finder_thread_context_t *ctx = myhtml_calloc(count, sizeof(modest_finder_thread_context_t));
+    modest_finder_thread_context_t *ctx = mycore_calloc(count, sizeof(modest_finder_thread_context_t));
     
     if(ctx == NULL)
         return NULL;
@@ -225,7 +225,7 @@ modest_finder_thread_context_t * modest_finder_thread_create_context(modest_find
                 mcobject_async_node_delete(finder_thread->entry_obj, ctx[i].entry_node_id);
             }
             
-            myhtml_free(ctx);
+            mycore_free(ctx);
             return NULL;
         }
     }
@@ -245,7 +245,7 @@ modest_finder_thread_context_t * modest_finder_thread_create_context(modest_find
                 mcobject_async_node_delete(finder_thread->declaration_obj, ctx[i].declaration_node_id);
             }
             
-            myhtml_free(ctx);
+            mycore_free(ctx);
             return NULL;
         }
     }

@@ -23,12 +23,12 @@
 
 mycss_t * mycss_create(void)
 {
-    return (mycss_t*)myhtml_calloc(1, sizeof(mycss_t));
+    return (mycss_t*)mycore_calloc(1, sizeof(mycss_t));
 }
 
-mycss_status_t mycss_init(mycss_t* mycss)
+mystatus_t mycss_init(mycss_t* mycss)
 {
-    mycss_status_t status = mycss_tokenizer_state_init(mycss);
+    mystatus_t status = mycss_tokenizer_state_init(mycss);
     
     if(status != MyCSS_STATUS_OK)
         return status;
@@ -44,14 +44,14 @@ mycss_t * mycss_destroy(mycss_t* mycss, bool self_destroy)
     mycss_tokenizer_state_destroy(mycss);
     
     if(self_destroy) {
-        myhtml_free(mycss);
+        mycore_free(mycss);
         return NULL;
     }
     
     return mycss;
 }
 
-mycss_status_t mycss_parse(mycss_entry_t* entry, myhtml_encoding_t encoding, const char* css, size_t css_size)
+mystatus_t mycss_parse(mycss_entry_t* entry, myencoding_t encoding, const char* css, size_t css_size)
 {
     mycss_entry_clean(entry);
     
@@ -65,7 +65,7 @@ mycss_status_t mycss_parse(mycss_entry_t* entry, myhtml_encoding_t encoding, con
     /* and parse css */
     mycss_encoding_set(entry, encoding);
     
-    mycss_status_t status = mycss_tokenizer_chunk(entry, css, css_size);
+    mystatus_t status = mycss_tokenizer_chunk(entry, css, css_size);
     if(status != MyCSS_STATUS_OK)
         return status;
     
@@ -74,7 +74,7 @@ mycss_status_t mycss_parse(mycss_entry_t* entry, myhtml_encoding_t encoding, con
     return status;
 }
 
-mycss_status_t mycss_parse_chunk(mycss_entry_t* entry, const char* css, size_t css_size)
+mystatus_t mycss_parse_chunk(mycss_entry_t* entry, const char* css, size_t css_size)
 {
     if(entry->type & MyCSS_ENTRY_TYPE_END) {
         mycss_entry_clean_all(entry);
@@ -89,9 +89,9 @@ mycss_status_t mycss_parse_chunk(mycss_entry_t* entry, const char* css, size_t c
     return mycss_tokenizer_chunk(entry, css, css_size);
 }
 
-mycss_status_t mycss_parse_chunk_end(mycss_entry_t* entry)
+mystatus_t mycss_parse_chunk_end(mycss_entry_t* entry)
 {
-    mycss_status_t status = mycss_tokenizer_end(entry);
+    mystatus_t status = mycss_tokenizer_end(entry);
     mycss_entry_end(entry);
     
     return status;
@@ -129,10 +129,10 @@ const char * mycss_token_name_by_type(mycss_token_type_t type)
     return mycss_token_type_description[type];
 }
 
-size_t mycss_token_data_to_string(mycss_entry_t* entry, mycss_token_t* token, myhtml_string_t* str, bool init_string, bool case_insensitive)
+size_t mycss_token_data_to_string(mycss_entry_t* entry, mycss_token_t* token, mycore_string_t* str, bool init_string, bool case_insensitive)
 {
     if(init_string)
-        myhtml_string_init(entry->mchar, entry->mchar_node_id, str, (token->length + 4));
+        mycore_string_init(entry->mchar, entry->mchar_node_id, str, (token->length + 4));
     
     mycss_string_res_t out_res;
     mycss_string_res_clean(&out_res);
@@ -140,7 +140,7 @@ size_t mycss_token_data_to_string(mycss_entry_t* entry, mycss_token_t* token, my
     out_res.encoding = entry->encoding;
     out_res.case_insensitive = case_insensitive;
     
-    myhtml_incoming_buffer_t *buffer = myhtml_incoming_buffer_find_by_position(entry->current_buffer, token->begin);
+    mycore_incoming_buffer_t *buffer = mycore_incoming_buffer_find_by_position(entry->current_buffer, token->begin);
     size_t relative_begin = token->begin - buffer->offset;
     
     // if token data length in one buffer then print them all at once
@@ -175,30 +175,30 @@ size_t mycss_token_data_to_string(mycss_entry_t* entry, mycss_token_t* token, my
     return token->length;
 }
 
-myhtml_incoming_buffer_t * mycss_token_buffer_first(mycss_entry_t* entry, mycss_token_t* token)
+mycore_incoming_buffer_t * mycss_token_buffer_first(mycss_entry_t* entry, mycss_token_t* token)
 {
-    return myhtml_incoming_buffer_find_by_position(entry->current_buffer, token->begin);
+    return mycore_incoming_buffer_find_by_position(entry->current_buffer, token->begin);
 }
 
 // encoding
 
-void mycss_encoding_set(mycss_entry_t* entry, myhtml_encoding_t encoding)
+void mycss_encoding_set(mycss_entry_t* entry, myencoding_t encoding)
 {
     entry->encoding = encoding;
 }
 
-myhtml_encoding_t mycss_encoding_get(mycss_entry_t* entry)
+myencoding_t mycss_encoding_get(mycss_entry_t* entry)
 {
     return entry->encoding;
 }
 
-myhtml_encoding_t mycss_encoding_check_charset_rule(const char* css, size_t size)
+myencoding_t mycss_encoding_check_charset_rule(const char* css, size_t size)
 {
     if(size < 15)
-        return MyHTML_ENCODING_UTF_8;
+        return MyENCODING_UTF_8;
     
     if(strncmp("@charset \"", css, 10))
-        return MyHTML_ENCODING_UTF_8;
+        return MyENCODING_UTF_8;
     
     size_t begin = 10;
     size_t length = begin;
@@ -209,12 +209,12 @@ myhtml_encoding_t mycss_encoding_check_charset_rule(const char* css, size_t size
             ++length;
             
             if(length >= size || css[length] != ';')
-                return MyHTML_ENCODING_UTF_8;
+                return MyENCODING_UTF_8;
             
             size_t name_len = (length - begin) - 1;
             
-            myhtml_encoding_t encoding;
-            if(myhtml_encoding_by_name(&css[begin], name_len, &encoding))
+            myencoding_t encoding;
+            if(myencoding_by_name(&css[begin], name_len, &encoding))
                 return encoding;
             
             break;
@@ -223,7 +223,7 @@ myhtml_encoding_t mycss_encoding_check_charset_rule(const char* css, size_t size
         ++length;
     }
     
-    return MyHTML_ENCODING_UTF_8;
+    return MyENCODING_UTF_8;
 }
 
 

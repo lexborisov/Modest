@@ -62,7 +62,7 @@ struct res_html load_html_file(const char* filename)
     
     size_t nread = fread(html, 1, size, fh);
     if (nread != size) {
-        fprintf(stderr, "could not read %ld bytes (" MyHTML_FMT_Z " bytes done)\n", size, nread);
+        fprintf(stderr, "could not read %ld bytes (" MyCORE_FMT_Z " bytes done)\n", size, nread);
         exit(EXIT_FAILURE);
     }
 
@@ -81,13 +81,13 @@ int main(int argc, const char * argv[])
     
     struct res_html res = load_html_file(argv[1]);
     
-    myhtml_encoding_t encoding = myhtml_encoding_prescan_stream_to_determine_encoding(res.html, res.size);
+    myencoding_t encoding = myencoding_prescan_stream_to_determine_encoding(res.html, res.size);
     
-    if(encoding == MyHTML_ENCODING_NOT_DETERMINED) {
+    if(encoding == MyENCODING_NOT_DETERMINED) {
         printf("Can't detect encoding\n");
     }
     else {
-        const char *encoding_name = myhtml_encoding_name_by_id(encoding, NULL);
+        const char *encoding_name = myencoding_name_by_id(encoding, NULL);
         printf("Encoding: %s\n", encoding_name);
     }
     

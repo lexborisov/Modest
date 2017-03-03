@@ -31,7 +31,7 @@
 extern "C" {
 #endif
 
-mycss_declaration_entry_t * mycss_declaration_entry_create(mycss_declaration_t* declaration, myhtml_status_t* status);
+mycss_declaration_entry_t * mycss_declaration_entry_create(mycss_declaration_t* declaration, mystatus_t* status);
 void mycss_declaration_entry_clean(mycss_declaration_entry_t* entry);
 void mycss_declaration_entry_clean_all(mycss_declaration_entry_t* entry);
 mycss_declaration_entry_t * mycss_declaration_entry_destroy(mycss_declaration_t* declaration, mycss_declaration_entry_t* decl_entry, bool self_destroy);

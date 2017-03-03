@@ -20,7 +20,7 @@
 
 #include "myfont/maxp.h"
 
-myfont_status_t myfont_load_table_maxp(myfont_font_t *mf)
+mystatus_t myfont_load_table_maxp(myfont_font_t *mf)
 {
     memset(&mf->table_maxp, 0, sizeof(myfont_table_maxp_t));
     

@@ -23,10 +23,10 @@
 
 mycss_entry_t * mycss_entry_create(void)
 {
-    return (mycss_entry_t*)myhtml_calloc(1, sizeof(mycss_entry_t));
+    return (mycss_entry_t*)mycore_calloc(1, sizeof(mycss_entry_t));
 }
 
-mycss_status_t mycss_entry_init(mycss_t* mycss, mycss_entry_t* entry)
+mystatus_t mycss_entry_init(mycss_t* mycss, mycss_entry_t* entry)
 {
     entry->mycss               = mycss;
     entry->parser              = NULL;
@@ -49,7 +49,7 @@ mycss_status_t mycss_entry_init(mycss_t* mycss, mycss_entry_t* entry)
     if(entry->mcobject_string_entries == NULL)
         return MyCSS_STATUS_ERROR_STRING_CREATE;
     
-    myhtml_status_t myhtml_status = mcobject_init(entry->mcobject_string_entries, 256, sizeof(myhtml_string_t));
+    mystatus_t myhtml_status = mcobject_init(entry->mcobject_string_entries, 256, sizeof(mycore_string_t));
     if(myhtml_status)
         return MyCSS_STATUS_ERROR_STRING_INIT;
     
@@ -58,7 +58,7 @@ mycss_status_t mycss_entry_init(mycss_t* mycss, mycss_entry_t* entry)
     if(entry->selectors == NULL)
         return MyCSS_STATUS_ERROR_SELECTORS_CREATE;
     
-    mycss_status_t status = mycss_selectors_init(entry, entry->selectors);
+    mystatus_t status = mycss_selectors_init(entry, entry->selectors);
     if(status != MyCSS_STATUS_OK)
         return status;
     
@@ -103,7 +103,7 @@ mycss_status_t mycss_entry_init(mycss_t* mycss, mycss_entry_t* entry)
     if(entry->mcobject_incoming_buffer == NULL)
         return MyCSS_STATUS_ERROR_ENTRY_INCOMING_BUFFER_CREATE;
     
-    myhtml_status = mcobject_init(entry->mcobject_incoming_buffer, 256, sizeof(myhtml_incoming_buffer_t));
+    myhtml_status = mcobject_init(entry->mcobject_incoming_buffer, 256, sizeof(mycore_incoming_buffer_t));
     if(myhtml_status)
         return MyCSS_STATUS_ERROR_ENTRY_INCOMING_BUFFER_INIT;
     
@@ -113,7 +113,7 @@ mycss_status_t mycss_entry_init(mycss_t* mycss, mycss_entry_t* entry)
     return MyCSS_STATUS_OK;
 }
 
-mycss_status_t mycss_entry_clean(mycss_entry_t* entry)
+mystatus_t mycss_entry_clean(mycss_entry_t* entry)
 {
     mcobject_clean(entry->mcobject_incoming_buffer);
     mycss_entry_parser_list_clean(entry->parser_list);
@@ -138,7 +138,7 @@ mycss_status_t mycss_entry_clean(mycss_entry_t* entry)
     return MyCSS_STATUS_OK;
 }
 
-mycss_status_t mycss_entry_clean_all(mycss_entry_t* entry)
+mystatus_t mycss_entry_clean_all(mycss_entry_t* entry)
 {
     mcobject_clean(entry->mcobject_incoming_buffer);
     mchar_async_node_clean(entry->mchar, entry->mchar_node_id);
@@ -189,12 +189,12 @@ mycss_entry_t * mycss_entry_destroy(mycss_entry_t* entry, bool self_destroy)
     entry->mcobject_incoming_buffer = mcobject_destroy(entry->mcobject_incoming_buffer, true);
     
     if(entry->token) {
-        myhtml_free(entry->token);
+        mycore_free(entry->token);
         entry->token = NULL;
     }
     
     if(self_destroy) {
-        myhtml_free(entry);
+        mycore_free(entry);
         return NULL;
     }
     
@@ -212,14 +212,14 @@ mycss_selectors_t * mycss_entry_selectors(mycss_entry_t* entry)
     return entry->selectors;
 }
 
-myhtml_string_t * mycss_entry_string_create_and_init(mycss_entry_t* entry, size_t string_size)
+mycore_string_t * mycss_entry_string_create_and_init(mycss_entry_t* entry, size_t string_size)
 {
-    myhtml_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
+    mycore_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
     
     if(str == NULL)
         return NULL;
     
-    myhtml_string_init(entry->mchar, entry->mchar_node_id, str, (string_size + 1));
+    mycore_string_init(entry->mchar, entry->mchar_node_id, str, (string_size + 1));
     
     return str;
 }
@@ -237,12 +237,12 @@ size_t mycss_entry_token_count(mycss_entry_t* entry)
     return entry->token_counter;
 }
 
-myhtml_incoming_buffer_t * mycss_entry_incoming_buffer_current(mycss_entry_t* entry)
+mycore_incoming_buffer_t * mycss_entry_incoming_buffer_current(mycss_entry_t* entry)
 {
     return entry->current_buffer;
 }
 
-myhtml_incoming_buffer_t * mycss_entry_incoming_buffer_first(mycss_entry_t* entry)
+mycore_incoming_buffer_t * mycss_entry_incoming_buffer_first(mycss_entry_t* entry)
 {
     return entry->first_buffer;
 }
@@ -275,17 +275,17 @@ void mycss_entry_parser_original_set(mycss_entry_t* entry, mycss_parser_token_f 
 /* parser list */
 mycss_entry_parser_list_t * mycss_entry_parser_list_create_and_init(size_t size)
 {
-    mycss_entry_parser_list_t* parser_list = myhtml_malloc(sizeof(mycss_entry_parser_list_t));
+    mycss_entry_parser_list_t* parser_list = mycore_malloc(sizeof(mycss_entry_parser_list_t));
     
     if(parser_list == NULL)
         return NULL;
     
     parser_list->length = 0;
     parser_list->size   = size;
-    parser_list->list   = myhtml_malloc(parser_list->size * sizeof(mycss_entry_parser_list_entry_t));
+    parser_list->list   = mycore_malloc(parser_list->size * sizeof(mycss_entry_parser_list_entry_t));
     
     if(parser_list->list == NULL) {
-        myhtml_free(parser_list);
+        mycore_free(parser_list);
         return NULL;
     }
     
@@ -303,19 +303,19 @@ mycss_entry_parser_list_t * mycss_entry_parser_list_destroy(mycss_entry_parser_l
         return NULL;
     
     if(parser_list->list) {
-        myhtml_free(parser_list->list);
+        mycore_free(parser_list->list);
         parser_list->list = NULL;
     }
     
     if(self_destroy) {
-        myhtml_free(parser_list);
+        mycore_free(parser_list);
         return NULL;
     }
     
     return parser_list;
 }
 
-mycss_status_t mycss_entry_parser_list_push(mycss_entry_t* entry, mycss_parser_token_f parser_func,
+mystatus_t mycss_entry_parser_list_push(mycss_entry_t* entry, mycss_parser_token_f parser_func,
                                             mycss_parser_token_f parser_switch, mycss_token_type_t ending_token,
                                             bool is_local)
 {
@@ -324,7 +324,7 @@ mycss_status_t mycss_entry_parser_list_push(mycss_entry_t* entry, mycss_parser_t
     if(parser_list->length >= parser_list->size) {
         size_t new_size = parser_list->length + 1024;
         
-        mycss_entry_parser_list_entry_t *new_list = myhtml_realloc(parser_list->list, new_size * sizeof(mycss_entry_parser_list_entry_t));
+        mycss_entry_parser_list_entry_t *new_list = mycore_realloc(parser_list->list, new_size * sizeof(mycss_entry_parser_list_entry_t));
         
         if(new_list) {
             parser_list->size = new_size;

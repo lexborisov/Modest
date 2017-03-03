@@ -25,10 +25,10 @@
 
 modest_t * modest_create(void)
 {
-    return (modest_t*)myhtml_calloc(1, sizeof(modest_t));
+    return (modest_t*)mycore_calloc(1, sizeof(modest_t));
 }
 
-modest_status_t modest_init(modest_t* modest)
+mystatus_t modest_init(modest_t* modest)
 {
     /* Modest nodes */
     modest->mnode_obj = mcobject_async_create();
@@ -73,17 +73,17 @@ modest_status_t modest_init(modest_t* modest)
     if(modest->mraw_style_declaration_obj == NULL)
         return MODEST_STATUS_ERROR_STYLE_DECLARATION_CREATE;
     
-    myhtml_status_t myhtml_status = mcobject_init(modest->mraw_style_declaration_obj, 256, sizeof(modest_style_raw_declaration_t));
+    mystatus_t myhtml_status = mcobject_init(modest->mraw_style_declaration_obj, 256, sizeof(modest_style_raw_declaration_t));
     if(myhtml_status)
         return MODEST_STATUS_ERROR_STYLE_DECLARATION_INIT;
     
     
     /* styles tree */
-    modest->style_avl_tree = myhtml_utils_avl_tree_create();
+    modest->style_avl_tree = mycore_utils_avl_tree_create();
     if(modest->style_avl_tree == NULL)
         return MODEST_STATUS_ERROR_AVL_TREE_CREATE;
     
-    myhtml_status = myhtml_utils_avl_tree_init(modest->style_avl_tree);
+    myhtml_status = mycore_utils_avl_tree_init(modest->style_avl_tree);
     if(myhtml_status)
         return MODEST_STATUS_ERROR_AVL_TREE_INIT;
     
@@ -94,7 +94,7 @@ void modest_clean(modest_t* modest)
 {
     mcobject_async_clean(modest->mnode_obj);
     mcobject_async_clean(modest->mstylesheet_obj);
-    myhtml_utils_avl_tree_clean(modest->style_avl_tree);
+    mycore_utils_avl_tree_clean(modest->style_avl_tree);
 }
 
 modest_t * modest_destroy(modest_t* modest, bool self_destroy)
@@ -104,10 +104,10 @@ modest_t * modest_destroy(modest_t* modest, bool self_destroy)
     
     modest->mnode_obj = mcobject_async_destroy(modest->mnode_obj, true);
     modest->mstylesheet_obj = mcobject_async_destroy(modest->mstylesheet_obj, true);
-    modest->style_avl_tree = myhtml_utils_avl_tree_destroy(modest->style_avl_tree, true);
+    modest->style_avl_tree = mycore_utils_avl_tree_destroy(modest->style_avl_tree, true);
     
     if(self_destroy) {
-        myhtml_free(modest);
+        mycore_free(modest);
         return NULL;
     }
     

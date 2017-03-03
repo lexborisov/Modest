@@ -23,10 +23,10 @@
 
 myhtml_tag_t * myhtml_tag_create(void)
 {
-    return (myhtml_tag_t*)myhtml_malloc(sizeof(myhtml_tag_t));
+    return (myhtml_tag_t*)mycore_malloc(sizeof(myhtml_tag_t));
 }
 
-myhtml_status_t myhtml_tag_init(myhtml_tree_t *tree, myhtml_tag_t *tags)
+mystatus_t myhtml_tag_init(myhtml_tree_t *tree, myhtml_tag_t *tags)
 {
     tags->mcsimple_context = mcsimple_create();
     
@@ -64,7 +64,7 @@ myhtml_tag_t * myhtml_tag_destroy(myhtml_tag_t* tags)
     
     mchar_async_node_delete(tags->mchar, tags->mchar_node);
     
-    myhtml_free(tags);
+    mycore_free(tags);
     
     return NULL;
 }
@@ -142,14 +142,14 @@ void myhtml_tag_print(myhtml_tag_t* tags, FILE* fh)
     {
         const myhtml_tag_context_t *ctx = myhtml_tag_get_by_id(tags, i);
         
-        fprintf(fh, "<%s id=\"" MyHTML_FMT_Z "\">\n", ctx->name, i);
+        fprintf(fh, "<%s id=\"" MyCORE_FMT_Z "\">\n", ctx->name, i);
     }
     
     for(i = (MyHTML_TAG_LAST_ENTRY + 1); i < tags->tags_count; i++)
     {
         const myhtml_tag_context_t *ctx = myhtml_tag_get_by_id(tags, i);
         
-        fprintf(fh, "<%s id=\"" MyHTML_FMT_Z "\">\n", ctx->name, i);
+        fprintf(fh, "<%s id=\"" MyCORE_FMT_Z "\">\n", ctx->name, i);
     }
 }
 

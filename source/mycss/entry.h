@@ -40,8 +40,8 @@ extern "C" {
 #include "mycss/declaration/entry.h"
 #include "mycss/media/myosi.h"
 #include "mycss/media/init.h"
-#include "myhtml/utils/mcobject.h"
-#include "myhtml/utils/mchar_async.h"
+#include "mycore/utils/mcobject.h"
+#include "mycore/utils/mchar_async.h"
 
 struct mycss_entry_parser_list_entry {
     mycss_parser_token_f parser;
@@ -83,12 +83,12 @@ struct mycss_entry {
     
     /* incoming buffer */
     mcobject_t* mcobject_incoming_buffer;
-    myhtml_incoming_buffer_t* first_buffer;
-    myhtml_incoming_buffer_t* current_buffer;
+    mycore_incoming_buffer_t* first_buffer;
+    mycore_incoming_buffer_t* current_buffer;
     
     /* options */
     mycss_entry_type_t type;
-    myhtml_encoding_t encoding;
+    myencoding_t encoding;
     
     /* tokenizer */
     mycss_tokenizer_state_t state;
@@ -112,9 +112,9 @@ struct mycss_entry {
 };
 
 mycss_entry_t * mycss_entry_create(void);
-mycss_status_t mycss_entry_init(mycss_t* mycss, mycss_entry_t* entry);
-mycss_status_t mycss_entry_clean(mycss_entry_t* entry);
-mycss_status_t mycss_entry_clean_all(mycss_entry_t* entry);
+mystatus_t mycss_entry_init(mycss_t* mycss, mycss_entry_t* entry);
+mystatus_t mycss_entry_clean(mycss_entry_t* entry);
+mystatus_t mycss_entry_clean_all(mycss_entry_t* entry);
 mycss_entry_t * mycss_entry_destroy(mycss_entry_t* entry, bool self_destroy);
 
 void mycss_entry_end(mycss_entry_t* entry);
@@ -125,10 +125,10 @@ mycss_selectors_t * mycss_entry_selectors(mycss_entry_t* entry);
 mycss_token_ready_callback_f mycss_entry_token_ready_callback(mycss_entry_t* entry, mycss_token_ready_callback_f callback_f);
 
 size_t mycss_entry_token_count(mycss_entry_t* entry);
-myhtml_incoming_buffer_t * mycss_entry_incoming_buffer_current(mycss_entry_t* entry);
-myhtml_incoming_buffer_t * mycss_entry_incoming_buffer_first(mycss_entry_t* entry);
+mycore_incoming_buffer_t * mycss_entry_incoming_buffer_current(mycss_entry_t* entry);
+mycore_incoming_buffer_t * mycss_entry_incoming_buffer_first(mycss_entry_t* entry);
 
-myhtml_string_t * mycss_entry_string_create_and_init(mycss_entry_t* entry, size_t string_size);
+mycore_string_t * mycss_entry_string_create_and_init(mycss_entry_t* entry, size_t string_size);
 
 mycss_stylesheet_t * mycss_entry_stylesheet(mycss_entry_t* entry);
 mycss_selectors_list_t * mycss_entry_current_selectors_list(mycss_entry_t* entry);
@@ -142,7 +142,7 @@ mycss_entry_parser_list_t * mycss_entry_parser_list_create_and_init(size_t size)
 void mycss_entry_parser_list_clean(mycss_entry_parser_list_t* parser_list);
 mycss_entry_parser_list_t * mycss_entry_parser_list_destroy(mycss_entry_parser_list_t* parser_list, bool self_destroy);
 
-mycss_status_t mycss_entry_parser_list_push(mycss_entry_t* entry, mycss_parser_token_f parser_func,
+mystatus_t mycss_entry_parser_list_push(mycss_entry_t* entry, mycss_parser_token_f parser_func,
                                             mycss_parser_token_f parser_switch, mycss_token_type_t ending_token,
                                             bool is_local);
 

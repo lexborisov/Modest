@@ -22,23 +22,23 @@
 
 mycss_stylesheet_t * mycss_stylesheet_create(void)
 {
-    return (mycss_stylesheet_t*)myhtml_calloc(1, sizeof(mycss_stylesheet_t));
+    return (mycss_stylesheet_t*)mycore_calloc(1, sizeof(mycss_stylesheet_t));
 }
 
-mycss_status_t mycss_stylesheet_init(mycss_stylesheet_t* stylesheet, mycss_entry_t* entry)
+mystatus_t mycss_stylesheet_init(mycss_stylesheet_t* stylesheet, mycss_entry_t* entry)
 {
     stylesheet->entry = entry;
     
-    mycss_status_t status = mycss_namespace_stylesheet_init(&stylesheet->ns_stylesheet, entry);
+    mystatus_t status = mycss_namespace_stylesheet_init(&stylesheet->ns_stylesheet, entry);
     if(status != MyCSS_STATUS_OK)
         return status;
     
     return MyCSS_STATUS_OK;
 }
 
-mycss_status_t mycss_stylesheet_clean_all(mycss_stylesheet_t* stylesheet)
+mystatus_t mycss_stylesheet_clean_all(mycss_stylesheet_t* stylesheet)
 {
-    mycss_status_t status = mycss_namespace_stylesheet_clean(&stylesheet->ns_stylesheet, stylesheet->entry);
+    mystatus_t status = mycss_namespace_stylesheet_clean(&stylesheet->ns_stylesheet, stylesheet->entry);
     if(status != MyCSS_STATUS_OK)
         return status;
     
@@ -52,7 +52,7 @@ mycss_stylesheet_t * mycss_stylesheet_destroy(mycss_stylesheet_t* stylesheet, bo
     mycss_namespace_stylesheet_destroy(&stylesheet->ns_stylesheet, stylesheet->entry, false);
     
     if(self_destroy) {
-        myhtml_free(stylesheet);
+        mycore_free(stylesheet);
         return NULL;
     }
     

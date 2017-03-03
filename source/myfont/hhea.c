@@ -20,7 +20,7 @@
 
 #include "myfont/hhea.h"
 
-myfont_status_t myfont_load_table_hhea(myfont_font_t *mf)
+mystatus_t myfont_load_table_hhea(myfont_font_t *mf)
 {
     memset(&mf->table_hhea, 0, sizeof(myfont_table_hhea_t));
     

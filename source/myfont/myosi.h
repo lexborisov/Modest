@@ -85,7 +85,6 @@ extern "C" {
 // base
 /*
  Very important!!!
- see modest/myosi.h:modest_status_t
 */
 enum myfont_status {
     MyFONT_STATUS_OK                                    = 0x000000,

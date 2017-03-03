@@ -41,7 +41,7 @@ void serialization_callback(const char* data, size_t len, void* ctx)
 myhtml_tree_t * parse_html(const char* data, size_t data_size)
 {
     myhtml_t* myhtml = myhtml_create();
-    myhtml_status_t status = myhtml_init(myhtml, MyHTML_OPTIONS_DEFAULT, 1, 0);
+    mystatus_t status = myhtml_init(myhtml, MyHTML_OPTIONS_DEFAULT, 1, 0);
     
     CHECK_STATUS("Can't init MyHTML object\n");
     
@@ -50,7 +50,7 @@ myhtml_tree_t * parse_html(const char* data, size_t data_size)
     
     CHECK_STATUS("Can't init MyHTML Tree object\n");
     
-    status = myhtml_parse(tree, MyHTML_ENCODING_UTF_8, data, data_size);
+    status = myhtml_parse(tree, MyENCODING_UTF_8, data, data_size);
     CHECK_STATUS("Can't parse HTML:\n%s\n", data);
     
     return tree;
@@ -60,7 +60,7 @@ mycss_entry_t * create_css_parser(void)
 {
     // base init
     mycss_t *mycss = mycss_create();
-    mycss_status_t status = mycss_init(mycss);
+    mystatus_t status = mycss_init(mycss);
     
     CHECK_STATUS("Can't init MyCSS object\n");
     
@@ -101,7 +101,7 @@ void parse_style_of_node_and_print(myhtml_tree_t *html_tree, mycss_entry_t *css_
         myhtml_tree_attr_t *attr_style = myhtml_attribute_by_key(node, "style", 5);
         
         if(attr_style) {
-            mycss_declaration_entry_t *dec_entry = mycss_declaration_parse(css_entry->declaration, MyHTML_ENCODING_UTF_8,
+            mycss_declaration_entry_t *dec_entry = mycss_declaration_parse(css_entry->declaration, MyENCODING_UTF_8,
                                                                            attr_style->value.data, attr_style->value.length, NULL);
             
             if(dec_entry) {

@@ -55,7 +55,7 @@ bool mycss_values_color_parser_hsl_lightness(mycss_entry_t* entry, mycss_token_t
 bool mycss_values_color_parser_hsl_before_alpha(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_values_color_parser_hsl_alpha(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 
-bool mycss_values_color_parser_hex(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str);
+bool mycss_values_color_parser_hex(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, mycore_string_t* str);
 
 bool mycss_values_color_parser_hwb(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_values_color_parser_hwb_before_whiteness(mycss_entry_t* entry, mycss_token_t* token, bool last_response);

@@ -24,7 +24,7 @@
 
 #include <modest/myosi.h>
 #include <modest/modest.h>
-#include <myhtml/utils/mcobject.h>
+#include <mycore/utils/mcobject.h>
 
 #ifdef __cplusplus
 extern "C" {

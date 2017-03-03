@@ -26,7 +26,7 @@
 #include "mycss/values/units.h"
 #include "mycss/values/color_const.h"
 #include "mycss/property/const.h"
-#include "myhtml/utils/mchar_async.h"
+#include "mycore/utils/mchar_async.h"
 #include "myhtml/mystring.h"
 #include "mycss/declaration/myosi.h"
 
@@ -173,7 +173,7 @@ struct mycss_values_resolution {
 };
 
 struct mycss_values_custom_ident {
-    myhtml_string_t str;
+    mycore_string_t str;
 };
 
 /*
@@ -287,7 +287,7 @@ struct mycss_values_color_stop_list {
  URL
  */
 struct mycss_values_url {
-    myhtml_string_t str;
+    mycore_string_t str;
 };
 
 /*
@@ -320,14 +320,14 @@ struct mycss_values_image_list {
 
 /* image() */
 struct mycss_values_image_image {
-    myhtml_string_t* str;
+    mycore_string_t* str;
     mycss_values_image_t* image;
     mycss_values_color_t* color;
 };
 
 /* image-set() */
 struct mycss_values_image_image_set_option {
-    myhtml_string_t* str;
+    mycore_string_t* str;
     mycss_values_image_t* image;
     mycss_values_resolution_t* resolution;
 };
@@ -398,7 +398,7 @@ typedef mycss_values_font_family_type_t;
 
 struct mycss_values_font_family_entry {
     union {
-        myhtml_string_t str;
+        mycore_string_t str;
         mycss_property_font_family_t prop_type;
     };
     

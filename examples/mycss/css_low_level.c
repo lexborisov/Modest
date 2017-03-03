@@ -64,7 +64,7 @@ struct res_data load_data_file(const char* filename)
     
     size_t nread = fread(data, 1, size, fh);
     if (nread != size) {
-        fprintf(stderr, "could not read %ld bytes (" MyHTML_FMT_Z " bytes done)\n", size, nread);
+        fprintf(stderr, "could not read %ld bytes (" MyCORE_FMT_Z " bytes done)\n", size, nread);
         exit(EXIT_FAILURE);
     }
     
@@ -95,14 +95,14 @@ int main(int argc, const char * argv[])
     
     // basic init
     mycss_t *mycss = mycss_create();
-    mycss_status_t status = mycss_init(mycss);
+    mystatus_t status = mycss_init(mycss);
     
     // current entry work init
     mycss_entry_t *entry = mycss_entry_create();
     status = mycss_entry_init(mycss, entry);
     
     // parse selectors
-    status = mycss_parse(entry, MyHTML_ENCODING_UTF_8, res.data, res.size);
+    status = mycss_parse(entry, MyENCODING_UTF_8, res.data, res.size);
     
     if(status) {
         fprintf(stderr, "Parse error!\n");

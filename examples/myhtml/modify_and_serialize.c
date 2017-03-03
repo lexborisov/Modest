@@ -45,7 +45,7 @@ int main()
     const char *input = "<html><head></head><body><a href=http://nu.nl></body></html>";
     
     // parse html
-    myhtml_parse(tree, MyHTML_ENCODING_UTF_8, input, strlen(input));
+    myhtml_parse(tree, MyENCODING_UTF_8, input, strlen(input));
 
     // collection of links
     myhtml_collection_t *collection = myhtml_get_nodes_by_name(tree, NULL, "a", 1, NULL);
@@ -54,7 +54,7 @@ int main()
     for (size_t i = 0; i < collection->length; ++i)
     {
         // add attribute
-        myhtml_attribute_add(collection->list[i], "title", 5, "my value", 8, MyHTML_ENCODING_UTF_8);
+        myhtml_attribute_add(collection->list[i], "title", 5, "my value", 8, MyENCODING_UTF_8);
     }
     
 

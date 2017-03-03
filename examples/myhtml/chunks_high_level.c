@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include <myhtml/api.h>
 
 int main(int argc, const char * argv[])
@@ -53,7 +54,7 @@ int main(int argc, const char * argv[])
     myhtml_tree_t* tree = myhtml_tree_create();
     myhtml_tree_init(tree, myhtml);
     
-    myhtml_encoding_set(tree, MyHTML_ENCODING_UTF_8);
+    myhtml_encoding_set(tree, MyENCODING_UTF_8);
     
     for(size_t i = 0; html[i][0]; i++)
     {

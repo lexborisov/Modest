@@ -44,7 +44,7 @@ void serialization_bad_selectors(const char* buffer, size_t size, void* ctx) {
 myhtml_tree_t * parse_html(const char* data, size_t data_size)
 {
     myhtml_t* myhtml = myhtml_create();
-    myhtml_status_t status = myhtml_init(myhtml, MyHTML_OPTIONS_DEFAULT, 1, 0);
+    mystatus_t status = myhtml_init(myhtml, MyHTML_OPTIONS_DEFAULT, 1, 0);
     
     CHECK_STATUS("Can't init MyHTML object\n");
     
@@ -53,7 +53,7 @@ myhtml_tree_t * parse_html(const char* data, size_t data_size)
     
     CHECK_STATUS("Can't init MyHTML Tree object\n");
     
-    status = myhtml_parse(tree, MyHTML_ENCODING_UTF_8, data, data_size);
+    status = myhtml_parse(tree, MyENCODING_UTF_8, data, data_size);
     CHECK_STATUS("Can't parse HTML:\n%s\n", data);
     
     return tree;
@@ -63,7 +63,7 @@ mycss_entry_t * create_css_parser(void)
 {
     // base init
     mycss_t *mycss = mycss_create();
-    mycss_status_t status = mycss_init(mycss);
+    mystatus_t status = mycss_init(mycss);
     
     CHECK_STATUS("Can't init MyCSS object\n");
     
@@ -78,9 +78,9 @@ mycss_entry_t * create_css_parser(void)
 
 mycss_selectors_list_t * prepare_selector(mycss_entry_t *css_entry, const char* selector, size_t selector_size)
 {
-    mycss_status_t out_status;
+    mystatus_t out_status;
     mycss_selectors_list_t *list = mycss_selectors_parse(mycss_entry_selectors(css_entry),
-                                                         MyHTML_ENCODING_UTF_8,
+                                                         MyENCODING_UTF_8,
                                                          selector, selector_size,
                                                          &out_status);
     /* check parsing errors */

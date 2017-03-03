@@ -37,7 +37,7 @@ int main(int argc, const char * argv[])
     myhtml_tree_init(tree, myhtml);
     
     // parse html
-    myhtml_parse_fragment(tree, MyHTML_ENCODING_UTF_8, html, strlen(html), MyHTML_TAG_DIV, MyHTML_NAMESPACE_HTML);
+    myhtml_parse_fragment(tree, MyENCODING_UTF_8, html, strlen(html), MyHTML_TAG_DIV, MyHTML_NAMESPACE_HTML);
     
     // print fragment
     myhtml_tree_print_node_children(tree, myhtml_tree_get_document(tree), stdout, 0);

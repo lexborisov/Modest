@@ -38,7 +38,7 @@ typedef myhtml_tree_node_t * (*modest_finder_selector_combinator_f)(modest_finde
 
 /* init */
 modest_finder_t * modest_finder_create(void);
-modest_status_t modest_finder_init(modest_finder_t* finder);
+mystatus_t modest_finder_init(modest_finder_t* finder);
 void modest_finder_clean(modest_finder_t* finder);
 modest_finder_t * modest_finder_destroy(modest_finder_t* finder, bool self_destroy);
 
@@ -59,7 +59,7 @@ void modest_finder_specificity_inc(mycss_selectors_entry_t* selector, mycss_sele
 /* base api */
 modest_finder_t * modest_finder_by_stylesheet(mycss_stylesheet_t *stylesheet, myhtml_collection_t** collection, myhtml_tree_node_t* base_node);
 
-modest_status_t modest_finder_by_selectors_list(modest_finder_t* finder, myhtml_tree_node_t* scope_node,
+mystatus_t modest_finder_by_selectors_list(modest_finder_t* finder, myhtml_tree_node_t* scope_node,
                                                 mycss_selectors_list_t* selector_list, myhtml_collection_t** collection);
 
 /* process */

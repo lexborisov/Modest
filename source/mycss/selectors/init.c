@@ -23,10 +23,10 @@
 
 mycss_selectors_t * mycss_selectors_create(void)
 {
-    return (mycss_selectors_t*)myhtml_calloc(1, sizeof(mycss_selectors_t));
+    return (mycss_selectors_t*)mycore_calloc(1, sizeof(mycss_selectors_t));
 }
 
-mycss_status_t mycss_selectors_init(mycss_entry_t* entry, mycss_selectors_t* selectors)
+mystatus_t mycss_selectors_init(mycss_entry_t* entry, mycss_selectors_t* selectors)
 {
     selectors->ref_entry  = entry;
     selectors->entry      = NULL;
@@ -40,7 +40,7 @@ mycss_status_t mycss_selectors_init(mycss_entry_t* entry, mycss_selectors_t* sel
     if(selectors->mcobject_entries == NULL)
         return MyCSS_STATUS_ERROR_SELECTORS_ENTRIES_CREATE;
     
-    myhtml_status_t myhtml_status = mcobject_init(selectors->mcobject_entries, 256, sizeof(mycss_selectors_entry_t));
+    mystatus_t myhtml_status = mcobject_init(selectors->mcobject_entries, 256, sizeof(mycss_selectors_entry_t));
     if(myhtml_status)
         return MyCSS_STATUS_ERROR_SELECTORS_ENTRIES_INIT;
     
@@ -65,7 +65,7 @@ void mycss_selectors_clean(mycss_selectors_t* selectors)
     selectors->combinator = NULL;
 }
 
-mycss_status_t mycss_selectors_clean_all(mycss_selectors_t* selectors)
+mystatus_t mycss_selectors_clean_all(mycss_selectors_t* selectors)
 {
     selectors->entry      = NULL;
     selectors->entry_last = NULL;
@@ -88,7 +88,7 @@ mycss_selectors_t * mycss_selectors_destroy(mycss_selectors_t* selectors, bool s
     selectors->mcobject_list_entries = mcobject_destroy(selectors->mcobject_list_entries, true);
     
     if(self_destroy) {
-        myhtml_free(selectors);
+        mycore_free(selectors);
         return NULL;
     }
     
@@ -111,7 +111,7 @@ mycss_token_t * mycss_selectors_parse_token_callback(mycss_entry_t* entry, mycss
     return entry->token;
 }
 
-mycss_selectors_list_t * mycss_selectors_parse_by_function(mycss_selectors_t* selectors, mycss_parser_token_f func, myhtml_encoding_t encoding, const char* data, size_t data_size, mycss_status_t* out_status)
+mycss_selectors_list_t * mycss_selectors_parse_by_function(mycss_selectors_t* selectors, mycss_parser_token_f func, myencoding_t encoding, const char* data, size_t data_size, mystatus_t* out_status)
 {
     mycss_entry_t *entry = selectors->ref_entry;
     
@@ -131,7 +131,7 @@ mycss_selectors_list_t * mycss_selectors_parse_by_function(mycss_selectors_t* se
     /* parsing */
     mycss_encoding_set(entry, encoding);
     
-    mycss_status_t status = mycss_tokenizer_chunk(entry, data, data_size);
+    mystatus_t status = mycss_tokenizer_chunk(entry, data, data_size);
     if(status != MyCSS_STATUS_OK) {
         if(out_status)
             *out_status = status;
@@ -150,7 +150,7 @@ mycss_selectors_list_t * mycss_selectors_parse_by_function(mycss_selectors_t* se
     return NULL;
 }
 
-mycss_selectors_list_t * mycss_selectors_parse(mycss_selectors_t* selectors, myhtml_encoding_t encoding, const char* data, size_t data_size, mycss_status_t* out_status)
+mycss_selectors_list_t * mycss_selectors_parse(mycss_selectors_t* selectors, myencoding_t encoding, const char* data, size_t data_size, mystatus_t* out_status)
 {
     return mycss_selectors_parse_by_function(selectors, mycss_selectors_state_complex_selector_list, encoding, data, data_size, out_status);
 }
@@ -177,7 +177,7 @@ mycss_selectors_entry_t * mycss_selectors_entry_destroy(mycss_selectors_t* selec
         return NULL;
     
     if(selector->key) {
-        myhtml_string_destroy(selector->key, false);
+        mycore_string_destroy(selector->key, false);
         mcobject_free(selectors->ref_entry->mcobject_string_entries, selector->key);
     }
     

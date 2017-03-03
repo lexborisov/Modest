@@ -48,7 +48,7 @@ void modest_node_raw_serialization_declaration(mycss_entry_t* mycss_entry, mycss
 //    return is_use;
 //}
 
-void modest_node_raw_serialization_callback(myhtml_utils_avl_tree_node_t* node, void* context)
+void modest_node_raw_serialization_callback(mycore_utils_avl_tree_node_t* node, void* context)
 {
     modest_node_serialization_context_t *ctx = context;
     
@@ -60,7 +60,7 @@ bool modest_node_raw_serialization(modest_t* modest, modest_node_t* mnode, mycss
 {
     modest_node_serialization_context_t ctx = {modest, callback, context, 0};
     
-    myhtml_utils_avl_tree_list_all_nodes(modest->style_avl_tree, mnode->avl_tree_node, modest_node_raw_serialization_callback, &ctx);
+    mycore_utils_avl_tree_list_all_nodes(modest->style_avl_tree, mnode->avl_tree_node, modest_node_raw_serialization_callback, &ctx);
     
     return ctx.is_use;
 }

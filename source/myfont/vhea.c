@@ -20,7 +20,7 @@
 
 #include "myfont/vhea.h"
 
-myfont_status_t myfont_load_table_vhea(myfont_font_t *mf)
+mystatus_t myfont_load_table_vhea(myfont_font_t *mf)
 {
     memset(&mf->table_vhea, 0, sizeof(myfont_table_vhea_t));
     

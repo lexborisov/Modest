@@ -27,7 +27,7 @@ extern "C" {
 #endif
 
 #include "myhtml/myosi.h"
-#include "myhtml/utils.h"
+#include "mycore/utils.h"
 #include "myhtml/myhtml.h"
 #include "myhtml/tokenizer.h"
 

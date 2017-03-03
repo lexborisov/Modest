@@ -63,7 +63,7 @@ struct res_html load_html_file(const char* filename)
     
     size_t nread = fread(html, 1, size, fh);
     if (nread != size) {
-        fprintf(stderr, "could not read %ld bytes (" MyHTML_FMT_Z " bytes done)\n", size, nread);
+        fprintf(stderr, "could not read %ld bytes (" MyCORE_FMT_Z " bytes done)\n", size, nread);
         exit(EXIT_FAILURE);
     }
     
@@ -101,7 +101,7 @@ int main(int argc, const char * argv[])
                                 MyHTML_TREE_PARSE_FLAGS_WITHOUT_DOCTYPE_IN_TREE);
     
     // parse html
-    myhtml_parse(tree, MyHTML_ENCODING_UTF_8, res.html, res.size);
+    myhtml_parse(tree, MyENCODING_UTF_8, res.html, res.size);
     
     if(myhtml_tree_get_node_html(tree))
         myhtml_tree_print_by_node(tree, myhtml_tree_get_node_html(tree), stdout, 0);

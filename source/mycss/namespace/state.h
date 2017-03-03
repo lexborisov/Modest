@@ -29,7 +29,7 @@ extern "C" {
 #include "mycss/entry.h"
 #include "mycss/namespace/myosi.h"
 #include "mycss/namespace/parser.h"
-#include "myhtml/utils.h"
+#include "mycore/utils.h"
 
 bool mycss_namespace_state_namespace(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_namespace_state_namespace_namespace(mycss_entry_t* entry, mycss_token_t* token, bool last_response);

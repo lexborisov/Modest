@@ -21,7 +21,7 @@
 #include "mycss/values/serialization.h"
 #include "mycss/values/units_resources.h"
 #include "mycss/property/resources_name.h"
-#include "myhtml/utils/resources.h"
+#include "mycore/utils/resources.h"
 
 static void mycss_values_serialization_to_callback(const char* data, size_t len, mycss_callback_serialization_f callback, void* context)
 {
@@ -29,7 +29,7 @@ static void mycss_values_serialization_to_callback(const char* data, size_t len,
         callback(data, len, context);
 }
 
-void mycss_values_serialization_string(myhtml_string_t* str, mycss_callback_serialization_f callback, void* context)
+void mycss_values_serialization_string(mycore_string_t* str, mycss_callback_serialization_f callback, void* context)
 {
     callback(str->data, str->length, context);
 }
@@ -156,13 +156,13 @@ void mycss_values_serialization_type_length_percentage(mycss_values_type_length_
 
 static void mycss_values_serialization_color_hex_one_value(int value, unsigned char* data)
 {
-    data[0] = myhtml_string_hex_to_char_map[ (unsigned int)(value >> 4) ];
+    data[0] = mycore_string_hex_to_char_map[ (unsigned int)(value >> 4) ];
 }
 
 static void mycss_values_serialization_color_hex_two_value(int value, unsigned char* data)
 {
-    data[0] = myhtml_string_hex_to_char_map[ (unsigned int)(value >> 4) ];
-    data[1] = myhtml_string_hex_to_char_map[ (unsigned int)((value) ^ ((value >> 4) << 4)) ];
+    data[0] = mycore_string_hex_to_char_map[ (unsigned int)(value >> 4) ];
+    data[1] = mycore_string_hex_to_char_map[ (unsigned int)((value) ^ ((value >> 4) << 4)) ];
 }
 
 void mycss_values_serialization_color(mycss_values_color_t* value, mycss_callback_serialization_f callback, void* context)

@@ -29,8 +29,8 @@
 #include "modest/finder/myosi.h"
 #include "modest/finder/finder.h"
 
-#include "myhtml/thread.h"
-#include "myhtml/utils/mcobject_async.h"
+#include "mycore/thread.h"
+#include "mycore/utils/mcobject_async.h"
 
 #include "mycss/declaration/myosi.h"
 
@@ -85,11 +85,11 @@ struct modest_finder_thread_found_context {
 
 
 modest_finder_thread_t * modest_finder_thread_create(void);
-modest_status_t modest_finder_thread_init(modest_finder_t* finder, modest_finder_thread_t* finder_thread, size_t thread_count);
+mystatus_t modest_finder_thread_init(modest_finder_t* finder, modest_finder_thread_t* finder_thread, size_t thread_count);
 void modest_finder_thread_clean(modest_finder_thread_t* finder_thread, bool self_destroy);
 modest_finder_thread_t * modest_finder_thread_destroy(modest_finder_thread_t* finder_thread, bool self_destroy);
 
-modest_status_t modest_finder_thread_process(modest_t* modest, modest_finder_thread_t* finder_thread, myhtml_tree_node_t* scope_node, mycss_selectors_list_t* selector_list);
+mystatus_t modest_finder_thread_process(modest_t* modest, modest_finder_thread_t* finder_thread, myhtml_tree_node_t* scope_node, mycss_selectors_list_t* selector_list);
 
 void modest_finder_thread_wait_for_all_done(modest_finder_thread_t* finder_thread);
 bool modest_finder_thread_spec_is_up(modest_style_raw_specificity_t* spec_f, modest_style_raw_specificity_t* spec_t);

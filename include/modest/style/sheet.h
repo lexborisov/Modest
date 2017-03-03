@@ -53,7 +53,7 @@ struct modest_style_sheet {
 };
 
 modest_style_sheet_t * modest_style_sheet_create(modest_t* modest);
-modest_status_t modest_style_sheet_init(modest_t* modest, modest_style_sheet_t* m_stylesheet);
+mystatus_t modest_style_sheet_init(modest_t* modest, modest_style_sheet_t* m_stylesheet);
 
 #ifdef __cplusplus
 } /* extern "C" */

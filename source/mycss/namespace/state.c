@@ -23,10 +23,10 @@
 bool mycss_namespace_state_namespace(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     if(token->type == MyCSS_TOKEN_TYPE_AT_KEYWORD) {
-        myhtml_string_t str;
+        mycore_string_t str;
         mycss_token_data_to_string(entry, token, &str, true, true);
         
-        if(myhtml_strcmp(str.data, "namespace") == 0) {
+        if(mycore_strcmp(str.data, "namespace") == 0) {
             entry->parser = mycss_namespace_state_namespace_namespace;
         }
         else {
@@ -34,7 +34,7 @@ bool mycss_namespace_state_namespace(mycss_entry_t* entry, mycss_token_t* token,
             entry->parser = mycss_parser_token;
         }
         
-        myhtml_string_destroy(&str, false);
+        mycore_string_destroy(&str, false);
     }
     else {
         mycss_namespace_parser_expectations_error(entry, token);

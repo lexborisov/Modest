@@ -32,7 +32,7 @@ modest_style_sheet_t * modest_style_sheet_create(modest_t* modest)
     return m_stylesheet;
 }
 
-modest_status_t modest_style_sheet_init(modest_t* modest, modest_style_sheet_t* m_stylesheet)
+mystatus_t modest_style_sheet_init(modest_t* modest, modest_style_sheet_t* m_stylesheet)
 {
     return MODEST_STATUS_OK;
 }

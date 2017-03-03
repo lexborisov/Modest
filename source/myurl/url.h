@@ -55,7 +55,7 @@ struct myurl_entry {
     size_t fragment_length;
     
     myurl_flags_t flags;
-    myurl_status_t status;
+    mystatus_t status;
     
     myurl_t* url_ref;
 };
@@ -64,7 +64,7 @@ struct myhtml_url {
     /* parser */
     myurl_state_f state;
     myurl_state_f state_override;
-    myhtml_encoding_t  encoding;
+    myencoding_t  encoding;
     
     /* memory */
     myurl_callback_malloc_f  callback_malloc;
@@ -80,11 +80,11 @@ struct myhtml_url {
 };
 
 myurl_t * myurl_create(void);
-myurl_status_t myurl_init(myurl_t* url);
+mystatus_t myurl_init(myurl_t* url);
 void myurl_clean(myurl_t* url);
 myurl_t * myurl_destroy(myurl_t* url, bool self_destroy);
 
-myurl_entry_t * myurl_parse(myurl_t* url, const char* data_url, size_t data_url_size, myurl_entry_t* base_url, myurl_status_t* status);
+myurl_entry_t * myurl_parse(myurl_t* url, const char* data_url, size_t data_url_size, myurl_entry_t* base_url, mystatus_t* status);
 
 myurl_entry_t * myurl_entry_create_and_init(myurl_t* url);
 void myurl_entry_clean(myurl_entry_t* url_entry);
@@ -97,7 +97,7 @@ void * myurl_callback_memory_context(myurl_t* url);
 
 /* api entry */
 /* for read */
-myurl_status_t myurl_entry_status(myurl_entry_t* url_entry);
+mystatus_t myurl_entry_status(myurl_entry_t* url_entry);
 myurl_flags_t myurl_entry_flags(myurl_entry_t* url_entry);
 myurl_t * myurl_entry_url(myurl_entry_t* url_entry);
 
@@ -164,16 +164,16 @@ const char * myurl_entry_username_set(myurl_entry_t* url_entry, const char* user
 const char * myurl_entry_password_set(myurl_entry_t* url_entry, const char* password, size_t length);
 
 /* host */
-myurl_status_t myurl_entry_host_set(myurl_entry_t* url_entry, const char* host, size_t length);
+mystatus_t myurl_entry_host_set(myurl_entry_t* url_entry, const char* host, size_t length);
 
 /* port */
 void myurl_entry_port_set(myurl_entry_t* url_entry, unsigned int port);
 
 /* path */
-myurl_status_t myurl_entry_path_set(myurl_entry_t* url_entry, const char* path, size_t length);
-myurl_status_t myurl_entry_path_append_entry(myurl_entry_t* url_entry, const char* entry, size_t length);
+mystatus_t myurl_entry_path_set(myurl_entry_t* url_entry, const char* path, size_t length);
+mystatus_t myurl_entry_path_append_entry(myurl_entry_t* url_entry, const char* entry, size_t length);
 void myurl_entry_path_pop_entry(myurl_entry_t* url_entry);
-myurl_status_t myurl_entry_path_replace_entry(myurl_entry_t* url_entry, size_t index, const char* entry, size_t length);
+mystatus_t myurl_entry_path_replace_entry(myurl_entry_t* url_entry, size_t index, const char* entry, size_t length);
 void myurl_entry_path_remove_entry(myurl_entry_t* url_entry, size_t index);
 void myurl_entry_path_clean(myurl_entry_t* url_entry);
 

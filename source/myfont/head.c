@@ -20,7 +20,7 @@
 
 #include "myfont/head.h"
 
-myfont_status_t myfont_load_table_head(struct myfont_font *mf)
+mystatus_t myfont_load_table_head(struct myfont_font *mf)
 {
     memset(&mf->table_head, 0, sizeof(myfont_table_head_t));
     

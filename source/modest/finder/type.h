@@ -27,7 +27,7 @@
 #include "modest/finder/pseudo_class.h"
 #include "modest/finder/match.h"
 #include "myhtml/tree.h"
-#include "myhtml/utils.h"
+#include "mycore/utils.h"
 #include "mycss/selectors/value.h"
 
 #ifdef __cplusplus

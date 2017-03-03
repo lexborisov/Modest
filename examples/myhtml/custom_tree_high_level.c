@@ -38,7 +38,7 @@ int main(int argc, const char * argv[])
     myhtml_tree_t* tree = myhtml_tree_create();
     myhtml_tree_init(tree, myhtml);
     
-    myhtml_encoding_set(tree, MyHTML_ENCODING_UTF_8);
+    myhtml_encoding_set(tree, MyENCODING_UTF_8);
     
     // create nodes
     printf("Create DIV element\n");
@@ -57,14 +57,14 @@ int main(int argc, const char * argv[])
         myhtml_tree_node_t* new_text_node = myhtml_node_create(tree, MyHTML_TAG__TEXT, MyHTML_NAMESPACE_HTML);
         myhtml_node_append_child(new_p_node, new_text_node);
         
-        sprintf(tmp_buf_key, "best_key_for_" MyHTML_FMT_Z, i);
-        sprintf(tmp_buf_value, "for best value " MyHTML_FMT_Z, i);
-        sprintf(tmp_buf_text, "Text! Entity &#x26;#" MyHTML_FMT_Z " = &#" MyHTML_FMT_Z, i, i);
+        sprintf(tmp_buf_key, "best_key_for_" MyCORE_FMT_Z, i);
+        sprintf(tmp_buf_value, "for best value " MyCORE_FMT_Z, i);
+        sprintf(tmp_buf_text, "Text! Entity &#x26;#" MyCORE_FMT_Z " = &#" MyCORE_FMT_Z, i, i);
         
-        myhtml_node_text_set_with_charef(new_text_node, tmp_buf_text, strlen(tmp_buf_text), MyHTML_ENCODING_UTF_8);
+        myhtml_node_text_set_with_charef(new_text_node, tmp_buf_text, strlen(tmp_buf_text), MyENCODING_UTF_8);
         
         myhtml_attribute_add(new_p_node, tmp_buf_key, strlen(tmp_buf_key),
-                             tmp_buf_value, strlen(tmp_buf_value), MyHTML_ENCODING_UTF_8);
+                             tmp_buf_value, strlen(tmp_buf_value), MyENCODING_UTF_8);
     }
     
     // print

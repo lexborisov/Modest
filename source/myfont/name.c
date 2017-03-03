@@ -20,7 +20,7 @@
 
 #include "myfont/name.h"
 
-myfont_status_t myfont_load_table_name(myfont_font_t *mf)
+mystatus_t myfont_load_table_name(myfont_font_t *mf)
 {
     memset(&mf->table_name, 0, sizeof(myfont_table_name_t));
     

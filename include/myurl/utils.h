@@ -45,8 +45,8 @@ struct myurl_utils_serialization_ctx {
 typedef myurl_utils_serialization_ctx_t;
 
 char * myurl_utils_data_copy(myurl_t* url, const char* data, size_t size);
-myurl_status_t myurl_utils_data_copy_set(myurl_t* url, const char* data, size_t size, char** to, size_t* to_length);
-myurl_status_t myurl_utils_data_copy_append(myurl_t* url, const char* data, size_t size, char** to, size_t* to_length);
+mystatus_t myurl_utils_data_copy_set(myurl_t* url, const char* data, size_t size, char** to, size_t* to_length);
+mystatus_t myurl_utils_data_copy_append(myurl_t* url, const char* data, size_t size, char** to, size_t* to_length);
 void myurl_utils_data_set_null(myurl_t* url, char** to, size_t* length);
 void myurl_utils_data_set_empty(myurl_t* url, char** to, size_t* length);
 char * myurl_utils_percent_encode(myurl_t* url, const char* data, size_t size, const unsigned char* encode_set, size_t* return_length);

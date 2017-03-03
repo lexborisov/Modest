@@ -20,7 +20,7 @@
 
 #include "myfont/os_2.h"
 
-myfont_status_t myfont_load_table_os_2(myfont_font_t *mf)
+mystatus_t myfont_load_table_os_2(myfont_font_t *mf)
 {
     memset(&mf->table_os_2, 0, sizeof(myfont_table_os_2_t));
     

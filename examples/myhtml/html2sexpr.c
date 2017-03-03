@@ -119,7 +119,7 @@ struct res_html load_html_file(const char* filename)
     
     size_t nread = fread(html, 1, size, fh);
     if (nread != size) {
-        DIE("could not read %ld bytes (" MyHTML_FMT_Z " bytes done)\n", size, nread);
+        DIE("could not read %ld bytes (" MyCORE_FMT_Z " bytes done)\n", size, nread);
     }
 
     fclose(fh);
@@ -141,7 +141,7 @@ int main(int argc, char** argv)
     }
 
     struct res_html data = load_html_file(argv[1]);
-    myhtml_status_t res;
+    mystatus_t res;
 
 	// basic init
     myhtml_t* myhtml = myhtml_create();
@@ -166,7 +166,7 @@ int main(int argc, char** argv)
     }
     
     // parse html
-    myhtml_parse(tree, MyHTML_ENCODING_UTF_8, data.html, data.size);
+    myhtml_parse(tree, MyENCODING_UTF_8, data.html, data.size);
     
     walk_subtree(tree, myhtml_tree_get_node_html(tree), 0);
     printf("\n");

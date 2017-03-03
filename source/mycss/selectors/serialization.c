@@ -114,7 +114,7 @@ bool mycss_selectors_serialization_selector(mycss_selectors_t* selectors, mycss_
             
             /* value */
             if(mycss_selector_value_attribute(selector->value)->value) {
-                myhtml_string_t *str_value = mycss_selector_value_attribute(selector->value)->value;
+                mycore_string_t *str_value = mycss_selector_value_attribute(selector->value)->value;
                 callback(str_value->data, str_value->length, context);
             }
             
@@ -203,7 +203,7 @@ bool mycss_selectors_serialization_selector(mycss_selectors_t* selectors, mycss_
                 case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_DIR:
                 {
                     if(selector->value) {
-                        myhtml_string_t *str_fname = mycss_selector_value_string(selector->value);
+                        mycore_string_t *str_fname = mycss_selector_value_string(selector->value);
                         callback(str_fname->data, str_fname->length, context);
                     }
                     

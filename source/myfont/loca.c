@@ -20,7 +20,7 @@
 
 #include "myfont/loca.h"
 
-myfont_status_t myfont_load_table_loca(struct myfont_font *mf)
+mystatus_t myfont_load_table_loca(struct myfont_font *mf)
 {
     memset(&mf->table_loca, 0, sizeof(myfont_table_loca_t));
     

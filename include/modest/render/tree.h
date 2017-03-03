@@ -25,7 +25,7 @@
 typedef struct modest_render_tree modest_render_tree_t;
 
 #include <modest/modest.h>
-#include <myhtml/utils/mcobject.h>
+#include <mycore/utils/mcobject.h>
 #include <modest/render/tree_node.h>
 
 #ifdef __cplusplus
@@ -37,7 +37,7 @@ struct modest_render_tree {
 };
 
 modest_render_tree_t * modest_render_tree_create(void);
-modest_status_t modest_render_tree_init(modest_render_tree_t* render_tree);
+mystatus_t modest_render_tree_init(modest_render_tree_t* render_tree);
 void modest_render_tree_clean_all(modest_render_tree_t* render_tree);
 modest_render_tree_t * modest_render_tree_destroy(modest_render_tree_t* render_tree, bool self_destroy);
 

@@ -25,7 +25,7 @@
 #include <mycss/property/myosi.h>
 #include <mycss/property/parser.h>
 #include <mycss/values/serialization.h>
-#include <myhtml/utils.h>
+#include <mycore/utils.h>
 
 #ifdef __cplusplus
 extern "C" {

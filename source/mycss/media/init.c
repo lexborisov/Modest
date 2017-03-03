@@ -22,15 +22,15 @@
 
 mycss_media_t * mycss_media_create(void)
 {
-    return (mycss_media_t*)myhtml_calloc(1, sizeof(mycss_media_t));
+    return (mycss_media_t*)mycore_calloc(1, sizeof(mycss_media_t));
 }
 
-mycss_status_t mycss_media_init(mycss_entry_t* entry, mycss_media_t* media)
+mystatus_t mycss_media_init(mycss_entry_t* entry, mycss_media_t* media)
 {
     return MyCSS_STATUS_OK;
 }
 
-mycss_status_t mycss_media_clean_all(mycss_media_t* media)
+mystatus_t mycss_media_clean_all(mycss_media_t* media)
 {
     return MyCSS_STATUS_OK;
 }
@@ -41,7 +41,7 @@ mycss_media_t * mycss_media_destroy(mycss_media_t* media, bool self_destroy)
         return NULL;
     
     if(self_destroy) {
-        myhtml_free(media);
+        mycore_free(media);
         return NULL;
     }
     

@@ -21,7 +21,7 @@
 #include "myurl/url.h"
 #include "myurl/parser.h"
 #include "myurl/resources.h"
-#include "myhtml/utils/resources.h"
+#include "mycore/utils/resources.h"
 
 size_t myurl_parser_state_relative_end(myurl_t* url, myurl_entry_t* url_entry, myurl_entry_t* url_base, const char* data, size_t data_length, size_t data_size)
 {
@@ -109,7 +109,7 @@ size_t myurl_parser_state_port_end(myurl_t* url, myurl_entry_t* url_entry, myurl
                 return (data_size + 1);
             }
             
-            port = myhtml_string_chars_num_map[ (unsigned char)data[len] ] + port * 10;
+            port = mycore_string_chars_num_map[ (unsigned char)data[len] ] + port * 10;
             len++;
         }
         
@@ -177,7 +177,7 @@ size_t myurl_parser_state_file_host_end(myurl_t* url, myurl_entry_t* url_entry, 
     /* 1.3.3 */
     if(url_entry->host.type == MyURL_HOST_TYPE_DOMAIN &&
        url_entry->host.domain.length == 9 &&
-       myhtml_strncasecmp("localhost", url_entry->host.domain.value, url_entry->host.domain.length) == 0)
+       mycore_strncasecmp("localhost", url_entry->host.domain.value, url_entry->host.domain.length) == 0)
     {
         myurl_host_clean(url, &url_entry->host);
     }
@@ -318,7 +318,7 @@ size_t myurl_parser_state_query_end(myurl_t* url, myurl_entry_t* url_entry, myur
        url_entry->scheme.sid == MyURL_SCHEME_ID_WS ||
        url_entry->scheme.sid == MyURL_SCHEME_ID_WSS)
     {
-        url->encoding = MyHTML_ENCODING_UTF_8;
+        url->encoding = MyENCODING_UTF_8;
     }
     
     /* 1.2, 1.3 */

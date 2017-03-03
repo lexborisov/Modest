@@ -26,7 +26,7 @@
 #include "mycss/stack.h"
 #include "mycss/values/units.h"
 #include "mycss/property/myosi.h"
-#include "myhtml/utils/mcobject.h"
+#include "mycore/utils/mcobject.h"
 
 #ifdef __cplusplus
 extern "C" {

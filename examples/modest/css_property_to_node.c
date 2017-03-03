@@ -31,7 +31,7 @@
 myhtml_tree_t * parse_html(const char* data, size_t data_size, myhtml_callback_tree_node_f cai, void* cai_ctx)
 {
     myhtml_t* myhtml = myhtml_create();
-    myhtml_status_t status = myhtml_init(myhtml, MyHTML_OPTIONS_DEFAULT, 1, 0);
+    mystatus_t status = myhtml_init(myhtml, MyHTML_OPTIONS_DEFAULT, 1, 0);
     
     check_status("Can't init MyHTML object\n");
     
@@ -42,7 +42,7 @@ myhtml_tree_t * parse_html(const char* data, size_t data_size, myhtml_callback_t
     
     myhtml_callback_tree_node_insert_set(tree, cai, cai_ctx);
     
-    status = myhtml_parse(tree, MyHTML_ENCODING_UTF_8, data, data_size);
+    status = myhtml_parse(tree, MyENCODING_UTF_8, data, data_size);
     check_status("Can't parse HTML:\n%s\n", data);
     
     return tree;
@@ -52,7 +52,7 @@ mycss_entry_t * parse_css(const char* data, size_t data_size)
 {
     // base init
     mycss_t *mycss = mycss_create();
-    mycss_status_t status = mycss_init(mycss);
+    mystatus_t status = mycss_init(mycss);
     
     check_status("Can't init MyCSS object\n");
     
@@ -62,7 +62,7 @@ mycss_entry_t * parse_css(const char* data, size_t data_size)
     
     check_status("Can't init MyCSS Entry object\n");
     
-    status = mycss_parse(entry, MyHTML_ENCODING_UTF_8, data, data_size);
+    status = mycss_parse(entry, MyENCODING_UTF_8, data, data_size);
     check_status("Can't parse CSS:\n%s\n", data);
     
     return entry;
@@ -111,7 +111,7 @@ int main(int argc, const char * argv[])
     
     /* init Modest */
     modest_t *modest = modest_create();
-    modest_status_t status = modest_init(modest);
+    mystatus_t status = modest_init(modest);
     
     check_status("Can't init Modest object\n");
     

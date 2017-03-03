@@ -36,7 +36,7 @@
 #include <myfont/pclt.h>
 #include <myfont/loca.h>
 
-#include <myhtml/utils/mchar_async.h>
+#include <mycore/utils/mchar_async.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -92,7 +92,7 @@ struct myfont_font {
 };
 
 myfont_font_t * myfont_create(void);
-myfont_status_t myfont_init(myfont_font_t *mf);
+mystatus_t myfont_init(myfont_font_t *mf);
 void myfont_clean(myfont_font_t *mf);
 myfont_font_t * myfont_destroy(myfont_font_t *mf, bool self_destroy);
 
@@ -100,10 +100,10 @@ void * myfont_malloc(myfont_font_t* mf, size_t size);
 void * myfont_calloc(myfont_font_t* mf, size_t count, size_t size);
 void myfont_free(myfont_font_t *mf, void* data);
 
-myfont_status_t myfont_load(myfont_font_t *mf, const char *filepath);
+mystatus_t myfont_load(myfont_font_t *mf, const char *filepath);
 
 void myfont_font_print_exists_table(myfont_font_t *mf, FILE *file);
-myfont_status_t myfont_check_required_tables(myfont_font_t *mf);
+mystatus_t myfont_check_required_tables(myfont_font_t *mf);
 
 float myfont_metrics_baseline(myfont_font_t *mf, float font_size);
 float myfont_metrics_ascender(myfont_font_t *mf, float font_size);
@@ -113,11 +113,11 @@ float myfont_metrics_x_height(myfont_font_t *mf, float font_size);
 float myfont_metrics_cap_height(myfont_font_t *mf, float font_size);
 float myfont_metrics_font_height(myfont_font_t *mf, float font_size);
 
-float myfont_metrics_width(myfont_font_t *mf, unsigned long codepoint, float font_size, myfont_status_t* status);
-float myfont_metrics_height(myfont_font_t *mf, unsigned long codepoint, float font_size, myfont_status_t* status);
-float myfont_metrics_glyph_offset_y(myfont_font_t *mf, unsigned long codepoint, float font_size, myfont_status_t* status);
+float myfont_metrics_width(myfont_font_t *mf, unsigned long codepoint, float font_size, mystatus_t* status);
+float myfont_metrics_height(myfont_font_t *mf, unsigned long codepoint, float font_size, mystatus_t* status);
+float myfont_metrics_glyph_offset_y(myfont_font_t *mf, unsigned long codepoint, float font_size, mystatus_t* status);
 
-myfont_status_t myfont_load_table(myfont_font_t *mf, void *table, size_t size, enum myfont_table_key tkey);
+mystatus_t myfont_load_table(myfont_font_t *mf, void *table, size_t size, enum myfont_table_key tkey);
 
 int16_t myfont_table_version_major(uint32_t version);
 int16_t myfont_table_version_minor(uint32_t version);

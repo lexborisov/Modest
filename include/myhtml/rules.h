@@ -30,15 +30,13 @@ extern "C" {
 #include <myhtml/myhtml.h>
 #include <myhtml/tree.h>
 
-
-myhtml_status_t myhtml_rules_init(myhtml_t* myhtml);
+mystatus_t myhtml_rules_init(myhtml_t* myhtml);
 void myhtml_rules_stop_parsing(myhtml_tree_t* tree);
 
 bool myhtml_rules_tree_dispatcher(myhtml_tree_t* tree, myhtml_token_node_t* token);
 bool myhtml_insertion_mode_in_body_other_end_tag(myhtml_tree_t* tree, myhtml_token_node_t* token);
 bool myhtml_insertion_mode_in_body(myhtml_tree_t* tree, myhtml_token_node_t* token);
 bool myhtml_insertion_mode_in_template(myhtml_tree_t* tree, myhtml_token_node_t* token);
-
 
 #ifdef __cplusplus
 } /* extern "C" */

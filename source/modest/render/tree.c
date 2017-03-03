@@ -22,16 +22,16 @@
 
 modest_render_tree_t * modest_render_tree_create(void)
 {
-    return myhtml_calloc(1, sizeof(modest_render_tree_t));
+    return mycore_calloc(1, sizeof(modest_render_tree_t));
 }
 
-modest_status_t modest_render_tree_init(modest_render_tree_t* render_tree)
+mystatus_t modest_render_tree_init(modest_render_tree_t* render_tree)
 {
     render_tree->mc_nodes = mcobject_create();
     if(render_tree->mc_nodes == NULL)
         return MODEST_STATUS_ERROR_MEMORY_ALLOCATION;
     
-    myhtml_status_t myhtml_status = mcobject_init(render_tree->mc_nodes, 1024, sizeof(modest_render_tree_node_t));
+    mystatus_t myhtml_status = mcobject_init(render_tree->mc_nodes, 1024, sizeof(modest_render_tree_node_t));
     if(myhtml_status)
         return MODEST_STATUS_ERROR;
     
@@ -51,7 +51,7 @@ modest_render_tree_t * modest_render_tree_destroy(modest_render_tree_t* render_t
     render_tree->mc_nodes = mcobject_destroy(render_tree->mc_nodes, true);
     
     if(self_destroy) {
-        myhtml_free(render_tree);
+        mycore_free(render_tree);
         return NULL;
     }
     

@@ -21,7 +21,7 @@
 #include "myurl/host.h"
 #include "myurl/url.h"
 #include "myurl/resources.h"
-#include "myhtml/utils/resources.h"
+#include "mycore/utils/resources.h"
 
 myurl_host_t * myurl_host_create(myurl_t* url)
 {
@@ -33,7 +33,7 @@ myurl_host_t * myurl_host_create(myurl_t* url)
     return host;
 }
 
-myurl_status_t myurl_host_init(myurl_t* url)
+mystatus_t myurl_host_init(myurl_t* url)
 {
     return MyURL_STATUS_OK;
 }
@@ -63,7 +63,7 @@ myurl_host_t * myurl_host_destroy(myurl_t* url, myurl_host_t* host, bool destroy
     return host;
 }
 
-myurl_status_t myurl_host_copy(myurl_t* url, myurl_host_t* host_from, myurl_host_t* host_to)
+mystatus_t myurl_host_copy(myurl_t* url, myurl_host_t* host_from, myurl_host_t* host_to)
 {
     host_to->type = host_from->type;
     
@@ -91,7 +91,7 @@ myurl_host_ipv_t * myurl_host_ipv6_entry_create(myurl_t* url)
 }
 
 /* Parsing */
-myurl_status_t myurl_host_parser(myurl_t* url, myurl_host_t* host, const char* data, size_t data_size, bool is_special)
+mystatus_t myurl_host_parser(myurl_t* url, myurl_host_t* host, const char* data, size_t data_size, bool is_special)
 {
     size_t data_length = 0;
     
@@ -121,7 +121,7 @@ myurl_status_t myurl_host_parser(myurl_t* url, myurl_host_t* host, const char* d
     /* 4 */
     char* ascii_domain;
     size_t ascii_domain_size;
-    myurl_status_t status = myurl_host_domain_to_ascii(url, &ascii_domain, &ascii_domain_size, domain, domain_size,
+    mystatus_t status = myurl_host_domain_to_ascii(url, &ascii_domain, &ascii_domain_size, domain, domain_size,
                                                        false, false, MyURL_HOST_IDNA_PROCESSING_OPTION_NONTRANSITIONAL);
     /* 5 */
     if(status != MyURL_STATUS_OK) {
@@ -164,7 +164,7 @@ myurl_status_t myurl_host_parser(myurl_t* url, myurl_host_t* host, const char* d
     return MyURL_STATUS_OK;
 }
 
-myurl_status_t myurl_host_domain_to_ascii(myurl_t* url, char** return_domain, size_t* return_domain_size,
+mystatus_t myurl_host_domain_to_ascii(myurl_t* url, char** return_domain, size_t* return_domain_size,
                                           char* domain, size_t domain_size,
                                           bool UseSTD3ASCIIRules, bool VerifyDnsLength,
                                           myurl_host_idna_processing_option_t opt)
@@ -178,7 +178,7 @@ myurl_status_t myurl_host_domain_to_ascii(myurl_t* url, char** return_domain, si
     return MyURL_STATUS_OK;
 }
 
-myurl_status_t myurl_host_opaque_host_parser(myurl_t* url, myurl_host_opaque_t* opaque, const char* data, size_t data_size)
+mystatus_t myurl_host_opaque_host_parser(myurl_t* url, myurl_host_opaque_t* opaque, const char* data, size_t data_size)
 {
     // TODO: see this
     /* 1 */
@@ -223,7 +223,7 @@ myurl_status_t myurl_host_opaque_host_parser(myurl_t* url, myurl_host_opaque_t* 
     return MyURL_STATUS_OK;
 }
 
-myurl_status_t myurl_host_ipv4_number_parser(const char* data, size_t data_size, unsigned int* number, bool* validationErrorFlag)
+mystatus_t myurl_host_ipv4_number_parser(const char* data, size_t data_size, unsigned int* number, bool* validationErrorFlag)
 {
     size_t length = 0;
     
@@ -258,22 +258,22 @@ myurl_status_t myurl_host_ipv4_number_parser(const char* data, size_t data_size,
     
     if(r == 10) {
         while(length < data_size) {
-            if(myhtml_string_chars_num_map[ (unsigned char)data[length] ] == 0xff) {
+            if(mycore_string_chars_num_map[ (unsigned char)data[length] ] == 0xff) {
                 return MyURL_STATUS_ERROR;
             }
             
-            *number = myhtml_string_chars_num_map[ (unsigned char)data[length] ] + *number * r;
+            *number = mycore_string_chars_num_map[ (unsigned char)data[length] ] + *number * r;
             
             length++;
         }
     }
     else if(r == 16) {
         while(length < data_size) {
-            if(myhtml_string_chars_hex_map[ (unsigned char)data[length] ] == 0xff) {
+            if(mycore_string_chars_hex_map[ (unsigned char)data[length] ] == 0xff) {
                 return MyURL_STATUS_ERROR;
             }
             
-            *number = myhtml_string_chars_hex_map[ (unsigned char)data[length] ] + *number * r;
+            *number = mycore_string_chars_hex_map[ (unsigned char)data[length] ] + *number * r;
             
             length++;
         }
@@ -284,7 +284,7 @@ myurl_status_t myurl_host_ipv4_number_parser(const char* data, size_t data_size,
                 return MyURL_STATUS_ERROR;
             }
             
-            *number = myhtml_string_chars_num_map[ (unsigned char)data[length] ] + *number * r;
+            *number = mycore_string_chars_num_map[ (unsigned char)data[length] ] + *number * r;
             
             length++;
         }
@@ -293,7 +293,7 @@ myurl_status_t myurl_host_ipv4_number_parser(const char* data, size_t data_size,
     return MyURL_STATUS_OK;
 }
 
-myurl_status_t myurl_host_ipv4_parser(myurl_host_ipv_t* ipv, const char* data, size_t data_size, bool* failure)
+mystatus_t myurl_host_ipv4_parser(myurl_host_ipv_t* ipv, const char* data, size_t data_size, bool* failure)
 {
     if(failure)
         *failure = false;
@@ -366,7 +366,7 @@ myurl_status_t myurl_host_ipv4_parser(myurl_host_ipv_t* ipv, const char* data, s
     }
     
     /* 9 */
-    if(ipv->pieces[(part_count - 1)] >= myhtml_power(256, (5 - part_count))) {
+    if(ipv->pieces[(part_count - 1)] >= mycore_power(256, (5 - part_count))) {
         if(failure)
             *failure = true;
         
@@ -379,7 +379,7 @@ myurl_status_t myurl_host_ipv4_parser(myurl_host_ipv_t* ipv, const char* data, s
     
     /* calc end char count */
     for(size_t i = 0; i < part_count; i++) {
-        size_t n = myhtml_power(256, (3 - i));
+        size_t n = mycore_power(256, (3 - i));
         ipv4 += ipv->pieces[i] * n;
     }
     
@@ -389,7 +389,7 @@ myurl_status_t myurl_host_ipv4_parser(myurl_host_ipv_t* ipv, const char* data, s
     return MyURL_STATUS_OK;
 }
 
-myurl_status_t myurl_host_ipv6_parser(myurl_host_ipv_t* ipv, const char* data, size_t data_size)
+mystatus_t myurl_host_ipv6_parser(myurl_host_ipv_t* ipv, const char* data, size_t data_size)
 {
     size_t data_length = 0;
     const unsigned char *u_data = (const unsigned char*)data;
@@ -455,9 +455,9 @@ myurl_status_t myurl_host_ipv6_parser(myurl_host_ipv_t* ipv, const char* data, s
         size_t i = 0;
         
         while((i < 4) && (data_length < data_size)) {
-            if(myhtml_string_chars_hex_map[ u_data[data_length] ] != 0xff) {
+            if(mycore_string_chars_hex_map[ u_data[data_length] ] != 0xff) {
                 num <<= 4;
-                num |= myhtml_string_chars_hex_map[ u_data[data_length] ];
+                num |= mycore_string_chars_hex_map[ u_data[data_length] ];
             }
             else
                 break;
@@ -539,7 +539,7 @@ myurl_status_t myurl_host_ipv6_parser(myurl_host_ipv_t* ipv, const char* data, s
     return MyURL_STATUS_OK;
 }
 
-myurl_status_t myurl_host_ipv6_ipv4_parser(myurl_host_ipv_t* ipv, const char* data, size_t data_size, unsigned int** piece_pointer)
+mystatus_t myurl_host_ipv6_ipv4_parser(myurl_host_ipv_t* ipv, const char* data, size_t data_size, unsigned int** piece_pointer)
 {
     size_t data_length = 0;
     const unsigned char *u_data = (const unsigned char*)data;
@@ -574,16 +574,16 @@ myurl_status_t myurl_host_ipv6_ipv4_parser(myurl_host_ipv_t* ipv, const char* da
         }
         
         /* 10.3 */
-        if(myhtml_string_chars_num_map[ u_data[data_length] ] == 0xff) {
+        if(mycore_string_chars_num_map[ u_data[data_length] ] == 0xff) {
             // parse error
             return MyURL_STATUS_ERROR;
         }
         
         /* 10.4 */
-        while(data_length < data_size && myhtml_string_chars_num_map[ u_data[data_length] ] != 0xff)
+        while(data_length < data_size && mycore_string_chars_num_map[ u_data[data_length] ] != 0xff)
         {
             /* 10.4.1 */
-            unsigned int number = myhtml_string_chars_num_map[ u_data[data_length] ];
+            unsigned int number = mycore_string_chars_num_map[ u_data[data_length] ];
             
             /* 10.4.2 */
             if(value == -1) {

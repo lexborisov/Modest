@@ -35,7 +35,7 @@ bool modest_finder_selector_type_element(modest_finder_t* finder, myhtml_tree_no
     }
     
     /* tag match */
-    myhtml_string_t *str = selector->key;
+    mycore_string_t *str = selector->key;
     if(str->length == 1 && *str->data == '*')
         return true;
     

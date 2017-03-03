@@ -26,7 +26,7 @@ bool mycss_values_consume_length(mycss_entry_t* entry, mycss_token_t* token)
     {
         mycss_values_length_t *value = mycss_values_create(entry, sizeof(mycss_values_length_t));
         
-        myhtml_string_t str;
+        mycore_string_t str;
         mycss_token_data_to_string(entry, token, &str, true, false);
         
         double return_num;
@@ -34,7 +34,7 @@ bool mycss_values_consume_length(mycss_entry_t* entry, mycss_token_t* token)
         
         if(token->type == MyCSS_TOKEN_TYPE_DIMENSION) {
             value->type = mycss_units_type_by_name(&str.data[consume_length], (str.length - consume_length));
-            myhtml_string_destroy(&str, false);
+            mycore_string_destroy(&str, false);
             
             if(value->type == MyCSS_UNIT_TYPE_UNDEF) {
                 mycss_values_destroy(entry, value);
@@ -43,7 +43,7 @@ bool mycss_values_consume_length(mycss_entry_t* entry, mycss_token_t* token)
         }
         else {
             value->type = MyCSS_UNIT_TYPE_UNDEF;
-            myhtml_string_destroy(&str, false);
+            mycore_string_destroy(&str, false);
         }
         
         if(value->is_float)
@@ -65,13 +65,13 @@ bool mycss_values_consume_percentage(mycss_entry_t* entry, mycss_token_t* token)
     {
         mycss_values_percentage_t *value = mycss_values_create(entry, sizeof(mycss_values_length_t));
         
-        myhtml_string_t str;
+        mycore_string_t str;
         mycss_token_data_to_string(entry, token, &str, true, false);
         
         double return_num;
         mycss_convert_data_to_double(str.data, str.length, &return_num, &value->is_float);
         
-        myhtml_string_destroy(&str, false);
+        mycore_string_destroy(&str, false);
         
         if(value->is_float)
             value->f = (float)return_num;

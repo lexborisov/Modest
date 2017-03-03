@@ -60,7 +60,7 @@ typedef myfont_table_name_t;
 
 struct myfont_font;
 
-myfont_status_t myfont_load_table_name(struct myfont_font *mf);
+mystatus_t myfont_load_table_name(struct myfont_font *mf);
 
 #ifdef __cplusplus
 } /* extern "C" */

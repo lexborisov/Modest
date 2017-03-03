@@ -31,7 +31,7 @@ myurl_path_t * myurl_path_create(myurl_t* url)
     return path;
 }
 
-myurl_status_t myurl_path_init(myurl_t* url, myurl_path_t* path, size_t begin_size)
+mystatus_t myurl_path_init(myurl_t* url, myurl_path_t* path, size_t begin_size)
 {
     if(begin_size == 0)
         return MyURL_STATUS_ERROR;
@@ -212,7 +212,7 @@ void myurl_path_remove_by_index(myurl_t* url, myurl_path_t* path, size_t index)
     path->length--;
 }
 
-myurl_status_t myurl_path_copy(myurl_t* url, myurl_path_t* path_from, myurl_path_t* path_to)
+mystatus_t myurl_path_copy(myurl_t* url, myurl_path_t* path_from, myurl_path_t* path_to)
 {
     if(path_from->length >= path_to->size) {
         size_t new_size = path_from->length + 2;

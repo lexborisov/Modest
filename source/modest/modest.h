@@ -24,10 +24,10 @@
 
 #include "modest/myosi.h"
 #include "modest/layer/layer.h"
-#include "myhtml/utils/mcobject.h"
-#include "myhtml/utils/mcobject_async.h"
-#include "myhtml/utils/mchar_async.h"
-#include "myhtml/utils/avl_tree.h"
+#include "mycore/utils/mcobject.h"
+#include "mycore/utils/mcobject_async.h"
+#include "mycore/utils/mchar_async.h"
+#include "mycore/utils/avl_tree.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -47,7 +47,7 @@ struct modest {
     
     modest_layout_t* layout;
     
-    myhtml_utils_avl_tree_t* style_avl_tree;
+    mycore_utils_avl_tree_t* style_avl_tree;
     
     /* refs */
     myhtml_tree_t* myhtml_tree;
@@ -56,7 +56,7 @@ struct modest {
 
 
 modest_t * modest_create(void);
-modest_status_t modest_init(modest_t* modest);
+mystatus_t modest_init(modest_t* modest);
 void modest_clean(modest_t* modest);
 modest_t * modest_destroy(modest_t* modest, bool self_destroy);
 

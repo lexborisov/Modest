@@ -28,16 +28,16 @@ extern "C" {
 
 #include "mycss/myosi.h"
 #include "myhtml/mystring.h"
-#include "myhtml/utils/mctree.h"
-#include "myhtml/utils/mcobject.h"
+#include "mycore/utils/mctree.h"
+#include "mycore/utils/mcobject.h"
 
 typedef struct mycss_namespace mycss_namespace_t;
 typedef struct mycss_namespace_entry mycss_namespace_entry_t;
 typedef struct mycss_namespace_stylesheet mycss_namespace_stylesheet_t;
 
 struct mycss_namespace_entry {
-    myhtml_string_t* name;
-    myhtml_string_t* url;
+    mycore_string_t* name;
+    mycore_string_t* url;
     
     myhtml_namespace_t ns_id;
     size_t mctree_id;

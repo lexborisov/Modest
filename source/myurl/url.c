@@ -23,10 +23,10 @@
 
 myurl_t * myurl_create(void)
 {
-    return myhtml_calloc(1, sizeof(myurl_t));
+    return mycore_calloc(1, sizeof(myurl_t));
 }
 
-myurl_status_t myurl_init(myurl_t* url)
+mystatus_t myurl_init(myurl_t* url)
 {
     url->callback_malloc  = myurl_callback_malloc;
     url->callback_free    = myurl_callback_free;
@@ -47,7 +47,7 @@ myurl_t * myurl_destroy(myurl_t* url, bool self_destroy)
         return NULL;
     
     if(self_destroy) {
-        myhtml_free(url);
+        mycore_free(url);
         return NULL;
     }
     
@@ -116,7 +116,7 @@ myurl_entry_t * myurl_entry_destroy(myurl_entry_t* url_entry, bool self_destroy)
 /*
  * The CODE
  */
-myurl_entry_t * myurl_parse(myurl_t* url, const char* data_url, size_t data_url_size, myurl_entry_t* base_url, myurl_status_t* status)
+myurl_entry_t * myurl_parse(myurl_t* url, const char* data_url, size_t data_url_size, myurl_entry_t* base_url, mystatus_t* status)
 {
     myurl_entry_t* entry = myurl_entry_create_and_init(url);
     
@@ -230,7 +230,7 @@ static char * myurl_as_string(myurl_entry_t* url_entry, size_t *length, myurl_ca
     return ctx.data;
 }
 
-myurl_status_t myurl_entry_status(myurl_entry_t* url_entry)
+mystatus_t myurl_entry_status(myurl_entry_t* url_entry)
 {
     return url_entry->status;
 }
@@ -489,13 +489,13 @@ const char * myurl_entry_password_set(myurl_entry_t* url_entry, const char* pass
 }
 
 /* host */
-myurl_status_t myurl_entry_host_set(myurl_entry_t* url_entry, const char* host, size_t length)
+mystatus_t myurl_entry_host_set(myurl_entry_t* url_entry, const char* host, size_t length)
 {
     if(url_entry->url_ref == NULL)
         return MyURL_STATUS_ERROR;
     
     myurl_host_t new_host = {{}, 0};
-    myurl_status_t status = myurl_host_parser(url_entry->url_ref, &new_host, host, length, (url_entry->scheme.type & MyURL_SCHEME_TYPE_SPECIAL));
+    mystatus_t status = myurl_host_parser(url_entry->url_ref, &new_host, host, length, (url_entry->scheme.type & MyURL_SCHEME_TYPE_SPECIAL));
     
     if(status)
         return status;
@@ -514,12 +514,12 @@ void myurl_entry_port_set(myurl_entry_t* url_entry, unsigned int port)
 }
 
 /* path */
-myurl_status_t myurl_entry_path_set(myurl_entry_t* url_entry, const char* path, size_t length)
+mystatus_t myurl_entry_path_set(myurl_entry_t* url_entry, const char* path, size_t length)
 {
     if(url_entry->url_ref == NULL || path == NULL)
         return MyURL_STATUS_ERROR;
     
-    myurl_status_t status;
+    mystatus_t status;
     myurl_entry_t *new_entry = myurl_parse(url_entry->url_ref, path, length, url_entry, &status);
     
     if(new_entry) {
@@ -531,7 +531,7 @@ myurl_status_t myurl_entry_path_set(myurl_entry_t* url_entry, const char* path, 
     return status;
 }
 
-myurl_status_t myurl_entry_path_append_entry(myurl_entry_t* url_entry, const char* entry, size_t length)
+mystatus_t myurl_entry_path_append_entry(myurl_entry_t* url_entry, const char* entry, size_t length)
 {
     if(url_entry->url_ref == NULL || entry == NULL)
         return MyURL_STATUS_ERROR;
@@ -553,7 +553,7 @@ void myurl_entry_path_pop_entry(myurl_entry_t* url_entry)
     myurl_path_pop(&url_entry->path);
 }
 
-myurl_status_t myurl_entry_path_replace_entry(myurl_entry_t* url_entry, size_t index, const char* entry, size_t length)
+mystatus_t myurl_entry_path_replace_entry(myurl_entry_t* url_entry, size_t index, const char* entry, size_t length)
 {
     if(url_entry->url_ref == NULL || entry == NULL)
         return MyURL_STATUS_ERROR;

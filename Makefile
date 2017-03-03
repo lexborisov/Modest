@@ -53,6 +53,8 @@ EXTDIRS := examples test
 all: create shared static
 	for f in $(EXTDIRS); do $(MAKE) -C $$f all; done
 
+include $(TARGET)/mycore/Makefile.mk
+include $(TARGET)/myencoding/Makefile.mk
 include $(TARGET)/myhtml/Makefile.mk
 include $(TARGET)/mycss/Makefile.mk
 include $(TARGET)/myfont/Makefile.mk
@@ -79,7 +81,7 @@ clean:
 clean_include:
 	rm -rf $(INCLUDE_TMP)
 
-clone: create clean_include myhtml_clone mycss_clone modest_clone myfont_clone myurl_clone
+clone: create clean_include myhtml_clone mycss_clone modest_clone myfont_clone myurl_clone mycore_clone myencoding_clone
 	find include -name "*.h" -exec sed -i '.bak' -E 's/^[ \t]*#[ \t]*include[ \t]*"([^"]+)"/#include <\1>/g' {} \;
 	find include -name "*.h.bak" -exec rm -f {} \;
 

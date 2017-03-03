@@ -32,7 +32,7 @@ typedef struct myhtml_url myurl_t;
 typedef struct myurl_entry myurl_entry_t;
 
 typedef size_t (*myurl_state_f)(myurl_t* url, myurl_entry_t* url_entry, myurl_entry_t* url_base, const char* data, size_t data_length, size_t data_size);
-typedef void (*myurl_callback_serialization_func_f)(myurl_entry_t* url_entry, myhtml_callback_serialize_f callback, void* ctx);
+typedef void (*myurl_callback_serialization_func_f)(myurl_entry_t* url_entry, mycore_callback_serialize_f callback, void* ctx);
     
 typedef void * (*myurl_callback_malloc_f)(size_t size, void *ctx);
 typedef void * (*myurl_callback_realloc_f)(void* value, size_t size, void *ctx);

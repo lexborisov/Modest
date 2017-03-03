@@ -24,9 +24,9 @@
 
 /* Format */
 #ifdef _WIN32
-    #define MyHTML_FMT_Z "%Iu"
+    #define MyCORE_FMT_Z "%Iu"
 #else
-    #define MyHTML_FMT_Z "%zu"
+    #define MyCORE_FMT_Z "%zu"
 #endif
 
 #endif /* MyHTML_EXAMPLE_EXAMPLE_H */

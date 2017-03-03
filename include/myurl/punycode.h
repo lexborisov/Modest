@@ -24,7 +24,7 @@
 
 #include <myurl/myosi.h>
 #include <myhtml/mystring.h>
-#include <myhtml/encoding.h>
+#include <myencoding/encoding.h>
 
 #ifdef __cplusplus
 extern "C" {

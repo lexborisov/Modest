@@ -38,7 +38,7 @@ void mycss_declaration_parser_ident(mycss_entry_t* entry, mycss_token_t* token)
     else
         mycss_declaration_entry_clean(dec_entry);
     
-    myhtml_string_t str;
+    mycore_string_t str;
     mycss_token_data_to_string(entry, token, &str, true, false);
     
     const mycss_property_index_static_entry_t *prop_entry = mycss_property_index_entry_by_name(str.data, str.length);
@@ -53,7 +53,7 @@ void mycss_declaration_parser_ident(mycss_entry_t* entry, mycss_token_t* token)
         entry->parser = mycss_declaration_state_parse_error;
     }
     
-    myhtml_string_destroy(&str, false);
+    mycore_string_destroy(&str, false);
 }
 
 void mycss_declaration_parser_end(mycss_entry_t* entry, mycss_token_t* token)

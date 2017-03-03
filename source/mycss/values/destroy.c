@@ -333,12 +333,12 @@ mycss_values_text_decoration_t * mycss_values_destroy_text_decoration(mycss_entr
 /*
  * String
  */
-myhtml_string_t * mycss_values_destroy_string(mycss_entry_t* entry, myhtml_string_t* value, bool self_destroy)
+mycore_string_t * mycss_values_destroy_string(mycss_entry_t* entry, mycore_string_t* value, bool self_destroy)
 {
     if(value == NULL)
         return NULL;
     
-    myhtml_string_destroy(value, false);
+    mycore_string_destroy(value, false);
     
     if(self_destroy) {
         mycss_values_destroy(entry, (void*)value);

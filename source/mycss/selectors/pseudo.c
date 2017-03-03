@@ -20,7 +20,7 @@
 
 #include "mycss/selectors/pseudo.h"
 #include "mycss/selectors/pseudo_resource.h"
-#include "myhtml/utils/resources.h"
+#include "mycore/utils/resources.h"
 
 /////////////////////////////////////////////////////////
 //// Functions for a find Begin Function
@@ -28,15 +28,15 @@
 /////////////////////////////////////////////////////////
 const mycss_selectots_pseudo_begin_entry_t * mycss_pseudo_begin_entry_by_name(const char* name, size_t length, size_t static_size, const mycss_selectots_pseudo_begin_entry_t* pseudo)
 {
-    size_t idx = ((myhtml_string_chars_lowercase_map[ (const unsigned char)name[0] ] *
-                   myhtml_string_chars_lowercase_map[ (const unsigned char)name[(length - 1)] ] *
+    size_t idx = ((mycore_string_chars_lowercase_map[ (const unsigned char)name[0] ] *
+                   mycore_string_chars_lowercase_map[ (const unsigned char)name[(length - 1)] ] *
                    length)
                   % static_size) + 1;
     
     while (pseudo[idx].name)
     {
         if(pseudo[idx].length == length) {
-            if(myhtml_strncasecmp(pseudo[idx].name, name, length) == 0)
+            if(mycore_strncasecmp(pseudo[idx].name, name, length) == 0)
                 return &pseudo[idx];
             
             if(pseudo[idx].next)

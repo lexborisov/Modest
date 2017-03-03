@@ -63,7 +63,7 @@ struct res_html load_html_file(const char* filename)
     
     size_t nread = fread(html, 1, size, fh);
     if (nread != size) {
-        fprintf(stderr, "could not read %ld bytes (" MyHTML_FMT_Z " bytes done)\n", size, nread);
+        fprintf(stderr, "could not read %ld bytes (" MyCORE_FMT_Z " bytes done)\n", size, nread);
         exit(EXIT_FAILURE);
     }
                
@@ -96,18 +96,18 @@ int main(int argc, const char * argv[])
     myhtml_tree_init(tree, myhtml);
     
     // parse html
-    myhtml_parse(tree, MyHTML_ENCODING_UTF_8, res.html, res.size);
+    myhtml_parse(tree, MyENCODING_UTF_8, res.html, res.size);
     
     // get title from index
     myhtml_collection_t *titles_list = myhtml_get_nodes_by_tag_id(tree, NULL, MyHTML_TAG_TITLE, NULL);
     
     if(titles_list && titles_list->length != 0 && titles_list->list[0]->child) {
-        myhtml_string_raw_t str = {0};
+        mycore_string_raw_t str = {0};
         myhtml_serialization_node(titles_list->list[0]->child, &str);
         
         printf("%s\n", str.data);
         
-        myhtml_string_raw_destroy(&str, false);
+        mycore_string_raw_destroy(&str, false);
     }
     
     // release resources

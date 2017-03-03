@@ -20,7 +20,7 @@
 
 #include "myfont/hmtx.h"
 
-myfont_status_t myfont_load_table_hmtx(struct myfont_font *mf)
+mystatus_t myfont_load_table_hmtx(struct myfont_font *mf)
 {
     memset(&mf->table_hmtx, 0, sizeof(myfont_table_hmtx_t));
     

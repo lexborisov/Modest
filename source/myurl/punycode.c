@@ -20,13 +20,13 @@
 
 #include "myurl/punycode.h"
 
-myurl_status_t myurl_punycode_encode_with_callback(const unsigned char* data, size_t data_size, myhtml_string_raw_t* str_raw)
+mystatus_t myurl_punycode_encode_with_callback(const unsigned char* data, size_t data_size, mycore_string_raw_t* str_raw)
 {
     size_t i = 0;
     size_t cp_count = 0;
     
     while(i < data_size) {
-        size_t n = myhtml_encoding_ascii_utf_8_length(data[i]);
+        size_t n = myencoding_ascii_utf_8_length(data[i]);
         
         if(n == 1) {
             str_raw->data[ str_raw->length++ ] = data[i];

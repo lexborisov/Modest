@@ -20,19 +20,19 @@
 
 #include "mycss/values/image.h"
 #include "mycss/values/image_resources.h"
-#include "myhtml/utils/resources.h"
+#include "mycore/utils/resources.h"
 
 const mycss_values_image_function_index_static_entry_t * mycss_values_image_index_entry_by_name(const char* name, size_t length)
 {
-    size_t idx = ((myhtml_string_chars_lowercase_map[ (const unsigned char)name[0] ] *
-                   myhtml_string_chars_lowercase_map[ (const unsigned char)name[(length - 1)] ] *
+    size_t idx = ((mycore_string_chars_lowercase_map[ (const unsigned char)name[0] ] *
+                   mycore_string_chars_lowercase_map[ (const unsigned char)name[(length - 1)] ] *
                    length)
                   % MyCSS_IMAGE_FUNCTION_STATIC_INDEX_FOR_SEARCH_SIZE) + 1;
     
     while (mycss_values_image_function_index_static_for_search[idx].name)
     {
         if(mycss_values_image_function_index_static_for_search[idx].name_length == length) {
-            if(myhtml_strncasecmp(mycss_values_image_function_index_static_for_search[idx].name, name, length) == 0)
+            if(mycore_strncasecmp(mycss_values_image_function_index_static_for_search[idx].name, name, length) == 0)
                 return &mycss_values_image_function_index_static_for_search[idx];
             
             if(mycss_values_image_function_index_static_for_search[idx].next)

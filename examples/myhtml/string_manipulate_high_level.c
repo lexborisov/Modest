@@ -37,7 +37,7 @@ int main(int argc, const char * argv[])
     myhtml_tree_init(tree, myhtml);
     
     // parse html
-    myhtml_parse(tree, MyHTML_ENCODING_UTF_8, html, strlen(html));
+    myhtml_parse(tree, MyENCODING_UTF_8, html, strlen(html));
     
     // print original tree
     printf("Original Tree:\n");
@@ -51,18 +51,18 @@ int main(int argc, const char * argv[])
     if(collection && collection->list && collection->length)
     {
         myhtml_tree_node_t *text_node = collection->list[0];
-        myhtml_string_t *str = myhtml_node_string(text_node);
+        mycore_string_t *str = myhtml_node_string(text_node);
         
         // change data
-        char *data = myhtml_string_data(str);
+        char *data = mycore_string_data(str);
         
-        for (size_t i = 0; i < myhtml_string_length(str); i++)
+        for (size_t i = 0; i < mycore_string_length(str); i++)
         {
             if(data[i] == 'm') {
                 sprintf(&data[i], "test");
                 
                 // set new length
-                myhtml_string_length_set(str, (i + 4));
+                mycore_string_length_set(str, (i + 4));
                 break;
             }
         }

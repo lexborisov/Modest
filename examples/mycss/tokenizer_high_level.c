@@ -31,7 +31,7 @@ mycss_token_t * token_ready_callback(mycss_entry_t* entry, mycss_token_t* token)
     size_t tokens_count = mycss_entry_token_count(entry);
     mycss_token_type_t token_type = mycss_token_type(token);
 
-    printf("Token " MyHTML_FMT_Z ": <%s>\n", tokens_count, mycss_token_name_by_type(token_type));
+    printf("Token " MyCORE_FMT_Z ": <%s>\n", tokens_count, mycss_token_name_by_type(token_type));
 
     return token;
 }
@@ -42,7 +42,7 @@ int main(int argc, const char * argv[])
 
     // basic init
     mycss_t *mycss = mycss_create();
-    mycss_status_t status = mycss_init(mycss);
+    mystatus_t status = mycss_init(mycss);
 
     // check initialization
     if (MyCSS_FAILED(status)) return EXIT_FAILURE;
@@ -55,7 +55,7 @@ int main(int argc, const char * argv[])
     mycss_entry_token_ready_callback(entry, token_ready_callback);
 
     // parse css
-    mycss_parse(entry, MyHTML_ENCODING_UTF_8, css, strlen(css));
+    mycss_parse(entry, MyENCODING_UTF_8, css, strlen(css));
 
     // release resurces
     mycss_entry_destroy(entry, true);

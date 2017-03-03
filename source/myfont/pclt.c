@@ -20,7 +20,7 @@
 
 #include "myfont/pclt.h"
 
-myfont_status_t myfont_load_table_pclt(struct myfont_font *mf)
+mystatus_t myfont_load_table_pclt(struct myfont_font *mf)
 {
     memset(&mf->table_pclt, 0, sizeof(myfont_table_pclt_t));
     

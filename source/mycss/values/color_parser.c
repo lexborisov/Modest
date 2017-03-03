@@ -19,7 +19,7 @@
 */
 
 #include "mycss/values/color_parser.h"
-#include "myhtml/utils/resources.h"
+#include "mycore/utils/resources.h"
 
 bool mycss_values_color_parser_undef(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
@@ -51,7 +51,7 @@ static bool mycss_values_color_parser_find_end(mycss_entry_t* entry, mycss_token
 
 static void mycss_values_color_parser_set_percentage_value(mycss_entry_t* entry, mycss_token_t* token, mycss_values_percentage_t *color_rgb)
 {
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_token_data_to_string(entry, token, &str, true, false);
     
     double return_num;
@@ -62,12 +62,12 @@ static void mycss_values_color_parser_set_percentage_value(mycss_entry_t* entry,
     else
         color_rgb->i = (int)return_num;
     
-    myhtml_string_destroy(&str, false);
+    mycore_string_destroy(&str, false);
 }
 
 static void mycss_values_color_parser_set_number_value(mycss_entry_t* entry, mycss_token_t* token, mycss_values_number_t *color_rgb)
 {
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_token_data_to_string(entry, token, &str, true, false);
     
     double return_num;
@@ -78,12 +78,12 @@ static void mycss_values_color_parser_set_number_value(mycss_entry_t* entry, myc
     else
         color_rgb->i = (int)return_num;
     
-    myhtml_string_destroy(&str, false);
+    mycore_string_destroy(&str, false);
 }
 
 static bool mycss_values_color_parser_set_angle_value(mycss_entry_t* entry, mycss_token_t* token, mycss_values_angle_t *angle)
 {
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_token_data_to_string(entry, token, &str, true, false);
     
     bool is_float;
@@ -92,7 +92,7 @@ static bool mycss_values_color_parser_set_angle_value(mycss_entry_t* entry, mycs
     size_t consume_length = mycss_convert_data_to_double(str.data, str.length, &return_num, &is_float);
     mycss_units_type_t type = mycss_units_type_by_name(&str.data[consume_length], (str.length - consume_length));
     
-    myhtml_string_destroy(&str, false);
+    mycore_string_destroy(&str, false);
     
     switch (type) {
         case MyCSS_UNIT_TYPE_DEG:
@@ -686,10 +686,10 @@ bool mycss_values_color_parser_hsl_alpha(mycss_entry_t* entry, mycss_token_t* to
  */
 static unsigned int mycss_values_color_parser_hex_get_by_two(unsigned char* u_data)
 {
-    return (myhtml_string_chars_hex_map[ u_data[0] ] << 4) | myhtml_string_chars_hex_map[ u_data[1] ];
+    return (mycore_string_chars_hex_map[ u_data[0] ] << 4) | mycore_string_chars_hex_map[ u_data[1] ];
 }
 
-bool mycss_values_color_parser_hex(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_values_color_parser_hex(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, mycore_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_HASH)
         return true;
@@ -720,13 +720,13 @@ bool mycss_values_color_parser_hex(mycss_entry_t* entry, mycss_token_t* token, v
             color->type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_HEX_8;
             break;
         case 3:
-            color->hex.r.i = (int)(myhtml_string_chars_hex_map[ u_data[0] ]);
+            color->hex.r.i = (int)(mycore_string_chars_hex_map[ u_data[0] ]);
             color->hex.r.i = (color->hex.r.i << 4) | color->hex.r.i;
             
-            color->hex.g.i = (int)(myhtml_string_chars_hex_map[ u_data[1] ]);
+            color->hex.g.i = (int)(mycore_string_chars_hex_map[ u_data[1] ]);
             color->hex.g.i = (color->hex.g.i << 4) | color->hex.g.i;
             
-            color->hex.b.i = (int)(myhtml_string_chars_hex_map[ u_data[2] ]);
+            color->hex.b.i = (int)(mycore_string_chars_hex_map[ u_data[2] ]);
             color->hex.b.i = (color->hex.b.i << 4) | color->hex.b.i;
             
             color->hex.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_UNDEF;
@@ -734,16 +734,16 @@ bool mycss_values_color_parser_hex(mycss_entry_t* entry, mycss_token_t* token, v
             color->type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_HEX_3;
             break;
         case 4:
-            color->hex.r.i = (int)(myhtml_string_chars_hex_map[ u_data[0] ]);
+            color->hex.r.i = (int)(mycore_string_chars_hex_map[ u_data[0] ]);
             color->hex.r.i = (color->hex.r.i << 4) | color->hex.r.i;
             
-            color->hex.g.i = (int)(myhtml_string_chars_hex_map[ u_data[1] ]);
+            color->hex.g.i = (int)(mycore_string_chars_hex_map[ u_data[1] ]);
             color->hex.g.i = (color->hex.g.i << 4) | color->hex.g.i;
             
-            color->hex.b.i = (int)(myhtml_string_chars_hex_map[ u_data[2] ]);
+            color->hex.b.i = (int)(mycore_string_chars_hex_map[ u_data[2] ]);
             color->hex.b.i = (color->hex.b.i << 4) | color->hex.b.i;
             
-            color->hex.alpha.number.i = (int)(myhtml_string_chars_hex_map[ u_data[3] ]);
+            color->hex.alpha.number.i = (int)(mycore_string_chars_hex_map[ u_data[3] ]);
             color->hex.alpha.number.i = (color->hex.alpha.number.i << 4) | color->hex.alpha.number.i;
             color->hex.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
             

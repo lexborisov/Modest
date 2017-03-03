@@ -304,7 +304,7 @@ static bool mycss_property_parser_background_step_size_height(mycss_entry_t* ent
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     mycss_values_background_t *background = mycss_values_background_list_current_entry(dec_entry->value);
@@ -343,7 +343,7 @@ bool mycss_property_parser_background_step_size(mycss_entry_t* entry, mycss_toke
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     mycss_values_background_t *background = mycss_values_background_list_current_entry(dec_entry->value);
@@ -396,7 +396,7 @@ static bool mycss_property_parser_background_step_position(mycss_entry_t* entry,
         return true;
     }
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     void* value = NULL;
@@ -421,7 +421,7 @@ static bool mycss_property_parser_background_step_repeat_wait_two(mycss_entry_t*
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     mycss_values_background_t *background = mycss_values_background_list_current_entry(dec_entry->value);
     
@@ -457,7 +457,7 @@ bool mycss_property_parser_background(mycss_entry_t* entry, mycss_token_t* token
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_values_image_t stat_image;
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
@@ -695,7 +695,7 @@ bool mycss_property_parser_background_attachment(mycss_entry_t* entry, mycss_tok
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     unsigned int value_type = 0;
@@ -745,7 +745,7 @@ bool mycss_property_parser_background_clip(mycss_entry_t* entry, mycss_token_t* 
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     unsigned int value_type = 0;
@@ -795,7 +795,7 @@ bool mycss_property_parser_background_image(mycss_entry_t* entry, mycss_token_t*
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_values_image_t stat_image;
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
@@ -873,7 +873,7 @@ bool mycss_property_parser_background_origin(mycss_entry_t* entry, mycss_token_t
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     unsigned int value_type = 0;
@@ -906,7 +906,7 @@ bool mycss_property_parser_background_position(mycss_entry_t* entry, mycss_token
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     void* value = NULL;
@@ -990,7 +990,7 @@ static bool mycss_property_parser_background_repeat_wait_two(mycss_entry_t* entr
         return true;
     }
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     unsigned int value_type = 0;
@@ -1023,7 +1023,7 @@ bool mycss_property_parser_background_repeat(mycss_entry_t* entry, mycss_token_t
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     unsigned int value_type = 0;
@@ -1077,7 +1077,7 @@ static bool mycss_property_parser_background_size_height(mycss_entry_t* entry, m
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     void *value = NULL;
@@ -1116,7 +1116,7 @@ bool mycss_property_parser_background_size(mycss_entry_t* entry, mycss_token_t* 
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     void *value = NULL;

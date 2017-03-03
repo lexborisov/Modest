@@ -31,10 +31,10 @@ extern "C" {
 #include <myhtml/mystring.h>
 #include <myhtml/token.h>
 #include <myhtml/stream.h>
-#include <myhtml/utils/mcsync.h>
-#include <myhtml/utils/mchar_async.h>
-#include <myhtml/utils/mcobject.h>
-#include <myhtml/utils/mcobject_async.h>
+#include <mycore/utils/mcsync.h>
+#include <mycore/utils/mchar_async.h>
+#include <mycore/utils/mcobject.h>
+#include <mycore/utils/mcobject_async.h>
 
 #define myhtml_tree_get(tree, attr) tree->attr
 #define myhtml_tree_set(tree, attr) tree->attr
@@ -164,7 +164,7 @@ struct myhtml_tree_temp_stream {
     size_t length;
     size_t size;
     
-    myhtml_encoding_result_t res;
+    myencoding_result_t res;
     struct myhtml_tree_temp_tag_name* current;
 };
 
@@ -192,8 +192,8 @@ struct myhtml_tree {
     mythread_queue_node_t*  current_qnode;
     
     mcobject_t*                mcobject_incoming_buf;
-    myhtml_incoming_buffer_t*  incoming_buf;
-    myhtml_incoming_buffer_t*  incoming_buf_first;
+    mycore_incoming_buffer_t*  incoming_buf;
+    mycore_incoming_buffer_t*  incoming_buf_first;
     
     // ref for nodes
     myhtml_tree_node_t*   document;
@@ -227,10 +227,10 @@ struct myhtml_tree {
     volatile myhtml_tree_parse_flags_t parse_flags;
     bool                               foster_parenting;
     size_t                             global_offset;
-    myhtml_status_t                    tokenizer_status;
+    mystatus_t                    tokenizer_status;
     
-    myhtml_encoding_t            encoding;
-    myhtml_encoding_t            encoding_usereq;
+    myencoding_t            encoding;
+    myencoding_t            encoding_usereq;
     myhtml_tree_temp_tag_name_t  temp_tag_name;
     
     /* callback */
@@ -249,7 +249,7 @@ struct myhtml_tree {
 
 // base
 myhtml_tree_t * myhtml_tree_create(void);
-myhtml_status_t myhtml_tree_init(myhtml_tree_t* tree, myhtml_t* myhtml);
+mystatus_t myhtml_tree_init(myhtml_tree_t* tree, myhtml_t* myhtml);
 void myhtml_tree_clean(myhtml_tree_t* tree);
 void myhtml_tree_clean_all(myhtml_tree_t* tree);
 myhtml_tree_t * myhtml_tree_destroy(myhtml_tree_t* tree);
@@ -390,21 +390,21 @@ bool myhtml_tree_is_mathml_integration_point(myhtml_tree_t* tree, myhtml_tree_no
 bool myhtml_tree_is_html_integration_point(myhtml_tree_t* tree, myhtml_tree_node_t* node);
 
 // temp tag name
-myhtml_status_t myhtml_tree_temp_tag_name_init(myhtml_tree_temp_tag_name_t* temp_tag_name);
+mystatus_t myhtml_tree_temp_tag_name_init(myhtml_tree_temp_tag_name_t* temp_tag_name);
 void myhtml_tree_temp_tag_name_clean(myhtml_tree_temp_tag_name_t* temp_tag_name);
 myhtml_tree_temp_tag_name_t * myhtml_tree_temp_tag_name_destroy(myhtml_tree_temp_tag_name_t* temp_tag_name, bool self_destroy);
-myhtml_status_t myhtml_tree_temp_tag_name_append(myhtml_tree_temp_tag_name_t* temp_tag_name, const char* name, size_t name_len);
-myhtml_status_t myhtml_tree_temp_tag_name_append_one(myhtml_tree_temp_tag_name_t* temp_tag_name, const char name);
+mystatus_t myhtml_tree_temp_tag_name_append(myhtml_tree_temp_tag_name_t* temp_tag_name, const char* name, size_t name_len);
+mystatus_t myhtml_tree_temp_tag_name_append_one(myhtml_tree_temp_tag_name_t* temp_tag_name, const char name);
 
 /* special tonek list */
-myhtml_status_t myhtml_tree_special_list_init(myhtml_tree_special_token_list_t* special);
-myhtml_status_t myhtml_tree_special_list_append(myhtml_tree_special_token_list_t* special, myhtml_token_node_t *token, myhtml_namespace_t ns);
+mystatus_t myhtml_tree_special_list_init(myhtml_tree_special_token_list_t* special);
+mystatus_t myhtml_tree_special_list_append(myhtml_tree_special_token_list_t* special, myhtml_token_node_t *token, myhtml_namespace_t ns);
 size_t myhtml_tree_special_list_length(myhtml_tree_special_token_list_t* special);
 myhtml_tree_special_token_t * myhtml_tree_special_list_get_last(myhtml_tree_special_token_list_t* special);
 size_t myhtml_tree_special_list_pop(myhtml_tree_special_token_list_t* special);
 
 /* incoming buffer */
-myhtml_incoming_buffer_t * myhtml_tree_incoming_buffer_first(myhtml_tree_t *tree);
+mycore_incoming_buffer_t * myhtml_tree_incoming_buffer_first(myhtml_tree_t *tree);
 const char * myhtml_tree_incomming_buffer_make_data(myhtml_tree_t *tree, size_t begin, size_t length);
 
 #ifdef __cplusplus

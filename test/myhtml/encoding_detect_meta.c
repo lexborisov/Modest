@@ -19,7 +19,7 @@
 */
 
 #include <myhtml/myhtml.h>
-#include <myhtml/encoding.h>
+#include <myencoding/encoding.h>
 
 struct test_res {
     char*  data;
@@ -60,7 +60,7 @@ test_res_t test_load_file(const char* filename)
     
     size_t nread = fread(file_data, 1, size, fh);
     if (nread != size) {
-        fprintf(stderr, "Could not read %ld bytes (" MyHTML_FMT_Z " bytes done)\n", size, nread);
+        fprintf(stderr, "Could not read %ld bytes (" MyCORE_FMT_Z " bytes done)\n", size, nread);
         exit(EXIT_FAILURE);
     }
     
@@ -116,7 +116,7 @@ void test_entries(const char* filename)
     size_t code_begin = 0, code_length = 0;
     size_t body_begin = 0;
     
-    myhtml_encoding_t encoding;
+    myencoding_t encoding;
     const unsigned char *udata = (const unsigned char*)test_data.data;
     
     printf("Test, get encoding from <meta ...> element:\n");
@@ -135,9 +135,9 @@ void test_entries(const char* filename)
         code_length = length - code_begin;
         
         if(strncmp("not-determined", &test_data.data[code_begin], strlen("not-determined")) == 0) {
-            encoding = MyHTML_ENCODING_NOT_DETERMINED;
+            encoding = MyENCODING_NOT_DETERMINED;
         }
-        else if(myhtml_encoding_by_name(&test_data.data[code_begin], code_length, &encoding) == false) {
+        else if(myencoding_by_name(&test_data.data[code_begin], code_length, &encoding) == false) {
             fprintf(stderr, "Can't get encoding from test header: %.*s\n", (int)code_length, &test_data.data[code_begin]);
             exit(EXIT_FAILURE);
         }
@@ -149,7 +149,7 @@ void test_entries(const char* filename)
         /* get end of body */
         length = test_find_body_end(udata, length, test_data.size);
         
-        myhtml_encoding_t find_encoding = myhtml_encoding_prescan_stream_to_determine_encoding(&test_data.data[body_begin], (length - body_begin));
+        myencoding_t find_encoding = myencoding_prescan_stream_to_determine_encoding(&test_data.data[body_begin], (length - body_begin));
         
         if(find_encoding != encoding) {
             fprintf(stderr, "ERROR! WRONG! ACHTUNG! Header Encoding not equally Encoding after parsing body\n");

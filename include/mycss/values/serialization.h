@@ -30,7 +30,7 @@ extern "C" {
 #include <mycss/values/color.h>
 #include <mycss/property/const.h>
 
-void mycss_values_serialization_string(myhtml_string_t* str, mycss_callback_serialization_f callback, void* context);
+void mycss_values_serialization_string(mycore_string_t* str, mycss_callback_serialization_f callback, void* context);
 void mycss_values_serialization_number(mycss_values_number_t* value, mycss_callback_serialization_f callback, void* context);
 void mycss_values_serialization_length(mycss_values_length_t* value, mycss_callback_serialization_f callback, void* context);
 void mycss_values_serialization_angle(mycss_values_angle_t* value, mycss_callback_serialization_f callback, void* context);

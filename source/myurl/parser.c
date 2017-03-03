@@ -21,7 +21,7 @@
 #include "myurl/url.h"
 #include "myurl/parser.h"
 #include "myurl/resources.h"
-#include "myhtml/utils/resources.h"
+#include "mycore/utils/resources.h"
 
 static size_t myurl_parser_skip_control_and_space_leading(const char* url, size_t url_size)
 {
@@ -282,7 +282,7 @@ size_t myurl_parser_state_scheme(myurl_t* url, myurl_entry_t* url_entry, myurl_e
                 {
                     /* 2.5.1 */
                     if(((data_length + 1) < data_size) &&
-                       myhtml_strncmp((const char*)(&data[data_length]), "//", 2))
+                       mycore_strncmp((const char*)(&data[data_length]), "//", 2))
                     {
                         // parse error
                     }
@@ -1033,8 +1033,8 @@ size_t myurl_parser_state_path(myurl_t* url, myurl_entry_t* url_entry, myurl_ent
         
         /* 2.2 */
         //if((data_length + 2) < data_size && data[data_length] == '%' &&
-        //   (myhtml_string_chars_hex_map[ (unsigned char)data[(data_length + 1)] ] == 0xff ||
-        //    myhtml_string_chars_hex_map[ (unsigned char)data[(data_length + 2)] ] == 0xff))
+        //   (mycore_string_chars_hex_map[ (unsigned char)data[(data_length + 1)] ] == 0xff ||
+        //    mycore_string_chars_hex_map[ (unsigned char)data[(data_length + 2)] ] == 0xff))
         //{
         //    // parse error
         //}
@@ -1097,8 +1097,8 @@ size_t myurl_parser_state_cannot_be_a_base_URL_path(myurl_t* url, myurl_entry_t*
         
         /* 3.2 */
         //if((data_length + 2) < data_size && data[data_length] == '%' &&
-        //   (myhtml_string_chars_hex_map[ (unsigned char)data[(data_length + 1)] ] == 0xff ||
-        //    myhtml_string_chars_hex_map[ (unsigned char)data[(data_length + 2)] ] == 0xff))
+        //   (mycore_string_chars_hex_map[ (unsigned char)data[(data_length + 1)] ] == 0xff ||
+        //    mycore_string_chars_hex_map[ (unsigned char)data[(data_length + 2)] ] == 0xff))
         //{
         //    // parse error
         //}
@@ -1130,8 +1130,8 @@ size_t myurl_parser_state_query(myurl_t* url, myurl_entry_t* url_entry, myurl_en
         
         /* 2.2 */
         //if((data_length + 2) < data_size && data[data_length] == '%' &&
-        //   (myhtml_string_chars_hex_map[ (unsigned char)data[(data_length + 1)] ] == 0xff ||
-        //    myhtml_string_chars_hex_map[ (unsigned char)data[(data_length + 2)] ] == 0xff))
+        //   (mycore_string_chars_hex_map[ (unsigned char)data[(data_length + 1)] ] == 0xff ||
+        //    mycore_string_chars_hex_map[ (unsigned char)data[(data_length + 2)] ] == 0xff))
         //{
         //    // parse error
         //}

@@ -55,7 +55,7 @@ bool mycss_property_parser_url_string(mycss_entry_t* entry, mycss_token_t* token
         return false;
     }
     
-    myhtml_string_t *str = mycss_values_create(entry, sizeof(myhtml_string_t));
+    mycore_string_t *str = mycss_values_create(entry, sizeof(mycore_string_t));
     mycss_token_data_to_string(entry, token, str, true, false);
     
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;

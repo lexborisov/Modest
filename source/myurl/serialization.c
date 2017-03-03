@@ -21,7 +21,7 @@
 #include "myurl/url.h"
 #include "myhtml/serialization.h"
 
-void myurl_serialization_host(myurl_entry_t* url_entry, myhtml_callback_serialize_f callback, void* ctx)
+void myurl_serialization_host(myurl_entry_t* url_entry, mycore_callback_serialize_f callback, void* ctx)
 {
     switch (url_entry->host.type) {
         case MyURL_HOST_TYPE_DOMAIN:
@@ -122,7 +122,7 @@ void myurl_serialization_host(myurl_entry_t* url_entry, myhtml_callback_serializ
     }
 }
 
-void myurl_serialization_authority(myurl_entry_t* url_entry, myhtml_callback_serialize_f callback, void* ctx)
+void myurl_serialization_authority(myurl_entry_t* url_entry, mycore_callback_serialize_f callback, void* ctx)
 {
     if(url_entry->username_length || url_entry->password_length) {
         callback(url_entry->username, url_entry->username_length, ctx);
@@ -134,7 +134,7 @@ void myurl_serialization_authority(myurl_entry_t* url_entry, myhtml_callback_ser
     }
 }
 
-void myurl_serialization_auth_host_port(myurl_entry_t* url_entry, myhtml_callback_serialize_f callback, void* ctx)
+void myurl_serialization_auth_host_port(myurl_entry_t* url_entry, mycore_callback_serialize_f callback, void* ctx)
 {
     callback("//", 2, ctx);
     
@@ -155,7 +155,7 @@ void myurl_serialization_auth_host_port(myurl_entry_t* url_entry, myhtml_callbac
     }
 }
 
-void myurl_serialization_path(myurl_entry_t* url_entry, myhtml_callback_serialize_f callback, void* ctx)
+void myurl_serialization_path(myurl_entry_t* url_entry, mycore_callback_serialize_f callback, void* ctx)
 {
     if(url_entry->flags & MyURL_FLAGS_CANNOT_BE_BASE_URL) {
         callback(url_entry->path.list[0].data, url_entry->path.list[0].length, ctx);
@@ -168,13 +168,13 @@ void myurl_serialization_path(myurl_entry_t* url_entry, myhtml_callback_serializ
     }
 }
 
-void myurl_serialization_fragment(myurl_entry_t* url_entry, myhtml_callback_serialize_f callback, void* ctx)
+void myurl_serialization_fragment(myurl_entry_t* url_entry, mycore_callback_serialize_f callback, void* ctx)
 {
     if(url_entry->fragment && url_entry->fragment_length)
         callback(url_entry->fragment, url_entry->fragment_length, ctx);
 }
 
-void myurl_serialization_without_fragment(myurl_entry_t* url_entry, myhtml_callback_serialize_f callback, void* ctx)
+void myurl_serialization_without_fragment(myurl_entry_t* url_entry, mycore_callback_serialize_f callback, void* ctx)
 {
     if(url_entry->scheme.name)
         callback(url_entry->scheme.name, url_entry->scheme.length, ctx);
@@ -198,7 +198,7 @@ void myurl_serialization_without_fragment(myurl_entry_t* url_entry, myhtml_callb
     }
 }
 
-void myurl_serialization_with_fragment(myurl_entry_t* url_entry, myhtml_callback_serialize_f callback, void* ctx)
+void myurl_serialization_with_fragment(myurl_entry_t* url_entry, mycore_callback_serialize_f callback, void* ctx)
 {
     myurl_serialization_without_fragment(url_entry, callback, ctx);
     
@@ -210,7 +210,7 @@ void myurl_serialization_with_fragment(myurl_entry_t* url_entry, myhtml_callback
     }
 }
 
-void myurl_serialization(myurl_entry_t* url_entry, bool exclude_fragment_flag, myhtml_callback_serialize_f callback, void* ctx)
+void myurl_serialization(myurl_entry_t* url_entry, bool exclude_fragment_flag, mycore_callback_serialize_f callback, void* ctx)
 {
     if(exclude_fragment_flag)
         myurl_serialization_without_fragment(url_entry, callback, ctx);

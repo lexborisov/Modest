@@ -32,7 +32,7 @@ void * modest_style_type_create(modest_t* modest, size_t size)
     return data;
 }
 
-modest_status_t modest_style_type_init(modest_t* modest, void *data)
+mystatus_t modest_style_type_init(modest_t* modest, void *data)
 {
     return MODEST_STATUS_OK;
 }

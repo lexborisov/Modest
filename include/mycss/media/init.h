@@ -29,8 +29,8 @@ extern "C" {
 #endif
 
 mycss_media_t * mycss_media_create(void);
-mycss_status_t  mycss_media_init(mycss_entry_t* entry, mycss_media_t* media);
-mycss_status_t  mycss_media_clean_all(mycss_media_t* media);
+mystatus_t  mycss_media_init(mycss_entry_t* entry, mycss_media_t* media);
+mystatus_t  mycss_media_clean_all(mycss_media_t* media);
 mycss_media_t * mycss_media_destroy(mycss_media_t* media, bool self_destroy);
 
 #ifdef __cplusplus

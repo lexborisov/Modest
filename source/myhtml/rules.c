@@ -23,13 +23,13 @@
 void myhtml_insertion_fix_emit_for_text_begin_ws(myhtml_token_node_t* token)
 {
     myhtml_token_node_wait_for_done(token);
-    myhtml_string_crop_whitespace_from_begin(&token->str);
+    mycore_string_crop_whitespace_from_begin(&token->str);
 }
 
 myhtml_token_node_t * myhtml_insertion_fix_split_for_text_begin_ws(myhtml_tree_t* tree, myhtml_token_node_t* token)
 {
     myhtml_token_node_wait_for_done(token);
-    size_t len = myhtml_string_whitespace_from_begin(&token->str);
+    size_t len = mycore_string_whitespace_from_begin(&token->str);
     
     if(len == 0)
         return NULL;
@@ -40,9 +40,9 @@ myhtml_token_node_t * myhtml_insertion_fix_split_for_text_begin_ws(myhtml_tree_t
     if(new_token == NULL)
         return NULL;
     
-    myhtml_string_init(tree->mchar, tree->mchar_node_id, &new_token->str, (len + 2));
+    mycore_string_init(tree->mchar, tree->mchar_node_id, &new_token->str, (len + 2));
     
-    myhtml_string_append(&new_token->str, token->str.data, len);
+    mycore_string_append(&new_token->str, token->str.data, len);
     
     new_token->type |= MyHTML_TOKEN_TYPE_DONE;
     
@@ -57,7 +57,7 @@ void myhtml_insertion_fix_for_null_char_drop_all(myhtml_tree_t* tree, myhtml_tok
 {
     myhtml_token_node_wait_for_done(token);
     
-    myhtml_string_t *str = &token->str;
+    mycore_string_t *str = &token->str;
     size_t len = str->length;
     size_t offset = 0;
     
@@ -3301,7 +3301,7 @@ bool myhtml_insertion_mode_after_body(myhtml_tree_t* tree, myhtml_token_node_t* 
             case MyHTML_TAG__COMMENT:
             {
                 if(tree->open_elements->length == 0) {
-                    MyHTML_DEBUG_ERROR("after body state; open_elements length < 1");
+                    MyCORE_DEBUG_ERROR("after body state; open_elements length < 1");
                     break;
                 }
                 
@@ -3397,7 +3397,7 @@ bool myhtml_insertion_mode_in_frameset(myhtml_tree_t* tree, myhtml_token_node_t*
                 /* %EXTERNAL% VALIDATOR:RULES TOKEN STATUS:ELEMENT_UNNECESSARY ACTION:IGNORE LEVEL:ERROR */
                 
                 myhtml_token_node_wait_for_done(token);
-                myhtml_string_stay_only_whitespace(&token->str);
+                mycore_string_stay_only_whitespace(&token->str);
                 
                 if(token->str.length)
                     myhtml_tree_node_insert_text(tree, token);
@@ -3489,7 +3489,7 @@ bool myhtml_insertion_mode_after_frameset(myhtml_tree_t* tree, myhtml_token_node
                 /* %EXTERNAL% VALIDATOR:RULES TOKEN STATUS:ELEMENT_UNNECESSARY ACTION:IGNORE LEVEL:ERROR */
                 
                 myhtml_token_node_wait_for_done(token);
-                myhtml_string_stay_only_whitespace(&token->str);
+                mycore_string_stay_only_whitespace(&token->str);
                 
                 if(token->str.length)
                     myhtml_tree_node_insert_text(tree, token);
@@ -3924,9 +3924,9 @@ bool myhtml_rules_tree_dispatcher(myhtml_tree_t* tree, myhtml_token_node_t* toke
     return reprocess;
 }
 
-myhtml_status_t myhtml_rules_init(myhtml_t* myhtml)
+mystatus_t myhtml_rules_init(myhtml_t* myhtml)
 {
-    myhtml->insertion_func = (myhtml_insertion_f*)myhtml_malloc(sizeof(myhtml_insertion_f) * MyHTML_INSERTION_MODE_LAST_ENTRY);
+    myhtml->insertion_func = (myhtml_insertion_f*)mycore_malloc(sizeof(myhtml_insertion_f) * MyHTML_INSERTION_MODE_LAST_ENTRY);
     
     if(myhtml->insertion_func == NULL)
         return MyHTML_STATUS_RULES_ERROR_MEMORY_ALLOCATION;

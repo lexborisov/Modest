@@ -25,16 +25,16 @@
 /**
  *  Forward declaration of all the functions that are used inside this module
  */
-static void myhtml_serialization_append(const char* str, size_t size, myhtml_callback_serialize_f callback, void *ptr);
-static void myhtml_serialization_append_attr(const char* str, size_t length, myhtml_callback_serialize_f callback, void *ptr);
-static void myhtml_serialization_attributes(myhtml_tree_t* tree, myhtml_tree_attr_t* attr, myhtml_callback_serialize_f callback, void *ptr);
-static void myhtml_serialization_node_append_text_node(myhtml_tree_node_t* node, myhtml_callback_serialize_f callback, void *ptr);
-static void myhtml_serialization_node_append_close(myhtml_tree_node_t* node, myhtml_callback_serialize_f callback, void *ptr);
+static void myhtml_serialization_append(const char* str, size_t size, mycore_callback_serialize_f callback, void *ptr);
+static void myhtml_serialization_append_attr(const char* str, size_t length, mycore_callback_serialize_f callback, void *ptr);
+static void myhtml_serialization_attributes(myhtml_tree_t* tree, myhtml_tree_attr_t* attr, mycore_callback_serialize_f callback, void *ptr);
+static void myhtml_serialization_node_append_text_node(myhtml_tree_node_t* node, mycore_callback_serialize_f callback, void *ptr);
+static void myhtml_serialization_node_append_close(myhtml_tree_node_t* node, mycore_callback_serialize_f callback, void *ptr);
 
 /**
  *  See the function myhtml_serialization_tree_buffer
  */
-bool myhtml_serialization(myhtml_tree_node_t* scope_node, myhtml_string_raw_t* str)
+bool myhtml_serialization(myhtml_tree_node_t* scope_node, mycore_string_raw_t* str)
 {
     return myhtml_serialization_tree_buffer(scope_node, str);
 }
@@ -42,7 +42,7 @@ bool myhtml_serialization(myhtml_tree_node_t* scope_node, myhtml_string_raw_t* s
 /**
  *  See the function myhtml_serialization_node_buffer
  */
-bool myhtml_serialization_node(myhtml_tree_node_t* node, myhtml_string_raw_t* str)
+bool myhtml_serialization_node(myhtml_tree_node_t* node, mycore_string_raw_t* str)
 {
     return myhtml_serialization_node_buffer(node, str);
 }
@@ -55,7 +55,7 @@ bool myhtml_serialization_node(myhtml_tree_node_t* node, myhtml_string_raw_t* st
  *  @param  ptr         user-supplied pointer
  *  @return bool
  */
-bool myhtml_serialization_tree_callback(myhtml_tree_node_t* scope_node, myhtml_callback_serialize_f callback, void *ptr)
+bool myhtml_serialization_tree_callback(myhtml_tree_node_t* scope_node, mycore_callback_serialize_f callback, void *ptr)
 {
     myhtml_tree_node_t* node = scope_node;
     
@@ -91,7 +91,7 @@ bool myhtml_serialization_tree_callback(myhtml_tree_node_t* scope_node, myhtml_c
  *  @param  ptr         user-supplied pointer
  *  @return bool
  */
-bool myhtml_serialization_node_callback(myhtml_tree_node_t* node, myhtml_callback_serialize_f callback, void *ptr)
+bool myhtml_serialization_node_callback(myhtml_tree_node_t* node, mycore_callback_serialize_f callback, void *ptr)
 {
     switch (node->tag_id) {
         case MyHTML_TAG__TEXT: {
@@ -140,7 +140,7 @@ bool myhtml_serialization_node_callback(myhtml_tree_node_t* node, myhtml_callbac
  *  @param  callback
  *  @param  ptr
  */
-void myhtml_serialization_attributes(myhtml_tree_t* tree, myhtml_tree_attr_t* attr, myhtml_callback_serialize_f callback, void* ptr)
+void myhtml_serialization_attributes(myhtml_tree_t* tree, myhtml_tree_attr_t* attr, mycore_callback_serialize_f callback, void* ptr)
 {
     while(attr) {
         callback(" ", 1, ptr);
@@ -154,7 +154,7 @@ void myhtml_serialization_attributes(myhtml_tree_t* tree, myhtml_tree_attr_t* at
                     If the attribute is in the XMLNS namespace and the attribute's local name is not xmlns
                     The attribute's serialized name is the string "xmlns:" followed by the attribute's local name.
                  */
-                if(attr->key.data && attr->key.length == 5 && myhtml_strcmp(attr->key.data, "xmlns")) {
+                if(attr->key.data && attr->key.length == 5 && mycore_strcmp(attr->key.data, "xmlns")) {
                     callback("xmlns:", 6, ptr);
                 }
                 
@@ -189,7 +189,7 @@ void myhtml_serialization_attributes(myhtml_tree_t* tree, myhtml_tree_attr_t* at
  *  @param  callback
  *  @param  ptr
  */
-void myhtml_serialization_node_append_close(myhtml_tree_node_t* node, myhtml_callback_serialize_f callback, void* ptr)
+void myhtml_serialization_node_append_close(myhtml_tree_node_t* node, mycore_callback_serialize_f callback, void* ptr)
 {
     if(node->tag_id != MyHTML_TAG__TEXT &&
        node->tag_id != MyHTML_TAG__COMMENT &&
@@ -211,7 +211,7 @@ void myhtml_serialization_node_append_close(myhtml_tree_node_t* node, myhtml_cal
  *  @param  callback
  *  @param  ptr
  */
-void myhtml_serialization_node_append_text_node(myhtml_tree_node_t* node, myhtml_callback_serialize_f callback, void* ptr)
+void myhtml_serialization_node_append_text_node(myhtml_tree_node_t* node, mycore_callback_serialize_f callback, void* ptr)
 {
     if(node->token == NULL || node->token->str.data == NULL) return;
     
@@ -240,7 +240,7 @@ void myhtml_serialization_node_append_text_node(myhtml_tree_node_t* node, myhtml
  *  @param  callback
  *  @param  ptr
  */
-void myhtml_serialization_append(const char *data, size_t size, myhtml_callback_serialize_f callback, void* ptr)
+void myhtml_serialization_append(const char *data, size_t size, mycore_callback_serialize_f callback, void* ptr)
 {
     // number of chars not yet displayed
     size_t notwritten = 0;
@@ -290,7 +290,7 @@ void myhtml_serialization_append(const char *data, size_t size, myhtml_callback_
  *  @param  callback
  *  @param  ptr
  */
-void myhtml_serialization_append_attr(const char* data, size_t size, myhtml_callback_serialize_f callback, void* ptr)
+void myhtml_serialization_append_attr(const char* data, size_t size, mycore_callback_serialize_f callback, void* ptr)
 {
     // number of chars not yet displayed
     size_t notwritten = 0;
@@ -340,17 +340,17 @@ static jmp_buf leap;
  *  @param  str         the buffer to reallocate
  *  @param  size        new size
  */
-void myhtml_serialization_reallocate(myhtml_string_raw_t *str, size_t size)
+void myhtml_serialization_reallocate(mycore_string_raw_t *str, size_t size)
 {
     // construct a buffer
-    char *data = (char*)myhtml_realloc(str->data, size * sizeof(char));
+    char *data = (char*)mycore_realloc(str->data, size * sizeof(char));
 
     // was it ok?
     if (data == NULL) {
         
         // allocation failed, reset the string object
-        myhtml_free(str->data);
-        memset(str, 0, sizeof(myhtml_string_raw_t));
+        mycore_free(str->data);
+        memset(str, 0, sizeof(mycore_string_raw_t));
         
         // leap back to the source of the serialization algorithm
         longjmp(leap, 1);
@@ -364,7 +364,7 @@ void myhtml_serialization_reallocate(myhtml_string_raw_t *str, size_t size)
 }
 
 /**
- *  Implementation of the myhtml_callback_serialize_f function for internal
+ *  Implementation of the mycore_callback_serialize_f function for internal
  *  use that concatenats everything to a string
  *  @param  data
  *  @param  size
@@ -372,7 +372,7 @@ void myhtml_serialization_reallocate(myhtml_string_raw_t *str, size_t size)
 void myhtml_serialization_concatenate(const char* data, size_t length, void *ptr)
 {
     // get the string back
-    myhtml_string_raw_t* str = (myhtml_string_raw_t *)ptr;
+    mycore_string_raw_t* str = (mycore_string_raw_t *)ptr;
     
     // do we still have enough size in the output buffer?
     if ((length + str->length) >= str->size) myhtml_serialization_reallocate(str, length + str->length + 4096);
@@ -392,7 +392,7 @@ void myhtml_serialization_concatenate(const char* data, size_t length, void *ptr
  *  @param  str
  *  @return bool
  */
-bool myhtml_serialization_tree_buffer(myhtml_tree_node_t* scope_node, myhtml_string_raw_t* str) {
+bool myhtml_serialization_tree_buffer(myhtml_tree_node_t* scope_node, mycore_string_raw_t* str) {
 
     // we need an output variable
     if(str == NULL) return false;
@@ -401,7 +401,7 @@ bool myhtml_serialization_tree_buffer(myhtml_tree_node_t* scope_node, myhtml_str
     if(str->data == NULL) {
         str->size   = 4098 * 5;
         str->length = 0;
-        str->data   = (char*)myhtml_malloc(str->size * sizeof(char));
+        str->data   = (char*)mycore_malloc(str->size * sizeof(char));
         
         if(str->data == NULL) {
             str->size = 0;
@@ -429,7 +429,7 @@ bool myhtml_serialization_tree_buffer(myhtml_tree_node_t* scope_node, myhtml_str
  *  @param  str
  *  @return bool
  */
-bool myhtml_serialization_node_buffer(myhtml_tree_node_t* node, myhtml_string_raw_t* str) {
+bool myhtml_serialization_node_buffer(myhtml_tree_node_t* node, mycore_string_raw_t* str) {
 
     // we need an output variable
     if(str == NULL) return false;
@@ -438,7 +438,7 @@ bool myhtml_serialization_node_buffer(myhtml_tree_node_t* node, myhtml_string_ra
     if(str->data == NULL) {
         str->size   = 2048;
         str->length = 0;
-        str->data   = (char*)myhtml_malloc(str->size * sizeof(char));
+        str->data   = (char*)mycore_malloc(str->size * sizeof(char));
         
         if(str->data == NULL) {
             str->size = 0;

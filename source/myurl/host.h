@@ -85,18 +85,18 @@ struct myurl_host {
 typedef myurl_host_t;
 
 myurl_host_t * myurl_host_create(myurl_t* url);
-myurl_status_t myurl_host_init(myurl_t* url);
+mystatus_t myurl_host_init(myurl_t* url);
 void myurl_host_clean(myurl_t* url, myurl_host_t* host);
 
 myurl_host_t * myurl_host_destroy(myurl_t* url, myurl_host_t* host, bool destroy_self);
-myurl_status_t myurl_host_copy(myurl_t* url, myurl_host_t* host_from, myurl_host_t* host_to);
+mystatus_t myurl_host_copy(myurl_t* url, myurl_host_t* host_from, myurl_host_t* host_to);
 
-myurl_status_t myurl_host_parser(myurl_t* url, myurl_host_t* host, const char* data, size_t data_size, bool is_special);
-myurl_status_t myurl_host_ipv4_parser(myurl_host_ipv_t* ipv, const char* data, size_t data_size, bool* failure);
-myurl_status_t myurl_host_ipv6_parser(myurl_host_ipv_t* ipv, const char* data, size_t data_size);
-myurl_status_t myurl_host_ipv6_ipv4_parser(myurl_host_ipv_t* ipv, const char* data, size_t data_size, unsigned int** piece_pointer);
-myurl_status_t myurl_host_opaque_host_parser(myurl_t* url, myurl_host_opaque_t* opaque, const char* data, size_t data_size);
-myurl_status_t myurl_host_domain_to_ascii(myurl_t* url, char** return_domain, size_t* return_domain_size, char* domain, size_t domain_size, bool UseSTD3ASCIIRules, bool VerifyDnsLength, myurl_host_idna_processing_option_t opt);
+mystatus_t myurl_host_parser(myurl_t* url, myurl_host_t* host, const char* data, size_t data_size, bool is_special);
+mystatus_t myurl_host_ipv4_parser(myurl_host_ipv_t* ipv, const char* data, size_t data_size, bool* failure);
+mystatus_t myurl_host_ipv6_parser(myurl_host_ipv_t* ipv, const char* data, size_t data_size);
+mystatus_t myurl_host_ipv6_ipv4_parser(myurl_host_ipv_t* ipv, const char* data, size_t data_size, unsigned int** piece_pointer);
+mystatus_t myurl_host_opaque_host_parser(myurl_t* url, myurl_host_opaque_t* opaque, const char* data, size_t data_size);
+mystatus_t myurl_host_domain_to_ascii(myurl_t* url, char** return_domain, size_t* return_domain_size, char* domain, size_t domain_size, bool UseSTD3ASCIIRules, bool VerifyDnsLength, myurl_host_idna_processing_option_t opt);
 
 #ifdef __cplusplus
 } /* extern "C" */

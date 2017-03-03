@@ -420,15 +420,15 @@ bool modest_finder_selector_sub_type_pseudo_class_checked(modest_finder_t* finde
         while (attr)
         {
             if(attr->key.length == 4) {
-                if(myhtml_strncasecmp("type", attr->key.data, 4) == 0)
+                if(mycore_strncasecmp("type", attr->key.data, 4) == 0)
                 {
                     if(attr->value.length == 8) {
-                        if(myhtml_strncasecmp("checkbox", attr->value.data, 8) == 0) {
+                        if(mycore_strncasecmp("checkbox", attr->value.data, 8) == 0) {
                             return modest_finder_match_attribute_only_key(base_node->token->attr_first, "checked", 7);
                         }
                     }
                     else if(attr->value.length == 5) {
-                        if(myhtml_strncasecmp("radio", attr->value.data, 5) == 0) {
+                        if(mycore_strncasecmp("radio", attr->value.data, 5) == 0) {
                             return modest_finder_match_attribute_only_key(base_node->token->attr_first, "checked", 7);
                         }
                     }

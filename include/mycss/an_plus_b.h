@@ -45,8 +45,8 @@ struct mycss_an_plus_b_entry {
 };
 
 mycss_an_plus_b_t * mycss_an_plus_b_create(void);
-mycss_status_t mycss_an_plus_b_init(mycss_entry_t* entry, mycss_an_plus_b_t* anb);
-mycss_status_t mycss_an_plus_b_clean_all(mycss_an_plus_b_t* anb);
+mystatus_t mycss_an_plus_b_init(mycss_entry_t* entry, mycss_an_plus_b_t* anb);
+mystatus_t mycss_an_plus_b_clean_all(mycss_an_plus_b_t* anb);
 mycss_an_plus_b_t * mycss_an_plus_b_destroy(mycss_an_plus_b_t* anb, bool self_destroy);
 
 mycss_an_plus_b_entry_t * mycss_an_plus_b_entry_create(mycss_entry_t* entry);

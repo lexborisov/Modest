@@ -63,7 +63,7 @@ struct res_html load_html_file(const char* filename)
     
     size_t nread = fread(html, 1, size, fh);
     if (nread != size) {
-        fprintf(stderr, "could not read %ld bytes (" MyHTML_FMT_Z " bytes done)\n", size, nread);
+        fprintf(stderr, "could not read %ld bytes (" MyCORE_FMT_Z " bytes done)\n", size, nread);
         exit(EXIT_FAILURE);
     }
 
@@ -73,19 +73,19 @@ struct res_html load_html_file(const char* filename)
     return res;
 }
 
-void colorize_print(myhtml_incoming_buffer_t *inc_buf, size_t begin, size_t length, const char* color)
+void colorize_print(mycore_incoming_buffer_t *inc_buf, size_t begin, size_t length, const char* color)
 {
     if(length) {
-        inc_buf = myhtml_incoming_buffer_find_by_position(inc_buf, begin);
+        inc_buf = mycore_incoming_buffer_find_by_position(inc_buf, begin);
         
-        size_t between_begin  = (begin - myhtml_incoming_buffer_offset(inc_buf));
-        const char* between_data = myhtml_incoming_buffer_data(inc_buf);
+        size_t between_begin  = (begin - mycore_incoming_buffer_offset(inc_buf));
+        const char* between_data = mycore_incoming_buffer_data(inc_buf);
         
         printf("%s%.*s\e[0m", color, (int)length, &between_data[between_begin]);
     }
 }
 
-size_t colorize_print_attributes(myhtml_tree_t* tree, myhtml_tree_attr_t* attr, myhtml_incoming_buffer_t *inc_buf, size_t last_pos)
+size_t colorize_print_attributes(myhtml_tree_t* tree, myhtml_tree_attr_t* attr, mycore_incoming_buffer_t *inc_buf, size_t last_pos)
 {
     while(attr)
     {
@@ -135,7 +135,7 @@ size_t colorize_print_attributes(myhtml_tree_t* tree, myhtml_tree_attr_t* attr, 
 
 void * colorize_callback_before_token_done(myhtml_tree_t* tree, myhtml_token_node_t* token, void* ctx)
 {
-    myhtml_incoming_buffer_t *inc_buf = myhtml_tree_incoming_buffer_first(tree);
+    mycore_incoming_buffer_t *inc_buf = myhtml_tree_incoming_buffer_first(tree);
     
     myhtml_position_t token_pos = myhtml_token_node_raw_pasition(token);
     myhtml_position_t token_element_pos = myhtml_token_node_element_pasition(token);
@@ -212,7 +212,7 @@ int main(int argc, const char * argv[])
     myhtml_callback_before_token_done_set(tree, colorize_callback_before_token_done, NULL);
     
     // parse html
-    myhtml_parse(tree, MyHTML_ENCODING_UTF_8, res.html, res.size);
+    myhtml_parse(tree, MyENCODING_UTF_8, res.html, res.size);
     
     printf("\n");
     

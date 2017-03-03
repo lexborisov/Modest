@@ -62,7 +62,7 @@ struct res_html load_html_file(const char* filename)
     
     size_t nread = fread(html, 1, size, fh);
     if (nread != size) {
-        fprintf(stderr, "could not read %ld bytes (" MyHTML_FMT_Z " bytes done)\n", size, nread);
+        fprintf(stderr, "could not read %ld bytes (" MyCORE_FMT_Z " bytes done)\n", size, nread);
         exit(EXIT_FAILURE);
     }
 
@@ -72,19 +72,19 @@ struct res_html load_html_file(const char* filename)
     return res;
 }
 
-void print_encoding(myhtml_encoding_t encoding)
+void print_encoding(myencoding_t encoding)
 {
     printf("Character encoding is ");
     
     switch (encoding) {
-        case MyHTML_ENCODING_UTF_8:          printf("UTF-8");          break;
-        case MyHTML_ENCODING_UTF_16LE:       printf("UTF_16LE");       break;
-        case MyHTML_ENCODING_UTF_16BE:       printf("UTF_16BE");       break;
-        case MyHTML_ENCODING_KOI8_R:         printf("KOI8_R");         break;
-        case MyHTML_ENCODING_WINDOWS_1251:   printf("WINDOWS_1251");   break;
-        case MyHTML_ENCODING_X_MAC_CYRILLIC: printf("X_MAC_CYRILLIC"); break;
-        case MyHTML_ENCODING_IBM866:         printf("IBM866");         break;
-        case MyHTML_ENCODING_ISO_8859_5:     printf("ISO_8859_5");     break;
+        case MyENCODING_UTF_8:          printf("UTF-8");          break;
+        case MyENCODING_UTF_16LE:       printf("UTF_16LE");       break;
+        case MyENCODING_UTF_16BE:       printf("UTF_16BE");       break;
+        case MyENCODING_KOI8_R:         printf("KOI8_R");         break;
+        case MyENCODING_WINDOWS_1251:   printf("WINDOWS_1251");   break;
+        case MyENCODING_X_MAC_CYRILLIC: printf("X_MAC_CYRILLIC"); break;
+        case MyENCODING_IBM866:         printf("IBM866");         break;
+        case MyENCODING_ISO_8859_5:     printf("ISO_8859_5");     break;
         default:
             printf("UNKNOWN");
             break;
@@ -107,14 +107,14 @@ int main(int argc, const char * argv[])
     
     struct res_html res = load_html_file(path);
     
-    myhtml_encoding_t encoding;
+    myencoding_t encoding;
     
     // try detect by BOM
-    if (myhtml_encoding_detect_bom(res.html, res.size, &encoding)) {
+    if (myencoding_detect_bom(res.html, res.size, &encoding)) {
         print_encoding(encoding);
-    } else if (myhtml_encoding_detect(res.html, res.size, &encoding)) {
+    } else if (myencoding_detect(res.html, res.size, &encoding)) {
         print_encoding(encoding);
-    } else if (encoding != MyHTML_ENCODING_DEFAULT) {
+    } else if (encoding != MyENCODING_DEFAULT) {
         printf("It is possible that ");
         print_encoding(encoding);
     } else {

@@ -23,7 +23,7 @@
 #pragma once
 
 #include "modest/myosi.h"
-#include "myhtml/utils/mcobject.h"
+#include "mycore/utils/mcobject.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -47,7 +47,7 @@ struct modest_layout {
 };
 
 modest_layout_t * modest_layers_create(void);
-modest_status_t modest_layers_init(modest_layout_t* layout);
+mystatus_t modest_layers_init(modest_layout_t* layout);
 void modest_layers_clean_all(modest_layout_t* layout);
 modest_layout_t * modest_layers_destroy(modest_layout_t* layout, bool self_destroy);
 

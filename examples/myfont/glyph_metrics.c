@@ -23,7 +23,7 @@
 #include <string.h>
 
 #include <myfont/myfont.h>
-#include <myhtml/encoding.h>
+#include <myencoding/encoding.h>
 
 void usage(const char *path, float font_size, size_t codepoint)
 {
@@ -39,10 +39,10 @@ int main(int argc, const char * argv[])
     float font_size = 200.0f;
     
     size_t codepoint;
-    myhtml_encoding_ascii_utf_8_to_codepoint((unsigned char*)"x", &codepoint);
+    myencoding_ascii_utf_8_to_codepoint((unsigned char*)"x", &codepoint);
     
     if (argc == 2) {
-        if(myhtml_encoding_ascii_utf_8_to_codepoint((const unsigned char*)argv[1], &codepoint) == 0) {
+        if(myencoding_ascii_utf_8_to_codepoint((const unsigned char*)argv[1], &codepoint) == 0) {
             fprintf(stderr, "Bad char code point\n");
             return EXIT_FAILURE;
         }
@@ -67,7 +67,7 @@ int main(int argc, const char * argv[])
     myfont_font_t *mf = myfont_create();
     myfont_init(mf);
     
-    myfont_status_t mf_status = myfont_load(mf, path);
+    mystatus_t mf_status = myfont_load(mf, path);
     
     if(mf_status) {
         myfont_destroy(mf, true);
@@ -83,7 +83,7 @@ int main(int argc, const char * argv[])
     }
     
     char data[5];
-    size_t len = myhtml_encoding_codepoint_to_ascii_utf_8(codepoint, data);
+    size_t len = myencoding_codepoint_to_ascii_utf_8(codepoint, data);
     data[len] = '\0';
     
     /* work code */
@@ -102,7 +102,7 @@ int main(int argc, const char * argv[])
     printf("Font file: %s\n", path);
     printf("Font size: %.fpx\n\n", font_size);
     
-    printf("Metrics for code point " MyHTML_FMT_Z " (%s):\n", codepoint, data);
+    printf("Metrics for code point " MyCORE_FMT_Z " (%s):\n", codepoint, data);
     printf("\tBaseline: %.05f\n", baseline);
     printf("\tAscender: %.05f\n", ascender);
     printf("\tDescender: %.05f\n", descender);

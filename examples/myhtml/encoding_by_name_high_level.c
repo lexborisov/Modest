@@ -27,11 +27,11 @@
 int main(int argc, const char * argv[])
 {
     const char *name = "cp1251";
-    myhtml_encoding_t encoding;
+    myencoding_t encoding;
     
-    if(myhtml_encoding_by_name(name, strlen(name), &encoding))
+    if(myencoding_by_name(name, strlen(name), &encoding))
     {
-        if(encoding == MyHTML_ENCODING_WINDOWS_1251) {
+        if(encoding == MyENCODING_WINDOWS_1251) {
             printf("Detected Encoding: windows-1251\n");
             return 0;
         }

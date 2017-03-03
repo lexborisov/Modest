@@ -36,7 +36,7 @@ int main(int argc, const char * argv[])
 
     // basic init
     mycss_t *mycss = mycss_create();
-    mycss_status_t status = mycss_init(mycss);
+    mystatus_t status = mycss_init(mycss);
 
     // check initialization
     if (MyCSS_FAILED(status)) return EXIT_FAILURE;
@@ -50,8 +50,8 @@ int main(int argc, const char * argv[])
     printf("\t%s", selector);
     printf("\n");
 
-    mycss_status_t out_status;
-    mycss_selectors_list_t *list = mycss_selectors_parse(entry->selectors, MyHTML_ENCODING_UTF_8, selector, strlen(selector), &out_status);
+    mystatus_t out_status;
+    mycss_selectors_list_t *list = mycss_selectors_parse(entry->selectors, MyENCODING_UTF_8, selector, strlen(selector), &out_status);
 
     /* print result */
     printf("Result:\n\t");

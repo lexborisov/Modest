@@ -20,7 +20,7 @@
 
 #include "myfont/cmap.h"
 
-myfont_status_t myfont_table_cmap_format_0(myfont_font_t *mf, myfont_tcmap_entry_t *entry, size_t offset)
+mystatus_t myfont_table_cmap_format_0(myfont_font_t *mf, myfont_tcmap_entry_t *entry, size_t offset)
 {
     if(mf->file_size < (offset + 260)) {
         entry->header = NULL;
@@ -46,7 +46,7 @@ myfont_status_t myfont_table_cmap_format_0(myfont_font_t *mf, myfont_tcmap_entry
     return MyFONT_STATUS_OK;
 }
 
-myfont_status_t myfont_table_cmap_format_4(myfont_font_t *mf, myfont_tcmap_entry_t *entry, size_t offset)
+mystatus_t myfont_table_cmap_format_4(myfont_font_t *mf, myfont_tcmap_entry_t *entry, size_t offset)
 {
     uint8_t *data = &mf->file_data[offset];
     
@@ -137,7 +137,7 @@ myfont_status_t myfont_table_cmap_format_4(myfont_font_t *mf, myfont_tcmap_entry
     return MyFONT_STATUS_OK;
 }
 
-uint16_t myfont_glyph_index_by_code_format_0(myfont_tcmap_format_0_t *f0, unsigned long codepoint, myfont_status_t* status)
+uint16_t myfont_glyph_index_by_code_format_0(myfont_tcmap_format_0_t *f0, unsigned long codepoint, mystatus_t* status)
 {
     if(status)
         *status = MyFONT_STATUS_OK;
@@ -151,7 +151,7 @@ uint16_t myfont_glyph_index_by_code_format_0(myfont_tcmap_format_0_t *f0, unsign
     return 0;
 }
 
-uint16_t myfont_glyph_index_by_code_format_4(myfont_tcmap_format_4_t *f4, unsigned long codepoint, myfont_status_t* status)
+uint16_t myfont_glyph_index_by_code_format_4(myfont_tcmap_format_4_t *f4, unsigned long codepoint, mystatus_t* status)
 {
     uint16_t i;
     
@@ -187,10 +187,10 @@ uint16_t myfont_glyph_index_by_code_format_4(myfont_tcmap_format_4_t *f4, unsign
     return 0;
 }
 
-uint16_t myfont_glyph_index_by_codepoint(myfont_font_t *mf, unsigned long codepoint, myfont_status_t* status)
+uint16_t myfont_glyph_index_by_codepoint(myfont_font_t *mf, unsigned long codepoint, mystatus_t* status)
 {
     uint16_t i, index = 0, tcout = mf->table_cmap.header.numTables;
-    myfont_status_t mf_status;
+    mystatus_t mf_status;
     
     for(i = 0; i < tcout; i++)
     {
@@ -224,7 +224,7 @@ uint16_t myfont_glyph_index_by_codepoint(myfont_font_t *mf, unsigned long codepo
     return 0;
 }
 
-myfont_status_t myfont_load_table_cmap(myfont_font_t *mf)
+mystatus_t myfont_load_table_cmap(myfont_font_t *mf)
 {
     myfont_table_cmap_t *tcmap = &mf->table_cmap;
     const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_cmap];

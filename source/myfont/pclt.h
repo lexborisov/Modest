@@ -52,7 +52,7 @@ typedef myfont_table_pclt_t;
 
 struct myfont_font;
 
-myfont_status_t myfont_load_table_pclt(struct myfont_font *mf);
+mystatus_t myfont_load_table_pclt(struct myfont_font *mf);
 
 #ifdef __cplusplus
 } /* extern "C" */
