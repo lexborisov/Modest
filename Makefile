@@ -15,11 +15,7 @@ CC ?= gcc
 #********************
 # Flags
 #***************
-MODEST_OPTIMIZATION_LEVEL ?= -O2
-
 MODEST_CFLAGS ?= -Wall -Werror
-MODEST_CFLAGS += $(MODEST_OPTIMIZATION_LEVEL) -Wno-unused-variable --std=c99 -I$(SRCDIR)
-
 MODEST_LFLAGS ?=
 
 #********************
