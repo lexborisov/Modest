@@ -18,10 +18,10 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#include <myurl/myosi.h>
-#include <myurl/scheme_const.h>
-#include <myurl/utils.h>
-#include <myhtml/mystring.h>
+#include "myurl/myosi.h"
+#include "myurl/scheme_const.h"
+#include "myurl/utils.h"
+#include "myhtml/mystring.h"
 
 #ifndef MyURL_PATH_H
 #define MyURL_PATH_H

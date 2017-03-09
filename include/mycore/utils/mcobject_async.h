@@ -26,8 +26,8 @@
 extern "C" {
 #endif
 
-#include <mycore/myosi.h>
-#include <mycore/utils/mcsync.h>
+#include "mycore/myosi.h"
+#include "mycore/utils/mcsync.h"
 
 enum mcobject_async_status {
     MCOBJECT_ASYNC_STATUS_OK                                  = 0,

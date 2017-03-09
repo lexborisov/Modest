@@ -1,12 +1,10 @@
-find_files_h = $(wildcard $(SRCDIR)/myencoding/$(dir)/*.h)
-find_files_c = $(wildcard $(SRCDIR)/myencoding/$(dir)/*.c)
+myencoding_dirs := .
+myencoding_objs := $(call MODEST_UTILS_OBJS,myencoding,$(myencoding_dirs))
 
-SUBDIRS := .
-HDRS += $(foreach dir,$(SUBDIRS),$(find_files_h))
-SRCS += $(foreach dir,$(SUBDIRS),$(find_files_c))
+myencoding_all: $(myencoding_objs)
 
-myencoding_clone: MyENCODING_DIR_$(SUBDIRS)
+myencoding_clean: 
+	rm -f $(myencoding_objs)
 
-MyENCODING_DIR_$(SUBDIRS):
-	mkdir -p $(INCLUDE_TMP)/myencoding/$(patsubst MyENCODING_DIR_%,%,$@)
-	cp $(SRCDIR)/myencoding/$(patsubst MyENCODING_DIR_%,%,$@)/*.h $(INCLUDE_TMP)/myencoding/$(patsubst MyENCODING_DIR_%,%,$@)/
+myencoding_clone: 
+	$(call MODEST_UTILS_HDRS_CLONE,myencoding,$(myencoding_dirs))

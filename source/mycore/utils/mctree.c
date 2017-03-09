@@ -25,9 +25,17 @@ mctree_t * mctree_create(size_t start_size)
 {
     mctree_t* mctree = (mctree_t*)mycore_malloc(sizeof(mctree_t));
     
+    if(mctree == NULL)
+        return NULL;
+    
     mctree->nodes_size = start_size + 512;
     mctree->nodes_length = start_size + 1;
     mctree->nodes = (mctree_node_t*)mycore_calloc(mctree->nodes_size, sizeof(mctree_node_t));
+    
+    if(mctree->nodes == NULL) {
+        mycore_free(mctree);
+        return NULL;
+    }
     
     mctree->start_size = start_size;
     

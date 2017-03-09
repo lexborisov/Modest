@@ -20,109 +20,80 @@
 
 #include "mycore/utils/mcsync.h"
 
-#if !defined(MyCORE_BUILD_WITHOUT_THREADS) && ((defined(__GNUC__) && __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 7)) || \
-    defined(__ATOMIC_SEQ_CST))
-#define MyCORE_FORCE_SPINLOCK
-#endif
-
-#if defined(MyCORE_FORCE_SPINLOCK)
-static int mcsync_atomic_compare_exchange(int* ptr, int compare, int exchange)
-{
-    return __atomic_compare_exchange_n(ptr, &compare, exchange, 0, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST);
-}
-
-static void mcsync_atomic_store(int* ptr, int value)
-{
-    __atomic_store_n(ptr, 0, __ATOMIC_SEQ_CST);
-}
-#endif
-
 mcsync_t * mcsync_create(void)
 {
-    return calloc(1, sizeof(mcsync_t));
+    return mycore_calloc(1, sizeof(mcsync_t));
 }
+
+
 
 mcsync_status_t mcsync_init(mcsync_t* mcsync)
 {
-    mcsync_clean(mcsync);
-    return MCSYNC_STATUS_OK;
-}
-
-mcsync_t * mcsync_destroy(mcsync_t* mcsync, int destroy_self)
-{
-    if(mcsync == NULL)
-        return NULL;
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
+    /* spinlock */
+    if((mcsync->spinlock = mcsync_spin_create()) == NULL)
+        return MCSYNC_STATUS_NOT_OK;
     
-#if !defined(MyCORE_BUILD_WITHOUT_THREADS) && !defined(MyCORE_FORCE_SPINLOCK)
-    if(mcsync->mutex) {
-        pthread_mutex_destroy(mcsync->mutex);
-        mycore_free(mcsync->mutex);
+    mcsync_status_t status = mcsync_spin_init(mcsync->spinlock);
+    if(status) {
+        mcsync_spin_destroy(mcsync->spinlock);
+        return status;
+    }
+    
+    /* mutex */
+    if((mcsync->mutex = mcsync_mutex_create()) == NULL)
+        return MCSYNC_STATUS_NOT_OK;
+    
+    if((status = mcsync_mutex_init(mcsync->mutex))) {
+        mcsync_spin_destroy(mcsync->spinlock);
+        mcsync_mutex_destroy(mcsync->mutex);
+        
+        return status;
     }
 #endif
     
-    if(destroy_self)
-        mycore_free(mcsync);
-    
-    return NULL;
+    return MCSYNC_STATUS_OK;
 }
 
 void mcsync_clean(mcsync_t* mcsync)
 {
-    mcsync->spinlock = 0;
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
+    mcsync_spin_clean(mcsync->spinlock);
+    mcsync_mutex_clean(mcsync->mutex);
+#endif
+}
+
+mcsync_t * mcsync_destroy(mcsync_t* mcsync, int destroy_self)
+{
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
+    if(mcsync == NULL)
+        return NULL;
+    
+    mcsync_spin_destroy(mcsync->spinlock);
+    mcsync_mutex_destroy(mcsync->mutex);
+#endif
+    if(destroy_self) {
+        mycore_free(mcsync);
+        return NULL;
+    }
+    
+    return mcsync;
 }
 
 mcsync_status_t mcsync_lock(mcsync_t* mcsync)
 {
-#if defined(MyCORE_FORCE_SPINLOCK)
-    while (!mcsync_atomic_compare_exchange(&mcsync->spinlock, 0, 1)) {}
-#elif !defined(MyCORE_BUILD_WITHOUT_THREADS)
-    mcsync_mutex_lock(mcsync);
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
+    return mcsync_spin_lock(mcsync->spinlock);
+#else
+    return MyCORE_STATUS_OK;
 #endif
-    
-    return MCSYNC_STATUS_OK;
 }
 
 mcsync_status_t mcsync_unlock(mcsync_t* mcsync)
 {
-#if defined(MyCORE_FORCE_SPINLOCK)
-    mcsync_atomic_store(&mcsync->spinlock, 0);
-#elif !defined(MyCORE_BUILD_WITHOUT_THREADS)
-    mcsync_mutex_unlock(mcsync);
-#endif
-    
-    return MCSYNC_STATUS_OK;
-}
-
-mcsync_status_t mcsync_mutex_lock(mcsync_t* mcsync)
-{
-#if !defined(MyCORE_BUILD_WITHOUT_THREADS) && !defined(MyCORE_FORCE_SPINLOCK)
-    if(mcsync->mutex == NULL) {
-        mcsync->mutex = (pthread_mutex_t*)mycore_malloc(sizeof(pthread_mutex_t));
-        
-        if(mcsync->mutex == NULL)
-            return MCSYNC_STATUS_ERROR_MEM_ALLOCATE;
-        
-        pthread_mutex_init(mcsync->mutex, NULL);
-    }
-    
-    if(pthread_mutex_lock(mcsync->mutex) == 0)
-        return MCSYNC_STATUS_OK;
-    else
-        return MCSYNC_STATUS_NOT_OK;
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
+    return mcsync_spin_unlock(mcsync->spinlock);
 #else
-    return MCSYNC_STATUS_NOT_OK;
+    return MyCORE_STATUS_OK;
 #endif
 }
-
-mcsync_status_t mcsync_mutex_unlock(mcsync_t* mcsync)
-{
-#if !defined(MyCORE_BUILD_WITHOUT_THREADS) && !defined(MyCORE_FORCE_SPINLOCK)
-    if(pthread_mutex_unlock(mcsync->mutex) == 0)
-        return MCSYNC_STATUS_OK;
-    else
-        return MCSYNC_STATUS_NOT_OK;
-#else
-    return MCSYNC_STATUS_NOT_OK;
-#endif
-}
-

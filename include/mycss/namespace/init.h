@@ -26,9 +26,9 @@
 extern "C" {
 #endif
 
-#include <mycss/namespace/myosi.h>
-#include <mycss/entry.h>
-#include <myhtml/mynamespace.h>
+#include "mycss/namespace/myosi.h"
+#include "mycss/entry.h"
+#include "myhtml/mynamespace.h"
 
 mycss_namespace_t * mycss_namespace_create(void);
 mystatus_t mycss_namespace_init(mycss_entry_t* entry, mycss_namespace_t* ns);

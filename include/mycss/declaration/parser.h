@@ -26,9 +26,9 @@
 extern "C" {
 #endif
 
-#include <mycss/entry.h>
-#include <mycss/property/init.h>
-#include <mycss/declaration/entry.h>
+#include "mycss/entry.h"
+#include "mycss/property/init.h"
+#include "mycss/declaration/entry.h"
 
 void mycss_declaration_parser_begin(mycss_entry_t* entry, mycss_token_t* token);
 void mycss_declaration_parser_ident(mycss_entry_t* entry, mycss_token_t* token);

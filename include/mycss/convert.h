@@ -26,9 +26,9 @@
 extern "C" {
 #endif
 
-#include <mycss/myosi.h>
-#include <mycss/entry.h>
-#include <myhtml/mystring.h>
+#include "mycss/myosi.h"
+#include "mycss/entry.h"
+#include "myhtml/mystring.h"
 
 const char * mycss_convert_split_dimension_string(mycore_string_t* str, double* value, bool* is_float);
 

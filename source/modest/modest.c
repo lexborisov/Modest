@@ -30,6 +30,8 @@ modest_t * modest_create(void)
 
 mystatus_t modest_init(modest_t* modest)
 {
+    mystatus_t status;
+    
     /* Modest nodes */
     modest->mnode_obj = mcobject_async_create();
     if(modest->mnode_obj == NULL)
@@ -61,12 +63,16 @@ mystatus_t modest_init(modest_t* modest)
     
     
     /* Modest style type */
-    modest->mstyle_type_obj = mchar_async_create(12, (4096 * 5));
+    modest->mstyle_type_obj = mchar_async_create();
     if(modest->mstyle_type_obj == NULL)
         return MODEST_STATUS_ERROR_STYLE_TYPE_CREATE;
     
-    modest->mstyle_type_node_id = mchar_async_node_add(modest->mstyle_type_obj);
+    if((status = mchar_async_init(modest->mstyle_type_obj, 12, (4096 * 5))))
+        return status;
     
+    modest->mstyle_type_node_id = mchar_async_node_add(modest->mstyle_type_obj, &status);
+    if(status)
+        return status;
     
     /* for raw declaration style */
     modest->mraw_style_declaration_obj = mcobject_create();

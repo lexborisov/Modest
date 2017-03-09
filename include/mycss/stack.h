@@ -22,7 +22,7 @@
 #define MyCSS_STACK_H
 #pragma once
 
-#include <mycss/myosi.h>
+#include "mycss/myosi.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -38,7 +38,6 @@ mystatus_t myhtml_tree_init(myhtml_tree_t* tree, myhtml_t* myhtml)
     tree->temp_tag_name.data = NULL;
     tree->stream_buffer      = NULL;
     tree->parse_flags        = MyHTML_TREE_PARSE_FLAGS_CLEAN;
-    tree->queue              = mythread_queue_create(9182, &status);
     tree->context            = NULL;
     
     tree->callback_before_token     = NULL;
@@ -54,7 +53,16 @@ mystatus_t myhtml_tree_init(myhtml_tree_t* tree, myhtml_t* myhtml)
     if(status)
         return status;
     
-    /* init Incoming Buffer objects */
+    /* Thread Queue */
+    tree->queue = mythread_queue_create();
+    if(tree->queue == NULL)
+        return MyHTML_STATUS_ERROR_MEMORY_ALLOCATION;
+    
+    status = mythread_queue_init(tree->queue, 9182);
+    if(status)
+        return status;
+    
+    /* Init Incoming Buffer objects */
     tree->mcobject_incoming_buf = mcobject_create();
     if(tree->mcobject_incoming_buf == NULL)
         return MyHTML_STATUS_TREE_ERROR_INCOMING_BUFFER_CREATE;
@@ -72,12 +80,18 @@ mystatus_t myhtml_tree_init(myhtml_tree_t* tree, myhtml_t* myhtml)
     if(mcstatus)
         return MyHTML_STATUS_TREE_ERROR_MCOBJECT_INIT;
     
-    tree->mchar              = mchar_async_create(128, (4096 * 5));
+    tree->mchar              = mchar_async_create();
     tree->active_formatting  = myhtml_tree_active_formatting_init(tree);
     tree->open_elements      = myhtml_tree_open_elements_init(tree);
     tree->other_elements     = myhtml_tree_list_init();
     tree->token_list         = myhtml_tree_token_list_init();
     tree->template_insertion = myhtml_tree_template_insertion_init(tree);
+    
+    if(tree->mchar == NULL)
+        return MyHTML_STATUS_ERROR_MEMORY_ALLOCATION;
+    
+    if((status = mchar_async_init(tree->mchar, 128, (4096 * 5))))
+        return status;
     
     tree->mcasync_tree_id = mcobject_async_node_add(tree->tree_obj, &mcstatus);
     if(mcstatus)
@@ -91,36 +105,40 @@ mystatus_t myhtml_tree_init(myhtml_tree_t* tree, myhtml_t* myhtml)
     if(mcstatus)
         return MyHTML_STATUS_TREE_ERROR_MCOBJECT_CREATE_NODE;
     
-    tree->mchar_node_id = mchar_async_node_add(tree->mchar);
-    
-#ifndef MyHTML_BUILD_WITHOUT_THREADS
-    
-    tree->async_args = (myhtml_async_args_t*)mycore_calloc(myhtml->thread->pth_list_length, sizeof(myhtml_async_args_t));
-    
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
+    tree->async_args = (myhtml_async_args_t*)mycore_calloc(myhtml->thread_total, sizeof(myhtml_async_args_t));
     if(tree->async_args == NULL)
-        return MyHTML_STATUS_TREE_ERROR_MEMORY_ALLOCATION;
-    
-    // for single mode in main thread
-    tree->async_args[0].mchar_node_id = tree->mchar_node_id;
+        return MyHTML_STATUS_ERROR_MEMORY_ALLOCATION;
     
     // for batch thread
-    for(size_t i = 0; i < myhtml->thread->batch_count; i++) {
-        tree->async_args[(myhtml->thread->batch_first_id + i)].mchar_node_id = mchar_async_node_add(tree->mchar);
+    for(size_t i = 0; i < myhtml->thread_total; i++) {
+        tree->async_args[i].mchar_node_id = mchar_async_node_add(tree->mchar, &status);
+        
+        if(status)
+            return status;
     }
-    
-#else /* MyHTML_BUILD_WITHOUT_THREADS */
-    
+#else /* MyCORE_BUILD_WITHOUT_THREADS */
     tree->async_args = (myhtml_async_args_t*)mycore_calloc(1, sizeof(myhtml_async_args_t));
     
     if(tree->async_args == NULL)
         return MyHTML_STATUS_TREE_ERROR_MEMORY_ALLOCATION;
     
-    tree->async_args->mchar_node_id = tree->mchar_node_id;
+    tree->async_args->mchar_node_id = mchar_async_node_add(tree->mchar, &status);
     
-#endif /* MyHTML_BUILD_WITHOUT_THREADS */
+    if(status)
+        return status;
+    
+#endif /* MyCORE_BUILD_WITHOUT_THREADS */
+    
+    /* for main thread only after parsing */
+    tree->mchar_node_id = tree->async_args->mchar_node_id;
     
     tree->sync = mcsync_create();
-    mcsync_init(tree->sync);
+    if(tree->sync == NULL)
+        return MyHTML_STATUS_ERROR_MEMORY_ALLOCATION;
+    
+    if(mcsync_init(tree->sync))
+        return MyHTML_STATUS_ERROR_MEMORY_ALLOCATION;
     
     /* init Tags after create and init mchar */
     tree->tags = myhtml_tag_create();
@@ -133,22 +151,23 @@ mystatus_t myhtml_tree_init(myhtml_tree_t* tree, myhtml_t* myhtml)
 
 void myhtml_tree_clean(myhtml_tree_t* tree)
 {
-#ifndef MyHTML_BUILD_WITHOUT_THREADS
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
     myhtml_t* myhtml = tree->myhtml;
     
-    for(size_t i = 0; i < myhtml->thread->batch_count; i++) {
-        mchar_async_node_clean(tree->mchar, tree->async_args[(myhtml->thread->batch_first_id + i)].mchar_node_id);
+    for(size_t i = 0; i < myhtml->thread_total; i++) {
+        mchar_async_node_clean(tree->mchar, tree->async_args[i].mchar_node_id);
     }
-#endif /* MyHTML_BUILD_WITHOUT_THREADS */
+#else
+    mchar_async_node_clean(tree->mchar, tree->mchar_node_id);
+#endif
     
     mcobject_async_node_clean(tree->tree_obj, tree->mcasync_tree_id);
     mcobject_async_node_clean(tree->token->nodes_obj, tree->mcasync_rules_token_id);
     mcobject_async_node_clean(tree->token->attr_obj, tree->mcasync_rules_attr_id);
-    mchar_async_node_clean(tree->mchar, tree->mchar_node_id);
     
-#ifndef MyHTML_BUILD_WITHOUT_THREADS
-    mythread_queue_list_entry_clean(tree->myhtml->thread, tree->queue_entry);
-#endif /* MyHTML_BUILD_WITHOUT_THREADS */
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
+    mythread_queue_list_entry_clean(tree->queue_entry);
+#endif /* MyCORE_BUILD_WITHOUT_THREADS */
     
     myhtml_token_clean(tree->token);
     
@@ -252,9 +271,9 @@ void myhtml_tree_clean_all(myhtml_tree_t* tree)
     mcobject_clean(tree->mcobject_incoming_buf);
     myhtml_tag_clean(tree->tags);
     
-#ifndef MyHTML_BUILD_WITHOUT_THREADS
-    mythread_queue_list_entry_clean(tree->myhtml->thread, tree->queue_entry);
-#endif /* MyHTML_BUILD_WITHOUT_THREADS */
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
+    mythread_queue_list_entry_clean(tree->queue_entry);
+#endif
     
     tree->attr_current = myhtml_token_attr_create(tree->token, tree->token->mcasync_attr_id);
 }
@@ -493,7 +512,7 @@ myhtml_tree_node_t * myhtml_tree_node_clone(myhtml_tree_node_t* node)
 {
     myhtml_tree_node_t* new_node = myhtml_tree_node_create(node->tree);
     
-    myhtml_token_node_wait_for_done(node->token);
+    myhtml_token_node_wait_for_done(node->tree->token, node->token);
     
     new_node->token        = myhtml_token_node_clone(node->tree->token, node->token,
                                                      node->tree->mcasync_rules_token_id,
@@ -1424,8 +1443,8 @@ void myhtml_tree_active_formatting_append_with_check(myhtml_tree_t* tree, myhtml
         
         if(list[i]->token && node->token)
         {
-            myhtml_token_node_wait_for_done(list[i]->token);
-            myhtml_token_node_wait_for_done(node->token);
+            myhtml_token_node_wait_for_done(tree->token, list[i]->token);
+            myhtml_token_node_wait_for_done(tree->token, node->token);
             
             if(list[i]->ns == node->ns &&
                list[i]->tag_id == node->tag_id &&
@@ -2443,7 +2462,7 @@ bool myhtml_tree_is_html_integration_point(myhtml_tree_t* tree, myhtml_tree_node
        node->tag_id == MyHTML_TAG_ANNOTATION_XML && node->token &&
        (node->token->type & MyHTML_TOKEN_TYPE_CLOSE) == 0)
     {
-        myhtml_token_node_wait_for_done(node->token);
+        myhtml_token_node_wait_for_done(tree->token, node->token);
         
         myhtml_token_attr_t* attr = myhtml_token_attr_match_case(tree->token, node->token,
                                                                  "encoding", 8, "text/html", 9);
@@ -2540,10 +2559,9 @@ mystatus_t myhtml_tree_temp_tag_name_append(myhtml_tree_temp_tag_name_t* temp_ta
 
 void myhtml_tree_wait_for_last_done_token(myhtml_tree_t* tree, myhtml_token_node_t* token_for_wait)
 {
-#ifndef MyHTML_BUILD_WITHOUT_THREADS
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
     
-    const struct timespec timeout = {0, 0};
-    while(tree->token_last_done != token_for_wait) {mycore_thread_nanosleep(&timeout);}
+    while(tree->token_last_done != token_for_wait) {mythread_nanosleep_sleep(tree->myhtml->thread_stream->timespec);}
     
 #endif
 }

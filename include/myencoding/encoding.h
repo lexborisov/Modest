@@ -26,9 +26,9 @@
 //extern "C" {
 #endif
 
-#include <myencoding/myosi.h>
-#include <mycore/utils.h>
-#include <mycore/mystring.h>
+#include "myencoding/myosi.h"
+#include "mycore/utils.h"
+#include "mycore/mystring.h"
 
 struct myencoding_result {
     unsigned long first;

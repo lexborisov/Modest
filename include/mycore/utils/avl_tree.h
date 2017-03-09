@@ -22,8 +22,8 @@
 #define MyCORE_UTILS_AVL_TREE_H
 #pragma once
 
-#include <mycore/myosi.h>
-#include <mycore/utils/mcobject.h>
+#include "mycore/myosi.h"
+#include "mycore/utils/mcobject.h"
 
 #ifdef __cplusplus
 extern "C" {

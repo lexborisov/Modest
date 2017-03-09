@@ -26,10 +26,10 @@
 extern "C" {
 #endif
 
-#include <mycss/entry.h>
-#include <mycss/namespace/myosi.h>
-#include <myhtml/mynamespace.h>
-#include <mycore/utils/mctree.h>
+#include "mycss/entry.h"
+#include "mycss/namespace/myosi.h"
+#include "myhtml/mynamespace.h"
+#include "mycore/utils/mctree.h"
 
 void mycss_namespace_parser_begin(mycss_entry_t* entry);
 

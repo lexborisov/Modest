@@ -22,17 +22,17 @@
 #define MODEST_FINDER_THREAD_H
 #pragma once
 
-#include <modest/modest.h>
-#include <modest/node/node.h>
-#include <modest/style/type.h>
-#include <modest/style/map.h>
-#include <modest/finder/myosi.h>
-#include <modest/finder/finder.h>
+#include "modest/modest.h"
+#include "modest/node/node.h"
+#include "modest/style/type.h"
+#include "modest/style/map.h"
+#include "modest/finder/myosi.h"
+#include "modest/finder/finder.h"
 
-#include <mycore/thread.h>
-#include <mycore/utils/mcobject_async.h>
+#include "mycore/mythread.h"
+#include "mycore/utils/mcobject_async.h"
 
-#include <mycss/declaration/myosi.h>
+#include "mycss/declaration/myosi.h"
 
 #ifdef __cplusplus
 extern "C" {

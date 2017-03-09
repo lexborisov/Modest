@@ -78,6 +78,11 @@ mcobject_async_status_t mcobject_async_init(mcobject_async_t *mcobj_async, size_
     mcobject_async_clean(mcobj_async);
     
     mcobj_async->mcsync = mcsync_create();
+    if(mcobj_async->mcsync == NULL)
+        return MCOBJECT_ASYNC_STATUS_ERROR_MEMORY_ALLOCATION;
+    
+    if(mcsync_init(mcobj_async->mcsync))
+        return MCOBJECT_ASYNC_STATUS_ERROR_MEMORY_ALLOCATION;
     
     return MCOBJECT_ASYNC_STATUS_OK;
 }
@@ -251,7 +256,9 @@ mcobject_async_chunk_t * mcobject_async_chunk_malloc_without_lock(mcobject_async
 
 mcobject_async_chunk_t * mcobject_async_chunk_malloc(mcobject_async_t *mcobj_async, size_t length, mcobject_async_status_t *status)
 {
-    mcsync_lock(mcobj_async->mcsync);
+    if(mcsync_lock(mcobj_async->mcsync))
+        return NULL;
+    
     mcobject_async_chunk_t* chunk = mcobject_async_chunk_malloc_without_lock(mcobj_async, length, status);
     mcsync_unlock(mcobj_async->mcsync);
     

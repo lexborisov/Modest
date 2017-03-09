@@ -22,10 +22,10 @@
 #define MyHTML_MyCSS_PROPERTY_INIT_H
 #pragma once
 
-#include <mycss/property/myosi.h>
-#include <mycss/property/parser.h>
-#include <mycss/values/serialization.h>
-#include <mycore/utils.h>
+#include "mycss/property/myosi.h"
+#include "mycss/property/parser.h"
+#include "mycss/values/serialization.h"
+#include "mycore/utils.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -22,10 +22,10 @@
 #define MyHTML_MyCSS_VALUES_CONSUME_H
 #pragma once
 
-#include <mycss/myosi.h>
-#include <mycss/entry.h>
-#include <mycss/values/values.h>
-#include <mycss/values/units.h>
+#include "mycss/myosi.h"
+#include "mycss/entry.h"
+#include "mycss/values/values.h"
+#include "mycss/values/units.h"
 
 #ifdef __cplusplus
 extern "C" {

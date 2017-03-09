@@ -22,11 +22,11 @@
 #define MyURL_HOST_H
 #pragma once
 
-#include <myurl/myosi.h>
-#include <myhtml/mystring.h>
+#include "myurl/myosi.h"
+#include "myhtml/mystring.h"
 
-#include <myurl/parser.h>
-#include <myurl/utils.h>
+#include "myurl/parser.h"
+#include "myurl/utils.h"
 
 #ifdef __cplusplus
 extern "C" {

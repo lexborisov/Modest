@@ -22,37 +22,22 @@
 #define MyCORE_UTILS_MCSYNC_H
 #pragma once
 
+#include "mycore/myosi.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-    
-#include <stdio.h>
-#include <stdlib.h>
-#include <memory.h>
-    
-#include <mycore/myosi.h>
-    
-#if !defined(MyCORE_BUILD_WITHOUT_THREADS)
-#if defined(IS_OS_WINDOWS)
-    typedef CRITICAL_SECTION pthread_mutex_t;
-    typedef unsigned long pthread_mutexattr_t;
-#else
-#	include <pthread.h>
-#endif
-#endif
 
 enum mcsync_status {
-    MCSYNC_STATUS_OK                 = 0,
-    MCSYNC_STATUS_NOT_OK             = 1,
-    MCSYNC_STATUS_ERROR_MEM_ALLOCATE = 2
+    MCSYNC_STATUS_OK                 = 0x00,
+    MCSYNC_STATUS_NOT_OK             = 0x01,
+    MCSYNC_STATUS_ERROR_MEM_ALLOCATE = 0x02
 }
 typedef mcsync_status_t;
 
 struct mcsync {
-    int spinlock;
-#if !defined(MyCORE_BUILD_WITHOUT_THREADS)
-    pthread_mutex_t *mutex;
-#endif
+    int* spinlock;
+    void* mutex;
 }
 typedef mcsync_t;
 
@@ -61,37 +46,26 @@ mcsync_status_t mcsync_init(mcsync_t* mcsync);
 void mcsync_clean(mcsync_t* mcsync);
 mcsync_t * mcsync_destroy(mcsync_t* mcsync, int destroy_self);
 
-mcsync_status_t mcsync_lock(mcsync_t* mclock);
-mcsync_status_t mcsync_unlock(mcsync_t* mclock);
+mcsync_status_t mcsync_lock(mcsync_t* mcsync);
+mcsync_status_t mcsync_unlock(mcsync_t* mcsync);
 
-mcsync_status_t mcsync_mutex_lock(mcsync_t* mclock);
-mcsync_status_t mcsync_mutex_unlock(mcsync_t* mclock);
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
+mcsync_status_t mcsync_spin_lock(void* spinlock);
+mcsync_status_t mcsync_spin_unlock(void* spinlock);
 
-#if !defined(MyCORE_BUILD_WITHOUT_THREADS) && defined(IS_OS_WINDOWS)
-static __inline int pthread_mutex_lock(pthread_mutex_t *mutex)
-{
-    EnterCriticalSection(mutex);
-    return 0;
-}
+mcsync_status_t mcsync_mutex_lock(void* mutex);
+mcsync_status_t mcsync_mutex_try_lock(void* mutex);
+mcsync_status_t mcsync_mutex_unlock(void* mutex);
 
-static __inline int pthread_mutex_unlock(pthread_mutex_t *mutex)
-{
-    LeaveCriticalSection(mutex);
-    return 0;
-}
+void * mcsync_spin_create(void);
+mcsync_status_t mcsync_spin_init(void* spinlock);
+void mcsync_spin_clean(void* spinlock);
+void mcsync_spin_destroy(void* spinlock);
 
-static __inline int pthread_mutex_init(pthread_mutex_t *mutex, pthread_mutexattr_t *a)
-{
-    (void)a;
-    InitializeCriticalSection(mutex);
-    return 0;
-}
-
-static __inline int pthread_mutex_destroy(pthread_mutex_t *mutex)
-{
-    DeleteCriticalSection(mutex);
-    return 0;
-}
+void * mcsync_mutex_create(void);
+mcsync_status_t mcsync_mutex_init(void* mutex);
+void mcsync_mutex_clean(void* mutex);
+void mcsync_mutex_destroy(void* mutex);
 #endif
 
 #ifdef __cplusplus

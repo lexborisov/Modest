@@ -22,8 +22,8 @@
 #define MyURL_PARSER_H
 #pragma once
 
-#include <myurl/myosi.h>
-#include <myurl/utils.h>
+#include "myurl/myosi.h"
+#include "myurl/utils.h"
 
 #define myurl_parser_digit(onechar) (onechar >= 0x30 && onechar <= 0x39)
 #define myurl_parser_alpha_upper(onechar) (onechar >= 0x41 && onechar <= 0x5A)

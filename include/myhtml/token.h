@@ -28,14 +28,14 @@ extern "C" {
 
 #include <string.h>
 
-#include <myhtml/myosi.h>
-#include <mycore/utils.h>
-#include <myhtml/tag.h>
-#include <myhtml/myhtml.h>
-#include <myhtml/mystring.h>
-#include <mycore/utils/mcobject_async.h>
-#include <mycore/utils/mchar_async.h>
-#include <mycore/utils/mcsync.h>
+#include "myhtml/myosi.h"
+#include "mycore/utils.h"
+#include "myhtml/tag.h"
+#include "myhtml/myhtml.h"
+#include "myhtml/mystring.h"
+#include "mycore/utils/mcobject_async.h"
+#include "mycore/utils/mchar_async.h"
+#include "mycore/utils/mcsync.h"
 
 #define myhtml_token_node_set_done(token_node) token_node->type |= MyHTML_TOKEN_TYPE_DONE
 
@@ -130,7 +130,7 @@ myhtml_token_attr_t * myhtml_token_attr_remove_by_name(myhtml_token_node_t* node
 void myhtml_token_attr_delete_all(myhtml_token_t* token, myhtml_token_node_t* node);
 
 void myhtml_token_delete(myhtml_token_t* token, myhtml_token_node_t* node);
-void myhtml_token_node_wait_for_done(myhtml_token_node_t* node);
+void myhtml_token_node_wait_for_done(myhtml_token_t* token, myhtml_token_node_t* node);
 void myhtml_token_set_done(myhtml_token_node_t* node);
 
 myhtml_token_attr_t * myhtml_token_attr_match(myhtml_token_t* token, myhtml_token_node_t* target, const char* key, size_t key_size, const char* value, size_t value_size);

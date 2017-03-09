@@ -32,11 +32,11 @@ typedef struct mycss_selectors_entries_list mycss_selectors_entries_list_t;
 typedef struct mycss_selectors_list mycss_selectors_list_t;
 typedef struct mycss_selectors_specificity mycss_selectors_specificity_t;
 
-#include <mycss/myosi.h>
-#include <mycss/mystring.h>
-#include <mycss/namespace/myosi.h>
-#include <mycss/declaration/myosi.h>
-#include <mycore/utils/mcobject.h>
+#include "mycss/myosi.h"
+#include "mycss/mystring.h"
+#include "mycss/namespace/myosi.h"
+#include "mycss/declaration/myosi.h"
+#include "mycore/utils/mcobject.h"
 
 typedef bool (*mycss_selectors_state_f)(mycss_entry_t* entry, mycss_selectors_t* selectors, mycss_selectors_entry_t* selector, mycss_token_t* token);
 typedef void (*mycss_callback_selector_done_f)(mycss_selectors_t* selectors, mycss_selectors_entry_t* selector);

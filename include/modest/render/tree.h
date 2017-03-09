@@ -24,9 +24,9 @@
 
 typedef struct modest_render_tree modest_render_tree_t;
 
-#include <modest/modest.h>
-#include <mycore/utils/mcobject.h>
-#include <modest/render/tree_node.h>
+#include "modest/modest.h"
+#include "mycore/utils/mcobject.h"
+#include "modest/render/tree_node.h"
 
 #ifdef __cplusplus
 extern "C" {

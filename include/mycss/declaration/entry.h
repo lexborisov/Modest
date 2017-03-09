@@ -22,10 +22,10 @@
 #define MyHTML_MyCSS_DECLARATION_ENTRY_H
 #pragma once
 
-#include <mycss/declaration/myosi.h>
-#include <mycss/declaration/entry_destroy.h>
-#include <mycss/values/values.h>
-#include <mycss/property/init.h>
+#include "mycss/declaration/myosi.h"
+#include "mycss/declaration/entry_destroy.h"
+#include "mycss/values/values.h"
+#include "mycss/property/init.h"
 
 #ifdef __cplusplus
 extern "C" {

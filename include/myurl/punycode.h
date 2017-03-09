@@ -22,9 +22,9 @@
 #define MyURL_PUNYCODE_H
 #pragma once
 
-#include <myurl/myosi.h>
-#include <myhtml/mystring.h>
-#include <myencoding/encoding.h>
+#include "myurl/myosi.h"
+#include "myhtml/mystring.h"
+#include "myencoding/encoding.h"
 
 #ifdef __cplusplus
 extern "C" {

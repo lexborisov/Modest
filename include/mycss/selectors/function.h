@@ -26,9 +26,9 @@
 extern "C" {
 #endif
 
-#include <mycss/entry.h>
-#include <mycss/selectors/myosi.h>
-#include <mycss/selectors/function_parser.h>
+#include "mycss/entry.h"
+#include "mycss/selectors/myosi.h"
+#include "mycss/selectors/function_parser.h"
 
 typedef void (*mycss_selectors_function_begin_f)(mycss_entry_t* entry, mycss_selectors_entry_t* selector);
 

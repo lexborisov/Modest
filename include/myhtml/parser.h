@@ -26,12 +26,12 @@
 extern "C" {
 #endif
 
-#include <myhtml/myosi.h>
-#include <myhtml/myhtml.h>
-#include <myhtml/mystring.h>
-#include <myhtml/tree.h>
-#include <myhtml/token.h>
-#include <myhtml/data_process.h>
+#include "myhtml/myosi.h"
+#include "myhtml/myhtml.h"
+#include "myhtml/mystring.h"
+#include "myhtml/tree.h"
+#include "myhtml/token.h"
+#include "myhtml/data_process.h"
 
 void myhtml_parser_stream(mythread_id_t thread_id, void* ctx);
 void myhtml_parser_worker(mythread_id_t thread_id, void* ctx);

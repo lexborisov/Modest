@@ -22,10 +22,10 @@
 #define MyCSS_VALUES_COLOR_H
 #pragma once
 
-#include <mycss/myosi.h>
-#include <mycss/values/values.h>
-#include <mycss/values/color_const.h>
-#include <mycss/values/color_parser.h>
+#include "mycss/myosi.h"
+#include "mycss/values/values.h"
+#include "mycss/values/color_const.h"
+#include "mycss/values/color_parser.h"
 
 #ifdef __cplusplus
 extern "C" {

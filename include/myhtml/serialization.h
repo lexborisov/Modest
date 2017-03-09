@@ -22,9 +22,9 @@
 #define MyHTML_SERIALIZATION_H
 #pragma once
 
-#include <myhtml/myosi.h>
-#include <myhtml/mystring.h>
-#include <myhtml/tree.h>
+#include "myhtml/myosi.h"
+#include "myhtml/mystring.h"
+#include "myhtml/tree.h"
 
 #ifdef __cplusplus
 extern "C" {

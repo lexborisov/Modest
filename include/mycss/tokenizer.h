@@ -26,14 +26,14 @@
 extern "C" {
 #endif
 
-#include <mycss/myosi.h>
-#include <mycss/mycss.h>
-#include <mycss/entry.h>
-#include <mycss/check.h>
-#include <mycss/tokenizer_global.h>
-#include <mycss/tokenizer_end.h>
+#include "mycss/myosi.h"
+#include "mycss/mycss.h"
+#include "mycss/entry.h"
+#include "mycss/check.h"
+#include "mycss/tokenizer_global.h"
+#include "mycss/tokenizer_end.h"
 
-#include <mycore/incoming.h>
+#include "mycore/incoming.h"
 
 #define MyCSS_TOKEN_READY_CALLBACK_FUNCTION(ENTRY, TOKEN) \
     ++ENTRY->token_counter; \

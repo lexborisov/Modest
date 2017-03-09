@@ -22,9 +22,9 @@
 #define MyCSS_VALUES_COLOR_PARSER_H
 #pragma once
 
-#include <mycss/myosi.h>
-#include <mycss/values/consume.h>
-#include <mycss/values/values.h>
+#include "mycss/myosi.h"
+#include "mycss/values/consume.h"
+#include "mycss/values/values.h"
 
 #ifdef __cplusplus
 extern "C" {

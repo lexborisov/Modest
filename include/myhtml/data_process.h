@@ -26,9 +26,9 @@
 extern "C" {
 #endif
 
-#include <myhtml/myosi.h>
-#include <myhtml/charef.h>
-#include <myhtml/mystring.h>
+#include "myhtml/myosi.h"
+#include "myhtml/charef.h"
+#include "myhtml/mystring.h"
 
 struct myhtml_data_process_entry {
     /* current state for process data */

@@ -22,13 +22,13 @@
 #define MODEST_FINDER_TYPE_H
 #pragma once
 
-#include <modest/finder/myosi.h>
-#include <modest/finder/finder.h>
-#include <modest/finder/pseudo_class.h>
-#include <modest/finder/match.h>
-#include <myhtml/tree.h>
-#include <mycore/utils.h>
-#include <mycss/selectors/value.h>
+#include "modest/finder/myosi.h"
+#include "modest/finder/finder.h"
+#include "modest/finder/pseudo_class.h"
+#include "modest/finder/match.h"
+#include "myhtml/tree.h"
+#include "mycore/utils.h"
+#include "mycss/selectors/value.h"
 
 #ifdef __cplusplus
 extern "C" {

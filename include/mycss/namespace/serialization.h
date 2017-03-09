@@ -22,8 +22,8 @@
 #define MyHTML_MyCSS_NAMESPACE_SERIALIZATION_H
 #pragma once
 
-#include <mycss/entry.h>
-#include <mycss/namespace/myosi.h>
+#include "mycss/entry.h"
+#include "mycss/namespace/myosi.h"
 
 #ifdef __cplusplus
 extern "C" {

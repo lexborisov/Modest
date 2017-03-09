@@ -27,11 +27,13 @@
 #include <stdlib.h>
 #include <memory.h>
 #include <stdint.h>
-#include <stdarg.h>
+#include <inttypes.h>
 
 #define MyCORE_VERSION_MAJOR 1
 #define MyCORE_VERSION_MINOR 0
 #define MyCORE_VERSION_PATCH 0
+
+#define MyCORE_BUILD_WITHOUT_THREADS
 
 #ifdef __cplusplus
 //extern "C" {
@@ -60,14 +62,14 @@
 /* Debug */
 #ifdef MyCORE_DEBUG_MODE
     #define MyCORE_DEBUG(format, ...)      \
-        mycore_print(stderr, "DEBUG: "format"\n", ##__VA_ARGS__)
+        mycore_fprintf(stderr, "DEBUG: "format"\n", ##__VA_ARGS__)
 #else
     #define MyCORE_DEBUG(format, ...)
 #endif
 
 #ifdef MyCORE_DEBUG_MODE
     #define MyCORE_DEBUG_ERROR(format, ...)      \
-        mycore_print(stderr, "DEBUG ERROR: "format"\n", ##__VA_ARGS__)
+        mycore_fprintf(stderr, "DEBUG ERROR: "format"\n", ##__VA_ARGS__)
 #else
     #define MyCORE_DEBUG_ERROR(format, ...)
 #endif
@@ -123,22 +125,16 @@ enum mycore_status {
     MyCORE_STATUS_MCOBJECT_ERROR_CACHE_CREATE          = 0x0055,
     MyCORE_STATUS_MCOBJECT_ERROR_CHUNK_CREATE          = 0x0056,
     MyCORE_STATUS_MCOBJECT_ERROR_CHUNK_INIT            = 0x0057,
-    MyCORE_STATUS_MCOBJECT_ERROR_CACHE_REALLOC         = 0x0058
+    MyCORE_STATUS_MCOBJECT_ERROR_CACHE_REALLOC         = 0x0058,
+    MyCORE_STATUS_ASYNC_ERROR_LOCK                     = 0x0060,
+    MyCORE_STATUS_ASYNC_ERROR_UNLOCK                   = 0x0061,
+    MyCORE_STATUS_ERROR_NO_FREE_SLOT                   = 0x0062,
 }
 typedef mycore_status_t;
 
 typedef unsigned int mystatus_t;
 
 /* thread */
-enum mythread_thread_opt {
-    MyTHREAD_OPT_UNDEF = 0x00,
-    MyTHREAD_OPT_WAIT  = 0x01,
-    MyTHREAD_OPT_QUIT  = 0x02,
-    MyTHREAD_OPT_STOP  = 0x04,
-    MyTHREAD_OPT_DONE  = 0x08
-}
-typedef mythread_thread_opt_t;
-
 typedef struct mythread_queue_list_entry mythread_queue_list_entry_t;
 typedef struct mythread_queue_thread_param mythread_queue_thread_param_t;
 typedef struct mythread_queue_list mythread_queue_list_t;
@@ -146,9 +142,8 @@ typedef struct mythread_queue_node mythread_queue_node_t;
 typedef struct mythread_queue mythread_queue_t;
 
 typedef size_t mythread_id_t;
-typedef struct mythread_workers_list mythread_workers_list_t;
 typedef struct mythread_context mythread_context_t;
-typedef struct mythread_list mythread_list_t;
+typedef struct mythread_entry mythread_entry_t;
 typedef struct mythread mythread_t;
 
 /* mystring */
@@ -164,9 +159,28 @@ typedef void (*mycore_callback_serialize_f)(const char* buffer, size_t size, voi
 void * mycore_malloc(size_t size);
 void * mycore_realloc(void* dst, size_t size);
 void * mycore_calloc(size_t num, size_t size);
-void   mycore_free(void* dst);
+void * mycore_free(void* dst);
 
-void mycore_print(FILE* out, const char* format, ...);
+/* io */
+int mycore_printf(const char* format, ...);
+int mycore_fprintf(FILE* out, const char* format, ...);
+int mycore_snprintf(char* buffer, size_t buffer_size, const char* format, ...);
+
+/**
+ * Platform-specific hdef performance clock queries.
+ * Implemented in perf.c
+ */
+
+/** Get clock resolution */
+uint64_t mycore_hperf_res(mystatus_t *status);
+
+/** Get current value in clock ticks */
+uint64_t mycore_hperf_clock(mystatus_t *status);
+
+/** Print an hperf measure */
+mystatus_t mycore_hperf_print(const char *name, uint64_t x, uint64_t y, FILE *fh);
+mystatus_t mycore_hperf_print_by_val(const char *name, uint64_t x, FILE *fh);
+
 
 #ifdef __cplusplus
 } /* extern "C" */

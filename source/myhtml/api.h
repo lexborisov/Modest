@@ -1724,10 +1724,11 @@ myhtml_token_node_is_close_self(myhtml_token_node_t *token_node);
 /**
  * Wait for process token all parsing stage. Need if you use thread mode
  *
+ * @param[in] myhtml_token_t*
  * @param[in] myhtml_token_node_t*
  */
 void
-myhtml_token_node_wait_for_done(myhtml_token_node_t* node);
+myhtml_token_node_wait_for_done(myhtml_token_t* token, myhtml_token_node_t* node);
 
 /***********************************************************************************
  *

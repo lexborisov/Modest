@@ -26,14 +26,14 @@
 extern "C" {
 #endif
 
-#include <myhtml/myosi.h>
-#include <mycore/utils.h>
-#include <mycore/thread.h>
-#include <myhtml/myhtml.h>
-#include <myhtml/tag.h>
-#include <myhtml/tokenizer_doctype.h>
-#include <myhtml/tokenizer_script.h>
-#include <myhtml/tokenizer_end.h>
+#include "myhtml/myosi.h"
+#include "mycore/utils.h"
+#include "mycore/mythread.h"
+#include "myhtml/myhtml.h"
+#include "myhtml/tag.h"
+#include "myhtml/tokenizer_doctype.h"
+#include "myhtml/tokenizer_script.h"
+#include "myhtml/tokenizer_end.h"
 
 #define myhtml_tokenizer_inc_html_offset(offset, size)   \
     offset++;                                            \

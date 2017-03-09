@@ -26,22 +26,22 @@
 extern "C" {
 #endif
 
-#include <myhtml/myosi.h>
+#include "myhtml/myosi.h"
 
-#include <mycore/utils/mctree.h>
-#include <mycore/utils/mcobject_async.h>
-#include <mycore/thread.h>
-#include <mycore/incoming.h>
-#include <myencoding/encoding.h>
-#include <myhtml/tree.h>
-#include <myhtml/tag.h>
-#include <myhtml/def.h>
-#include <myhtml/parser.h>
-#include <myhtml/tokenizer.h>
-#include <myhtml/rules.h>
-#include <myhtml/token.h>
-#include <myhtml/charef.h>
-#include <myhtml/callback.h>
+#include "mycore/utils/mctree.h"
+#include "mycore/utils/mcobject_async.h"
+#include "mycore/mythread.h"
+#include "mycore/incoming.h"
+#include "myencoding/encoding.h"
+#include "myhtml/tree.h"
+#include "myhtml/tag.h"
+#include "myhtml/def.h"
+#include "myhtml/parser.h"
+#include "myhtml/tokenizer.h"
+#include "myhtml/rules.h"
+#include "myhtml/token.h"
+#include "myhtml/charef.h"
+#include "myhtml/callback.h"
 
 #define mh_queue_current() tree->queue
 #define myhtml_tokenizer_state_set(tree) myhtml_tree_set(tree, state)
@@ -65,8 +65,10 @@ extern "C" {
     (onechar < 'A' || onechar > 'Z'))
 
 struct myhtml {
-    mythread_t          *thread;
-    //mchar_async_t       *mchar; // for all
+    mythread_t* thread_stream;
+    mythread_t* thread_batch;
+    mythread_t* thread_list[3];
+    size_t      thread_total;
     
     myhtml_tokenizer_state_f* parse_state_func;
     myhtml_insertion_f* insertion_func;
@@ -214,21 +216,6 @@ bool myhtml_is_html_node(myhtml_tree_node_t *node, myhtml_tag_id_t tag_id);
 
 // queue
 mystatus_t myhtml_queue_add(myhtml_tree_t *tree, size_t begin, myhtml_token_node_t* token);
-
-/** 
- * Platform-specific hdef performance clock queries.
- * Implemented in perf.c
- */ 
-
-/** Get clock resolution */
-uint64_t myhtml_hperf_res(mystatus_t *status);
-
-/** Get current value in clock ticks */
-uint64_t myhtml_hperf_clock(mystatus_t *status);
-
-/** Print an hperf measure */
-mystatus_t myhtml_hperf_print(const char *name, uint64_t x, uint64_t y, FILE *fh);
-mystatus_t myhtml_hperf_print_by_val(const char *name, uint64_t x, FILE *fh);
 
 /* version */
 myhtml_version_t myhtml_version(void);

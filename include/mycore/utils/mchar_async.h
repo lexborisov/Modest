@@ -26,8 +26,8 @@
 extern "C" {
 #endif
 
-#include <mycore/myosi.h>
-#include <mycore/utils/mcsync.h>
+#include "mycore/myosi.h"
+#include "mycore/utils/mcsync.h"
 
 #define mchar_async_cache_has_nodes(cache) cache.count
 
@@ -96,16 +96,16 @@ struct mchar_async {
 typedef mchar_async_t;
 
 
-mchar_async_t * mchar_async_create(size_t pos_size, size_t size);
-void mchar_async_init(mchar_async_t *mchar_async, size_t chunk_len, size_t char_size);
-void mchar_async_clean(mchar_async_t *mchar_async);
+mchar_async_t * mchar_async_create(void);
+mystatus_t mchar_async_init(mchar_async_t *mchar_async, size_t chunk_len, size_t char_size);
+mystatus_t mchar_async_clean(mchar_async_t *mchar_async);
 mchar_async_t * mchar_async_destroy(mchar_async_t *mchar_async, int destroy_self);
 
 char * mchar_async_malloc(mchar_async_t *mchar_async, size_t node_idx, size_t size);
 char * mchar_async_realloc(mchar_async_t *mchar_async, size_t node_idx, char *data, size_t data_len, size_t new_size);
 void mchar_async_free(mchar_async_t *mchar_async, size_t node_idx, char *entry);
 
-size_t mchar_async_node_add(mchar_async_t *mchar_async);
+size_t mchar_async_node_add(mchar_async_t *mchar_async, mystatus_t* status);
 void mchar_async_node_clean(mchar_async_t *mchar_async, size_t node_idx);
 void mchar_async_node_delete(mchar_async_t *mchar_async, size_t node_idx);
 
@@ -116,7 +116,7 @@ char * mchar_async_crop_first_chars_without_cache(char *data, size_t crop_len);
 size_t mchar_async_get_size_by_data(const char *data);
 
 // cache
-void mchar_async_cache_init(mchar_async_cache_t *cache);
+mystatus_t mchar_async_cache_init(mchar_async_cache_t *cache);
 mchar_async_cache_t * mchar_async_cache_destroy(mchar_async_cache_t *cache, bool self_destroy);
 void mchar_async_cache_clean(mchar_async_cache_t *cache);
 

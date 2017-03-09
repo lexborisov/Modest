@@ -26,9 +26,9 @@
 extern "C" {
 #endif
 
-#include <mycore/myosi.h>
-#include <mycore/utils/mchar_async.h>
-#include <mycore/utils.h>
+#include "mycore/myosi.h"
+#include "mycore/utils/mchar_async.h"
+#include "mycore/utils.h"
     
 #define mycore_string_get(str, attr) str->attr
 #define mycore_string_set(str, attr) mycore_string_get(str, attr)

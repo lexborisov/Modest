@@ -22,11 +22,11 @@
 #define MODEST_NODE_SERIALIZATION_H
 #pragma once
 
-#include <modest/myosi.h>
-#include <modest/node/node.h>
-#include <modest/node/raw_property.h>
-#include <mycss/myosi.h>
-#include <mycss/declaration/serialization.h>
+#include "modest/myosi.h"
+#include "modest/node/node.h"
+#include "modest/node/raw_property.h"
+#include "mycss/myosi.h"
+#include "mycss/declaration/serialization.h"
 
 #ifdef __cplusplus
 extern "C" {

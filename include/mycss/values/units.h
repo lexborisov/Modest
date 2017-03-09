@@ -22,8 +22,8 @@
 #define MyHTML_MyCSS_VALUES_UNITS_H
 #pragma once
 
-#include <mycss/myosi.h>
-#include <mycore/utils.h>
+#include "mycss/myosi.h"
+#include "mycore/utils.h"
 
 #define mycss_units_is_angel_type(type)           (type >= 1  && type <= 4)
 #define mycss_units_is_frequency_type(type)       (type >= 5  && type <= 6)

@@ -22,12 +22,12 @@
 #define MyHTML_MyCSS_PROPERTY_SHARED_H
 #pragma once
 
-#include <mycss/property/myosi.h>
-#include <mycss/values/consume.h>
-#include <mycss/values/values.h>
-#include <mycss/values/color.h>
-#include <mycss/values/image.h>
-#include <mycore/utils.h>
+#include "mycss/property/myosi.h"
+#include "mycss/values/consume.h"
+#include "mycss/values/values.h"
+#include "mycss/values/color.h"
+#include "mycss/values/image.h"
+#include "mycore/utils.h"
 
 #ifdef __cplusplus
 extern "C" {

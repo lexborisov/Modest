@@ -26,10 +26,10 @@
 extern "C" {
 #endif
 
-#include <mycss/myosi.h>
-#include <mycore/incoming.h>
-#include <mycore/mystring.h>
-#include <myencoding/encoding.h>
+#include "mycss/myosi.h"
+#include "mycore/incoming.h"
+#include "mycore/mystring.h"
+#include "myencoding/encoding.h"
     
 enum mycss_string_process_state {
     MyCSS_STRING_PROCESS_STATE_DATA       = 0x00,

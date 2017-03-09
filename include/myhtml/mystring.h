@@ -26,13 +26,13 @@
 //extern "C" {
 #endif
     
-#include <myhtml/myosi.h>
+#include "myhtml/myosi.h"
 
-#include <myencoding/encoding.h>
-#include <myencoding/mystring.h>
+#include "myencoding/encoding.h"
+#include "myencoding/mystring.h"
 
-#include <mycore/mystring.h>
-#include <mycore/utils/mchar_async.h>
+#include "mycore/mystring.h"
+#include "mycore/utils/mchar_async.h"
 
 #define myhtml_string_get(str, attr) str->attr
 #define myhtml_string_set(str, attr) myhtml_string_get(str, attr)

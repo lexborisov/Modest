@@ -22,7 +22,7 @@
 #define MyHTML_MyCSS_SELECTORS_VALUE_RESOURCE_H
 #pragma once
 
-#include <mycss/selectors/myosi.h>
+#include "mycss/selectors/myosi.h"
 
 static const mycss_selectors_value_destroy_f mycss_selectors_value_destroy_map[MyCSS_SELECTORS_TYPE_LAST_ENTRY] = {
     mycss_selectors_value_undef_destroy,     /* MyCSS_SELECTORS_TYPE_UNDEF */

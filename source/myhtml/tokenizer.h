@@ -28,7 +28,7 @@ extern "C" {
 
 #include "myhtml/myosi.h"
 #include "mycore/utils.h"
-#include "mycore/thread.h"
+#include "mycore/mythread.h"
 #include "myhtml/myhtml.h"
 #include "myhtml/tag.h"
 #include "myhtml/tokenizer_doctype.h"

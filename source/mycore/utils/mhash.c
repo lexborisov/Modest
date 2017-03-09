@@ -45,11 +45,19 @@ mycore_utils_mhash_t * mycore_utils_mhash_create(void)
 
 mystatus_t mycore_utils_mhash_init(mycore_utils_mhash_t* mhash, size_t table_size, size_t max_depth)
 {
-    mhash->mchar_obj = mchar_async_create(128, 4096);
+    mystatus_t status;
+    
+    mhash->mchar_obj = mchar_async_create();
     if(mhash->mchar_obj == NULL)
         return MyCORE_STATUS_ERROR_MEMORY_ALLOCATION;
     
-    mhash->mchar_node = mchar_async_node_add(mhash->mchar_obj);
+    if((status = mchar_async_init(mhash->mchar_obj, 128, 4096)))
+        return status;
+    
+    /* nodest data for input char* */
+    mhash->mchar_node = mchar_async_node_add(mhash->mchar_obj, &status);
+    if(status)
+        return status;
     
     if(table_size < 128)
         table_size = 128;

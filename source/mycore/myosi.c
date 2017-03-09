@@ -20,10 +20,3 @@
 
 #include "mycore/myosi.h"
 
-void mycore_print(FILE* out, const char* format, ...)
-{
-    va_list argptr;
-    va_start(argptr, format);
-    vfprintf(out, format, argptr);
-    va_end(argptr);
-}

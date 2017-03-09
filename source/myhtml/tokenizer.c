@@ -50,7 +50,7 @@ mystatus_t myhtml_tokenizer_chunk_process(myhtml_tree_t* tree, const char* html,
     // add for a chunk
     tree->incoming_buf = mycore_incoming_buffer_add(tree->incoming_buf, tree->mcobject_incoming_buf, html, html_length);
     
-#ifndef MyHTML_BUILD_WITHOUT_THREADS
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
     
     if(myhtml->opt & MyHTML_OPTIONS_PARSE_MODE_SINGLE)
         tree->flags |= MyHTML_TREE_FLAGS_SINGLE_MODE;
@@ -59,7 +59,9 @@ mystatus_t myhtml_tokenizer_chunk_process(myhtml_tree_t* tree, const char* html,
     {
         if(tree->queue_entry == NULL) {
             mystatus_t status = MyHTML_STATUS_OK;
-            tree->queue_entry = mythread_queue_list_entry_push(myhtml->thread, tree->queue, &status);
+            tree->queue_entry = mythread_queue_list_entry_push(myhtml->thread_list, 2,
+                                                               myhtml->thread_stream->context, tree->queue,
+                                                               myhtml->thread_total, &status);
             
             if(status)
                 return status;
@@ -172,19 +174,22 @@ mystatus_t myhtml_tokenizer_end(myhtml_tree_t* tree)
     
     mystatus_t status = tree->tokenizer_status;
     
-#ifndef MyHTML_BUILD_WITHOUT_THREADS
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
     
     if((tree->flags & MyHTML_TREE_FLAGS_SINGLE_MODE) == 0)
     {
-        mythread_queue_list_entry_wait_for_done(tree->myhtml->thread, tree->queue_entry);
-        tree->queue_entry = mythread_queue_list_entry_delete(tree->myhtml->thread, tree->queue_entry, false);
+        mythread_queue_list_entry_wait_for_done(tree->myhtml->thread_stream, tree->queue_entry);
+        
+        tree->queue_entry = mythread_queue_list_entry_delete(tree->myhtml->thread_list, 2,
+                                                             tree->myhtml->thread_stream->context,
+                                                             tree->queue_entry, false);
+        
         /* Further, any work with tree... */
-        if(mythread_queue_list_get_count(tree->myhtml->thread->context) == 0) {
+        if(mythread_queue_list_get_count(tree->myhtml->thread_stream->context) == 0)
             myhtml_tokenizer_pause(tree);
-        }
         
         if(status == MyHTML_STATUS_OK)
-            status = mythread_check_status(tree->myhtml->thread);
+            status = mythread_check_status(tree->myhtml->thread_stream);
     }
     
 #endif
@@ -238,17 +243,32 @@ myhtml_tree_node_t * myhtml_tokenizer_fragment_init(myhtml_tree_t* tree, myhtml_
 
 void myhtml_tokenizer_wait(myhtml_tree_t* tree)
 {
-    mythread_queue_wait_all_for_done(tree->myhtml->thread);
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
+    if(tree->myhtml->thread_stream)
+        mythread_queue_list_entry_wait_for_done(tree->myhtml->thread_stream, tree->queue_entry);
+#endif
 }
 
 void myhtml_tokenizer_post(myhtml_tree_t* tree)
 {
-    mythread_resume_all(tree->myhtml->thread);
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
+    if(tree->myhtml->thread_stream)
+        mythread_resume(tree->myhtml->thread_stream);
+    
+    if(tree->myhtml->thread_batch)
+        mythread_resume(tree->myhtml->thread_batch);
+#endif
 }
 
 void myhtml_tokenizer_pause(myhtml_tree_t* tree)
 {
-    mythread_stop_all(tree->myhtml->thread);
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
+    if(tree->myhtml->thread_stream)
+        mythread_stop(tree->myhtml->thread_stream);
+    
+    if(tree->myhtml->thread_batch)
+        mythread_stop(tree->myhtml->thread_batch);
+#endif
 }
 
 void myhtml_tokenizer_calc_current_namespace(myhtml_tree_t* tree, myhtml_token_node_t* token_node)

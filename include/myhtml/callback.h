@@ -26,8 +26,8 @@
 extern "C" {
 #endif
     
-#include <myhtml/myosi.h>
-#include <myhtml/tree.h>
+#include "myhtml/myosi.h"
+#include "myhtml/tree.h"
 
 /* callback functions */
 myhtml_callback_token_f myhtml_callback_before_token_done(myhtml_tree_t *tree);

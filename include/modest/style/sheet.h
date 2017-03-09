@@ -22,9 +22,9 @@
 #define MODEST_STYLE_SHEET_H
 #pragma once
 
-#include <modest/myosi.h>
-#include <modest/modest.h>
-#include <modest/style/type.h>
+#include "modest/myosi.h"
+#include "modest/modest.h"
+#include "modest/style/type.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -26,7 +26,7 @@
 extern "C" {
 #endif
 
-#include <mycore/myosi.h>
+#include "mycore/myosi.h"
 
 struct mcobject_chunk {
     unsigned char *begin;

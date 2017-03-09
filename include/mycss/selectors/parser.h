@@ -26,13 +26,13 @@
 extern "C" {
 #endif
 
-#include <mycss/entry.h>
-#include <mycss/namespace/myosi.h>
-#include <mycss/namespace/init.h>
-#include <mycss/selectors/myosi.h>
-#include <mycss/selectors/value.h>
-#include <mycss/selectors/function.h>
-#include <mycss/selectors/pseudo.h>
+#include "mycss/entry.h"
+#include "mycss/namespace/myosi.h"
+#include "mycss/namespace/init.h"
+#include "mycss/selectors/myosi.h"
+#include "mycss/selectors/value.h"
+#include "mycss/selectors/function.h"
+#include "mycss/selectors/pseudo.h"
 
 void mycss_selectors_parser_selector_begin(mycss_entry_t* entry, mycss_token_t* token);
 void mycss_selectors_parser_selector_ident_type(mycss_entry_t* entry, mycss_token_t* token);

@@ -59,23 +59,27 @@ mystatus_t modest_finder_thread_init(modest_finder_t* finder, modest_finder_thre
         return MODEST_STATUS_OK;
     
     /* create and init threads */
+#ifdef MyCORE_BUILD_WITHOUT_THREADS
+    finder_thread->thread = NULL;
+#else
     finder_thread->thread = mythread_create();
     
     if(finder_thread->thread == NULL)
         return MODEST_STATUS_OK;
     
-    mystatus_t status = mythread_init(finder_thread->thread, "lastmac", thread_count);
+    mystatus_t status = mythread_init(finder_thread->thread, MyTHREAD_TYPE_STREAM, thread_count, 0);
     if(status) {
-        mythread_destroy(finder_thread->thread, NULL, true);
+        mythread_destroy(finder_thread->thread, NULL, NULL, true);
         return MODEST_STATUS_OK;
     }
     
     finder_thread->thread->context = finder_thread;
     
     /* create threads */
-    for(size_t i = finder_thread->thread->pth_list_root; i < finder_thread->thread->pth_list_size; i++) {
-        myhread_create_stream(finder_thread->thread, mythread_function, modest_finder_thread_stream, MyTHREAD_OPT_UNDEF, &status);
+    for(size_t i = 0; i < finder_thread->thread->entries_size; i++) {
+        myhread_entry_create(finder_thread->thread, mythread_function, modest_finder_thread_stream, MyTHREAD_OPT_UNDEF);
     }
+#endif
     
     return MODEST_STATUS_OK;
 }
@@ -96,15 +100,10 @@ modest_finder_thread_t * modest_finder_thread_destroy(modest_finder_thread_t* fi
     finder_thread->entry_obj = mcobject_async_destroy(finder_thread->entry_obj, true);
     finder_thread->declaration_obj = mcobject_async_destroy(finder_thread->declaration_obj, true);
     
-    if(finder_thread->thread) {
-        finder_thread->thread->stream_opt = MyTHREAD_OPT_QUIT;
-        
-        for(size_t i = finder_thread->thread->pth_list_root; i < finder_thread->thread->pth_list_size; i++) {
-            finder_thread->thread->pth_list[i].data.opt = MyTHREAD_OPT_QUIT;
-        }
-        
-        finder_thread->thread = mythread_destroy(finder_thread->thread, NULL, true);
-    }
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
+    if(finder_thread->thread)
+        finder_thread->thread = mythread_destroy(finder_thread->thread, mythread_callback_quit, NULL, true);
+#endif
     
     if(finder_thread->context_list) {
         mycore_free(finder_thread->context_list);
@@ -133,6 +132,7 @@ void modest_finder_thread_collate_node(modest_t* modest, myhtml_tree_node_t* nod
     }
 }
 
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
 mystatus_t modest_finder_thread_process(modest_t* modest, modest_finder_thread_t* finder_thread,
                                              myhtml_tree_node_t* scope_node, mycss_selectors_list_t* selector_list)
 {
@@ -142,7 +142,7 @@ mystatus_t modest_finder_thread_process(modest_t* modest, modest_finder_thread_t
     if(finder_thread->finder == NULL)
         return MODEST_STATUS_ERROR;
     
-    mythread_resume_all(finder_thread->thread);
+    mythread_resume(finder_thread->thread);
     modest_finder_thread_wait_for_all_done(finder_thread);
     
     /* calc result */
@@ -151,7 +151,7 @@ mystatus_t modest_finder_thread_process(modest_t* modest, modest_finder_thread_t
     
     /* compare results */
     while(node) {
-        for(size_t i = finder_thread->thread->pth_list_root; i < finder_thread->thread->pth_list_size; i++)
+        for(size_t i = 0; i < finder_thread->thread->entries_length; i++)
         {
             modest_finder_thread_context_t* context = &context_list[i];
             modest_finder_thread_entry_t* entry = context->entry;
@@ -194,19 +194,16 @@ mystatus_t modest_finder_thread_process(modest_t* modest, modest_finder_thread_t
 
 void modest_finder_thread_wait_for_all_done(modest_finder_thread_t* finder_thread)
 {
-    const struct timespec tomeout = {0, 0};
-    
-    for (size_t idx = finder_thread->thread->pth_list_root; idx < finder_thread->thread->pth_list_size; idx++) {
-        while((finder_thread->thread->pth_list[idx].data.opt & MyTHREAD_OPT_DONE) == 0) {
-            mycore_thread_nanosleep(&tomeout);
+    for (size_t idx = 0; idx < finder_thread->thread->entries_length; idx++) {
+        while((finder_thread->thread->entries[idx].context.opt & MyTHREAD_OPT_DONE) == 0) {
+            mythread_nanosleep_sleep(finder_thread->thread->timespec);
         }
     }
 }
+#endif /* if undef MyCORE_BUILD_WITHOUT_THREADS */
 
 modest_finder_thread_context_t * modest_finder_thread_create_context(modest_finder_thread_t* finder_thread, size_t count)
 {
-    /* +1 because threads ids begin 1 */
-    count++;
     finder_thread->context_list_size = count;
     
     modest_finder_thread_context_t *ctx = mycore_calloc(count, sizeof(modest_finder_thread_context_t));
@@ -216,7 +213,7 @@ modest_finder_thread_context_t * modest_finder_thread_create_context(modest_find
     
     mcobject_async_status_t mcstatus;
     
-    for(size_t i = 1; i < count; i++) {
+    for(size_t i = 0; i < count; i++) {
         ctx[i].entry_node_id = mcobject_async_node_add(finder_thread->entry_obj, &mcstatus);
         
         if(mcstatus) {
@@ -230,7 +227,7 @@ modest_finder_thread_context_t * modest_finder_thread_create_context(modest_find
         }
     }
     
-    for(size_t i = 1; i < count; i++) {
+    for(size_t i = 0; i < count; i++) {
         ctx[i].declaration_node_id = mcobject_async_node_add(finder_thread->declaration_obj, &mcstatus);
         
         if(mcstatus) {
@@ -371,6 +368,7 @@ void modest_finder_thread_callback_found(modest_finder_t* finder, myhtml_tree_no
     }
 }
 
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
 void modest_finder_thread_stream(mythread_id_t thread_id, void* arg)
 {
     mythread_context_t* ctx = (mythread_context_t*)arg;
@@ -380,7 +378,7 @@ void modest_finder_thread_stream(mythread_id_t thread_id, void* arg)
     modest_finder_thread_found_context_t found_ctx = {finder_thread, &finder_thread->context_list[ctx->id]};
     
     size_t count = 0, counnt_done = ctx->id - 1;
-    size_t offset = (ctx->mythread->pth_list_size - 1);
+    size_t offset = (ctx->mythread->entries_size - 1);
     
     while(selector_list) {
         for(size_t i = 0; i < selector_list->entries_list_length; i++) {
@@ -403,5 +401,5 @@ void modest_finder_thread_stream(mythread_id_t thread_id, void* arg)
     
     ctx->opt = MyTHREAD_OPT_STOP|MyTHREAD_OPT_DONE;
 }
-
+#endif
 

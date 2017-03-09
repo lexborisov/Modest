@@ -28,6 +28,8 @@ myhtml_tag_t * myhtml_tag_create(void)
 
 mystatus_t myhtml_tag_init(myhtml_tree_t *tree, myhtml_tag_t *tags)
 {
+    mystatus_t status;
+    
     tags->mcsimple_context = mcsimple_create();
     
     if(tags->mcsimple_context == NULL)
@@ -35,10 +37,16 @@ mystatus_t myhtml_tag_init(myhtml_tree_t *tree, myhtml_tag_t *tags)
     
     mcsimple_init(tags->mcsimple_context, 128, 1024, sizeof(myhtml_tag_context_t));
     
-    tags->mchar_node         = mchar_async_node_add(tree->mchar);
-    tags->tree               = mctree_create(2);
-    tags->mchar              = tree->mchar;
-    tags->tags_count         = MyHTML_TAG_LAST_ENTRY;
+    tags->mchar_node = mchar_async_node_add(tree->mchar, &status);
+    tags->tree       = mctree_create(2);
+    tags->mchar      = tree->mchar;
+    tags->tags_count = MyHTML_TAG_LAST_ENTRY;
+    
+    if(status)
+        return status;
+    
+    if(tags->tree == NULL)
+        return MyCORE_STATUS_ERROR_MEMORY_ALLOCATION;
     
     myhtml_tag_clean(tags);
     

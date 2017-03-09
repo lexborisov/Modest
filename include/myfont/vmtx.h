@@ -22,7 +22,7 @@
 #define MyFONT_VMTX_H
 #pragma once
 
-#include <myfont/myosi.h>
+#include "myfont/myosi.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -41,7 +41,7 @@ struct myfont_table_vmtx {
 }
 typedef myfont_table_vmtx_t;
 
-#include <myfont/myfont.h>
+#include "myfont/myfont.h"
 
 struct myfont_font;
 

@@ -253,14 +253,16 @@ bool myhtml_token_node_is_close_self(myhtml_token_node_t *token_node)
     return (token_node->type & MyHTML_TOKEN_TYPE_CLOSE_SELF);
 }
 
-void myhtml_token_node_wait_for_done(myhtml_token_node_t* node)
+void myhtml_token_node_wait_for_done(myhtml_token_t* token, myhtml_token_node_t* node)
 {
-#ifndef MyHTML_BUILD_WITHOUT_THREADS
-    
-    const struct timespec timeout = {0, 0};
-    while((node->type & MyHTML_TOKEN_TYPE_DONE) == 0) {mycore_thread_nanosleep(&timeout);}
-    
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
+    while((node->type & MyHTML_TOKEN_TYPE_DONE) == 0) {mythread_nanosleep_sleep(token->tree->myhtml->thread_stream->timespec);}
 #endif
+}
+
+void myhtml_token_set_done(myhtml_token_node_t* node)
+{
+    node->type |= MyHTML_TOKEN_TYPE_DONE;
 }
 
 myhtml_token_node_t * myhtml_token_node_clone(myhtml_token_t* token, myhtml_token_node_t* node, size_t token_thread_idx, size_t attr_thread_idx)
@@ -803,8 +805,8 @@ myhtml_token_attr_t * myhtml_token_attr_remove_by_name(myhtml_token_node_t* node
 
 myhtml_token_node_t * myhtml_token_merged_two_token_string(myhtml_tree_t* tree, myhtml_token_node_t* token_to, myhtml_token_node_t* token_from, bool cp_reverse)
 {
-    myhtml_token_node_wait_for_done(token_to);
-    myhtml_token_node_wait_for_done(token_from);
+    myhtml_token_node_wait_for_done(tree->token, token_to);
+    myhtml_token_node_wait_for_done(tree->token, token_from);
     
     mycore_string_t *string1 = &token_to->str;
     mycore_string_t *string2 = &token_from->str;
@@ -855,7 +857,7 @@ myhtml_token_node_t * myhtml_token_merged_two_token_string(myhtml_tree_t* tree, 
 
 void myhtml_token_set_replacement_character_for_null_token(myhtml_tree_t* tree, myhtml_token_node_t* node)
 {
-    myhtml_token_node_wait_for_done(node);
+    myhtml_token_node_wait_for_done(tree->token, node);
     
     mycore_string_t new_str;
     mycore_string_init(tree->mchar, tree->mchar_node_id, &new_str, (node->str.length + 2));
@@ -863,11 +865,6 @@ void myhtml_token_set_replacement_character_for_null_token(myhtml_tree_t* tree, 
     mycore_string_append_with_replacement_null_characters(&new_str, node->str.data, node->str.length);
     
     node->str = new_str;
-}
-
-void myhtml_token_set_done(myhtml_token_node_t* node)
-{
-    node->type |= MyHTML_TOKEN_TYPE_DONE;
 }
 
 void myhtml_token_print_param_by_idx(myhtml_tree_t* myhtml_tree, myhtml_token_node_t* node, FILE* out)

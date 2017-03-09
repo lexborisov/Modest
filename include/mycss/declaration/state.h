@@ -26,8 +26,8 @@
 extern "C" {
 #endif
 
-#include <mycss/entry.h>
-#include <mycss/declaration/parser.h>
+#include "mycss/entry.h"
+#include "mycss/declaration/parser.h"
 
 bool mycss_declaration_state_begin(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 

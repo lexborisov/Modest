@@ -22,10 +22,10 @@
 #define MODEST_DECLARATION_H
 #pragma once
 
-#include <modest/myosi.h>
-#include <modest/node/node.h>
-#include <modest/style/default.h>
-#include <mycss/declaration/default.h>
+#include "modest/myosi.h"
+#include "modest/node/node.h"
+#include "modest/style/default.h"
+#include "mycss/declaration/default.h"
 
 #ifdef __cplusplus
 extern "C" {

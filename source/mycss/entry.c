@@ -28,6 +28,8 @@ mycss_entry_t * mycss_entry_create(void)
 
 mystatus_t mycss_entry_init(mycss_t* mycss, mycss_entry_t* entry)
 {
+    mystatus_t status;
+    
     entry->mycss               = mycss;
     entry->parser              = NULL;
     entry->parser_switch       = NULL;
@@ -35,9 +37,21 @@ mystatus_t mycss_entry_init(mycss_t* mycss, mycss_entry_t* entry)
     entry->parser_ending_token = MyCSS_TOKEN_TYPE_UNDEF;
     
     // Other init
-    entry->mchar = mchar_async_create(128, (4096 * 5));
-    entry->mchar_node_id = mchar_async_node_add(entry->mchar);
-    entry->mchar_value_node_id = mchar_async_node_add(entry->mchar);
+    entry->mchar = mchar_async_create();
+    if(entry->mchar == NULL)
+        return MyCORE_STATUS_ERROR_MEMORY_ALLOCATION;
+    
+    if((status = mchar_async_init(entry->mchar, 128, (4096 * 5))))
+        return status;
+    
+    /* init data nodes for save input char* */
+    entry->mchar_node_id = mchar_async_node_add(entry->mchar, &status);
+    if(status)
+        return status;
+    
+    entry->mchar_value_node_id = mchar_async_node_add(entry->mchar, &status);
+    if(status)
+        return status;
     
     entry->parser_list = mycss_entry_parser_list_create_and_init(128);
     
@@ -58,7 +72,7 @@ mystatus_t mycss_entry_init(mycss_t* mycss, mycss_entry_t* entry)
     if(entry->selectors == NULL)
         return MyCSS_STATUS_ERROR_SELECTORS_CREATE;
     
-    mystatus_t status = mycss_selectors_init(entry, entry->selectors);
+    status = mycss_selectors_init(entry, entry->selectors);
     if(status != MyCSS_STATUS_OK)
         return status;
     

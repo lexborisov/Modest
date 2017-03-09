@@ -22,8 +22,8 @@
 #define MODEST_FINDER_PSEUDO_CLASS_H
 #pragma once
 
-#include <modest/finder/myosi.h>
-#include <modest/finder/finder.h>
+#include "modest/finder/myosi.h"
+#include "modest/finder/finder.h"
 
 #ifdef __cplusplus
 extern "C" {

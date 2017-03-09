@@ -20,16 +20,12 @@
 
 #include "mycore/utils/mchar_async.h"
 
-mchar_async_t * mchar_async_create(size_t pos_size, size_t size)
+mchar_async_t * mchar_async_create(void)
 {
-    mchar_async_t *mcobj_async = (mchar_async_t*)mycore_calloc(1, sizeof(mchar_async_t));
-    
-    mchar_async_init(mcobj_async, pos_size, size);
-    
-    return mcobj_async;
+    return (mchar_async_t*)mycore_calloc(1, sizeof(mchar_async_t));
 }
 
-void mchar_async_init(mchar_async_t *mchar_async, size_t chunk_len, size_t char_size)
+mystatus_t mchar_async_init(mchar_async_t *mchar_async, size_t chunk_len, size_t char_size)
 {
     if(char_size < 4096)
         char_size = 4096;
@@ -38,25 +34,58 @@ void mchar_async_init(mchar_async_t *mchar_async, size_t chunk_len, size_t char_
     
     mchar_async->chunks_size      = chunk_len;
     mchar_async->chunks_pos_size  = 1024;
+    
+    /* Chunck, list of mchar_async_chunk_t* */
     mchar_async->chunks           = (mchar_async_chunk_t**)mycore_calloc(mchar_async->chunks_pos_size, sizeof(mchar_async_chunk_t*));
+    
+    if(mchar_async->chunks == NULL)
+        return MyCORE_STATUS_ERROR_MEMORY_ALLOCATION;
+    
+    /* Init first mchar_async_chunk_t* */
     mchar_async->chunks[0]        = (mchar_async_chunk_t*)mycore_calloc(mchar_async->chunks_size, sizeof(mchar_async_chunk_t));
     
-    mchar_async_cache_init(&mchar_async->chunk_cache);
+    if(mchar_async->chunks[0] == NULL) {
+        mchar_async->chunks = mycore_free(mchar_async->chunks);
+        return MyCORE_STATUS_ERROR_MEMORY_ALLOCATION;
+    }
+    
+    /* Init cache */
+    mystatus_t status = mchar_async_cache_init(&mchar_async->chunk_cache);
+    
+    if(status) {
+        mycore_free(mchar_async->chunks[0]);
+        mchar_async->chunks = mycore_free(mchar_async->chunks);
+        
+        return status;
+    }
     
     mchar_async->nodes_length     = 0;
     mchar_async->nodes_size       = 64;
     mchar_async->nodes            = (mchar_async_node_t*)mycore_calloc(mchar_async->nodes_size, sizeof(mchar_async_node_t));
     
+    if(mchar_async->nodes == NULL)
+        return status;
+    
     mchar_async->nodes_cache_length = 0;
     mchar_async->nodes_cache_size   = mchar_async->nodes_size;
     mchar_async->nodes_cache        = (size_t*)mycore_malloc(mchar_async->nodes_cache_size * sizeof(size_t));
     
+    if(mchar_async->nodes_cache == NULL)
+        return status;
+    
     mchar_async_clean(mchar_async);
     
     mchar_async->mcsync = mcsync_create();
+    if(mchar_async->mcsync == NULL)
+        return MyCORE_STATUS_ERROR_MEMORY_ALLOCATION;
+    
+    if((status = mcsync_init(mchar_async->mcsync)))
+        return status;
+    
+    return MyCORE_STATUS_OK;
 }
 
-void mchar_async_clean(mchar_async_t *mchar_async)
+mystatus_t mchar_async_clean(mchar_async_t *mchar_async)
 {
     mchar_async->chunks_length      = 0;
     mchar_async->chunks_pos_length  = 1;
@@ -69,8 +98,14 @@ void mchar_async_clean(mchar_async_t *mchar_async)
         mchar_async_cache_clean(&node->cache);
         
         node->chunk = mchar_async_chunk_malloc(mchar_async, node, mchar_async->origin_size);
+        
+        if(node->chunk == NULL)
+            return MyCORE_STATUS_ERROR_MEMORY_ALLOCATION;
+        
         node->chunk->prev = 0;
     }
+    
+    return MyCORE_STATUS_OK;
 }
 
 mchar_async_t * mchar_async_destroy(mchar_async_t *mchar_async, int destroy_self)
@@ -159,6 +194,8 @@ mchar_async_chunk_t * mchar_async_chunk_malloc_without_lock(mchar_async_t *mchar
         
         if(index)
             return (mchar_async_chunk_t*)mchar_async->chunk_cache.nodes[index].value;
+        else
+            return NULL;
     }
     
     if(mchar_async->chunks_length >= mchar_async->chunks_size)
@@ -178,6 +215,8 @@ mchar_async_chunk_t * mchar_async_chunk_malloc_without_lock(mchar_async_t *mchar
                 
                 mchar_async->chunks = tmp_pos;
             }
+            else
+                return NULL;
         }
         
         if(mchar_async->chunks[current_idx] == NULL) {
@@ -185,6 +224,8 @@ mchar_async_chunk_t * mchar_async_chunk_malloc_without_lock(mchar_async_t *mchar
             
             if(tmp)
                 mchar_async->chunks[current_idx] = tmp;
+            else
+                return NULL;
         }
         
         mchar_async->chunks_length = 0;
@@ -194,6 +235,9 @@ mchar_async_chunk_t * mchar_async_chunk_malloc_without_lock(mchar_async_t *mchar
     mchar_async->chunks_length++;
     
     mchar_async_mem_malloc(mchar_async, node, chunk, length);
+    
+    if(chunk->begin == NULL)
+        return NULL;
     
     return chunk;
 }
@@ -207,9 +251,14 @@ mchar_async_chunk_t * mchar_async_chunk_malloc(mchar_async_t *mchar_async, mchar
     return chunk;
 }
 
-size_t mchar_async_node_add(mchar_async_t *mchar_async)
+size_t mchar_async_node_add(mchar_async_t *mchar_async, mystatus_t* status)
 {
-    mcsync_lock(mchar_async->mcsync);
+    if(mcsync_lock(mchar_async->mcsync)) {
+        if(status)
+            *status = MyCORE_STATUS_ASYNC_ERROR_LOCK;
+        
+        return 0;
+    }
     
     size_t node_idx;
     
@@ -220,6 +269,9 @@ size_t mchar_async_node_add(mchar_async_t *mchar_async)
     }
     else {
         if(mchar_async->nodes_length >= mchar_async->nodes_size) {
+            if(status)
+                *status = MyCORE_STATUS_ERROR_NO_FREE_SLOT;
+            
             mcsync_unlock(mchar_async->mcsync);
             return 0;
         }
@@ -230,14 +282,31 @@ size_t mchar_async_node_add(mchar_async_t *mchar_async)
     
     mchar_async_node_t *node = &mchar_async->nodes[node_idx];
     
-    mchar_async_cache_init(&node->cache);
+    if(mchar_async_cache_init(&node->cache)) {
+        if(status)
+            *status = MyCORE_STATUS_ERROR_MEMORY_ALLOCATION;
+        
+        mcsync_unlock(mchar_async->mcsync);
+        return 0;
+    }
     
     node->chunk = mchar_async_chunk_malloc_without_lock(mchar_async, node, mchar_async->origin_size);
+    
+    if(node->chunk == NULL) {
+        if(status)
+            *status = MyCORE_STATUS_ERROR_MEMORY_ALLOCATION;
+        
+        mcsync_unlock(mchar_async->mcsync);
+        return 0;
+    }
     
     node->chunk->next = NULL;
     node->chunk->prev = NULL;
     
     mcsync_unlock(mchar_async->mcsync);
+    
+    if(status)
+        *status = MyCORE_STATUS_OK;
     
     return node_idx;
 }
@@ -486,13 +555,16 @@ void mchar_async_free(mchar_async_t *mchar_async, size_t node_idx, char *entry)
         mchar_async_cache_add(&mchar_async->nodes[node_idx].cache, entry, *(size_t*)(entry - sizeof(size_t)));
 }
 
-void mchar_async_cache_init(mchar_async_cache_t *cache)
+mystatus_t mchar_async_cache_init(mchar_async_cache_t *cache)
 {
     cache->count        = 0;
     cache->nodes_root   = 0;
     cache->nodes_length = 1;
     cache->nodes_size   = 1024;
     cache->nodes        = (mchar_async_cache_node_t*)mycore_malloc(sizeof(mchar_async_cache_node_t) * cache->nodes_size);
+    
+    if(cache->nodes == NULL)
+        return MyCORE_STATUS_ERROR_MEMORY_ALLOCATION;
     
     cache->nodes[0].left  = 0;
     cache->nodes[0].right = 0;
@@ -502,6 +574,13 @@ void mchar_async_cache_init(mchar_async_cache_t *cache)
     cache->index_length = 0;
     cache->index_size   = cache->nodes_size;
     cache->index = (size_t*)mycore_malloc(sizeof(size_t) * cache->index_size);
+    
+    if(cache->index == NULL) {
+        cache->nodes = mycore_free(cache->nodes);
+        return MyCORE_STATUS_ERROR_MEMORY_ALLOCATION;
+    }
+    
+    return MyCORE_STATUS_OK;
 }
 
 void mchar_async_cache_clean(mchar_async_cache_t *cache)
@@ -664,6 +743,8 @@ size_t mchar_async_cache_delete(mchar_async_cache_t *cache, size_t size)
                     cache->index = tmp;
                     cache->index_size = new_size;
                 }
+                else
+                    return 0;
             }
             
             cache->count--;

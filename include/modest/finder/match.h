@@ -22,8 +22,8 @@
 #define MODEST_FINDER_MATCH_H
 #pragma once
 
-#include <myhtml/myosi.h>
-#include <myhtml/tree.h>
+#include "myhtml/myosi.h"
+#include "myhtml/tree.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -1,14 +1,10 @@
-find_files_h = $(wildcard $(SRCDIR)/mycore/$(dir)/*.h)
-find_files_c = $(wildcard $(SRCDIR)/mycore/$(dir)/*.c)
+mycore_dirs := . utils
+mycore_objs := $(call MODEST_UTILS_OBJS,mycore,$(mycore_dirs))
 
-SUBDIRS := . utils
-HDRS += $(foreach dir,$(SUBDIRS),$(find_files_h))
-SRCS += $(foreach dir,$(SUBDIRS),$(find_files_c))
+mycore_all: $(mycore_objs)
 
-mycore_clone: MyCORE_DIR_$(SUBDIRS)
-	mkdir -p $(INCLUDE_TMP)/mycore/utils
-	cp $(SRCDIR)/mycore/utils/*.h $(INCLUDE_TMP)/mycore/utils
+mycore_clean: 
+	rm -f $(mycore_objs)
 
-MyCORE_DIR_$(SUBDIRS):
-	mkdir -p $(INCLUDE_TMP)/mycore/$(patsubst MyCORE_DIR_%,%,$@)
-	cp $(SRCDIR)/mycore/$(patsubst MyCORE_DIR_%,%,$@)/*.h $(INCLUDE_TMP)/mycore/$(patsubst MyCORE_DIR_%,%,$@)/
+mycore_clone: 
+	$(call MODEST_UTILS_HDRS_CLONE,mycore,$(mycore_dirs))

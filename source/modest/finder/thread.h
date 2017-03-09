@@ -29,7 +29,7 @@
 #include "modest/finder/myosi.h"
 #include "modest/finder/finder.h"
 
-#include "mycore/thread.h"
+#include "mycore/mythread.h"
 #include "mycore/utils/mcobject_async.h"
 
 #include "mycss/declaration/myosi.h"

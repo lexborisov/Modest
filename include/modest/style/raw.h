@@ -22,9 +22,9 @@
 #define MODEST_STYLE_RAW_H
 #pragma once
 
-#include <modest/myosi.h>
-#include <modest/modest.h>
-#include <mycore/utils/mcobject.h>
+#include "modest/myosi.h"
+#include "modest/modest.h"
+#include "mycore/utils/mcobject.h"
 
 #ifdef __cplusplus
 extern "C" {

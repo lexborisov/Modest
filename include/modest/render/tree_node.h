@@ -24,11 +24,11 @@
 
 typedef struct modest_render_tree_node modest_render_tree_node_t;
 
-#include <modest/modest.h>
-#include <modest/render/tree.h>
+#include "modest/modest.h"
+#include "modest/render/tree.h"
 
-#include <myhtml/tree.h>
-#include <mycore/utils/mcobject.h>
+#include "myhtml/tree.h"
+#include "mycore/utils/mcobject.h"
 
 #ifdef __cplusplus
 extern "C" {

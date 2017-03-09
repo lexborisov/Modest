@@ -130,7 +130,7 @@ myhtml_token_attr_t * myhtml_token_attr_remove_by_name(myhtml_token_node_t* node
 void myhtml_token_attr_delete_all(myhtml_token_t* token, myhtml_token_node_t* node);
 
 void myhtml_token_delete(myhtml_token_t* token, myhtml_token_node_t* node);
-void myhtml_token_node_wait_for_done(myhtml_token_node_t* node);
+void myhtml_token_node_wait_for_done(myhtml_token_t* token, myhtml_token_node_t* node);
 void myhtml_token_set_done(myhtml_token_node_t* node);
 
 myhtml_token_attr_t * myhtml_token_attr_match(myhtml_token_t* token, myhtml_token_node_t* target, const char* key, size_t key_size, const char* value, size_t value_size);

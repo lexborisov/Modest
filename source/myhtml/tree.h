@@ -31,6 +31,7 @@ extern "C" {
 #include "myhtml/mystring.h"
 #include "myhtml/token.h"
 #include "myhtml/stream.h"
+#include "mycore/thread_queue.h"
 #include "mycore/utils/mcsync.h"
 #include "mycore/utils/mchar_async.h"
 #include "mycore/utils/mcobject.h"
@@ -185,6 +186,11 @@ struct myhtml_tree {
     size_t                  mcasync_rules_token_id;
     size_t                  mcasync_rules_attr_id;
     size_t                  mcasync_tree_id;
+    /* 
+     * mchar_node_id
+     * for rules, or if single mode,
+     * or for main thread only after parsing
+     */
     size_t                  mchar_node_id;
     myhtml_token_attr_t*    attr_current;
     myhtml_tag_id_t         tmp_tag_id;
@@ -227,7 +233,7 @@ struct myhtml_tree {
     volatile myhtml_tree_parse_flags_t parse_flags;
     bool                               foster_parenting;
     size_t                             global_offset;
-    mystatus_t                    tokenizer_status;
+    mystatus_t                         tokenizer_status;
     
     myencoding_t            encoding;
     myencoding_t            encoding_usereq;

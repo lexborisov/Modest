@@ -37,8 +37,19 @@ myfont_font_t * myfont_create(void)
 
 mystatus_t myfont_init(myfont_font_t *mf)
 {
-    mf->mchar = mchar_async_create(64, (4096 * 2));
-    mf->mchar_node_id = mchar_async_node_add(mf->mchar);
+    mystatus_t status;
+    
+    mf->mchar = mchar_async_create();
+    if(mf->mchar == NULL)
+        return MyCORE_STATUS_ERROR_MEMORY_ALLOCATION;
+    
+    if((status = mchar_async_init(mf->mchar, 64, (4096 * 2))))
+        return status;
+    
+    mf->mchar_node_id = mchar_async_node_add(mf->mchar, &status);
+    
+    if(status)
+        return status;
     
     memset(mf->cache.tables_offset, 0, sizeof(uint32_t) * MyFONT_TKEY_LAST_KEY);
     memset(&mf->header, 0, sizeof(myfont_header_t));

@@ -22,14 +22,14 @@
 #define MODEST_RENDER_BINDING_H
 #pragma once
 
-#include <modest/myosi.h>
-#include <modest/modest.h>
-#include <modest/node/node.h>
-#include <modest/render/tree.h>
-#include <modest/render/tree_node.h>
-#include <modest/declaration.h>
+#include "modest/myosi.h"
+#include "modest/modest.h"
+#include "modest/node/node.h"
+#include "modest/render/tree.h"
+#include "modest/render/tree_node.h"
+#include "modest/declaration.h"
 
-#include <myhtml/tree.h>
+#include "myhtml/tree.h"
 
 #ifdef __cplusplus
 extern "C" {

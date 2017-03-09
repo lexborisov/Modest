@@ -34,89 +34,149 @@ void myhtml_destroy_marker(myhtml_t* myhtml)
         mycore_free(myhtml->marker);
 }
 
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
+mystatus_t myhtml_stream_create(myhtml_t* myhtml, mystatus_t* status, size_t count, size_t id_increase)
+{
+    if(count == 0) {
+        myhtml->thread_stream = NULL;
+        
+        *status = MyHTML_STATUS_OK;
+        return *status;
+    }
+    
+    myhtml->thread_stream = mythread_create();
+    if(myhtml->thread_stream == NULL)
+        *status = MyCORE_STATUS_THREAD_ERROR_MEMORY_ALLOCATION;
+    
+    *status = mythread_init(myhtml->thread_stream, MyTHREAD_TYPE_STREAM, count, id_increase);
+    
+    if(*status)
+        myhtml->thread_stream = mythread_destroy(myhtml->thread_stream, NULL, NULL, true);
+    
+    return *status;
+}
+
+mystatus_t myhtml_batch_create(myhtml_t* myhtml, mystatus_t* status, size_t count, size_t id_increase)
+{
+    if(count == 0) {
+        myhtml->thread_batch = NULL;
+        
+        *status = MyHTML_STATUS_OK;
+        return *status;
+    }
+    
+    myhtml->thread_batch = mythread_create();
+    if(myhtml->thread_stream == NULL) {
+        myhtml->thread_stream = mythread_destroy(myhtml->thread_stream, NULL, NULL, true);
+        *status = MyCORE_STATUS_THREAD_ERROR_MEMORY_ALLOCATION;
+    }
+    
+    *status = mythread_init(myhtml->thread_batch, MyTHREAD_TYPE_BATCH, count, id_increase);
+    
+    if(*status)
+        myhtml->thread_batch = mythread_destroy(myhtml->thread_batch , NULL, NULL, true);
+    
+    return *status;
+}
+
+mystatus_t myhtml_create_stream_and_batch(myhtml_t* myhtml, size_t stream_count, size_t batch_count)
+{
+    mystatus_t status;
+    
+    /* stream */
+    if(myhtml_stream_create(myhtml, &status, stream_count, 0)) {
+        return status;
+    }
+    
+    /* batch */
+    if(myhtml_batch_create(myhtml, &status, batch_count, stream_count)) {
+        myhtml->thread_stream = mythread_destroy(myhtml->thread_stream, NULL, NULL, true);
+        return status;
+    }
+    
+    return status;
+}
+#endif /* if undef MyCORE_BUILD_WITHOUT_THREADS */
+
 myhtml_t * myhtml_create(void)
 {
-    return (myhtml_t*)mycore_malloc(sizeof(myhtml_t));
+    return (myhtml_t*)mycore_calloc(1, sizeof(myhtml_t));
 }
 
 mystatus_t myhtml_init(myhtml_t* myhtml, enum myhtml_options opt, size_t thread_count, size_t queue_size)
 {
     mystatus_t status;
     
+    myhtml->opt = opt;
     myhtml_init_marker(myhtml);
     
     status = myhtml_tokenizer_state_init(myhtml);
-    if(status) {
-        myhtml->insertion_func = NULL;
-        myhtml->thread = NULL;
-        
-        return status;
-    }
-    
-    status = myhtml_rules_init(myhtml);
-    if(status) {
-        myhtml->thread = NULL;
-        
-        return status;
-    }
-    
-    myhtml->opt = opt;
-    myhtml->thread = mythread_create();
-    
-    if(myhtml->thread == NULL)
-        return MyCORE_STATUS_THREAD_ERROR_MEMORY_ALLOCATION;
-    
-#ifdef MyHTML_BUILD_WITHOUT_THREADS
-    
-    status = mythread_init(myhtml->thread, NULL, thread_count);
-    
     if(status)
         return status;
     
-#else /* MyHTML_BUILD_WITHOUT_THREADS */
+    status = myhtml_rules_init(myhtml);
+
+#ifdef MyCORE_BUILD_WITHOUT_THREADS
+    
+    myhtml->thread_stream = NULL;
+    myhtml->thread_batch  = NULL;
+    myhtml->thread_total  = 0;
+    
+#else /* if undef MyCORE_BUILD_WITHOUT_THREADS */
+    if(status)
+        return status;
+    
     switch (opt) {
         case MyHTML_OPTIONS_PARSE_MODE_SINGLE:
-            status = mythread_init(myhtml->thread, "lastmac", 0);
-            if(status)
-                return status;
-            
-            myhtml->thread->context = mythread_queue_list_create(&status);
-            if(status)
+            if((status = myhtml_create_stream_and_batch(myhtml, 0, 0)))
                 return status;
             
             break;
             
         case MyHTML_OPTIONS_PARSE_MODE_ALL_IN_ONE:
-            status = mythread_init(myhtml->thread, "lastmac", 1);
-            if(status)
+            if((status = myhtml_create_stream_and_batch(myhtml, 1, 0)))
                 return status;
             
-            myhtml->thread->context = mythread_queue_list_create(&status);
-            if(status)
-                return status;
+            myhtml->thread_stream->context = mythread_queue_list_create(&status);
+            status = myhread_entry_create(myhtml->thread_stream, mythread_function_queue_stream, myhtml_parser_worker_stream, MyTHREAD_OPT_STOP);
             
-            myhread_create_stream(myhtml->thread, mythread_function_queue_stream, myhtml_parser_worker_stream, MyTHREAD_OPT_STOP, &status);
             break;
             
         default:
             // default MyHTML_OPTIONS_PARSE_MODE_SEPARATELY
-            if(thread_count == 0)
-                thread_count = 1;
+            if(thread_count < 2)
+                thread_count = 2;
             
-            status = mythread_init(myhtml->thread, "lastmac", (thread_count + 1));
+            if((status = myhtml_create_stream_and_batch(myhtml, 1, (thread_count - 1))))
+                return status;
+            
+            myhtml->thread_stream->context = mythread_queue_list_create(&status);
+            myhtml->thread_batch->context  = myhtml->thread_stream->context;
+            
+            status = myhread_entry_create(myhtml->thread_stream, mythread_function_queue_stream, myhtml_parser_stream, MyTHREAD_OPT_STOP);
             if(status)
                 return status;
             
-            myhtml->thread->context = mythread_queue_list_create(&status);
-            if(status)
-                return status;
+            for(size_t i = 0; i < myhtml->thread_batch->entries_size; i++) {
+                status = myhread_entry_create(myhtml->thread_batch, mythread_function_queue_batch, myhtml_parser_worker, MyTHREAD_OPT_STOP);
+                
+                if(status)
+                    return status;
+            }
             
-            myhread_create_stream(myhtml->thread, mythread_function_queue_stream, myhtml_parser_stream, MyTHREAD_OPT_STOP, &status);
-            myhread_create_batch(myhtml->thread, mythread_function_queue_batch, myhtml_parser_worker, MyTHREAD_OPT_STOP, &status, thread_count);
             break;
     }
     
-#endif /* MyHTML_BUILD_WITHOUT_THREADS */
+    myhtml->thread_total = thread_count;
+    
+    myhtml->thread_list[0] = myhtml->thread_stream;
+    myhtml->thread_list[1] = myhtml->thread_batch;
+    myhtml->thread_list[2] = NULL;
+    
+#endif /* if undef MyCORE_BUILD_WITHOUT_THREADS */
+    
+    if(status)
+        return status;
     
     myhtml_clean(myhtml);
     
@@ -125,7 +185,7 @@ mystatus_t myhtml_init(myhtml_t* myhtml, enum myhtml_options opt, size_t thread_
 
 void myhtml_clean(myhtml_t* myhtml)
 {
-    mythread_clean(myhtml->thread);
+    /* some code */
 }
 
 myhtml_t* myhtml_destroy(myhtml_t* myhtml)
@@ -135,17 +195,22 @@ myhtml_t* myhtml_destroy(myhtml_t* myhtml)
     
     myhtml_destroy_marker(myhtml);
     
-    if(myhtml->thread) {
-#ifndef MyHTML_BUILD_WITHOUT_THREADS
-        mythread_queue_list_t* queue_list = myhtml->thread->context;
-#endif
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
+    if(myhtml->thread_stream) {
+        mythread_queue_list_t* queue_list = myhtml->thread_stream->context;
+
+        if(queue_list)
+            mythread_queue_list_wait_for_done(myhtml->thread_stream, queue_list);
         
-        myhtml->thread = mythread_destroy(myhtml->thread, mythread_queue_wait_all_for_done, true);
+        myhtml->thread_stream = mythread_destroy(myhtml->thread_stream, mythread_callback_quit, NULL, true);
         
-#ifndef MyHTML_BUILD_WITHOUT_THREADS
-        mythread_queue_list_destroy(queue_list);
-#endif
+        if(myhtml->thread_batch)
+            myhtml->thread_batch = mythread_destroy(myhtml->thread_batch, mythread_callback_quit, NULL, true);
+        
+        if(queue_list)
+            mythread_queue_list_destroy(queue_list);
     }
+#endif /* if undef MyCORE_BUILD_WITHOUT_THREADS */
     
     myhtml_tokenizer_state_destroy(myhtml);
     
@@ -1437,7 +1502,7 @@ mystatus_t myhtml_queue_add(myhtml_tree_t *tree, size_t begin, myhtml_token_node
         }
     }
     
-#ifndef MyHTML_BUILD_WITHOUT_THREADS
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
     
     if(tree->flags & MyHTML_TREE_FLAGS_SINGLE_MODE) {
         if(qnode && token) {
@@ -1447,31 +1512,30 @@ mystatus_t myhtml_queue_add(myhtml_tree_t *tree, size_t begin, myhtml_token_node
             myhtml_parser_stream(0, qnode);
         }
         
-        tree->current_qnode = mythread_queue_node_malloc_limit(tree->myhtml->thread, tree->queue, 4, NULL);
+        tree->current_qnode = mythread_queue_node_malloc_limit(tree->myhtml->thread_stream, tree->queue, 4, NULL);
     }
     else {
         if(qnode)
             qnode->args = token;
             
-        tree->current_qnode = mythread_queue_node_malloc_round(tree->myhtml->thread, tree->queue_entry, NULL);
+        tree->current_qnode = mythread_queue_node_malloc_round(tree->myhtml->thread_stream, tree->queue_entry, NULL);
     }
     
 #else
     
     if(qnode && token) {
-        qnode->token = token;
+        qnode->args = token;
         
         myhtml_parser_worker(0, qnode);
         myhtml_parser_stream(0, qnode);
     }
     
-    tree->current_qnode = mythread_queue_node_malloc_limit(tree->myhtml->thread, tree->queue, 4, NULL);
+    tree->current_qnode = mythread_queue_node_malloc_limit(tree->myhtml->thread_stream, tree->queue, 4, NULL);
     
-#endif /* MyHTML_BUILD_WITHOUT_THREADS */
+#endif /* MyCORE_BUILD_WITHOUT_THREADS */
     
-    if(tree->current_qnode == NULL) {
+    if(tree->current_qnode == NULL)
         return MyHTML_STATUS_ERROR_MEMORY_ALLOCATION;
-    }
     
     tree->current_qnode->context = tree;
     tree->current_qnode->prev = qnode;
@@ -1480,7 +1544,6 @@ mystatus_t myhtml_queue_add(myhtml_tree_t *tree, size_t begin, myhtml_token_node
         myhtml_tokenizer_calc_current_namespace(tree, token);
     
     tree->current_token_node = myhtml_token_node_create(tree->token, tree->token->mcasync_token_id);
-    
     if(tree->current_token_node == NULL)
         return MyHTML_STATUS_ERROR_MEMORY_ALLOCATION;
     

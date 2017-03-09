@@ -215,10 +215,16 @@ void myhtml_parser_worker(mythread_id_t thread_id, void* ctx)
         return;
     }
     
+    size_t mchar_node_id;
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
+    if(tree->myhtml->thread_batch)
+        mchar_node_id = tree->async_args[(thread_id + tree->myhtml->thread_batch->id_increase)].mchar_node_id;
+    else
+#endif
+        mchar_node_id = tree->async_args[thread_id].mchar_node_id;
+    
     if(tree->callback_before_token)
         tree->callback_before_token_ctx = tree->callback_before_token(tree, token, tree->callback_before_token_ctx);
-    
-    size_t mchar_node_id = tree->async_args[thread_id].mchar_node_id;
     
     if(token->tag_id == MyHTML_TAG__TEXT ||
        token->tag_id == MyHTML_TAG__COMMENT)

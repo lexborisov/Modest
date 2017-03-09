@@ -22,9 +22,9 @@
 #define MyURL_SCHEME_H
 #pragma once
 
-#include <myurl/myosi.h>
-#include <myurl/scheme_const.h>
-#include <mycore/utils.h>
+#include "myurl/myosi.h"
+#include "myurl/scheme_const.h"
+#include "mycore/utils.h"
 
 #ifdef __cplusplus
 extern "C" {

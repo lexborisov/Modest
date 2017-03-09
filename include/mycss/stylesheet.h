@@ -22,11 +22,11 @@
 #define MyHTML_MyCSS_STYLESHEET_H
 #pragma once
 
-#include <mycss/myosi.h>
-#include <mycss/entry.h>
-#include <mycss/namespace/myosi.h>
-#include <mycss/selectors/myosi.h>
-#include <mycss/selectors/serialization.h>
+#include "mycss/myosi.h"
+#include "mycss/entry.h"
+#include "mycss/namespace/myosi.h"
+#include "mycss/selectors/myosi.h"
+#include "mycss/selectors/serialization.h"
 
 #ifdef __cplusplus
 extern "C" {

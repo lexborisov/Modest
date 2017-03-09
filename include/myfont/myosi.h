@@ -24,7 +24,7 @@
 #define MyFONT_BASE_H
 #pragma once
 
-#include <myhtml/myosi.h>
+#include "myhtml/myosi.h"
 
 // Required Tables
 #define MyFONT_TABLE_TYPE_cmap 1885433187

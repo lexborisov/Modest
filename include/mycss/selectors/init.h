@@ -26,9 +26,9 @@
 extern "C" {
 #endif
 
-#include <mycss/entry.h>
-#include <mycss/selectors/myosi.h>
-#include <mycss/selectors/list.h>
+#include "mycss/entry.h"
+#include "mycss/selectors/myosi.h"
+#include "mycss/selectors/list.h"
 
 mycss_selectors_t * mycss_selectors_create(void);
 mystatus_t mycss_selectors_init(mycss_entry_t* entry, mycss_selectors_t* selectors);

@@ -22,7 +22,7 @@
 #define MODEST_NODE_RAW_PROPERTY_H
 #pragma once
 
-#include <modest/node/node.h>
+#include "modest/node/node.h"
 
 #ifdef __cplusplus
 extern "C" {

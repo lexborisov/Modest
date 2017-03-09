@@ -1,14 +1,10 @@
-find_files_h = $(wildcard $(SRCDIR)/myurl/$(dir)/*.h)
-find_files_c = $(wildcard $(SRCDIR)/myurl/$(dir)/*.c)
+myurl_dirs := .
+myurl_objs := $(call MODEST_UTILS_OBJS,myurl,$(myurl_dirs))
 
-SUBDIRS := .
-HDRS += $(foreach dir,$(SUBDIRS),$(find_files_h))
-SRCS += $(foreach dir,$(SUBDIRS),$(find_files_c))
+myurl_all: $(myurl_objs)
 
-myurl_clone: MyURL_DIR_$(SUBDIRS)
-	mkdir -p $(INCLUDE_TMP)/myurl
-	cp $(SRCDIR)/myurl/*.h $(INCLUDE_TMP)/myurl
+myurl_clean: 
+	rm -f $(myurl_objs)
 
-MyURL_DIR_$(SUBDIRS):
-	mkdir -p $(INCLUDE_TMP)/myurl/$(patsubst MyURL_DIR_%,%,$@)
-	cp $(SRCDIR)/myurl/$(patsubst MyURL_DIR_%,%,$@)/*.h $(INCLUDE_TMP)/myurl/$(patsubst MyURL_DIR_%,%,$@)/
+myurl_clone: 
+	$(call MODEST_UTILS_HDRS_CLONE,myurl,$(myurl_dirs))

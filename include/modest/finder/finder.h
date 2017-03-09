@@ -22,8 +22,8 @@
 #define MODEST_FINDER_FINDER_H
 #pragma once
 
-#include <modest/finder/myosi.h>
-#include <modest/finder/type.h>
+#include "modest/finder/myosi.h"
+#include "modest/finder/type.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -28,14 +28,14 @@ extern "C" {
 
 #ifdef MyCSS_DEBUG
     #define MyCSS_DEBUG_MESSAGE(format, ...) \
-        mycore_print(stderr, "DEBUG: "format"\n", ##__VA_ARGS__)
+        mycore_fprintf(stderr, "DEBUG: "format"\n", ##__VA_ARGS__)
 #else
     #define MyCSS_DEBUG_MESSAGE(format, ...)
 #endif
 
 #ifdef DEBUG_MODE
 #define MyCORE_DEBUG_ERROR(format, ...)      \
-mycore_print(stderr, "DEBUG ERROR: "format"\n", ##__VA_ARGS__)
+mycore_fprintf(stderr, "DEBUG ERROR: "format"\n", ##__VA_ARGS__)
 #else
 #define MyCORE_DEBUG_ERROR(format, ...)
 #endif
