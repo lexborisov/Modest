@@ -85,7 +85,7 @@ mcsync_status_t mcsync_lock(mcsync_t* mcsync)
 #ifndef MyCORE_BUILD_WITHOUT_THREADS
     return mcsync_spin_lock(mcsync->spinlock);
 #else
-    return MyCORE_STATUS_OK;
+    return MCSYNC_STATUS_OK;
 #endif
 }
 
@@ -94,6 +94,6 @@ mcsync_status_t mcsync_unlock(mcsync_t* mcsync)
 #ifndef MyCORE_BUILD_WITHOUT_THREADS
     return mcsync_spin_unlock(mcsync->spinlock);
 #else
-    return MyCORE_STATUS_OK;
+    return MCSYNC_STATUS_OK;
 #endif
 }
