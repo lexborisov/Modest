@@ -28,7 +28,7 @@ void mycss_selectors_serialization_chain(mycss_selectors_t* selectors, mycss_sel
         if(selector->combinator == MyCSS_SELECTORS_COMBINATOR_DESCENDANT)
             callback(" ", 1, context);
         else if(selector->combinator == MyCSS_SELECTORS_COMBINATOR_UNDEF) {
-            /* fprintf(fh, "") */
+            /* mycore_fprintf(fh, "") */
         }
         else {
             callback(" ", 1, context);

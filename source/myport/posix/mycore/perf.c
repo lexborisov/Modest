@@ -250,10 +250,10 @@ uint64_t mycore_hperf_clock(mystatus_t *status)
 
 #define _MyCORE_CHECK_STATUS_AND_PRINT_ERROR \
     if(status == MyCORE_STATUS_PERF_ERROR_COMPILED_WITHOUT_PERF) { \
-        fprintf(fh, "MyCORE: Library compiled without perf source. Please, build library with -DMyCORE_WITH_PERF flag\n"); \
+        mycore_fprintf(fh, "MyCORE: Library compiled without perf source. Please, build library with -DMyCORE_WITH_PERF flag\n"); \
     } \
     else if(status) { \
-        fprintf(fh, "MyCORE: Something wrong! Perhaps, your platform does not support the measurement of performance\n"); \
+        mycore_fprintf(fh, "MyCORE: Something wrong! Perhaps, your platform does not support the measurement of performance\n"); \
     } \
     else
 
@@ -264,7 +264,7 @@ mystatus_t mycore_hperf_print(const char *name, uint64_t x, uint64_t y, FILE *fh
     
     if(freq) {
         _MyCORE_CHECK_STATUS_AND_PRINT_ERROR {
-            fprintf(fh, "%s: %0.5f\n", name, (((float)(y - x) / (float)freq)));
+            mycore_fprintf(fh, "%s: %0.5f\n", name, (((float)(y - x) / (float)freq)));
         }
     }
     
@@ -278,7 +278,7 @@ mystatus_t mycore_hperf_print_by_val(const char *name, uint64_t x, FILE *fh) {
     
     if(freq) {
         _MyCORE_CHECK_STATUS_AND_PRINT_ERROR {
-            fprintf(fh, "%s: %0.5f\n", name, ((float)x / (float)freq));
+            mycore_fprintf(fh, "%s: %0.5f\n", name, ((float)x / (float)freq));
         }
     }
     

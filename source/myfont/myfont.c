@@ -304,7 +304,7 @@ void myfont_font_print_exists_table(myfont_font_t *mf, FILE *file)
     for(i = 0; i < MyFONT_TKEY_LAST_KEY; i++)
     { 
         if(mf->cache.tables_offset[i]) {
-            fprintf(file, "%s = %u\n", myfont_table_name[i], mf->cache.tables_offset[i]);
+            mycore_fprintf(file, "%s = %u\n", myfont_table_name[i], mf->cache.tables_offset[i]);
         }
     }
 }

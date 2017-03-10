@@ -150,14 +150,14 @@ void myhtml_tag_print(myhtml_tag_t* tags, FILE* fh)
     {
         const myhtml_tag_context_t *ctx = myhtml_tag_get_by_id(tags, i);
         
-        fprintf(fh, "<%s id=\"" MyCORE_FMT_Z "\">\n", ctx->name, i);
+        mycore_fprintf(fh, "<%s id=\"" MyCORE_FMT_Z "\">\n", ctx->name, i);
     }
     
     for(i = (MyHTML_TAG_LAST_ENTRY + 1); i < tags->tags_count; i++)
     {
         const myhtml_tag_context_t *ctx = myhtml_tag_get_by_id(tags, i);
         
-        fprintf(fh, "<%s id=\"" MyCORE_FMT_Z "\">\n", ctx->name, i);
+        mycore_fprintf(fh, "<%s id=\"" MyCORE_FMT_Z "\">\n", ctx->name, i);
     }
 }
 

@@ -1681,7 +1681,7 @@ bool myhtml_tree_adoption_agency_algorithm(myhtml_tree_t* tree, myhtml_token_nod
         
         // step 8
         //if(afe_last != list[i])
-        //    fprintf(stderr, "oh");
+        //    mycore_fprintf(stderr, "oh");
         
         // step 9
         myhtml_tree_node_t* current_node = myhtml_tree_current_node(tree);
@@ -1763,7 +1763,7 @@ bool myhtml_tree_adoption_agency_algorithm(myhtml_tree_t* tree, myhtml_token_nod
             if(node_index > 0)
                 node_index--;
             else {
-                fprintf(stderr, "ERROR: adoption agency algorithm; decrement node_index, node_index is null");
+                mycore_fprintf(stderr, "ERROR: adoption agency algorithm; decrement node_index, node_index is null");
                 return false;
             }
             
@@ -2161,54 +2161,54 @@ void myhtml_tree_print_node(myhtml_tree_t* tree, myhtml_tree_node_t* node, FILE*
        node->tag_id == MyHTML_TAG__COMMENT)
     {
         if(node->token)
-            fprintf(out, "<%.*s>: %.*s\n", (int)ctx->name_length, ctx->name,
+            mycore_fprintf(out, "<%.*s>: %.*s\n", (int)ctx->name_length, ctx->name,
                     (int)node->token->str.length, node->token->str.data);
         else
-            fprintf(out, "<%.*s>\n", (int)ctx->name_length, ctx->name);
+            mycore_fprintf(out, "<%.*s>\n", (int)ctx->name_length, ctx->name);
     }
     else if(node->tag_id == MyHTML_TAG__DOCTYPE)
     {
-        fprintf(out, "<!DOCTYPE");
+        mycore_fprintf(out, "<!DOCTYPE");
         
         if(tree->doctype.attr_name) {
-            fprintf(out, " %s", tree->doctype.attr_name);
+            mycore_fprintf(out, " %s", tree->doctype.attr_name);
         }
         
         if(tree->doctype.attr_public) {
-            fprintf(out, " %s", tree->doctype.attr_public);
+            mycore_fprintf(out, " %s", tree->doctype.attr_public);
         }
         
         if(tree->doctype.attr_system) {
-            fprintf(out, " %s", tree->doctype.attr_system);
+            mycore_fprintf(out, " %s", tree->doctype.attr_system);
         }
         
-        fprintf(out, ">\n");
+        mycore_fprintf(out, ">\n");
     }
     else
     {
         if(node->token && node->token->type & MyHTML_TOKEN_TYPE_CLOSE) {
-            fprintf(out, "</%.*s", (int)ctx->name_length, ctx->name);
+            mycore_fprintf(out, "</%.*s", (int)ctx->name_length, ctx->name);
         }
         else {
-            fprintf(out, "<%.*s", (int)ctx->name_length, ctx->name);
+            mycore_fprintf(out, "<%.*s", (int)ctx->name_length, ctx->name);
         }
         
         if(node->ns != MyHTML_NAMESPACE_HTML) {
             switch (node->ns) {
                 case MyHTML_NAMESPACE_SVG:
-                    fprintf(out, ":svg");
+                    mycore_fprintf(out, ":svg");
                     break;
                 case MyHTML_NAMESPACE_MATHML:
-                    fprintf(out, ":math");
+                    mycore_fprintf(out, ":math");
                     break;
                 case MyHTML_NAMESPACE_XLINK:
-                    fprintf(out, ":xlink");
+                    mycore_fprintf(out, ":xlink");
                     break;
                 case MyHTML_NAMESPACE_XML:
-                    fprintf(out, ":xml");
+                    mycore_fprintf(out, ":xml");
                     break;
                 case MyHTML_NAMESPACE_XMLNS:
-                    fprintf(out, ":xmlns");
+                    mycore_fprintf(out, ":xmlns");
                     break;
                 default:
                     break;
@@ -2218,7 +2218,7 @@ void myhtml_tree_print_node(myhtml_tree_t* tree, myhtml_tree_node_t* node, FILE*
         if(node->token)
             myhtml_token_print_attr(tree, node->token, out);
         
-        fprintf(out, ">\n");
+        mycore_fprintf(out, ">\n");
     }
 }
 
@@ -2232,7 +2232,7 @@ void _myhtml_tree_print_node_children(myhtml_tree_t* tree, myhtml_tree_node_t* n
     while(node)
     {
         for(i = 0; i < inc; i++)
-            fprintf(out, "\t");
+            mycore_fprintf(out, "\t");
         
         myhtml_tree_print_node(tree, node, out);
         _myhtml_tree_print_node_children(tree, node->child, out, (inc + 1));

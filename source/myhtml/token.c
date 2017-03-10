@@ -870,21 +870,21 @@ void myhtml_token_set_replacement_character_for_null_token(myhtml_tree_t* tree, 
 void myhtml_token_print_param_by_idx(myhtml_tree_t* myhtml_tree, myhtml_token_node_t* node, FILE* out)
 {
     if(node->type & MyHTML_TOKEN_TYPE_CLOSE) {
-        fprintf(out, "</");
+        mycore_fprintf(out, "</");
     }
     else {
-        fprintf(out, "<");
+        mycore_fprintf(out, "<");
     }
     
-    fprintf(out, "tag_id=" MyCORE_FMT_Z "; body_begin=" MyCORE_FMT_Z "; body_length=" MyCORE_FMT_Z "; attr_first=0x%p; attr_last=0x%p",
+    mycore_fprintf(out, "tag_id=" MyCORE_FMT_Z "; body_begin=" MyCORE_FMT_Z "; body_length=" MyCORE_FMT_Z "; attr_first=0x%p; attr_last=0x%p",
             node->tag_id, node->raw_begin, node->raw_length,
             node->attr_first, node->attr_last);
     
     if(node->type & MyHTML_TOKEN_TYPE_CLOSE_SELF) {
-        fprintf(out, " />\n");
+        mycore_fprintf(out, " />\n");
     }
     else {
-        fprintf(out, ">\n");
+        mycore_fprintf(out, ">\n");
     }
 }
 
@@ -896,31 +896,31 @@ void myhtml_token_print_by_idx(myhtml_tree_t* tree, myhtml_token_node_t* node, F
        node->tag_id == MyHTML_TAG__COMMENT)
     {
         if(node->str.length) {
-            fprintf(out, "%.*s: %.*s\n", (int)ctx->name_length, ctx->name,
+            mycore_fprintf(out, "%.*s: %.*s\n", (int)ctx->name_length, ctx->name,
                     (int)node->str.length, node->str.data);
         }
         else {
-            fprintf(out, "%.*s is empty\n", (int)ctx->name_length, ctx->name);
+            mycore_fprintf(out, "%.*s is empty\n", (int)ctx->name_length, ctx->name);
         }
     }
     else
     {
         if(node->type & MyHTML_TOKEN_TYPE_CLOSE) {
-            fprintf(out, "</");
+            mycore_fprintf(out, "</");
         }
         else {
-            fprintf(out, "<");
+            mycore_fprintf(out, "<");
         }
         
-        fprintf(out, "%.*s tagid=\"" MyCORE_FMT_Z "\"", (int)ctx->name_length, ctx->name, node->tag_id);
+        mycore_fprintf(out, "%.*s tagid=\"" MyCORE_FMT_Z "\"", (int)ctx->name_length, ctx->name, node->tag_id);
         
         myhtml_token_print_attr(tree, node, out);
         
         if(node->type & MyHTML_TOKEN_TYPE_CLOSE_SELF) {
-            fprintf(out, " />\n");
+            mycore_fprintf(out, " />\n");
         }
         else {
-            fprintf(out, ">\n");
+            mycore_fprintf(out, ">\n");
         }
     }
 }
@@ -931,34 +931,34 @@ void myhtml_token_print_attr(myhtml_tree_t* tree, myhtml_token_node_t* node, FIL
     
     while(attr)
     {
-        fprintf(out, " %s", attr->key.data);
+        mycore_fprintf(out, " %s", attr->key.data);
         
         if(attr->ns != MyHTML_NAMESPACE_HTML)
         {
             switch (attr->ns) {
                 case MyHTML_NAMESPACE_SVG:
-                    fprintf(out, ":svg");
+                    mycore_fprintf(out, ":svg");
                     break;
                 case MyHTML_NAMESPACE_MATHML:
-                    fprintf(out, ":math");
+                    mycore_fprintf(out, ":math");
                     break;
                 case MyHTML_NAMESPACE_XLINK:
-                    fprintf(out, ":xlink");
+                    mycore_fprintf(out, ":xlink");
                     break;
                 case MyHTML_NAMESPACE_XML:
-                    fprintf(out, ":xml");
+                    mycore_fprintf(out, ":xml");
                     break;
                 case MyHTML_NAMESPACE_XMLNS:
-                    fprintf(out, ":xmlns");
+                    mycore_fprintf(out, ":xmlns");
                     break;
                 default:
-                    fprintf(out, ":UNDEF");
+                    mycore_fprintf(out, ":UNDEF");
                     break;
             }
         }
         
         if(attr->value.length) {
-            fprintf(out, "=\"%s\"", attr->value.data);
+            mycore_fprintf(out, "=\"%s\"", attr->value.data);
         }
         
         attr = attr->next;
