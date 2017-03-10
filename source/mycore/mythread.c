@@ -46,8 +46,6 @@ mystatus_t mythread_init(mythread_t *mythread, mythread_type_t type, size_t thre
         return MyCORE_STATUS_THREAD_ERROR_ATTR_INIT;
     
     mythread->timespec = mythread_nanosleep_create(mythread);
-    if(mythread->timespec == NULL)
-        return MyCORE_STATUS_ERROR_MEMORY_ALLOCATION;
     
     return MyCORE_STATUS_OK;
 }
@@ -99,8 +97,6 @@ mystatus_t myhread_entry_create(mythread_t *mythread, mythread_process_f process
     entry->context.status   = 0;
     
     entry->context.timespec = mythread_nanosleep_create(mythread);
-    if(entry->context.timespec == NULL)
-        return MyCORE_STATUS_ERROR_MEMORY_ALLOCATION;
     
     entry->context.mutex = mythread_mutex_create(mythread);
     if(entry->context.mutex == NULL)
