@@ -13,6 +13,15 @@ CC ?= gcc
 .DEFAULT_GOAL := all
 
 #********************
+# Version
+#***************
+MODEST_VERSION_MAJOR := 1
+MODEST_VERSION_MINOR := 0
+MODEST_VERSION_PATCH := 0
+
+MODEST_VERSION_STRING := $(MODEST_VERSION_MAJOR).$(MODEST_VERSION_MINOR).$(MODEST_VERSION_PATCH)
+
+#********************
 # Flags
 #***************
 MODEST_CFLAGS ?= -Wall -Werror
@@ -93,66 +102,30 @@ CFLAGS += $(MODEST_CFLAGS)
 #********************
 # Objects
 #***************
-MODEST_BUILD_OBJECT_SHARED  ?= $(CC) -shared $(IMP_FLAG) $(LDFLAGS) $1 -o $2
+MODEST_BUILD_OBJECT_SHARED  ?= $(CC) -shared $(LDFLAGS) $(MODEST_LDFLAGS) $1 -o $2
+MODEST_BUILD_OBJECT_STATIC  ?= $(AR) crus $2 $1
 MODEST_BUILD_OBJECT_MODULES := $(foreach dir,$(MODEST_BUILD_MODULES_TARGET),$($(dir)_objs))
 
 #********************
 # Target options
 #***************
-all: create $(MODEST_BUILD_MODULES_TARGET_ALL)
-	$(call MODEST_BUILD_OBJECT_SHARED,$(MODEST_BUILD_OBJECT_MODULES),$(MODEST_LIBRARY))
+all: shared static
+
+shared: create $(MODEST_BUILD_MODULES_TARGET_ALL)
+	$(call MODEST_BUILD_OBJECT_SHARED,$(MODEST_BUILD_OBJECT_MODULES),$(call MODEST_LIBRARY_WITH_VERSION))
+
+static: create $(MODEST_BUILD_MODULES_TARGET_ALL)
+	$(call MODEST_BUILD_OBJECT_STATIC,$(MODEST_BUILD_OBJECT_MODULES),$(call MODEST_LIBRARY_STATIC_WITH_VERSION))
 
 clean: $(MODEST_BUILD_MODULES_TARGET_CLEAN)
+	rm -f $(call MODEST_LIBRARY_WITH_VERSION) && rm -f $(call MODEST_LIBRARY_STATIC_WITH_VERSION)
+
 clone: $(MODEST_BUILD_MODULES_TARGET_CLONE)
+	rm -rf $(INCLUDE_TMP)
+	find $(INCLUDE_DIR_API) -name "*.h" -exec sed -i '.bak' -E 's/^[ \t]*#[ \t]*include[ \t]*"([^"]+)"/#include <\1>/g' {} \;
+	find $(INCLUDE_DIR_API) -name "*.h.bak" -exec rm -f {} \;
 
 create:
-	mkdir -p lib bin
+	mkdir -p bin lib
 
 .PHONY: all clean clone $(MODEST_BUILD_MODULES_TARGET_ALL)
-
-# SRCS := 
-# HDRS := 
-# EXTDIRS := examples test
-
-# all: create shared static
-# 	for f in $(EXTDIRS); do $(MAKE) -C $$f all; done
-
-# include $(TARGET)/mycore/Makefile.mk
-# include $(TARGET)/myencoding/Makefile.mk
-# include $(TARGET)/myhtml/Makefile.mk
-# include $(TARGET)/mycss/Makefile.mk
-# include $(TARGET)/myfont/Makefile.mk
-# include $(TARGET)/myurl/Makefile.mk
-# include $(TARGET)/modest/Makefile.mk
-
-# OBJS := $(patsubst %.c,%.o,$(SRCS))
-
-# shared: $(OBJS)
-# 	$(CC) -shared $(IMP_FLAG) $(LDFLAGS) $(OBJS) -o $(LIB_TMP)/lib$(LIBNAME)$(LIBPOSTFIX)
-
-# static: shared
-# 	$(AR) crus $(LIB_TMP)/lib$(LIBNAME)$(LIBSTATIC_POSTFIX).a $(OBJS) 
-
-# create:
-# 	mkdir -p lib bin
-
-# clean:
-# 	for f in $(EXTDIRS); do $(MAKE) -C $$f clean; done
-# 	rm -f $(OBJS)
-# 	rm -f $(LIB_TMP)/*
-# 	rm -f $(BIN_TMP)/*
-
-# clean_include:
-# 	rm -rf $(INCLUDE_TMP)
-
-# clone: create clean_include myhtml_clone mycss_clone modest_clone myfont_clone myurl_clone mycore_clone myencoding_clone
-# 	find include -name "*.h" -exec sed -i '.bak' -E 's/^[ \t]*#[ \t]*include[ \t]*"([^"]+)"/#include <\1>/g' {} \;
-# 	find include -name "*.h.bak" -exec rm -f {} \;
-
-# test:
-# 	test/mycss/declaration test/mycss/data/declaration
-# 	test/myhtml/utils/avl_tree
-# 	test/myhtml/encoding_detect_meta test/myhtml/data/encoding/detect_meta.html
-# 	test/myurl/url test/myurl/data
-
-# .PHONY: all clean clone test
