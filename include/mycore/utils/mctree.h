@@ -22,8 +22,8 @@
 #define MyCORE_UTILS_MCTREE_H
 #pragma once
 
-#include "mycore/myosi.h"
-#include "mycore/utils.h"
+#include <mycore/myosi.h>
+#include <mycore/utils.h>
 
 #include <stdio.h>
 #include <stdlib.h>

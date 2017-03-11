@@ -22,10 +22,10 @@
 #define MODEST_STYLE_MAP_H
 #pragma once
 
-#include "modest/myosi.h"
-#include "modest/modest.h"
-#include "modest/finder/myosi.h"
-#include "modest/finder/thread.h"
+#include <modest/myosi.h>
+#include <modest/modest.h>
+#include <modest/finder/myosi.h>
+#include <modest/finder/thread.h>
 
 #ifdef __cplusplus
 extern "C" {

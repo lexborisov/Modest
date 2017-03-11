@@ -26,9 +26,9 @@
 extern "C" {
 #endif
 
-#include "mycss/myosi.h"
-#include "mycss/mycss.h"
-#include "mycss/entry.h"
+#include <mycss/myosi.h>
+#include <mycss/mycss.h>
+#include <mycss/entry.h>
 
 size_t mycss_tokenizer_end_run_state_single(mycss_entry_t* entry, mycss_tokenizer_state_t state, const char* css, size_t css_offset, size_t css_size);
 

@@ -13,48 +13,6 @@ CC ?= gcc
 .DEFAULT_GOAL := all
 
 #********************
-# Version
-#***************
-MODEST_VERSION_MAJOR := 1
-MODEST_VERSION_MINOR := 0
-MODEST_VERSION_PATCH := 0
-
-MODEST_VERSION_STRING := $(MODEST_VERSION_MAJOR).$(MODEST_VERSION_MINOR).$(MODEST_VERSION_PATCH)
-
-#********************
-# Flags
-#***************
-MODEST_CFLAGS ?= -Wall -Werror
-MODEST_LFLAGS ?=
-
-#********************
-# Include
-#***************
-# include dirs
-INCLUDE_DIR := $(TARGET)
-INCLUDE_DIR_API := include
-
-#********************
-# Libraries
-#***************
-# lib name
-LIB_NAME := modest
-LIB_NAME_SUFFIX := .so
-LIB_NAME_SUFFIX_STATIC := _static.a
-
-# lib dirs
-LIB_DIR_BASE := lib
-
-#********************
-# Binaries
-#***************
-# binaries dirs
-BIN_DIR_BASE := bin
-
-IMP_FLAG :=
-BIN_TMP := bin
-
-#********************
 # other Makefile
 #***************
 include Makefile.cfg
@@ -72,7 +30,7 @@ MODEST_BUILD_MODULES_MAKEFILES_LIST := $(foreach dir,$(MODEST_BUILD_MODULES),$(d
 #***************
 MODEST_BUILD_MODULES_TARGET       := $(MODEST_BUILD_MODULES_LIST)
 MODEST_BUILD_MODULES_TARGET_ALL   := $(foreach dir,$(MODEST_BUILD_MODULES_TARGET),$(dir)_all)
-MODEST_BUILD_MODULES_TARGET_CLEAN := $(foreach dir,$(MODEST_BUILD_MODULES_TARGET),$(dir)_clean)
+MODEST_BUILD_MODULES_TARGET_CLEAN := $(foreach dir,$(MODEST_BUILD_MODULES_TARGET),$(dir)_clean) $(myport_clean)
 MODEST_BUILD_MODULES_TARGET_CLONE := $(foreach dir,$(MODEST_BUILD_MODULES_TARGET),$(dir)_clone)
 
 #********************
@@ -115,10 +73,10 @@ shared: create $(MODEST_BUILD_MODULES_TARGET_ALL)
 	$(call MODEST_BUILD_OBJECT_SHARED,$(MODEST_BUILD_OBJECT_MODULES),$(call MODEST_LIBRARY_WITH_VERSION))
 
 static: create $(MODEST_BUILD_MODULES_TARGET_ALL)
-	$(call MODEST_BUILD_OBJECT_STATIC,$(MODEST_BUILD_OBJECT_MODULES),$(call MODEST_LIBRARY_STATIC_WITH_VERSION))
+	$(call MODEST_BUILD_OBJECT_STATIC,$(MODEST_BUILD_OBJECT_MODULES),$(call MODEST_LIBRARY_STATIC))
 
 clean: $(MODEST_BUILD_MODULES_TARGET_CLEAN)
-	rm -f $(call MODEST_LIBRARY_WITH_VERSION) && rm -f $(call MODEST_LIBRARY_STATIC_WITH_VERSION)
+	rm -f $(call MODEST_LIBRARY_WITH_VERSION) && rm -f $(call MODEST_LIBRARY_STATIC)
 
 clone: $(MODEST_BUILD_MODULES_TARGET_CLONE)
 	rm -rf $(INCLUDE_TMP)
@@ -126,6 +84,6 @@ clone: $(MODEST_BUILD_MODULES_TARGET_CLONE)
 	find $(INCLUDE_DIR_API) -name "*.h.bak" -exec rm -f {} \;
 
 create:
-	mkdir -p bin lib
+	mkdir -p $(BINARY_DIR_BASE) $(LIB_DIR_BASE)
 
 .PHONY: all clean clone $(MODEST_BUILD_MODULES_TARGET_ALL)

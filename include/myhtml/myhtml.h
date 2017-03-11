@@ -26,22 +26,22 @@
 extern "C" {
 #endif
 
-#include "myhtml/myosi.h"
+#include <myhtml/myosi.h>
 
-#include "mycore/utils/mctree.h"
-#include "mycore/utils/mcobject_async.h"
-#include "mycore/mythread.h"
-#include "mycore/incoming.h"
-#include "myencoding/encoding.h"
-#include "myhtml/tree.h"
-#include "myhtml/tag.h"
-#include "myhtml/def.h"
-#include "myhtml/parser.h"
-#include "myhtml/tokenizer.h"
-#include "myhtml/rules.h"
-#include "myhtml/token.h"
-#include "myhtml/charef.h"
-#include "myhtml/callback.h"
+#include <mycore/utils/mctree.h>
+#include <mycore/utils/mcobject_async.h>
+#include <mycore/mythread.h>
+#include <mycore/incoming.h>
+#include <myencoding/encoding.h>
+#include <myhtml/tree.h>
+#include <myhtml/tag.h>
+#include <myhtml/def.h>
+#include <myhtml/parser.h>
+#include <myhtml/tokenizer.h>
+#include <myhtml/rules.h>
+#include <myhtml/token.h>
+#include <myhtml/charef.h>
+#include <myhtml/callback.h>
 
 #define mh_queue_current() tree->queue
 #define myhtml_tokenizer_state_set(tree) myhtml_tree_set(tree, state)

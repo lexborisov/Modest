@@ -22,6 +22,8 @@
 #define MyFONT_MyFONT_H
 #pragma once
 
+#include <string.h>
+
 #include "myfont/myosi.h"
 #include "myfont/cmap.h"
 #include "myfont/head.h"

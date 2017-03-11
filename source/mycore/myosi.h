@@ -33,15 +33,10 @@
 #define MyCORE_VERSION_MINOR 0
 #define MyCORE_VERSION_PATCH 0
 
-#define MyCORE_BUILD_WITHOUT_THREADS
+//#define MyCORE_BUILD_WITHOUT_THREADS
 
 #ifdef __cplusplus
 //extern "C" {
-#endif
-
-#if (defined(_WIN32) || defined(_WIN64)) && !defined(__WINPTHREADS_VERSION)
-#define IS_OS_WINDOWS
-#include <windows.h>
 #endif
 
 /* Format */

@@ -30,8 +30,8 @@ extern "C" {
 
 #include <string.h>
 
-#include "myhtml/myosi.h"
-#include "mycore/utils.h"
+#include <myhtml/myosi.h>
+#include <mycore/utils.h>
 
 struct myhtml_namespace_detect_name_entry {
     const char* name;

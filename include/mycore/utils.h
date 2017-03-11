@@ -26,7 +26,7 @@
 extern "C" {
 #endif
 
-#include "mycore/myosi.h"
+#include <mycore/myosi.h>
 
 #define mycore_utils_whithspace(onechar, action, logic)     \
     (onechar action ' '  logic                              \

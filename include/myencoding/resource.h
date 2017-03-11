@@ -18,7 +18,7 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#include "myencoding/encoding.h"
+#include <myencoding/encoding.h>
 
 #ifndef MyENCODING_RESOURCE_H
 #define MyENCODING_RESOURCE_H

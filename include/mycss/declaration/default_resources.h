@@ -22,7 +22,7 @@
 #define MyCSS_DECLARATION_DEFAULT_RESOURCES_H
 #pragma once
 
-#include "mycss/declaration/default_entries.h"
+#include <mycss/declaration/default_entries.h>
 
 static mycss_declaration_entry_t * mycss_declaration_default_entry_index_type[MyCSS_PROPERTY_TYPE_LAST_ENTRY] = 
 {

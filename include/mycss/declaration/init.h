@@ -22,8 +22,8 @@
 #define MyHTML_MyCSS_DECLARATION_INIT_H
 #pragma once
 
-#include "mycss/declaration/myosi.h"
-#include "mycss/entry.h"
+#include <mycss/declaration/myosi.h>
+#include <mycss/entry.h>
 
 #ifdef __cplusplus
 extern "C" {

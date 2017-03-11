@@ -22,13 +22,13 @@
 #define MyHTML_MyCSS_VALUES_VALUES_H
 #pragma once
 
-#include "mycss/myosi.h"
-#include "mycss/values/units.h"
-#include "mycss/values/color_const.h"
-#include "mycss/property/const.h"
-#include "mycore/utils/mchar_async.h"
-#include "myhtml/mystring.h"
-#include "mycss/declaration/myosi.h"
+#include <mycss/myosi.h>
+#include <mycss/values/units.h>
+#include <mycss/values/color_const.h>
+#include <mycss/property/const.h>
+#include <mycore/utils/mchar_async.h>
+#include <myhtml/mystring.h>
+#include <mycss/declaration/myosi.h>
 
 #ifdef __cplusplus
 extern "C" {

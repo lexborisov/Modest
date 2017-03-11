@@ -22,11 +22,11 @@
 #define MODEST_NODE_NODE_H
 #pragma once
 
-#include "modest/myosi.h"
-#include "modest/modest.h"
-#include "modest/style/raw.h"
-#include "modest/render/tree_node.h"
-#include "mycore/utils/avl_tree.h"
+#include <modest/myosi.h>
+#include <modest/modest.h>
+#include <modest/style/raw.h>
+#include <modest/render/tree_node.h>
+#include <mycore/utils/avl_tree.h>
 
 #ifdef __cplusplus
 extern "C" {

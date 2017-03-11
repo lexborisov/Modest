@@ -22,8 +22,8 @@
 #define MODEST_GLUE_H
 #pragma once
 
-#include "modest/myosi.h"
-#include "modest/node/node.h"
+#include <modest/myosi.h>
+#include <modest/node/node.h>
 
 #ifdef __cplusplus
 extern "C" {

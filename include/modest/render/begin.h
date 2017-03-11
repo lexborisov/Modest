@@ -22,9 +22,9 @@
 #define MODEST_RENDER_BEGIN_H
 #pragma once
 
-#include "modest/modest.h"
-#include "modest/style/type.h"
-#include "modest/render/tree.h"
+#include <modest/modest.h>
+#include <modest/style/type.h>
+#include <modest/render/tree.h>
 
 #ifdef __cplusplus
 extern "C" {

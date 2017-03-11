@@ -26,16 +26,16 @@
 extern "C" {
 #endif
 
-#include "myhtml/myosi.h"
-#include "myhtml/myhtml.h"
-#include "myhtml/mystring.h"
-#include "myhtml/token.h"
-#include "myhtml/stream.h"
-#include "mycore/thread_queue.h"
-#include "mycore/utils/mcsync.h"
-#include "mycore/utils/mchar_async.h"
-#include "mycore/utils/mcobject.h"
-#include "mycore/utils/mcobject_async.h"
+#include <myhtml/myosi.h>
+#include <myhtml/myhtml.h>
+#include <myhtml/mystring.h>
+#include <myhtml/token.h>
+#include <myhtml/stream.h>
+#include <mycore/thread_queue.h>
+#include <mycore/utils/mcsync.h>
+#include <mycore/utils/mchar_async.h>
+#include <mycore/utils/mcobject.h>
+#include <mycore/utils/mcobject_async.h>
 
 #define myhtml_tree_get(tree, attr) tree->attr
 #define myhtml_tree_set(tree, attr) tree->attr
@@ -360,10 +360,6 @@ void myhtml_tree_node_delete_recursive(myhtml_tree_node_t* node);
 void myhtml_tree_node_clean(myhtml_tree_node_t* tree_node);
 void myhtml_tree_node_free(myhtml_tree_node_t* node);
 myhtml_tree_node_t * myhtml_tree_node_clone(myhtml_tree_node_t* node);
-
-void myhtml_tree_print_node(myhtml_tree_t* tree, myhtml_tree_node_t* node, FILE* out);
-void myhtml_tree_print_node_children(myhtml_tree_t* tree, myhtml_tree_node_t* node, FILE* out, size_t inc);
-void myhtml_tree_print_by_node(myhtml_tree_t* tree, myhtml_tree_node_t* node, FILE* out, size_t inc);
 
 void myhtml_tree_node_add_child(myhtml_tree_node_t* root, myhtml_tree_node_t* node);
 void myhtml_tree_node_insert_before(myhtml_tree_node_t* root, myhtml_tree_node_t* node);

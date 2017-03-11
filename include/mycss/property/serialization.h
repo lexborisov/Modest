@@ -22,9 +22,9 @@
 #define MyHTML_MyCSS_PROPERTY_SERIALIZATION_H
 #pragma once
 
-#include "mycss/property/myosi.h"
-#include "mycss/property/init.h"
-#include "mycss/values/serialization.h"
+#include <mycss/property/myosi.h>
+#include <mycss/property/init.h>
+#include <mycss/values/serialization.h>
 
 #ifdef __cplusplus
 extern "C" {

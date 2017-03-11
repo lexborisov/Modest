@@ -26,8 +26,8 @@
 //extern "C" {
 #endif
 
-#include "mycore/myosi.h"
-#include "mycore/mystring.h"
+#include <mycore/myosi.h>
+#include <mycore/mystring.h>
 
 #ifdef MyCORE_BUILD_WITHOUT_THREADS
 

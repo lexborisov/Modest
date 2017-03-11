@@ -22,8 +22,8 @@
 #define MODEST_LAYER_LAYER_H
 #pragma once
 
-#include "modest/myosi.h"
-#include "mycore/utils/mcobject.h"
+#include <modest/myosi.h>
+#include <mycore/utils/mcobject.h>
 
 #ifdef __cplusplus
 extern "C" {

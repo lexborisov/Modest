@@ -22,7 +22,7 @@
 #define MyCORE_UTILS_MCSYNC_H
 #pragma once
 
-#include "mycore/myosi.h"
+#include <mycore/myosi.h>
 
 #ifdef __cplusplus
 extern "C" {

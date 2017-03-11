@@ -73,6 +73,11 @@ struct res_html load_html_file(const char* filename)
     return res;
 }
 
+void serialization_callback(const char* data, size_t len, void* ctx)
+{
+    printf("%.*s", (int)len, data);
+}
+
 int main(int argc, const char * argv[])
 {
     const char* path;
@@ -104,7 +109,7 @@ int main(int argc, const char * argv[])
     myhtml_parse(tree, MyENCODING_UTF_8, res.html, res.size);
     
     if(myhtml_tree_get_node_html(tree))
-        myhtml_tree_print_by_node(tree, myhtml_tree_get_node_html(tree), stdout, 0);
+        myhtml_serialization_tree_callback(myhtml_tree_get_node_html(tree), serialization_callback, NULL);
     
     // release resources
     myhtml_tree_destroy(tree);

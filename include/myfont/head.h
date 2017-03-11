@@ -22,7 +22,7 @@
 #define MyFONT_HEAD_H
 #pragma once
 
-#include "myfont/myosi.h"
+#include <myfont/myosi.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,7 +49,7 @@ struct myfont_table_head {
 }
 typedef myfont_table_head_t;
 
-#include "myfont/myfont.h"
+#include <myfont/myfont.h>
 
 struct myfont_font;
 

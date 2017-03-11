@@ -22,11 +22,11 @@
 #define MyHTML_MyCSS_PROPERTY_PARSER_H
 #pragma once
 
-#include "mycss/property/myosi.h"
-#include "mycss/property/shared.h"
-#include "mycss/values/consume.h"
-#include "mycss/values/values.h"
-#include "mycss/declaration/entry.h"
+#include <mycss/property/myosi.h>
+#include <mycss/property/shared.h>
+#include <mycss/values/consume.h>
+#include <mycss/values/values.h>
+#include <mycss/declaration/entry.h>
 
 #ifdef __cplusplus
 extern "C" {

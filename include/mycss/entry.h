@@ -26,22 +26,22 @@
 extern "C" {
 #endif
 
-#include "mycss/myosi.h"
-#include "mycss/mycss.h"
-#include "mycss/parser.h"
-#include "mycss/stylesheet.h"
-#include "mycss/namespace/myosi.h"
-#include "mycss/namespace/init.h"
-#include "mycss/selectors/myosi.h"
-#include "mycss/selectors/init.h"
-#include "mycss/an_plus_b.h"
-#include "mycss/declaration/myosi.h"
-#include "mycss/declaration/init.h"
-#include "mycss/declaration/entry.h"
-#include "mycss/media/myosi.h"
-#include "mycss/media/init.h"
-#include "mycore/utils/mcobject.h"
-#include "mycore/utils/mchar_async.h"
+#include <mycss/myosi.h>
+#include <mycss/mycss.h>
+#include <mycss/parser.h>
+#include <mycss/stylesheet.h>
+#include <mycss/namespace/myosi.h>
+#include <mycss/namespace/init.h>
+#include <mycss/selectors/myosi.h>
+#include <mycss/selectors/init.h>
+#include <mycss/an_plus_b.h>
+#include <mycss/declaration/myosi.h>
+#include <mycss/declaration/init.h>
+#include <mycss/declaration/entry.h>
+#include <mycss/media/myosi.h>
+#include <mycss/media/init.h>
+#include <mycore/utils/mcobject.h>
+#include <mycore/utils/mchar_async.h>
 
 struct mycss_entry_parser_list_entry {
     mycss_parser_token_f parser;

@@ -1361,7 +1361,7 @@ mystatus_t mycss_tokenizer_state_init(mycss_t* mycss)
 void mycss_tokenizer_state_destroy(mycss_t* mycss)
 {
     if(mycss->parse_state_func) {
-        free(mycss->parse_state_func);
+        mycore_free(mycss->parse_state_func);
         mycss->parse_state_func = NULL;
     }
 }

@@ -26,8 +26,8 @@
 extern "C" {
 #endif
 
-#include "mycore/myosi.h"
-#include "mycore/utils/mcobject.h"
+#include <mycore/myosi.h>
+#include <mycore/utils/mcobject.h>
 
 struct mycore_incoming_buffer {
     const char* data;

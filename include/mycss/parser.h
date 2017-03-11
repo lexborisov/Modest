@@ -26,16 +26,16 @@
 extern "C" {
 #endif
 
-#include "mycss/myosi.h"
-#include "mycss/mycss.h"
-#include "mycss/entry.h"
-#include "mycss/mystring.h"
-#include "mycss/convert.h"
-#include "mycss/namespace/state.h"
-#include "mycss/selectors/state.h"
-#include "mycss/selectors/parser.h"
-#include "mycss/declaration/state.h"
-#include "mycore/incoming.h"
+#include <mycss/myosi.h>
+#include <mycss/mycss.h>
+#include <mycss/entry.h>
+#include <mycss/mystring.h>
+#include <mycss/convert.h>
+#include <mycss/namespace/state.h>
+#include <mycss/selectors/state.h>
+#include <mycss/selectors/parser.h>
+#include <mycss/declaration/state.h>
+#include <mycore/incoming.h>
 
 mycss_token_t * mycss_parser_token_ready_callback_function(mycss_entry_t* entry, mycss_token_t* token);
 

@@ -22,7 +22,7 @@
 #define MODEST_STYLE_DEFAULT_RESOURCES_H
 #pragma once
 
-#include "modest/style/default_entries.h"
+#include <modest/style/default_entries.h>
 
 static const modest_style_default_by_html_node_f modest_style_default_function_of_declarations[MyHTML_TAG_LAST_ENTRY] = 
 {

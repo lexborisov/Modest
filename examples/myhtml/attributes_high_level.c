@@ -23,6 +23,10 @@
 #include <string.h>
 #include <myhtml/api.h>
 
+void serialization_callback(const char* data, size_t len, void* ctx)
+{
+    printf("%.*s", (int)len, data);
+}
 
 int main(int argc, const char * argv[])
 {
@@ -45,7 +49,7 @@ int main(int argc, const char * argv[])
     
     // print original tree
     printf("Original tree:\n");
-    myhtml_tree_print_node_children(tree, myhtml_tree_get_document(tree), stdout, 0);
+    myhtml_serialization_tree_callback(myhtml_tree_get_node_html(tree), serialization_callback, NULL);
     
     printf("For a test; Create and delete 100000 attrs...\n");
     for(size_t j = 0; j < 100000; j++) {
@@ -57,7 +61,7 @@ int main(int argc, const char * argv[])
     myhtml_attribute_add(node, "key", 3, "value", 5, MyENCODING_UTF_8);
     
     printf("Modified tree:\n");
-    myhtml_tree_print_node_children(tree, myhtml_tree_get_document(tree), stdout, 0);
+    myhtml_serialization_tree_callback(myhtml_tree_get_node_html(tree), serialization_callback, NULL);
     
     // get attr by key name
     myhtml_tree_attr_t *gets_attr = myhtml_attribute_by_key(node, "key", 3);

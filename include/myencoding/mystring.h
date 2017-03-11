@@ -26,10 +26,10 @@
 //extern "C" {
 #endif
 
-#include "myencoding/myosi.h"
-#include "myencoding/encoding.h"
-#include "mycore/mystring.h"
-#include "mycore/utils.h"
+#include <myencoding/myosi.h>
+#include <myencoding/encoding.h>
+#include <mycore/mystring.h>
+#include <mycore/utils.h>
 
 void myencoding_string_append(mycore_string_t* str, const char* buff, size_t length, myencoding_t encoding);
 

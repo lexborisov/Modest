@@ -421,6 +421,11 @@ typedef struct myhtml myhtml_t;
  */
 typedef struct myhtml_tree myhtml_tree_t;
 
+/**
+ * @struct myhtml_token_t MyHTML_TOKEN
+ */
+typedef struct myhtml_token myhtml_token_t;
+
 typedef struct myhtml_token_attr myhtml_tree_attr_t;
 typedef struct myhtml_tree_node myhtml_tree_node_t;
 

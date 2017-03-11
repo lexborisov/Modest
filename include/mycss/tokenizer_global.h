@@ -26,10 +26,10 @@
 extern "C" {
 #endif
 
-#include "mycss/myosi.h"
-#include "mycss/mycss.h"
-#include "mycss/entry.h"
-#include "mycss/check.h"
+#include <mycss/myosi.h>
+#include <mycss/mycss.h>
+#include <mycss/entry.h>
+#include <mycss/check.h>
 
 size_t mycss_tokenizer_global_back(mycss_entry_t* entry, mycss_token_t* token, const char* css, size_t css_offset, size_t css_size);
 

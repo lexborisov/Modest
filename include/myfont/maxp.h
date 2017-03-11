@@ -22,7 +22,7 @@
 #define MyFONT_MAXP_H
 #pragma once
 
-#include "myfont/myosi.h"
+#include <myfont/myosi.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -47,7 +47,7 @@ struct myfont_table_maxp {
 }
 typedef myfont_table_maxp_t;
 
-#include "myfont/myfont.h"
+#include <myfont/myfont.h>
 
 struct myfont_font;
 

@@ -22,9 +22,9 @@
 #define MyCSS_VALUES_IMAGE_H
 #pragma once
 
-#include "mycss/myosi.h"
-#include "mycss/values/values.h"
-#include "mycss/property/parser.h"
+#include <mycss/myosi.h>
+#include <mycss/values/values.h>
+#include <mycss/property/parser.h>
 
 #ifdef __cplusplus
 extern "C" {

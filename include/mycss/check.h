@@ -26,9 +26,9 @@
 extern "C" {
 #endif
 
-#include "mycss/myosi.h"
-#include "mycss/mycss.h"
-#include "mycss/entry.h"
+#include <mycss/myosi.h>
+#include <mycss/mycss.h>
+#include <mycss/entry.h>
 
 bool mycss_check_three_code_points_would_start_identifier(mycss_entry_t* entry, mycss_token_t* token, const char* css, size_t css_offset, size_t css_size);
 bool mycss_check_two_code_points_valid_escape(mycss_entry_t* entry, mycss_token_t* token, const char* css, size_t css_offset, size_t css_size);

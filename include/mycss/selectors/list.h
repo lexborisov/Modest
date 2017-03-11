@@ -26,9 +26,9 @@
 extern "C" {
 #endif
 
-#include "mycss/entry.h"
-#include "mycss/selectors/myosi.h"
-#include "mycss/declaration/myosi.h"
+#include <mycss/entry.h>
+#include <mycss/selectors/myosi.h>
+#include <mycss/declaration/myosi.h>
 
 struct mycss_selectors_entries_list {
     mycss_selectors_entry_t* entry;

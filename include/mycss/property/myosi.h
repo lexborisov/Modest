@@ -22,8 +22,8 @@
 #define MyHTML_MyCSS_PROPERTY_MYOSI_H
 #pragma once
 
-#include "mycss/myosi.h"
-#include "mycss/property/const.h"
+#include <mycss/myosi.h>
+#include <mycss/property/const.h>
 
 #ifdef __cplusplus
 extern "C" {

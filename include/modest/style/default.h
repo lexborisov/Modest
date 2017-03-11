@@ -22,8 +22,8 @@
 #define MODEST_STYLE_DEFAULT_H
 #pragma once
 
-#include "modest/myosi.h"
-#include "mycss/values/values.h"
+#include <modest/myosi.h>
+#include <mycss/values/values.h>
 
 #ifdef __cplusplus
 extern "C" {

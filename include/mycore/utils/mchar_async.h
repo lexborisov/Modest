@@ -26,8 +26,8 @@
 extern "C" {
 #endif
 
-#include "mycore/myosi.h"
-#include "mycore/utils/mcsync.h"
+#include <mycore/myosi.h>
+#include <mycore/utils/mcsync.h>
 
 #define mchar_async_cache_has_nodes(cache) cache.count
 

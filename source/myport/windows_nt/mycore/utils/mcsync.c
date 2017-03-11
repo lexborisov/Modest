@@ -26,9 +26,7 @@
 /* spinlock */
 void * mcsync_spin_create(void)
 {
-    void *spinlock = NULL;
-    
-    CRITICAL_SECTION *spinlock = mycore_calloc(1, sizeof(CRITICAL_SECTION);
+    CRITICAL_SECTION *spinlock = mycore_calloc(1, sizeof(CRITICAL_SECTION));
     if(spinlock == NULL)
         return NULL;
     
@@ -53,18 +51,18 @@ void mcsync_spin_clean(void* spinlock)
 void mcsync_spin_destroy(void* spinlock)
 {
     DeleteCriticalSection(spinlock);
-    mycore_free(spinlock)
+    mycore_free(spinlock);
 }
 
 mcsync_status_t mcsync_spin_lock(void* spinlock)
 {
-    EnterCriticalSection(spinlock)
+    EnterCriticalSection(spinlock);
     return MCSYNC_STATUS_OK;
 }
 
 mcsync_status_t mcsync_spin_unlock(void* spinlock)
 {
-    LeaveCriticalSection(spinlock)
+    LeaveCriticalSection(spinlock);
     return MCSYNC_STATUS_OK;
 }
 
@@ -94,7 +92,7 @@ void mcsync_mutex_destroy(void* mutex)
 
 mcsync_status_t mcsync_mutex_lock(void* mutex)
 {
-    if(WaitForSingleObject(ctx->mutex, INFINITE) == WAIT_OBJECT_0)
+    if(WaitForSingleObject(mutex, INFINITE) == WAIT_OBJECT_0)
         return MCSYNC_STATUS_OK;
     
     return MCSYNC_STATUS_NOT_OK;
@@ -102,7 +100,7 @@ mcsync_status_t mcsync_mutex_lock(void* mutex)
 
 mcsync_status_t mcsync_mutex_try_lock(void* mutex)
 {
-    if(WaitForSingleObject(ctx->mutex, 0) != WAIT_FAILED)
+    if(WaitForSingleObject(mutex, 0) != WAIT_FAILED)
         return MCSYNC_STATUS_OK;
     
     return MCSYNC_STATUS_NOT_OK;

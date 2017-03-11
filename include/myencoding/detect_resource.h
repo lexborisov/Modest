@@ -28,7 +28,7 @@ extern "C" {
 
 #define MyENCODING_DETECT_NAME_STATIC_SIZE 419
 
-#include "myencoding/encoding.h"
+#include <myencoding/encoding.h>
 
 static const myencoding_detect_name_entry_t myencoding_detect_name_entry_static_list_index[] =
 {

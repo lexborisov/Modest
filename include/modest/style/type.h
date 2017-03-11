@@ -22,10 +22,10 @@
 #define MODEST_STYLE_TYPE_H
 #pragma once
 
-#include "modest/myosi.h"
-#include "modest/modest.h"
-#include "mycss/declaration/myosi.h"
-#include "mycore/utils/mchar_async.h"
+#include <modest/myosi.h>
+#include <modest/modest.h>
+#include <mycss/declaration/myosi.h>
+#include <mycore/utils/mchar_async.h>
 
 #ifdef __cplusplus
 extern "C" {

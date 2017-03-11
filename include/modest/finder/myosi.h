@@ -22,10 +22,10 @@
 #define MODEST_FINDER_MYOSI_H
 #pragma once
 
-#include "modest/myosi.h"
-#include "mycss/myosi.h"
-#include "mycss/selectors/myosi.h"
-#include "mycss/selectors/list.h"
+#include <modest/myosi.h>
+#include <mycss/myosi.h>
+#include <mycss/selectors/myosi.h>
+#include <mycss/selectors/list.h>
 
 #ifdef __cplusplus
 extern "C" {

@@ -26,8 +26,8 @@
 extern "C" {
 #endif
 
-#include "mycss/entry.h"
-#include "mycss/selectors/list.h"
+#include <mycss/entry.h>
+#include <mycss/selectors/list.h>
 
 #define mycss_an_plus_b_current_entry(entry) (*entry->anb->entry)
 

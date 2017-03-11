@@ -24,9 +24,9 @@
 
 typedef struct myurl_utils_data_list myurl_utils_data_list_t;
 
-#include "myurl/myosi.h"
-#include "myurl/parser.h"
-#include "myhtml/mystring.h"
+#include <myurl/myosi.h>
+#include <myurl/parser.h>
+#include <myhtml/mystring.h>
 
 #include <math.h>
 

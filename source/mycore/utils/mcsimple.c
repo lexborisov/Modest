@@ -59,14 +59,14 @@ mcsimple_t * mcsimple_destroy(mcsimple_t *mcsimple, bool destroy_self)
     if(mcsimple->list) {
         for(size_t i = 0; i < mcsimple->list_pos_length_used; i++) {
             if(mcsimple->list[i])
-                free(mcsimple->list[i]);
+                mycore_free(mcsimple->list[i]);
         }
         
-        free(mcsimple->list);
+        mycore_free(mcsimple->list);
     }
     
     if(destroy_self) {
-        free(mcsimple);
+        mycore_free(mcsimple);
         return NULL;
     }
     

@@ -22,21 +22,21 @@
 #define MyFONT_MyFONT_H
 #pragma once
 
-#include "myfont/myosi.h"
-#include "myfont/cmap.h"
-#include "myfont/head.h"
-#include "myfont/name.h"
-#include "myfont/os_2.h"
-#include "myfont/maxp.h"
-#include "myfont/hhea.h"
-#include "myfont/hmtx.h"
-#include "myfont/glyf.h"
-#include "myfont/vhea.h"
-#include "myfont/vmtx.h"
-#include "myfont/pclt.h"
-#include "myfont/loca.h"
+#include <myfont/myosi.h>
+#include <myfont/cmap.h>
+#include <myfont/head.h>
+#include <myfont/name.h>
+#include <myfont/os_2.h>
+#include <myfont/maxp.h>
+#include <myfont/hhea.h>
+#include <myfont/hmtx.h>
+#include <myfont/glyf.h>
+#include <myfont/vhea.h>
+#include <myfont/vmtx.h>
+#include <myfont/pclt.h>
+#include <myfont/loca.h>
 
-#include "mycore/utils/mchar_async.h"
+#include <mycore/utils/mchar_async.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -102,7 +102,6 @@ void myfont_free(myfont_font_t *mf, void* data);
 
 mystatus_t myfont_load(myfont_font_t *mf, const char *filepath);
 
-void myfont_font_print_exists_table(myfont_font_t *mf, FILE *file);
 mystatus_t myfont_check_required_tables(myfont_font_t *mf);
 
 float myfont_metrics_baseline(myfont_font_t *mf, float font_size);

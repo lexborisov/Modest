@@ -26,17 +26,17 @@
 extern "C" {
 #endif
 
-#include "myhtml/myosi.h"
+#include <myhtml/myosi.h>
 
-#include "myhtml/tag_const.h"
-#include "myhtml/tokenizer.h"
-#include "myhtml/tree.h"
-#include "mycore/utils.h"
-#include "mycore/utils/mctree.h"
-#include "mycore/utils/mchar_async.h"
-#include "mycore/utils/mcobject.h"
-#include "mycore/utils/mcobject_async.h"
-#include "mycore/utils/mcsimple.h"
+#include <myhtml/tag_const.h>
+#include <myhtml/tokenizer.h>
+#include <myhtml/tree.h>
+#include <mycore/utils.h>
+#include <mycore/utils/mctree.h>
+#include <mycore/utils/mchar_async.h>
+#include <mycore/utils/mcobject.h>
+#include <mycore/utils/mcobject_async.h>
+#include <mycore/utils/mcsimple.h>
 
 #define myhtml_tag_get(tags, idx, attr) tags->context[idx].attr
 
@@ -104,8 +104,6 @@ const myhtml_tag_context_t * myhtml_tag_get_by_name(myhtml_tag_t* tags, const ch
 
 const myhtml_tag_context_t * myhtml_tag_static_get_by_id(size_t idx);
 const myhtml_tag_context_t * myhtml_tag_static_search(const char* name, size_t length);
-
-void myhtml_tag_print(myhtml_tag_t* tags, FILE* fh);
 
 #ifdef __cplusplus
 } /* extern "C" */

@@ -22,12 +22,12 @@
 #define MODEST_H
 #pragma once
 
-#include "modest/myosi.h"
-#include "modest/layer/layer.h"
-#include "mycore/utils/mcobject.h"
-#include "mycore/utils/mcobject_async.h"
-#include "mycore/utils/mchar_async.h"
-#include "mycore/utils/avl_tree.h"
+#include <modest/myosi.h>
+#include <modest/layer/layer.h>
+#include <mycore/utils/mcobject.h>
+#include <mycore/utils/mcobject_async.h>
+#include <mycore/utils/mchar_async.h>
+#include <mycore/utils/avl_tree.h>
 
 #ifdef __cplusplus
 extern "C" {

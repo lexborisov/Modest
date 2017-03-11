@@ -26,10 +26,10 @@
 extern "C" {
 #endif
 
-#include "mycss/myosi.h"
-#include "myhtml/mystring.h"
-#include "mycore/utils/mctree.h"
-#include "mycore/utils/mcobject.h"
+#include <mycss/myosi.h>
+#include <myhtml/mystring.h>
+#include <mycore/utils/mctree.h>
+#include <mycore/utils/mcobject.h>
 
 typedef struct mycss_namespace mycss_namespace_t;
 typedef struct mycss_namespace_entry mycss_namespace_entry_t;

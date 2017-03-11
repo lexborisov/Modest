@@ -74,6 +74,11 @@ struct res_html load_html_file(const char* filename)
     return res;
 }
 
+void serialization_callback(const char* data, size_t len, void* ctx)
+{
+    printf("%.*s", (int)len, data);
+}
+
 int main(int argc, const char * argv[])
 {
     const char* path;
@@ -105,7 +110,7 @@ int main(int argc, const char * argv[])
     myhtml_collection_t *collection = myhtml_get_nodes_by_attribute_key(tree, NULL, NULL, attr_key, strlen(attr_key), NULL);
     
     for(size_t i = 0; i < collection->length; i++)
-        myhtml_tree_print_node(tree, collection->list[i], stdout);
+        myhtml_serialization_node_callback(collection->list[i], serialization_callback, NULL);
     
     printf("Total found: " MyCORE_FMT_Z "\n", collection->length);
     

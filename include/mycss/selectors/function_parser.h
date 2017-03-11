@@ -28,8 +28,8 @@
 extern "C" {
 #endif
     
-#include "mycss/entry.h"
-#include "mycss/selectors/myosi.h"
+#include <mycss/entry.h>
+#include <mycss/selectors/myosi.h>
 
 bool mycss_selectors_function_parser_state_drop_component_value(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 

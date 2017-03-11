@@ -22,7 +22,7 @@
 #define MyHTML_MyCSS_MEDIA_INIT_H
 #pragma once
 
-#include "mycss/media/myosi.h"
+#include <mycss/media/myosi.h>
 
 #ifdef __cplusplus
 extern "C" {

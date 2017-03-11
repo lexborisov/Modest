@@ -26,7 +26,7 @@
 extern "C" {
 #endif
 
-#include "mycore/myosi.h"
+#include <mycore/myosi.h>
 
 struct mcsimple {
     size_t  struct_size;

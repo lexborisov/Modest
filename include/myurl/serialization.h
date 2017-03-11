@@ -24,8 +24,8 @@
 
 #include <math.h>
 
-#include "myurl/myosi.h"
-#include "myurl/utils.h"
+#include <myurl/myosi.h>
+#include <myurl/utils.h>
 
 #ifdef __cplusplus
 extern "C" {

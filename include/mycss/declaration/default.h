@@ -22,8 +22,8 @@
 #define MyCSS_DECLARATION_DEFAULT_H
 #pragma once
 
-#include "mycss/declaration/myosi.h"
-#include "mycss/values/values.h"
+#include <mycss/declaration/myosi.h>
+#include <mycss/values/values.h>
 
 #ifdef __cplusplus
 extern "C" {

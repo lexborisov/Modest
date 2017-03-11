@@ -22,11 +22,11 @@
 #define MyHTML_MyCSS_DECLARATION_MYOSI_H
 #pragma once
 
-#include "mycss/myosi.h"
-#include "mycss/stack.h"
-#include "mycss/values/units.h"
-#include "mycss/property/myosi.h"
-#include "mycore/utils/mcobject.h"
+#include <mycss/myosi.h>
+#include <mycss/stack.h>
+#include <mycss/values/units.h>
+#include <mycss/property/myosi.h>
+#include <mycore/utils/mcobject.h>
 
 #ifdef __cplusplus
 extern "C" {

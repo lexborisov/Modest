@@ -22,8 +22,8 @@
 #define MyCORE_THREAD_QUEUE_H
 #pragma once
 
-#include "mycore/myosi.h"
-#include "mycore/mythread.h"
+#include <mycore/myosi.h>
+#include <mycore/mythread.h>
 
 #ifdef __cplusplus
 //extern "C" {

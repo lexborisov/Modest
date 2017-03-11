@@ -110,15 +110,15 @@ myhtml_token_t * myhtml_token_create(myhtml_tree_t* tree, size_t size)
     token->nodes_obj = mcobject_async_create();
     
     if(token->nodes_obj == NULL) {
-        free(token);
+        mycore_free(token);
         return NULL;
     }
     
     token->attr_obj = mcobject_async_create();
     
     if(token->attr_obj == NULL) {
-        free(token->nodes_obj);
-        free(token);
+        mycore_free(token->nodes_obj);
+        mycore_free(token);
         
         return NULL;
     }

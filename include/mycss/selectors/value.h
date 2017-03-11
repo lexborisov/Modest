@@ -34,9 +34,9 @@
 extern "C" {
 #endif
 
-#include "mycss/entry.h"
-#include "mycss/selectors/myosi.h"
-#include "mycore/utils/mchar_async.h"
+#include <mycss/entry.h>
+#include <mycss/selectors/myosi.h>
+#include <mycore/utils/mchar_async.h>
 
 typedef void * (*mycss_selectors_value_destroy_f)(mycss_entry_t* entry, mycss_selectors_type_t type, int sub_type, void* value, bool self_destroy);
 typedef void * (*mycss_selectors_value_function_destroy_f)(mycss_entry_t* entry, void* value, bool self_destroy);

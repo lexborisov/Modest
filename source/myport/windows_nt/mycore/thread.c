@@ -32,17 +32,15 @@ void * mythread_thread_create(mythread_t *mythread, void* process_func, void* ct
 {
     return CreateThread(NULL,                   // default security attributes
                         0,                      // use default stack size
-                        work_func,              // thread function name
-                        &thr->data,             // argument to thread function
+                        process_func,           // thread function name
+                        ctx,                    // argument to thread function
                         0,                      // use default creation flags
                         NULL);                  // returns the thread identifier
-    
-    return thread;
 }
 
 mystatus_t mythread_thread_join(mythread_t *mythread, void* thread)
 {
-    if(WaitForSingleObject(thr->pth, INFINITE) == WAIT_OBJECT_0)
+    if(WaitForSingleObject(thread, INFINITE) == WAIT_OBJECT_0)
         return MyCORE_STATUS_OK;
     
     return MyCORE_STATUS_ERROR;
@@ -50,7 +48,7 @@ mystatus_t mythread_thread_join(mythread_t *mythread, void* thread)
 
 mystatus_t mythread_thread_cancel(mythread_t *mythread, void* thread)
 {
-    if(TerminateThread(thr->pth, 0))
+    if(TerminateThread(thread, 0))
         return MyCORE_STATUS_OK;
     
     return MyCORE_STATUS_ERROR;
@@ -58,7 +56,7 @@ mystatus_t mythread_thread_cancel(mythread_t *mythread, void* thread)
 
 mystatus_t mythread_thread_destroy(mythread_t *mythread, void* thread)
 {
-    if(TerminateThread(thr->pth, 0))
+    if(TerminateThread(thread, 0))
         return MyCORE_STATUS_OK;
     
     return MyCORE_STATUS_ERROR;
@@ -71,12 +69,10 @@ void * mythread_thread_attr_init(mythread_t *mythread)
 
 void mythread_thread_attr_clean(mythread_t *mythread, void* attr)
 {
-    return MyCORE_STATUS_OK;
 }
 
 void mythread_thread_attr_destroy(mythread_t *mythread, void* attr)
 {
-    return MyCORE_STATUS_OK;
 }
 
 void * mythread_mutex_create(mythread_t *mythread)

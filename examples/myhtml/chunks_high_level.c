@@ -24,6 +24,11 @@
 
 #include <myhtml/api.h>
 
+void serialization_callback(const char* data, size_t len, void* ctx)
+{
+    printf("%.*s", (int)len, data);
+}
+
 int main(int argc, const char * argv[])
 {
     char html[][64] = {
@@ -68,7 +73,7 @@ int main(int argc, const char * argv[])
     myhtml_parse_chunk_end(tree);
     
     // print fragment
-    myhtml_tree_print_node_children(tree, myhtml_tree_get_document(tree), stdout, 0);
+    myhtml_serialization_tree_callback(myhtml_tree_get_document(tree), serialization_callback, NULL);
     
     // release resources
     myhtml_tree_destroy(tree);

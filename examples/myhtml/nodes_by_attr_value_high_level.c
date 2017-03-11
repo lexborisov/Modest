@@ -157,6 +157,11 @@ struct res_argv get_argv(int len, int argc, const char ** argv)
     return rargv;
 }
 
+void serialization_callback(const char* data, size_t len, void* ctx)
+{
+    printf("%.*s", (int)len, data);
+}
+
 int main(int argc, const char * argv[])
 {
     const char* path;
@@ -230,7 +235,7 @@ int main(int argc, const char * argv[])
     
     if(collection) {
         for(size_t i = 0; i < collection->length; i++)
-            myhtml_tree_print_node(tree, collection->list[i], stdout);
+            myhtml_serialization_node_callback(collection->list[i], serialization_callback, NULL);
         
         printf("Total found: " MyCORE_FMT_Z "\n", collection->length);
     }

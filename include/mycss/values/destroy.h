@@ -22,8 +22,8 @@
 #define MyCSS_VALUES_DESTROY_H
 #pragma once
 
-#include "mycss/values/values.h"
-#include "mycss/declaration/entry.h"
+#include <mycss/values/values.h>
+#include <mycss/declaration/entry.h>
 
 #ifdef __cplusplus
 extern "C" {

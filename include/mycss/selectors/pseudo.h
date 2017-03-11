@@ -26,8 +26,8 @@
 extern "C" {
 #endif
 
-#include "mycss/entry.h"
-#include "mycss/selectors/myosi.h"
+#include <mycss/entry.h>
+#include <mycss/selectors/myosi.h>
 
 struct mycss_selectots_pseudo_begin_entry {
     const char* name;
