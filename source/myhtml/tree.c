@@ -1681,7 +1681,7 @@ bool myhtml_tree_adoption_agency_algorithm(myhtml_tree_t* tree, myhtml_token_nod
         
         // step 8
         //if(afe_last != list[i])
-        //    mycore_fprintf(stderr, "oh");
+        //    fprintf(stderr, "oh");
         
         // step 9
         myhtml_tree_node_t* current_node = myhtml_tree_current_node(tree);
@@ -1763,7 +1763,7 @@ bool myhtml_tree_adoption_agency_algorithm(myhtml_tree_t* tree, myhtml_token_nod
             if(node_index > 0)
                 node_index--;
             else {
-                mycore_fprintf(stderr, "ERROR: adoption agency algorithm; decrement node_index, node_index is null");
+                MyCORE_DEBUG_ERROR("Adoption agency algorithm; decrement node_index, node_index is null");
                 return false;
             }
             
@@ -2148,114 +2148,6 @@ void myhtml_tree_template_insertion_pop(myhtml_tree_t* tree)
 size_t myhtml_tree_template_insertion_length(myhtml_tree_t* tree)
 {
     return tree->template_insertion->length;
-}
-
-void myhtml_tree_print_node(myhtml_tree_t* tree, myhtml_tree_node_t* node, FILE* out)
-{
-    if(node == NULL)
-        return;
-    
-    const myhtml_tag_context_t *ctx = myhtml_tag_get_by_id(tree->tags, node->tag_id);
-    
-    if(node->tag_id == MyHTML_TAG__TEXT ||
-       node->tag_id == MyHTML_TAG__COMMENT)
-    {
-        if(node->token)
-            mycore_fprintf(out, "<%.*s>: %.*s\n", (int)ctx->name_length, ctx->name,
-                    (int)node->token->str.length, node->token->str.data);
-        else
-            mycore_fprintf(out, "<%.*s>\n", (int)ctx->name_length, ctx->name);
-    }
-    else if(node->tag_id == MyHTML_TAG__DOCTYPE)
-    {
-        mycore_fprintf(out, "<!DOCTYPE");
-        
-        if(tree->doctype.attr_name) {
-            mycore_fprintf(out, " %s", tree->doctype.attr_name);
-        }
-        
-        if(tree->doctype.attr_public) {
-            mycore_fprintf(out, " %s", tree->doctype.attr_public);
-        }
-        
-        if(tree->doctype.attr_system) {
-            mycore_fprintf(out, " %s", tree->doctype.attr_system);
-        }
-        
-        mycore_fprintf(out, ">\n");
-    }
-    else
-    {
-        if(node->token && node->token->type & MyHTML_TOKEN_TYPE_CLOSE) {
-            mycore_fprintf(out, "</%.*s", (int)ctx->name_length, ctx->name);
-        }
-        else {
-            mycore_fprintf(out, "<%.*s", (int)ctx->name_length, ctx->name);
-        }
-        
-        if(node->ns != MyHTML_NAMESPACE_HTML) {
-            switch (node->ns) {
-                case MyHTML_NAMESPACE_SVG:
-                    mycore_fprintf(out, ":svg");
-                    break;
-                case MyHTML_NAMESPACE_MATHML:
-                    mycore_fprintf(out, ":math");
-                    break;
-                case MyHTML_NAMESPACE_XLINK:
-                    mycore_fprintf(out, ":xlink");
-                    break;
-                case MyHTML_NAMESPACE_XML:
-                    mycore_fprintf(out, ":xml");
-                    break;
-                case MyHTML_NAMESPACE_XMLNS:
-                    mycore_fprintf(out, ":xmlns");
-                    break;
-                default:
-                    break;
-            }
-        }
-        
-        if(node->token)
-            myhtml_token_print_attr(tree, node->token, out);
-        
-        mycore_fprintf(out, ">\n");
-    }
-}
-
-void _myhtml_tree_print_node_children(myhtml_tree_t* tree, myhtml_tree_node_t* node, FILE* out, size_t inc)
-{
-    if(node == NULL)
-        return;
-    
-    size_t i;
-    
-    while(node)
-    {
-        for(i = 0; i < inc; i++)
-            mycore_fprintf(out, "\t");
-        
-        myhtml_tree_print_node(tree, node, out);
-        _myhtml_tree_print_node_children(tree, node->child, out, (inc + 1));
-        
-        node = node->next;
-    }
-}
-
-void myhtml_tree_print_node_children(myhtml_tree_t* tree, myhtml_tree_node_t* node, FILE* out, size_t inc)
-{
-    if(node == NULL)
-        return;
-    
-    _myhtml_tree_print_node_children(tree, node->child, out, inc);
-}
-
-void myhtml_tree_print_by_node(myhtml_tree_t* tree, myhtml_tree_node_t* node, FILE* out, size_t inc)
-{
-    if(node == NULL)
-        return;
-    
-    myhtml_tree_print_node(tree, node, out);
-    myhtml_tree_print_node_children(tree, node, out, (inc + 1));
 }
 
 // token list

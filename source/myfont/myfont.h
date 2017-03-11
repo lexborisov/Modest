@@ -102,7 +102,6 @@ void myfont_free(myfont_font_t *mf, void* data);
 
 mystatus_t myfont_load(myfont_font_t *mf, const char *filepath);
 
-void myfont_font_print_exists_table(myfont_font_t *mf, FILE *file);
 mystatus_t myfont_check_required_tables(myfont_font_t *mf);
 
 float myfont_metrics_baseline(myfont_font_t *mf, float font_size);

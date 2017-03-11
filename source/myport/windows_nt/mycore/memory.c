@@ -35,7 +35,8 @@ void * mycore_calloc(size_t num, size_t size)
     return calloc(num, size);
 }
 
-void mycore_free(void* dst)
+void * mycore_free(void* dst)
 {
     free(dst);
+    return NULL;
 }

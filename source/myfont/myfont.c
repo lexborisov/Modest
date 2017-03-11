@@ -298,17 +298,6 @@ mystatus_t myfont_check_required_tables(myfont_font_t *mf)
     return MyFONT_STATUS_OK;
 }
 
-void myfont_font_print_exists_table(myfont_font_t *mf, FILE *file)
-{
-    size_t i;
-    for(i = 0; i < MyFONT_TKEY_LAST_KEY; i++)
-    { 
-        if(mf->cache.tables_offset[i]) {
-            mycore_fprintf(file, "%s = %u\n", myfont_table_name[i], mf->cache.tables_offset[i]);
-        }
-    }
-}
-
 // metrics
 float myfont_metrics_baseline(myfont_font_t *mf, float font_size)
 {

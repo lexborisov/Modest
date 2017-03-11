@@ -49,7 +49,7 @@ void mycss_namespace_serialization_entry(mycss_namespace_t* ns, mycss_namespace_
         callback(ns_entry->name->data, ns_entry->name->length, context);
     }
     else if(ns_entry->ns_id == MyHTML_NAMESPACE_ANY)
-        return; //mycore_fprintf(fh, "*");
+        return;
     else if(ns_entry->ns_id == MyHTML_NAMESPACE_UNDEF) {
         /* some print */
     }

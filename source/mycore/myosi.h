@@ -60,19 +60,8 @@
 #endif
 
 /* Debug */
-#ifdef MyCORE_DEBUG_MODE
-    #define MyCORE_DEBUG(format, ...)      \
-        mycore_fprintf(stderr, "DEBUG: "format"\n", ##__VA_ARGS__)
-#else
-    #define MyCORE_DEBUG(format, ...)
-#endif
-
-#ifdef MyCORE_DEBUG_MODE
-    #define MyCORE_DEBUG_ERROR(format, ...)      \
-        mycore_fprintf(stderr, "DEBUG ERROR: "format"\n", ##__VA_ARGS__)
-#else
-    #define MyCORE_DEBUG_ERROR(format, ...)
-#endif
+#define MyCORE_DEBUG(format, ...)
+#define MyCORE_DEBUG_ERROR(format, ...)
 
 #define MyCORE_FAILED(_status_) ((_status_) != MyCORE_STATUS_OK)
 
@@ -161,26 +150,16 @@ void * mycore_realloc(void* dst, size_t size);
 void * mycore_calloc(size_t num, size_t size);
 void * mycore_free(void* dst);
 
-/* io */
-int mycore_printf(const char* format, ...);
-int mycore_fprintf(FILE* out, const char* format, ...);
-int mycore_snprintf(char* buffer, size_t buffer_size, const char* format, ...);
-
 /**
  * Platform-specific hdef performance clock queries.
  * Implemented in perf.c
  */
 
-/** Get clock resolution */
-uint64_t mycore_hperf_res(mystatus_t *status);
-
-/** Get current value in clock ticks */
-uint64_t mycore_hperf_clock(mystatus_t *status);
-
-/** Print an hperf measure */
-mystatus_t mycore_hperf_print(const char *name, uint64_t x, uint64_t y, FILE *fh);
-mystatus_t mycore_hperf_print_by_val(const char *name, uint64_t x, FILE *fh);
-
+///** Get clock resolution */
+//uint64_t mycore_hperf_res(mystatus_t *status);
+//
+///** Get current value in clock ticks */
+//uint64_t mycore_hperf_clock(mystatus_t *status);
 
 #ifdef __cplusplus
 } /* extern "C" */

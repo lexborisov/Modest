@@ -42,11 +42,11 @@ void mycss_values_serialization_number(mycss_values_number_t* value, mycss_callb
     char buff[512];
     
     if(value->is_float) {
-        int len = mycore_snprintf(buff, 512, "%0.4f", value->f);
+        int len = snprintf(buff, 512, "%0.4f", value->f);
         mycss_values_serialization_to_callback(buff, len, callback, context);
     }
     else {
-        int len = mycore_snprintf(buff, 512, "%d", value->i);
+        int len = snprintf(buff, 512, "%d", value->i);
         mycss_values_serialization_to_callback(buff, len, callback, context);
     }
 }
@@ -59,11 +59,11 @@ void mycss_values_serialization_length(mycss_values_length_t* value, mycss_callb
     char buff[512];
     
     if(value->is_float) {
-        int len = mycore_snprintf(buff, 512, "%0.4f", value->f);
+        int len = snprintf(buff, 512, "%0.4f", value->f);
         mycss_values_serialization_to_callback(buff, len, callback, context);
     }
     else {
-        int len = mycore_snprintf(buff, 512, "%d", value->i);
+        int len = snprintf(buff, 512, "%d", value->i);
         mycss_values_serialization_to_callback(buff, len, callback, context);
     }
     
@@ -81,11 +81,11 @@ void mycss_values_serialization_angle(mycss_values_angle_t* value, mycss_callbac
     char buff[512];
     
     if(value->is_float) {
-        int len = mycore_snprintf(buff, 512, "%0.4f", value->f);
+        int len = snprintf(buff, 512, "%0.4f", value->f);
         mycss_values_serialization_to_callback(buff, len, callback, context);
     }
     else {
-        int len = mycore_snprintf(buff, 512, "%d", value->i);
+        int len = snprintf(buff, 512, "%d", value->i);
         mycss_values_serialization_to_callback(buff, len, callback, context);
     }
     
@@ -103,11 +103,11 @@ void mycss_values_serialization_resolution(mycss_values_resolution_t* value, myc
     char buff[512];
     
     if(value->is_float) {
-        int len = mycore_snprintf(buff, 512, "%0.4f", value->f);
+        int len = snprintf(buff, 512, "%0.4f", value->f);
         mycss_values_serialization_to_callback(buff, len, callback, context);
     }
     else {
-        int len = mycore_snprintf(buff, 512, "%d", value->i);
+        int len = snprintf(buff, 512, "%d", value->i);
         mycss_values_serialization_to_callback(buff, len, callback, context);
     }
     
@@ -125,11 +125,11 @@ void mycss_values_serialization_percentage(mycss_values_percentage_t* value, myc
     char buff[512];
     
     if(value->is_float) {
-        int len = mycore_snprintf(buff, 512, "%0.4f%%", value->f);
+        int len = snprintf(buff, 512, "%0.4f%%", value->f);
         mycss_values_serialization_to_callback(buff, len, callback, context);
     }
     else {
-        int len = mycore_snprintf(buff, 512, "%d%%", value->i);
+        int len = snprintf(buff, 512, "%d%%", value->i);
         mycss_values_serialization_to_callback(buff, len, callback, context);
     }
 }

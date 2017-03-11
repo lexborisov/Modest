@@ -154,10 +154,6 @@ bool myhtml_token_attr_compare(myhtml_token_node_t* target, myhtml_token_node_t*
 myhtml_token_node_t * myhtml_token_merged_two_token_string(myhtml_tree_t* tree, myhtml_token_node_t* token_to, myhtml_token_node_t* token_from, bool cp_reverse);
 void myhtml_token_set_replacement_character_for_null_token(myhtml_tree_t* tree, myhtml_token_node_t* node);
 
-void myhtml_token_print_param_by_idx(myhtml_tree_t* myhtml_tree, myhtml_token_node_t* node, FILE* out);
-void myhtml_token_print_by_idx(myhtml_tree_t* myhtml_tree, myhtml_token_node_t* node, FILE* out);
-void myhtml_token_print_attr(myhtml_tree_t* myhtml_tree, myhtml_token_node_t* node, FILE* out);
-
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

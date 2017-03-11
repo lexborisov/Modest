@@ -105,8 +105,6 @@ const myhtml_tag_context_t * myhtml_tag_get_by_name(myhtml_tag_t* tags, const ch
 const myhtml_tag_context_t * myhtml_tag_static_get_by_id(size_t idx);
 const myhtml_tag_context_t * myhtml_tag_static_search(const char* name, size_t length);
 
-void myhtml_tag_print(myhtml_tag_t* tags, FILE* fh);
-
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

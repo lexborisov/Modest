@@ -361,10 +361,6 @@ void myhtml_tree_node_clean(myhtml_tree_node_t* tree_node);
 void myhtml_tree_node_free(myhtml_tree_node_t* node);
 myhtml_tree_node_t * myhtml_tree_node_clone(myhtml_tree_node_t* node);
 
-void myhtml_tree_print_node(myhtml_tree_t* tree, myhtml_tree_node_t* node, FILE* out);
-void myhtml_tree_print_node_children(myhtml_tree_t* tree, myhtml_tree_node_t* node, FILE* out, size_t inc);
-void myhtml_tree_print_by_node(myhtml_tree_t* tree, myhtml_tree_node_t* node, FILE* out, size_t inc);
-
 void myhtml_tree_node_add_child(myhtml_tree_node_t* root, myhtml_tree_node_t* node);
 void myhtml_tree_node_insert_before(myhtml_tree_node_t* root, myhtml_tree_node_t* node);
 void myhtml_tree_node_insert_after(myhtml_tree_node_t* root, myhtml_tree_node_t* node);

@@ -831,40 +831,6 @@ size_t
 myhtml_tree_get_mchar_node_id(myhtml_tree_t* tree);
 
 /**
- * Print tree of a node. Print including current node
- *
- * @param[in] myhtml_tree_t*
- * @param[in] myhtml_tree_node_t*
- * @param[in] file handle, for example use stdout
- * @param[in] tab (\t) increment for pretty print, set 0
- */
-void
-myhtml_tree_print_by_node(myhtml_tree_t* tree, myhtml_tree_node_t* node,
-                          FILE* out, size_t inc);
-
-/**
- * Print tree of a node. Print excluding current node
- *
- * @param[in] myhtml_tree_t*
- * @param[in] myhtml_tree_node_t*
- * @param[in] file handle, for example use stdout
- * @param[in] tab (\t) increment for pretty print, set 0
- */
-void
-myhtml_tree_print_node_children(myhtml_tree_t* tree, myhtml_tree_node_t* node,
-                                FILE* out, size_t inc);
-
-/**
- * Print a node
- *
- * @param[in] myhtml_tree_t*
- * @param[in] myhtml_tree_node_t*
- * @param[in] file handle, for example use stdout
- */
-void
-myhtml_tree_print_node(myhtml_tree_t* tree, myhtml_tree_node_t* node, FILE* out);
-
-/**
  * Get first Incoming Buffer
  *
  * @param[in] myhtml_tree_t*

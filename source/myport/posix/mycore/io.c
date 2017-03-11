@@ -21,36 +21,6 @@
 #include "mycore/myosi.h"
 #include <stdarg.h>
 
-int mycore_printf(const char* format, ...)
-{
-    va_list argptr;
-    va_start(argptr, format);
-    int res = vprintf(format, argptr);
-    va_end(argptr);
-    
-    return res;
-}
-
-int mycore_fprintf(FILE* out, const char* format, ...)
-{
-    va_list argptr;
-    va_start(argptr, format);
-    int res = vfprintf(out, format, argptr);
-    va_end(argptr);
-    
-    return res;
-}
-
-int mycore_snprintf(char* buffer, size_t buffer_size, const char* format, ...)
-{
-    va_list argptr;
-    va_start(argptr, format);
-    int res = vsnprintf(buffer, buffer_size, format, argptr);
-    va_end(argptr);
-    
-    return res;
-}
-
 /* FILE */
 FILE * mycore_fopen(const char *restrict filename, const char *restrict mode)
 {

@@ -96,7 +96,7 @@ void mycss_an_plus_b_serialization(mycss_an_plus_b_entry_t* anb_entry, mycss_cal
     char data[512];
     
     if(anb_entry->a != 0) {
-        int len = mycore_snprintf(data, 512, "%ld", anb_entry->a);
+        int len = snprintf(data, 512, "%ld", anb_entry->a);
         
         if(len > 0)
             callback(data, (size_t)len, context);
@@ -108,7 +108,7 @@ void mycss_an_plus_b_serialization(mycss_an_plus_b_entry_t* anb_entry, mycss_cal
         if(anb_entry->b >= 0)
             callback("+", 1, context);
         
-        int len = mycore_snprintf(data, 512, "%ld", anb_entry->b);
+        int len = snprintf(data, 512, "%ld", anb_entry->b);
         
         if(len > 0)
             callback(data, (size_t)len, context);
