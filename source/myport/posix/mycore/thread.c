@@ -33,6 +33,9 @@ void * mythread_thread_create(mythread_t *mythread, void* process_func, void* ct
 {
     void *thread = mycore_calloc(1, sizeof(pthread_t));
     
+    if(thread == NULL)
+        return NULL;
+    
     if(pthread_create(&(*((pthread_t*)thread)), mythread->attr, process_func, ctx) == 0)
         return thread;
     
@@ -41,7 +44,7 @@ void * mythread_thread_create(mythread_t *mythread, void* process_func, void* ct
 
 mystatus_t mythread_thread_join(mythread_t *mythread, void* thread)
 {
-    if(pthread_join(thread, NULL) == 0)
+    if(pthread_join(*((pthread_t*)thread), NULL) == 0)
         return MyCORE_STATUS_OK;
     
     return MyCORE_STATUS_ERROR;
@@ -49,7 +52,7 @@ mystatus_t mythread_thread_join(mythread_t *mythread, void* thread)
 
 mystatus_t mythread_thread_cancel(mythread_t *mythread, void* thread)
 {
-    if(pthread_cancel(thread) == 0)
+    if(pthread_cancel(*((pthread_t*)thread)) == 0)
         return MyCORE_STATUS_OK;
     
     return MyCORE_STATUS_ERROR;
@@ -57,6 +60,7 @@ mystatus_t mythread_thread_cancel(mythread_t *mythread, void* thread)
 
 mystatus_t mythread_thread_destroy(mythread_t *mythread, void* thread)
 {
+    mycore_free(thread);
     return MyCORE_STATUS_OK;
 }
 
