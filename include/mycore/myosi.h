@@ -29,8 +29,8 @@
 #include <stdint.h>
 #include <inttypes.h>
 
-#define MyCORE_VERSION_MAJOR 1
-#define MyCORE_VERSION_MINOR 0
+#define MyCORE_VERSION_MAJOR 0
+#define MyCORE_VERSION_MINOR 1
 #define MyCORE_VERSION_PATCH 0
 
 //#define MyCORE_BUILD_WITHOUT_THREADS

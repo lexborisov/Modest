@@ -77,10 +77,12 @@ clean: $(MODEST_BUILD_MODULES_TARGET_CLEAN)
 	rm -f $(call MODEST_LIBRARY_WITH_VERSION) && rm -f $(call MODEST_LIBRARY_STATIC)
 	$(call MODEST_BUILD_CLEAN_AFTER)
 
-clone: $(MODEST_BUILD_MODULES_TARGET_CLONE)
-	rm -rf $(INCLUDE_TMP)
+clone: clean_api $(MODEST_BUILD_MODULES_TARGET_CLONE)
 	find $(INCLUDE_DIR_API) -name "*.h" -exec sed -i '.bak' -E 's/^[ \t]*#[ \t]*include[ \t]*"([^"]+)"/#include <\1>/g' {} \;
 	find $(INCLUDE_DIR_API) -name "*.h.bak" -exec rm -f {} \;
+
+clean_api:
+	rm -rf $(INCLUDE_DIR_API)
 
 create:
 	mkdir -p $(BINARY_DIR_BASE) $(LIB_DIR_BASE)
