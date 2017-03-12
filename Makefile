@@ -55,7 +55,7 @@ include $(MODEST_BUILD_MODULES_MAKEFILES_LIST)
 #********************
 # Set ARGS for flags
 #***************
-CFLAGS += $(MODEST_CFLAGS)
+override CFLAGS += $(MODEST_CFLAGS)
 
 #********************
 # Objects
