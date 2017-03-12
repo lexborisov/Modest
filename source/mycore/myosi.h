@@ -41,9 +41,9 @@ extern "C" {
 
 /* Format */
 #ifdef IS_OS_WINDOWS
-#define MyCORE_FMT_Z "%Iu"
+#define MyCORE_FORMAT_Z "%Iu"
 #else
-#define MyCORE_FMT_Z "%zu"
+#define MyCORE_FORMAT_Z "%zu"
 #endif
 
 #if defined(_MSC_VER)

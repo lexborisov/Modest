@@ -36,10 +36,6 @@ MODEST_BUILD_MODULES_TARGET_CLONE := $(foreach dir,$(MODEST_BUILD_MODULES_TARGET
 #********************
 # Utils
 #***************
-define MODEST_UTILS_NEW_LINE
-
-
-endef
 MODEST_UTILS_HDRS = $(foreach dir,$2,$(wildcard $(SRCDIR)/$1/$(dir)/*.h))
 MODEST_UTILS_OBJS = $(patsubst %.c,%.o,$(foreach dir,$2,$(wildcard $(SRCDIR)/$1/$(dir)/*.c)))
 MODEST_UTILS_HDRS_CLONE_CMND = $(foreach path,$(foreach dir,$2,$(wildcard $(SRCDIR)/$1/$(dir)/*.h)), cp $(path) $(patsubst $(SRCDIR)%,$(INCLUDE_DIR_API)%,$(path)) $(MODEST_UTILS_NEW_LINE))
@@ -71,12 +67,15 @@ all: shared static
 
 shared: create $(MODEST_BUILD_MODULES_TARGET_ALL)
 	$(call MODEST_BUILD_OBJECT_SHARED,$(MODEST_BUILD_OBJECT_MODULES),$(call MODEST_LIBRARY_WITH_VERSION))
+	$(call MODEST_BUILD_SHARED_AFTER)
 
 static: create $(MODEST_BUILD_MODULES_TARGET_ALL)
 	$(call MODEST_BUILD_OBJECT_STATIC,$(MODEST_BUILD_OBJECT_MODULES),$(call MODEST_LIBRARY_STATIC))
+	$(call MODEST_BUILD_STATIC_AFTER)
 
 clean: $(MODEST_BUILD_MODULES_TARGET_CLEAN)
 	rm -f $(call MODEST_LIBRARY_WITH_VERSION) && rm -f $(call MODEST_LIBRARY_STATIC)
+	$(call MODEST_BUILD_CLEAN_AFTER)
 
 clone: $(MODEST_BUILD_MODULES_TARGET_CLONE)
 	rm -rf $(INCLUDE_TMP)

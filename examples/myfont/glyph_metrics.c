@@ -102,7 +102,7 @@ int main(int argc, const char * argv[])
     printf("Font file: %s\n", path);
     printf("Font size: %.fpx\n\n", font_size);
     
-    printf("Metrics for code point " MyCORE_FMT_Z " (%s):\n", codepoint, data);
+    printf("Metrics for code point " MyCORE_FORMAT_Z " (%s):\n", codepoint, data);
     printf("\tBaseline: %.05f\n", baseline);
     printf("\tAscender: %.05f\n", ascender);
     printf("\tDescender: %.05f\n", descender);

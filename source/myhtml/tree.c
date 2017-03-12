@@ -1434,7 +1434,7 @@ void myhtml_tree_active_formatting_append_with_check(myhtml_tree_t* tree, myhtml
         
 #ifdef DEBUG_MODE
         if(list[i] == NULL) {
-            MyCORE_DEBUG("Appen active formatting with check; list[" MyCORE_FMT_Z "] is NULL", i);
+            MyCORE_DEBUG("Appen active formatting with check; list[" MyCORE_FORMAT_Z "] is NULL", i);
         }
 #endif
         
@@ -1503,7 +1503,7 @@ void myhtml_tree_active_formatting_up_to_last_marker(myhtml_tree_t* tree)
     
 #ifdef DEBUG_MODE
     if(list[ tree->active_formatting->length ] == NULL) {
-        MyCORE_DEBUG("Up to last marker active formatting; list[" MyCORE_FMT_Z "] is NULL", tree->active_formatting->length);
+        MyCORE_DEBUG("Up to last marker active formatting; list[" MyCORE_FORMAT_Z "] is NULL", tree->active_formatting->length);
     }
 #endif
     
@@ -1513,7 +1513,7 @@ void myhtml_tree_active_formatting_up_to_last_marker(myhtml_tree_t* tree)
         
 #ifdef DEBUG_MODE
         if(list[ tree->active_formatting->length ] == NULL) {
-            MyCORE_DEBUG("Up to last marker active formatting; list[" MyCORE_FMT_Z "] is NULL", tree->active_formatting->length);
+            MyCORE_DEBUG("Up to last marker active formatting; list[" MyCORE_FORMAT_Z "] is NULL", tree->active_formatting->length);
         }
 #endif
         
@@ -1536,7 +1536,7 @@ myhtml_tree_node_t * myhtml_tree_active_formatting_between_last_marker(myhtml_tr
         
 #ifdef DEBUG_MODE
         if(list[i] == NULL) {
-            MyCORE_DEBUG("Between last marker active formatting; list[" MyCORE_FMT_Z "] is NULL", i);
+            MyCORE_DEBUG("Between last marker active formatting; list[" MyCORE_FORMAT_Z "] is NULL", i);
         }
 #endif
         
@@ -1575,7 +1575,7 @@ void myhtml_tree_active_formatting_reconstruction(myhtml_tree_t* tree)
         
 #ifdef DEBUG_MODE
         if(list[af_idx] == NULL) {
-            MyCORE_DEBUG("Formatting reconstruction; Step 4--6; list[" MyCORE_FMT_Z "] is NULL", af_idx);
+            MyCORE_DEBUG("Formatting reconstruction; Step 4--6; list[" MyCORE_FORMAT_Z "] is NULL", af_idx);
         }
 #endif
         
@@ -1591,7 +1591,7 @@ void myhtml_tree_active_formatting_reconstruction(myhtml_tree_t* tree)
     {
 #ifdef DEBUG_MODE
         if(list[af_idx] == NULL) {
-            MyCORE_DEBUG("Formatting reconstruction; Next steps; list[" MyCORE_FMT_Z "] is NULL", af_idx);
+            MyCORE_DEBUG("Formatting reconstruction; Next steps; list[" MyCORE_FORMAT_Z "] is NULL", af_idx);
         }
 #endif
         
@@ -1867,7 +1867,7 @@ bool myhtml_tree_adoption_agency_algorithm(myhtml_tree_t* tree, myhtml_token_nod
         
 #ifdef DEBUG_MODE
         if(bookmark >= tree->active_formatting->length) {
-            MyCORE_DEBUG_ERROR("Adoption agency algorithm; Before Step 18; bookmark (" MyCORE_FMT_Z ") >= open_elements length", bookmark);
+            MyCORE_DEBUG_ERROR("Adoption agency algorithm; Before Step 18; bookmark (" MyCORE_FORMAT_Z ") >= open_elements length", bookmark);
         }
 #endif
         
