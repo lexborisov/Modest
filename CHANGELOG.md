@@ -1,7 +1,12 @@
+0.0.6
+===========
+* Completely redesigned engine. Now base module for all it is MyCORE
+* Now Modest engine split by modules: mycore, modest, mycss, myencoding, myfont, myhtml, myport, myunicode, myurl
+
+
 0.0.5
 ===========
-Now()
-
+* Small fixes
 * Added URL parser by specification https://url.spec.whatwg.org/
 
 0.0.4
