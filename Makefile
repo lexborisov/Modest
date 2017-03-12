@@ -6,8 +6,8 @@ CC ?= gcc
 # ARGS
 #
 # MODEST_OPTIMIZATION_LEVEL, default -O2
-# MODEST_BUILD_WITHOUT_THREADS, YES or (NO or undefined), default undefined
-# MODEST_BUILD_DEBUG, default undefined
+# MyCORE_BUILD_WITHOUT_THREADS, YES or (NO or undefined), default undefined
+# MyCORE_BUILD_DEBUG, default undefined
 #
 
 .DEFAULT_GOAL := all
@@ -51,6 +51,9 @@ include $(MODEST_BUILD_MODULES_MAKEFILES_LIST)
 #********************
 # Set ARGS for flags
 #***************
+MODEST_CFLAGS += -DMODEST_BUILD_OS=$(MODEST_BUILD_OS)
+MODEST_CFLAGS += -DMODEST_PORT_NAME=$(MODEST_PORT_NAME)
+
 override CFLAGS += $(MODEST_CFLAGS)
 
 #********************
