@@ -159,7 +159,7 @@ bool modest_finder_selector_sub_type_pseudo_class_function_nth_child_check_selec
 bool modest_finder_selector_sub_type_pseudo_class_function_nth_child(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(selector->value == NULL)
-        return NULL;
+        return false;
     
     mycss_an_plus_b_entry_t *anb = mycss_selector_value_an_plus_b(selector->value);
     
@@ -226,7 +226,7 @@ bool modest_finder_selector_sub_type_pseudo_class_function_nth_column(modest_fin
 bool modest_finder_selector_sub_type_pseudo_class_function_nth_last_child(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(selector->value == NULL)
-        return NULL;
+        return false;
     
     mycss_an_plus_b_entry_t *anb = mycss_selector_value_an_plus_b(selector->value);
     
@@ -290,7 +290,7 @@ bool modest_finder_selector_sub_type_pseudo_class_function_nth_last_column(modes
 bool modest_finder_selector_sub_type_pseudo_class_function_nth_last_of_type(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(selector->value == NULL)
-        return NULL;
+        return false;
     
     mycss_an_plus_b_entry_t *anb = mycss_selector_value_an_plus_b(selector->value);
     
@@ -322,7 +322,7 @@ bool modest_finder_selector_sub_type_pseudo_class_function_nth_last_of_type(mode
 bool modest_finder_selector_sub_type_pseudo_class_function_nth_of_type(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(selector->value == NULL)
-        return NULL;
+        return false;
     
     mycss_an_plus_b_entry_t *anb = mycss_selector_value_an_plus_b(selector->value);
     

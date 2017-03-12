@@ -23,8 +23,10 @@
 #pragma once
 
 #ifdef __cplusplus
-//extern "C" {
+extern "C" {
 #endif
+
+#include <string.h>
 
 #include <myencoding/myosi.h>
 #include <mycore/utils.h>

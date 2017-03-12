@@ -26,7 +26,7 @@
 #include "mycore/mythread.h"
 
 #ifdef __cplusplus
-//extern "C" {
+extern "C" {
 #endif
 
 // queue

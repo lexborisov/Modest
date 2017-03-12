@@ -31,9 +31,9 @@
  ***********************************************************************************/
 void * mythread_thread_create(mythread_t *mythread, void* process_func, void* ctx)
 {
-    pthread_t thread;
+    void *thread = mycore_calloc(1, sizeof(pthread_t));
     
-    if(pthread_create(&thread, mythread->attr, process_func, ctx) == 0)
+    if(pthread_create(&(*((pthread_t*)thread)), mythread->attr, process_func, ctx) == 0)
         return thread;
     
     return NULL;

@@ -69,7 +69,7 @@ mcsync_status_t mcsync_spin_unlock(void* spinlock)
 /* mutex */
 void * mcsync_mutex_create(void)
 {
-    return CreateSemaphore(NULL, 0, 1, NULL);
+    return CreateSemaphore(NULL, 1, 1, NULL);
 }
 
 mcsync_status_t mcsync_mutex_init(void* mutex)

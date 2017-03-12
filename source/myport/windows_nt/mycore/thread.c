@@ -64,7 +64,7 @@ mystatus_t mythread_thread_destroy(mythread_t *mythread, void* thread)
 
 void * mythread_thread_attr_init(mythread_t *mythread)
 {
-    return MyCORE_STATUS_OK;
+    return (void*)0x01;
 }
 
 void mythread_thread_attr_clean(mythread_t *mythread, void* attr)
@@ -111,7 +111,7 @@ void mythread_mutex_close(mythread_t *mythread, void* mutex)
 
 void * mythread_nanosleep_create(mythread_t* mythread)
 {
-    return NULL;
+    return (void*)0x01;
 }
 
 void mythread_nanosleep_clean(void* timespec)
@@ -125,7 +125,7 @@ void mythread_nanosleep_destroy(void* timespec)
 mystatus_t mythread_nanosleep_sleep(void* timespec)
 {
     Sleep(0);
-    return MyCORE_STATUS_ERROR;
+    return MyCORE_STATUS_OK;
 }
 
 #endif

@@ -29,7 +29,7 @@
 #define MyENCODING_VERSION_PATCH 0
 
 #ifdef __cplusplus
-//extern "C" {
+extern "C" {
 #endif
 
 // encoding

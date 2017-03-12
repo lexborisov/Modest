@@ -36,7 +36,7 @@
 //#define MyCORE_BUILD_WITHOUT_THREADS
 
 #ifdef __cplusplus
-//extern "C" {
+extern "C" {
 #endif
 
 /* Format */

@@ -32,6 +32,7 @@ typedef struct mycss_media mycss_media_t;
 
 
 struct mycss_media {
+	mystatus_t error;
 };
 
 

@@ -21,6 +21,8 @@
 #ifndef MyCORE_UTILS_MHASH_H
 #define MyCORE_UTILS_MHASH_H
 
+#include <string.h>
+
 #include <mycore/myosi.h>
 #include <mycore/utils/mchar_async.h>
 
