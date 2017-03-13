@@ -32,7 +32,7 @@ void * mythread_thread_create(mythread_t *mythread, mythread_process_f process_f
 {
     return CreateThread(NULL,                   // default security attributes
                         0,                      // use default stack size
-                        process_func,           // thread function name
+                        (LPTHREAD_START_ROUTINE)process_func,           // thread function name
                         ctx,                    // argument to thread function
                         0,                      // use default creation flags
                         NULL);                  // returns the thread identifier
