@@ -82,43 +82,34 @@ bool modest_finder_match_attribute_ws(myhtml_token_attr_t* attr, const char* key
             if(myhtml_strncasecmp(key, attr->key.data, key_len) == 0)
             {
                 size_t i = 0;
+                size_t begin;
                 
                 if(attr->value.length >= value_len) {
                     if(case_sensitive)
                     {
                         while(i < attr->value.length)
                         {
-                            size_t end = i + value_len;
+                            begin = i;
+                            while(i < attr->value.length && myhtml_utils_whithspace(attr->value.data[i], !=, &&)) {i++;}
                             
-                            if(end > attr->value.length)
-                                return false;
-                            
-                            if(
-                               (myhtml_strncmp(value, &attr->value.data[i], value_len) == 0) &&
-                               (myhtml_utils_whithspace(attr->value.data[end], ==, ||) || end == attr->value.length))
-                            {
+                            if((i - begin) == value_len && (myhtml_strncmp(value, &attr->value.data[begin], value_len) == 0)) {
                                 return true;
                             }
-                            
-                            i++;
+                            /* skip all ws */
+                            while(i < attr->value.length && myhtml_utils_whithspace(attr->value.data[i], ==, ||)) {i++;}
                         }
                     }
                     else {
                         while(i < attr->value.length)
                         {
-                            size_t end = i + value_len;
+                            begin = i;
+                            while(i < attr->value.length && myhtml_utils_whithspace(attr->value.data[i], !=, &&)) {i++;}
                             
-                            if(end > attr->value.length)
-                                return false;
-                            
-                            if(
-                               (myhtml_strncasecmp(value, &attr->value.data[i], value_len) == 0) &&
-                               (myhtml_utils_whithspace(attr->value.data[end], ==, ||) || end == attr->value.length))
-                            {
+                            if((i - begin) == value_len && (myhtml_strncasecmp(value, &attr->value.data[begin], value_len) == 0)) {
                                 return true;
                             }
-                            
-                            i++;
+                            /* skip all ws */
+                            while(i < attr->value.length && myhtml_utils_whithspace(attr->value.data[i], ==, ||)) {i++;}
                         }
                     }
                 }
