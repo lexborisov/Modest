@@ -47,9 +47,9 @@ bool mycss_values_consume_length(mycss_entry_t* entry, mycss_token_t* token)
         }
         
         if(value->is_float)
-            value->f = (float)return_num;
+            value->value.f = (float)return_num;
         else
-            value->i = (int)return_num;
+            value->value.i = (int)return_num;
         
         *entry->values = value;
     }
@@ -74,9 +74,9 @@ bool mycss_values_consume_percentage(mycss_entry_t* entry, mycss_token_t* token)
         mycore_string_destroy(&str, false);
         
         if(value->is_float)
-            value->f = (float)return_num;
+            value->value.f = (float)return_num;
         else
-            value->i = (int)return_num;
+            value->value.i = (int)return_num;
         
         *entry->values = value;
         

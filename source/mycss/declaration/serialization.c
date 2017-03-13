@@ -271,11 +271,11 @@ bool mycss_declaration_serialization_font_family(mycss_entry_t* entry, mycss_dec
             callback(", ", 2, context);
         
         if(font_family->entries[i].type == MyCSS_VALUES_FONT_FAMILY_TYPE_GENERIC) {
-            mycss_property_serialization_value(font_family->entries[i].prop_type, NULL, callback, context);
+            mycss_property_serialization_value(font_family->entries[i].value.prop_type, NULL, callback, context);
         }
         else if(font_family->entries[i].type == MyCSS_VALUES_FONT_FAMILY_TYPE_NAME) {
             callback("\"", 1, context);
-            mycore_string_t *str = &font_family->entries[i].str;
+            mycore_string_t *str = &font_family->entries[i].value.str;
             callback(str->data, str->length, context);
             callback("\"", 1, context);
         }
@@ -587,23 +587,23 @@ bool mycss_declaration_serialization_background_position(mycss_entry_t* entry, m
     
     if(position->one.type) {
         o_e = true;
-        mycss_property_serialization_value(position->one.type, position->one.length, callback, context);
+        mycss_property_serialization_value(position->one.type, position->one.value.length, callback, context);
     }
     
     if(position->two.type) {
         if(o_e) callback(" ", 1, context); else o_e = true;
-        mycss_property_serialization_value(position->two.type, position->two.length, callback, context);
+        mycss_property_serialization_value(position->two.type, position->two.value.length, callback, context);
     }
     
     if(position->three.type) {
         if(o_e) callback(" ", 1, context); else o_e = true;
-        mycss_property_serialization_value(position->three.type, position->three.length, callback, context);
+        mycss_property_serialization_value(position->three.type, position->three.value.length, callback, context);
     }
     
     if(position->four.type) {
         if(o_e) callback(" ", 1, context);
         
-        mycss_property_serialization_value(position->four.type, position->four.length, callback, context);
+        mycss_property_serialization_value(position->four.type, position->four.value.length, callback, context);
     }
     
     mycss_declaration_serialization_important_if_need(dec_entry, callback, context);

@@ -55,7 +55,7 @@ int mycore_ferror(FILE *stream)
 /* setbuf */
 void mycore_setbuf(FILE *restrict stream, char *restrict buffer)
 {
-    return setbuf(stream, buffer);
+    setbuf(stream, buffer);
 }
 
 

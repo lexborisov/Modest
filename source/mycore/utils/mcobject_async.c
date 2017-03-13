@@ -256,8 +256,12 @@ mcobject_async_chunk_t * mcobject_async_chunk_malloc_without_lock(mcobject_async
 
 mcobject_async_chunk_t * mcobject_async_chunk_malloc(mcobject_async_t *mcobj_async, size_t length, mcobject_async_status_t *status)
 {
-    if(mcsync_lock(mcobj_async->mcsync))
+    if(mcsync_lock(mcobj_async->mcsync)) {
+        if(status)
+            *status = MCOBJECT_ASYNC_STATUS_ERROR_MEMORY_ALLOCATION;
+        
         return NULL;
+    }
     
     mcobject_async_chunk_t* chunk = mcobject_async_chunk_malloc_without_lock(mcobj_async, length, status);
     mcsync_unlock(mcobj_async->mcsync);

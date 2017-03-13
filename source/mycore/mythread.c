@@ -167,7 +167,7 @@ mystatus_t mythread_stop(mythread_t *mythread)
     
     for (size_t i = 0; i < mythread->entries_length; i++)
     {
-        while(mythread->entries[i].context.opt != MyTHREAD_OPT_STOP) {
+        while((mythread->entries[i].context.opt & MyTHREAD_OPT_STOP) == 0) {
             mythread_nanosleep_sleep(mythread->timespec);
         }
     }
@@ -184,8 +184,8 @@ mystatus_t mythread_suspend(mythread_t *mythread)
     
     for (size_t i = 0; i < mythread->entries_length; i++)
     {
-        while(mythread->entries[i].context.opt != MyTHREAD_OPT_STOP &&
-              mythread->entries[i].context.opt != MyTHREAD_OPT_WAIT)
+        while((mythread->entries[i].context.opt & MyTHREAD_OPT_STOP) == 0 &&
+              (mythread->entries[i].context.opt & MyTHREAD_OPT_WAIT) == 0)
         {
             mythread_nanosleep_sleep(mythread->timespec);
         }
@@ -205,7 +205,7 @@ mystatus_t mythread_resume(mythread_t *mythread)
     
     for (size_t i = 0; i < mythread->entries_length; i++)
     {
-        if(mythread->entries[i].context.opt == MyTHREAD_OPT_STOP) {
+        if(mythread->entries[i].context.opt & MyTHREAD_OPT_STOP) {
             mythread->entries[i].context.opt = MyTHREAD_OPT_UNDEF;
             
             if(mythread_mutex_post(mythread, mythread->entries[i].context.mutex))
@@ -272,7 +272,7 @@ mystatus_t mythread_entry_stop(mythread_entry_t* entry)
     
     entry->context.opt = MyTHREAD_OPT_STOP;
     
-    while(entry->context.opt != MyTHREAD_OPT_STOP) {
+    while((entry->context.opt & MyTHREAD_OPT_STOP) == 0) {
         mythread_nanosleep_sleep(entry->context.mythread->timespec);
     }
     
@@ -286,7 +286,7 @@ mystatus_t mythread_entry_suspend(mythread_entry_t* entry)
     
     entry->context.opt = MyTHREAD_OPT_WAIT;
     
-    while(entry->context.opt != MyTHREAD_OPT_STOP && entry->context.opt != MyTHREAD_OPT_WAIT) {
+    while((entry->context.opt & MyTHREAD_OPT_STOP) == 0 && (entry->context.opt & MyTHREAD_OPT_WAIT) == 0) {
         mythread_nanosleep_sleep(entry->context.mythread->timespec);
     }
     
@@ -298,7 +298,7 @@ mystatus_t mythread_entry_resume(mythread_entry_t* entry)
     if(entry->context.opt & MyTHREAD_OPT_WAIT) {
         entry->context.opt = MyTHREAD_OPT_UNDEF;
     }
-    else if(entry->context.opt == MyTHREAD_OPT_STOP) {
+    else if(entry->context.opt & MyTHREAD_OPT_STOP) {
         entry->context.opt = MyTHREAD_OPT_UNDEF;
         
         if(mythread_mutex_post(entry->context.mythread, entry->context.mutex))
@@ -323,7 +323,7 @@ mythread_t * mythread_entry_mythread(mythread_entry_t* entry)
 /* Callbacks */
 void mythread_callback_quit(mythread_t* mythread, mythread_entry_t* entry, void* ctx)
 {
-    while(entry->context.opt != MyTHREAD_OPT_QUIT)
+    while((entry->context.opt & MyTHREAD_OPT_QUIT) == 0)
         mythread_nanosleep_sleep(mythread->timespec);
 }
 

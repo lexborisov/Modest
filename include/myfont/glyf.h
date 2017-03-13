@@ -99,13 +99,13 @@ typedef myfont_table_glyf_t;
 
 struct myfont_font;
 
-mystatus_t myfont_load_table_glyf(struct myfont_font *mf);
+mystatus_t myfont_load_table_glyf(myfont_font_t *mf, uint8_t* data, size_t data_size);
 
-mystatus_t myfont_glyf_load(struct myfont_font *mf, myfont_table_glyph_t *glyph, uint16_t glyph_index);
-mystatus_t myfont_glyf_load_data(struct myfont_font *mf, myfont_table_glyph_t *glyph, uint32_t offset);
-mystatus_t myfont_glyf_load_simple(myfont_font_t *mf, myfont_table_glyph_t *glyph, uint8_t *data, uint32_t offset);
-mystatus_t myfont_glyf_load_simple_flags(struct myfont_font *mf, myfont_table_glyph_t *glyph, uint8_t *data, uint32_t offset);
-mystatus_t myfont_glyf_load_simple_coordinates(struct myfont_font *mf, myfont_table_glyph_t *glyph, uint8_t *data, uint32_t offset);
+mystatus_t myfont_glyf_load(myfont_font_t *mf, myfont_table_glyph_t *glyph, uint8_t* data, size_t data_size, uint16_t glyph_index);
+mystatus_t myfont_glyf_load_data(myfont_font_t *mf, myfont_table_glyph_t *glyph, uint8_t* data, size_t data_size, uint32_t offset);
+mystatus_t myfont_glyf_load_simple(myfont_font_t *mf, myfont_table_glyph_t *glyph, uint8_t *data, size_t data_size, uint32_t offset);
+mystatus_t myfont_glyf_load_simple_flags(myfont_font_t *mf, myfont_table_glyph_t *glyph, uint8_t *data, size_t data_size, uint32_t offset);
+mystatus_t myfont_glyf_load_simple_coordinates(myfont_font_t *mf, myfont_table_glyph_t *glyph, uint8_t *data, size_t data_size, uint32_t offset);
 
 #ifdef __cplusplus
 } /* extern "C" */

@@ -25,7 +25,7 @@ void myurl_serialization_host(myurl_entry_t* url_entry, mycore_callback_serializ
 {
     switch (url_entry->host.type) {
         case MyURL_HOST_TYPE_DOMAIN:
-            callback(url_entry->host.domain.value, url_entry->host.domain.length, ctx);
+            callback(url_entry->host.value.domain.value, url_entry->host.value.domain.length, ctx);
             break;
             
         case MyURL_HOST_TYPE_IPv4: {
@@ -35,7 +35,7 @@ void myurl_serialization_host(myurl_entry_t* url_entry, mycore_callback_serializ
             size_t ipv4_length = 12 + 4;
             size_t digit_size = 0;
             
-            unsigned int n = url_entry->host.ipv.pieces[0];
+            unsigned int n = url_entry->host.value.ipv.pieces[0];
             
             for(size_t i = 0; i < 4; i++)
             {
@@ -63,7 +63,7 @@ void myurl_serialization_host(myurl_entry_t* url_entry, mycore_callback_serializ
             callback("[", 1, ctx);
             
             /* 1 */
-            unsigned int *pieces = url_entry->host.ipv.pieces;
+            unsigned int *pieces = url_entry->host.value.ipv.pieces;
             unsigned int *compress_pointer = NULL;
             
             char buffer[128] = {0};
@@ -114,7 +114,7 @@ void myurl_serialization_host(myurl_entry_t* url_entry, mycore_callback_serializ
         }
             
         case MyURL_HOST_TYPE_OPAQUE:
-            callback(url_entry->host.opaque.value, url_entry->host.opaque.length, ctx);
+            callback(url_entry->host.value.opaque.value, url_entry->host.value.opaque.length, ctx);
             break;
             
         default:

@@ -176,8 +176,8 @@ size_t myurl_parser_state_file_host_end(myurl_t* url, myurl_entry_t* url_entry, 
     
     /* 1.3.3 */
     if(url_entry->host.type == MyURL_HOST_TYPE_DOMAIN &&
-       url_entry->host.domain.length == 9 &&
-       mycore_strncasecmp("localhost", url_entry->host.domain.value, url_entry->host.domain.length) == 0)
+       url_entry->host.value.domain.length == 9 &&
+       mycore_strncasecmp("localhost", url_entry->host.value.domain.value, url_entry->host.value.domain.length) == 0)
     {
         myurl_host_clean(url, &url_entry->host);
     }

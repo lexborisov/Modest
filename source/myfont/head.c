@@ -20,7 +20,7 @@
 
 #include "myfont/head.h"
 
-mystatus_t myfont_load_table_head(struct myfont_font *mf)
+mystatus_t myfont_load_table_head(myfont_font_t* mf, uint8_t* font_data, size_t data_size)
 {
     memset(&mf->table_head, 0, sizeof(myfont_table_head_t));
     
@@ -30,11 +30,11 @@ mystatus_t myfont_load_table_head(struct myfont_font *mf)
     myfont_table_head_t *thead = &mf->table_head;
     const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_head];
     
-    if(mf->file_size < (table_offset + 16 + 4 + 16 + 8 + 4 + 6))
+    if(data_size < (table_offset + 16 + 4 + 16 + 8 + 4 + 6))
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     /* get current data */
-    uint8_t *data = &mf->file_data[table_offset];
+    uint8_t *data = &font_data[table_offset];
     
     /* u32 */
     thead->version = myfont_read_u32(&data);

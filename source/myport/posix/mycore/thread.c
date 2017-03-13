@@ -29,7 +29,7 @@
  * For all unix system. POSIX pthread
  *
  ***********************************************************************************/
-void * mythread_thread_create(mythread_t *mythread, void* process_func, void* ctx)
+void * mythread_thread_create(mythread_t *mythread, mythread_process_f process_func, void* ctx)
 {
     void *thread = mycore_calloc(1, sizeof(pthread_t));
     

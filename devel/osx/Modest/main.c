@@ -1,84 +1,84 @@
-///*
-// Copyright (C) 2016 Alexander Borisov
-// 
-// This library is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 2.1 of the License, or (at your option) any later version.
-// 
-// This library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-// Lesser General Public License for more details.
-// 
-// You should have received a copy of the GNU Lesser General Public
-// License along with this library; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-// 
-// Author: lex.borisov@gmail.com (Alexander Borisov)
-//*/
-//
-//#include "myhtml/myhtml.h"
-//#include "mycss/mycss.h"
-//#include "modest/modest.h"
-//
-//#include "mycss/selectors/serialization.h"
-//#include "mycss/declaration/init.h"
-//#include "modest/finder/finder.h"
-//#include "modest/finder/thread.h"
-//#include "myhtml/encoding.h"
-//#include "myfont/myfont.h"
-//#include "modest/node/serialization.h"
-//
-//#include "myurl/url.h"
-//#include "myurl/serialization.h"
-//
-//struct res_data {
-//    char *data;
-//    size_t size;
-//};
-//
-//struct res_data load_data(const char* filename)
-//{
-//    FILE *f = fopen(filename, "rb");
-//    fseek(f, 0L, SEEK_END);
-//    
-//    long l = ftell(f);
-//    fseek(f, 0L, SEEK_SET);
-//    
-//    char *html = (char*)mycore_malloc(l);
-//    if(fread(html, 1, l, f) != l) {
-//        exit(1);
-//    }
-//    
-//    fclose(f);
-//    
-//    struct res_data res = {html, (size_t)l};
-//    return res;
-//}
-//
-//void serialization_callback(const char* data, size_t len, void* ctx)
-//{
-//    printf("%.*s", (int)len, data);
-//}
-//
+/*
+ Copyright (C) 2016 Alexander Borisov
+ 
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+ 
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ Lesser General Public License for more details.
+ 
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ 
+ Author: lex.borisov@gmail.com (Alexander Borisov)
+*/
+
+#include "myhtml/myhtml.h"
+#include "mycss/mycss.h"
+#include "modest/modest.h"
+
+#include "mycss/selectors/serialization.h"
+#include "mycss/declaration/init.h"
+#include "modest/finder/finder.h"
+#include "modest/finder/thread.h"
+#include "myencoding/encoding.h"
+#include "myfont/myfont.h"
+#include "modest/node/serialization.h"
+
+#include "myurl/url.h"
+#include "myurl/serialization.h"
+
+struct res_data {
+    char *data;
+    size_t size;
+};
+
+struct res_data load_data(const char* filename)
+{
+    FILE *f = fopen(filename, "rb");
+    fseek(f, 0L, SEEK_END);
+    
+    long l = ftell(f);
+    fseek(f, 0L, SEEK_SET);
+    
+    char *html = (char*)mycore_malloc(l);
+    if(fread(html, 1, l, f) != l) {
+        exit(1);
+    }
+    
+    fclose(f);
+    
+    struct res_data res = {html, (size_t)l};
+    return res;
+}
+
+void serialization_callback(const char* data, size_t len, void* ctx)
+{
+    printf("%.*s", (int)len, data);
+}
+
 //myhtml_tree_t * myhtml(const char* data, size_t data_size, bool is_file, bool print_result, myhtml_callback_tree_node_f cai, void* cai_ctx)
 //{
 //    setbuf(stdout, NULL);
 //    
 //    myhtml_t* myhtml = myhtml_create();
-//    myhtml_init(myhtml, MyHTML_OPTIONS_PARSE_MODE_SINGLE, 1, 0);
+//    myhtml_init(myhtml, MyHTML_OPTIONS_DEFAULT, 1, 0);
 //    
-//    uint64_t all_start = myhtml_hperf_clock(NULL);
-//    uint64_t tree_init_start = myhtml_hperf_clock(NULL);
+////    uint64_t all_start = mycore_hperf_clock(NULL);
+////    uint64_t tree_init_start = mycore_hperf_clock(NULL);
 //    
 //    myhtml_tree_t* tree = myhtml_tree_create();
 //    myhtml_tree_init(tree, myhtml);
 //    
 //    myhtml_callback_tree_node_insert_set(tree, cai, cai_ctx);
 //    
-//    uint64_t tree_init_stop = myhtml_hperf_clock(NULL);
-//    uint64_t parse_start = myhtml_hperf_clock(NULL);
+////    uint64_t tree_init_stop = mycore_hperf_clock(NULL);
+////    uint64_t parse_start = mycore_hperf_clock(NULL);
 //    
 //    if(is_file) {
 //        struct res_data res = load_data(data);
@@ -95,19 +95,19 @@
 //        myhtml_parse(tree, MyENCODING_UTF_8, data, data_size);
 //    }
 //    
-//    uint64_t parse_stop = myhtml_hperf_clock(NULL);
-//    uint64_t all_stop = myhtml_hperf_clock(NULL);
+////    uint64_t parse_stop = mycore_hperf_clock(NULL);
+////    uint64_t all_stop = mycore_hperf_clock(NULL);
 //    
 //    if(print_result) {
 //        myhtml_tree_print_node_children(tree, tree->document, stdout, 0);
 //    }
 //    
 //    printf("\n\nMyHTML Information:\n");
-//    printf("\tTicks/sec: %llu\n", (unsigned long long) myhtml_hperf_res(NULL));
-//    myhtml_hperf_print("\tFirst Tree init", tree_init_start, tree_init_stop, stdout);
-//    myhtml_hperf_print("\tParse html", parse_start, parse_stop, stdout);
-//    myhtml_hperf_print("\tTotal", all_start, all_stop, stdout);
-//    printf("\n");
+////    printf("\tTicks/sec: %llu\n", (unsigned long long) mycore_hperf_res(NULL));
+////    mycore_hperf_print("\tFirst Tree init", tree_init_start, tree_init_stop, stdout);
+////    mycore_hperf_print("\tParse html", parse_start, parse_stop, stdout);
+////    mycore_hperf_print("\tTotal", all_start, all_stop, stdout);
+////    printf("\n");
 //    
 //    //myhtml_tree_destroy(tree);
 //    //myhtml_destroy(myhtml);
@@ -125,7 +125,7 @@
 //    mycss_entry_t *entry = mycss_entry_create();
 //    mycss_entry_init(mycss, entry);
 //    
-//    uint64_t parse_start = myhtml_hperf_clock(NULL);
+//    uint64_t parse_start = mycore_hperf_clock(NULL);
 //    
 //    if(is_file) {
 //        struct res_data res = load_data(data);
@@ -136,7 +136,7 @@
 //        mycss_parse(entry, MyENCODING_UTF_8, data, data_size);
 //    }
 //    
-//    uint64_t parse_stop = myhtml_hperf_clock(NULL);
+//    uint64_t parse_stop = mycore_hperf_clock(NULL);
 //    
 //    if(print_result) {
 //        printf("\n");
@@ -145,8 +145,8 @@
 //    }
 //    
 //    printf("\n------------\nMyCSS Information:\n");
-//    printf("\tTicks/sec: %llu\n", (unsigned long long) myhtml_hperf_res(NULL));
-//    myhtml_hperf_print("\tParse css", parse_start, parse_stop, stdout);
+//    printf("\tTicks/sec: %llu\n", (unsigned long long) mycore_hperf_res(NULL));
+//    mycore_hperf_print("\tParse css", parse_start, parse_stop, stdout);
 //    
 //    //mycss_entry_destroy(entry, true);
 //    //mycss_destroy(mycss, true);
@@ -229,9 +229,809 @@
 //    }
 //    
 //    myurl_destroy(url, true);
+//    
+//    return 0;
 //}
 //
-//int main_23(int argc, const char * argv[])
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//#include <time.h>
+//#include <sys/stat.h>
+//
+//#include <stdbool.h>
+//
+//
+//
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include <dirent.h>
+//#include <string.h>
+//#include <unistd.h>
+//
+//
+//struct res_html_test {
+//    char *html;
+//    size_t len;
+//    size_t size;
+//};
+//
+//struct chunk_res_test {
+//    struct res_html_test data;
+//    struct res_html_test result;
+//};
+//
+//struct chunk_res_result {
+//    myhtml_tree_t *tree;
+//    size_t good;
+//    size_t bad;
+//    
+//    bool is_fragment;
+//    bool enabled_script;
+//    myhtml_tag_id_t tag_id;
+//    enum myhtml_namespace ns;
+//};
+//
+//typedef void (*chunk_test_f)(struct chunk_res_test *res_test, struct chunk_res_result *result);
+//
+//size_t read_line(char *html, size_t size)
+//{
+//    size_t len;
+//    for (len = 0; len < size; len++) {
+//        if(html[len] == '\n')
+//            break;
+//    }
+//    
+//    return len;
+//}
+//
+//void init_res_test_data(struct res_html_test* data)
+//{
+//    data->len  = 0;
+//    data->size = 4096;
+//    data->html = malloc(sizeof(char) * data->size);
+//    
+//    if(data->html == NULL) {
+//        fprintf(stderr, "Can't init resurces for test object\n");
+//        exit(EXIT_FAILURE);
+//    }
+//}
+//
+//void init_res_test(struct chunk_res_test* res_test)
+//{
+//    init_res_test_data(&res_test->data);
+//    init_res_test_data(&res_test->result);
+//}
+//
+//void clean_res_test(struct chunk_res_test* res_test)
+//{
+//    res_test->data.len   = 0;
+//    res_test->result.len = 0;
+//}
+//
+//void append_to_test(struct res_html_test* data, const char *text, size_t len, bool add_newline, bool to_lowercase)
+//{
+//    if(text == NULL)
+//        return;
+//    
+//    if((data->len + len + 2) >= data->size) {
+//        data->size = data->size + len + 2048;
+//        data->html = realloc(data->html, data->size);
+//        
+//        if(data->html == NULL) {
+//            fprintf(stderr, "Can't realloc resurces for test object\n");
+//            exit(EXIT_FAILURE);
+//        }
+//    }
+//    
+//    if(add_newline && data->len) {
+//        data->html[data->len] = '\n';
+//        data->len++;
+//    }
+//    
+//    memcpy(&data->html[data->len], text, len);
+//    
+//    if(to_lowercase) {
+//        for(size_t i = data->len; i < (data->len + len); i++) {
+//            if(data->html[i] > 0x40 && data->html[i] < 0x5b)
+//                data->html[i] |= 0x60;
+//        }
+//    }
+//    
+//    data->len += len;
+//    data->html[data->len] = '\0';
+//}
+//
+//bool sort_text(myhtml_tree_attr_t *attr1, size_t size, myhtml_tree_attr_t **list, size_t i, size_t *len)
+//{
+//    unsigned char *fisrt = (unsigned char*)attr1->key.data;
+//    unsigned char *sec = (unsigned char*)list[i]->key.data;
+//    
+//    for (size_t j = 0; j < size; j++)
+//    {
+//        if(fisrt[j] > sec[j]) {
+//            break;
+//        }
+//        else if(fisrt[j] < sec[j]) {
+//            memmove(&list[(i + 1)], &list[i], sizeof(myhtml_tree_attr_t*));
+//            list[i] = attr1;
+//            (*len)++;
+//            return true;
+//        }
+//    }
+//    
+//    return false;
+//}
+//
+//myhtml_tree_attr_t ** sort_attr(myhtml_tree_node_t *node)
+//{
+//    myhtml_tree_attr_t *attr = myhtml_node_attribute_first(node);
+//    myhtml_tree_attr_t **list = calloc(1024, sizeof(myhtml_tree_attr_t*));
+//    size_t len = 1;
+//    size_t i;
+//    
+//    list[0] = attr;
+//    attr = attr->next;
+//    
+//    while (attr) {
+//        for (i = 0; i < len; i++) {
+//            if(attr->key.length > list[i]->key.length)
+//            {
+//                if(sort_text(attr, list[i]->key.length, list, i, &len))
+//                    break;
+//            }
+//            else {
+//                if(sort_text(attr, attr->key.length, list, i, &len))
+//                    break;
+//            }
+//        }
+//        
+//        if(i == len) {
+//            list[i] = attr;
+//            len++;
+//        }
+//        
+//        attr = attr->next;
+//    }
+//    
+//    return list;
+//}
+//
+//void print_node_attr(myhtml_tree_node_t *node, struct res_html_test* data, size_t inc)
+//{
+//    if(myhtml_node_attribute_first(node) == NULL)
+//        return;
+//    
+//    myhtml_tree_attr_t **list_attr = sort_attr(node);
+//    
+//    size_t len = 0;
+//    while (*list_attr != NULL)
+//    {
+//        myhtml_tree_attr_t *attr = *list_attr;
+//        
+//        const char *name = myhtml_attribute_key(attr, &len);
+//        
+//        if(name) {
+//            append_to_test(data, "\n", 1, false, false);
+//            
+//            for(size_t i = 0; i < inc; i++)
+//                append_to_test(data, "  ", 2, false, false);
+//            
+//            if(attr->ns == MyHTML_NAMESPACE_XML) {
+//                append_to_test(data, "xml ", 4, false, false);
+//            }
+//            else if(attr->ns == MyHTML_NAMESPACE_XMLNS) {
+//                append_to_test(data, "xmlns ", 6, false, false);
+//            }
+//            else if(attr->ns == MyHTML_NAMESPACE_XLINK) {
+//                append_to_test(data, "xlink ", 6, false, false);
+//            }
+//            
+//            append_to_test(data, name, len, false, false);
+//            
+//            const char *value = myhtml_attribute_value(attr, &len);
+//            
+//            if(value) {
+//                append_to_test(data, "=\"", 2, false, false);
+//                append_to_test(data, value, len, false, false);
+//                append_to_test(data, "\"", 1, false, false);
+//            }
+//            else {
+//                append_to_test(data, "=\"\"", 3, false, false);
+//            }
+//        }
+//        
+//        //attr = myhtml_attribute_next(attr);
+//        list_attr++;
+//    }
+//}
+//
+//void print_tree(myhtml_tree_t* tree, myhtml_tree_node_t *node, struct res_html_test* data, size_t inc)
+//{
+//    while (node)
+//    {
+//        if(data->len)
+//            append_to_test(data, "\n", 1, false, false);
+//        
+//        for(size_t i = 0; i < inc; i++)
+//            append_to_test(data, "  ", 2, false, false);
+//        
+//        size_t len = 0;
+//        
+//        if(myhtml_node_tag_id(node) == MyHTML_TAG__TEXT)
+//        {
+//            const char *text = myhtml_node_text(node, &len);
+//            
+//            append_to_test(data, "\"", 1, false, false);
+//            append_to_test(data, text, len, false, false);
+//            append_to_test(data, "\"", 1, false, false);
+//        }
+//        else if(myhtml_node_tag_id(node) == MyHTML_TAG__COMMENT)
+//        {
+//            const char *text = myhtml_node_text(node, &len);
+//            
+//            append_to_test(data, "<!-- ", 5, false, false);
+//            append_to_test(data, text, len, false, false);
+//            append_to_test(data, " -->", 4, false, false);
+//        }
+//        else if(myhtml_node_tag_id(node) == MyHTML_TAG__DOCTYPE)
+//        {
+//            append_to_test(data, "<!DOCTYPE", strlen("<!DOCTYPE"), false, false);
+//            
+//            if(tree->doctype.attr_name) {
+//                append_to_test(data, " ", 1, false, false);
+//                append_to_test(data, tree->doctype.attr_name, strlen(tree->doctype.attr_name), false, false);
+//            }
+//            
+//            if(tree->doctype.attr_public) {
+//                append_to_test(data, " \"", 2, false, false);
+//                append_to_test(data, tree->doctype.attr_public, strlen(tree->doctype.attr_public), false, false);
+//                append_to_test(data, "\"", 1, false, false);
+//            }
+//            
+//            if(tree->doctype.attr_system) {
+//                append_to_test(data, " \"", 2, false, false);
+//                append_to_test(data, tree->doctype.attr_system, strlen(tree->doctype.attr_system), false, false);
+//                append_to_test(data, "\"", 1, false, false);
+//            }
+//            
+//            append_to_test(data, ">", 1, false, false);
+//        }
+//        else {
+//            const char *tag_name = myhtml_tag_name_by_id(tree, myhtml_node_tag_id(node), &len);
+//            
+//            if(tag_name) {
+//                append_to_test(data, "<", 1, false, false);
+//                
+//                switch (myhtml_node_namespace(node)) {
+//                    case MyHTML_NAMESPACE_SVG:
+//                        append_to_test(data, "svg ", 4, false, false);
+//                        append_to_test(data, tag_name, len, false, false);
+//                        break;
+//                        
+//                    case MyHTML_NAMESPACE_MATHML:
+//                        append_to_test(data, "math ", 5, false, false);
+//                        append_to_test(data, tag_name, len, false, true);
+//                        break;
+//                        
+//                    default:
+//                        append_to_test(data, tag_name, len, false, false);
+//                        break;
+//                }
+//            }
+//            else
+//                // it can not be
+//                printf("<!something is wrong!");
+//            
+//            //            if(myhtml_node_is_close_self(node))
+//            //                append_to_test(data, " /", 2, false);
+//            
+//            append_to_test(data, ">", 1, false, false);
+//            
+//            if(myhtml_node_tag_id(node) == MyHTML_TAG_TEMPLATE &&
+//               myhtml_node_namespace(node) == MyHTML_NAMESPACE_HTML)
+//            {
+//                append_to_test(data, "\n", 1, false, false);
+//                
+//                for(size_t i = 0; i <= inc; i++)
+//                    append_to_test(data, "  ", 2, false, false);
+//                
+//                append_to_test(data, "content", 7, false, false);
+//                
+//                print_tree(tree, myhtml_node_child(node), data, (inc + 2));
+//                node = myhtml_node_next(node);
+//                
+//                continue;
+//            }
+//            
+//            // print node attributes
+//            print_node_attr(node, data, (inc + 1));
+//        }
+//        
+//        // print childs
+//        print_tree(tree, myhtml_node_child(node), data, (inc + 1));
+//        node = myhtml_node_next(node);
+//    }
+//}
+//
+//void chunk_process(struct chunk_res_test *res_test, struct chunk_res_result *result)
+//{
+//    struct res_html_test data;
+//    init_res_test_data(&data);
+//    
+//    if(result->enabled_script)
+//        result->tree->flags |= MyHTML_TREE_FLAGS_SCRIPT;
+//    
+//    //printf("%.*s\n", res_test->data.len, res_test->data.html);
+//    
+//    if(result->is_fragment == false) {
+//        myhtml_parse_single(result->tree, MyENCODING_UTF_8, res_test->data.html, res_test->data.len);
+//        print_tree(result->tree, result->tree->document->child, &data, 0);
+//    }
+//    else {
+//        myhtml_parse_fragment_single(result->tree, MyENCODING_UTF_8, res_test->data.html, res_test->data.len, result->tag_id, result->ns);
+//        print_tree(result->tree, result->tree->document->child->child, &data, 0);
+//    }
+//    
+//    if(res_test->result.len != data.len) {
+//        result->bad++;
+//        
+//        printf("Error:\n");
+//        printf("Original raw:\n%.*s\n", (int)res_test->data.len, res_test->data.html);
+//        printf("Original:\n%s\n", res_test->result.html);
+//        printf("Result:\n%s\n", data.html);
+//    }
+//    else if(strcmp(res_test->result.html, data.html) == 0) {
+//        result->good++;
+//        printf("Done\n");
+//    }
+//    else {
+//        result->bad++;
+//        printf("Error with len ==:\n");
+//        printf("Original raw:\n%.*s\n", (int)res_test->data.len, res_test->data.html);
+//        printf("Original:\n%s\n", res_test->result.html);
+//        printf("Result:\n%s\n", data.html);
+//    }
+//    
+//    myhtml_tree_clean(result->tree);
+//    //mythread_clean(result->tree->myhtml->thread);
+//    
+//    free(data.html);
+//}
+//
+//void read_chunk(struct res_data* res, chunk_test_f func, struct chunk_res_result *result)
+//{
+//    struct chunk_res_test res_test;
+//    init_res_test(&res_test);
+//    
+//    result->is_fragment = false;
+//    
+//    size_t i = 0; size_t state = 0;
+//    while (i < res->size)
+//    {
+//        size_t line_len = read_line(&res->data[i], (res->size - i));
+//        
+//        if(line_len == 0 && state != 1) {
+//            if((i + 1) < res->size && res->data[(i + 1)] != '#') {
+//                append_to_test(&res_test.result, "\n", 1, true, false);
+//                i++;
+//                continue;
+//            }
+//            
+//            if(res_test.data.len)
+//                func(&res_test, result);
+//            
+//            state = 0;
+//            result->is_fragment = false;
+//            result->enabled_script = false;
+//            clean_res_test(&res_test);
+//        }
+//        else if(res->data[i] == '#') {
+//            
+//            if(line_len == strlen("#script-on") && strncmp(&res->data[i], "#script-on", strlen("#script-on")) == 0) {
+//                result->enabled_script = true;
+//            }
+//            else if(state == 0) {
+//                if(strncmp(&res->data[i], "#data", line_len) == 0) {
+//                    state = 1;
+//                }
+//            }
+//            else if(state == 1) {
+//                if(strncmp(&res->data[i], "#errors", line_len) == 0) {
+//                    state = 2;
+//                }
+//            }
+//            else if(state == 2 && line_len > 9) {
+//                if(strncmp(&res->data[i], "#document-fragment", line_len) == 0) {
+//                    state = 3;
+//                    result->is_fragment = true;
+//                }
+//            }
+//            else if(state == 2 || state == 3) {
+//                if(strncmp(&res->data[i], "#document", line_len) == 0) {
+//                    state = 4;
+//                }
+//            }
+//            else {
+//                fprintf(stderr, "Bad position in text\n");
+//                exit(EXIT_FAILURE);
+//            }
+//            
+//            i += line_len;
+//        }
+//        else if(state == 1) {
+//            append_to_test(&res_test.data, &res->data[i], line_len, true, false);
+//            i += line_len;
+//        }
+//        else if(state == 3) {
+//            const char *data = &res->data[i];
+//            size_t j;
+//            
+//            for(j = 0; j < line_len; j++)
+//            {
+//                if(data[j] == ' ')
+//                {
+//                    while(j < line_len) {
+//                        if(data[j] != ' ' && data[j] != '\n' && data[j] != '\t' && data[j] != '\r')
+//                            break;
+//                        
+//                        j++;
+//                    }
+//                    
+//                    break;
+//                }
+//            }
+//            
+//            if(j == line_len) {
+//                result->tag_id = myhtml_tag_id_by_name(result->tree, data, line_len);
+//                result->ns = MyHTML_NAMESPACE_HTML;
+//            }
+//            else {
+//                result->tag_id = myhtml_tag_id_by_name(result->tree, &data[j], (line_len - j));
+//                
+//                if(strncasecmp("math", data, 4) == 0) {
+//                    result->ns = MyHTML_NAMESPACE_MATHML;
+//                }
+//                else if(strncasecmp("svg", data, 3) == 0) {
+//                    result->ns = MyHTML_NAMESPACE_SVG;
+//                }
+//                else {
+//                    result->ns = MyHTML_NAMESPACE_HTML;
+//                }
+//            }
+//            
+//            i += line_len;
+//        }
+//        else if(state == 4) {
+//            if(res->data[i] == '|') {
+//                append_to_test(&res_test.result, &res->data[(i + 2)], (line_len - 2), true, false);
+//            }
+//            else if(res->data[i] != '\n') {
+//                append_to_test(&res_test.result, &res->data[i], line_len, true, false);
+//            }
+//            
+//            i += line_len;
+//        }
+//        else {
+//            i += line_len;
+//        }
+//        
+//        i++;
+//    }
+//}
+//
+//void read_dir(const char* from_dir)
+//{
+//    myhtml_t* myhtml = myhtml_create();
+//    myhtml_init(myhtml, MyHTML_OPTIONS_DEFAULT, 1, 0);
+//    
+//    myhtml_tree_t* tree = myhtml_tree_create();
+//    myhtml_tree_init(tree, myhtml);
+//    
+//    DIR *dir;
+//    struct dirent *ent;
+//    struct stat path_stat;
+//    
+//    size_t count = 0;
+//    size_t from_dir_len = strlen(from_dir);
+//    
+//    char path[4096];
+//    strncpy(path, from_dir, from_dir_len);
+//    
+//    if((dir = opendir(from_dir)) == NULL) {
+//        fprintf(stderr, "Can't open directory: %s\n", from_dir);
+//    }
+//    
+//    struct chunk_res_result result = {tree, 0, 0};
+//    
+//    while((ent = readdir(dir)) != NULL)
+//    {
+//        sprintf(&path[from_dir_len], "%s", ent->d_name);
+//        stat(path, &path_stat);
+//        
+//        if(ent->d_name[0] != '.' && !S_ISDIR(path_stat.st_mode) &&
+//           ent->d_namlen > 4 &&
+//           strcmp(".dat", &ent->d_name[ (ent->d_namlen - 4) ]) == 0)
+//        {
+//            count++;
+//            
+//            struct res_data res = load_data(path);
+//            read_chunk(&res, chunk_process, &result);
+//            free(res.data);
+//        }
+//    }
+//    
+//    closedir (dir);
+//    
+//    myhtml_tree_destroy(tree);
+//    myhtml_destroy(myhtml);
+//    
+//    printf("\nGood: %zu; Bad: %zu\n\n", result.good, result.bad);
+//}
+
+//#include "myhtml/serialization.h"
+//
+//int main(int argc, const char * argv[])
+//{
+//    setbuf(stdout, 0);
+//    
+////    read_dir("/new/C-git/tree-construction/");
+////    return 0;
+//    
+//    const char* path = "/new/test.html";
+//    struct res_data res = load_data(path);
+//    
+//    size_t i = 0;
+//    
+//    myhtml_t* myhtml = myhtml_create();
+//    myhtml_init(myhtml, MyHTML_OPTIONS_DEFAULT, 1, 0);
+//    
+//    myhtml_tree_t* tree = myhtml_tree_create();
+//    mystatus_t status = myhtml_tree_init(tree, myhtml);
+//    if(status) {
+//        fprintf(stderr, "Init Tree return BAD status!!!\n");
+//        exit(EXIT_FAILURE);
+//    }
+//    
+//    while(i < 1000) {
+//        if(myhtml_parse(tree, MyENCODING_UTF_8, res.data, res.size)) {
+//            fprintf(stderr, "Parser return BAD status!!!\n");
+//            exit(EXIT_FAILURE);
+//        }
+//        
+//        //myhtml_serialization_tree_callback(tree->document, serialization_callback, NULL);
+//        //printf("%zu\n", i);
+//        i++;
+//    }
+//    
+//    myhtml_tree_destroy(tree);
+//    myhtml_destroy(myhtml);
+//}
+
+
+
+
+
+
+
+
+
+
+
+/*
+ Copyright (C) 2016 Alexander Borisov
+ 
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+ 
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ Lesser General Public License for more details.
+ 
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ 
+ Author: lex.borisov@gmail.com (Alexander Borisov)
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <myfont/myfont.h>
+#include <myencoding/encoding.h>
+
+void usage(const char *path, float font_size, size_t codepoint)
+{
+    printf("Usage:\n");
+    printf("\tprogram [char in UTF-8] [font fize in px] [font path]\n");
+    printf("\tdefault: program \"x\" %.f %s\n\n", font_size, path);
+}
+
+int main(int argc, const char * argv[])
+{
+    /* set and get params */
+    const char *path = "/new/C-git/Modest/third_party/font/Arkhip.ttf";
+    float font_size = 200.0f;
+    
+    size_t codepoint;
+    myencoding_ascii_utf_8_to_codepoint((unsigned char*)"x", &codepoint);
+    
+    if (argc == 2) {
+        if(myencoding_ascii_utf_8_to_codepoint((const unsigned char*)argv[1], &codepoint) == 0) {
+            fprintf(stderr, "Bad char code point\n");
+            return EXIT_FAILURE;
+        }
+    }
+    else if (argc == 3) {
+        long num = strtol(argv[2], NULL, 0);
+        
+        if(num < 1) {
+            fprintf(stderr, "To small font size param\n");
+            return EXIT_FAILURE;
+        }
+        
+        font_size = (float)num;
+    }
+    else if (argc == 4) {
+        path = argv[3];
+    }
+    else {
+        usage(path, font_size, codepoint);
+    }
+    
+    myfont_font_t *mf = myfont_create();
+    myfont_init(mf);
+    
+    uint8_t *font_data;
+    mystatus_t mf_status = myfont_load_from_file(mf, path, &font_data, NULL);
+    
+    if(mf_status) {
+        myfont_destroy(mf, true);
+        
+        if(mf_status == MyFONT_STATUS_ERROR_FILE_OPEN) {
+            fprintf(stderr, "Can't open font file %s\n", path);
+        }
+        else {
+            fprintf(stderr, "Can't load font file %s\n", path);
+        }
+        
+        return EXIT_FAILURE;
+    }
+    
+    char data[5];
+    size_t len = myencoding_codepoint_to_ascii_utf_8(codepoint, data);
+    data[len] = '\0';
+    
+    /* work code */
+    uint16_t glyph_index = myfont_glyph_index_by_codepoint(mf, codepoint, NULL);
+    
+    float baseline   = myfont_metrics_baseline(mf, font_size);
+    float ascender   = myfont_metrics_ascender(mf, font_size);
+    float descender  = myfont_metrics_descender(mf, font_size);
+    float x_height   = myfont_metrics_x_height(mf, font_size);
+    float cap_height = myfont_metrics_cap_height(mf, font_size);
+    float offset     = myfont_metrics_glyph_offset_y(mf, codepoint, font_size, NULL);
+    float width      = myfont_metrics_width(mf, codepoint, font_size, NULL);
+    float height     = myfont_metrics_height(mf, codepoint, font_size, NULL);
+    
+    /* print result */
+    printf("Font file: %s\n", path);
+    printf("Font size: %.fpx\n\n", font_size);
+    
+    printf("Metrics for code point " MyCORE_FORMAT_Z " (%s):\n", codepoint, data);
+    printf("\tBaseline: %.05f\n", baseline);
+    printf("\tAscender: %.05f\n", ascender);
+    printf("\tDescender: %.05f\n", descender);
+    printf("\tX-Height: %.05f\n", x_height);
+    printf("\tCap-Height: %.05f\n", cap_height);
+    printf("\tWidth: %.05f\n", width);
+    printf("\tHeight: %.05f\n", height);
+    
+    /* print html svg */
+    printf("\n<svg width=\"%f\" height=\"%f\">\n", width + 4.0f, descender + 4.0f);
+    printf("\t<line x1=%f y1=%f x2=%f y2=%f style=\"stroke:rgb(0,124,110);stroke-width:1\" />\n", 0.0f, ascender, width, ascender);
+    printf("\t<line x1=%f y1=%f x2=%f y2=%f style=\"stroke:rgb(140,0,110);stroke-width:1\" />\n", 0.0f, cap_height, width, cap_height);
+    printf("\t<line x1=%f y1=%f x2=%f y2=%f style=\"stroke:rgb(140,124,110);stroke-width:1\" />\n", 0.0f, x_height, width, x_height);
+    printf("\t<line x1=%f y1=%f x2=%f y2=%f style=\"stroke:rgb(0,255,0);stroke-width:1\" />\n", 0.0f, baseline, width, baseline);
+    printf("\t<line x1=%f y1=%f x2=%f y2=%f style=\"stroke:rgb(255,0,0);stroke-width:1\" />\n", 0.0f, descender, width, descender);
+    
+    if(glyph_index < mf->table_maxp.numGlyphs) {
+        myfont_table_glyph_t *glyph = &mf->table_glyf.cache[glyph_index];
+        
+        printf("\t<polyline points=\"");
+        for(size_t i = 0; i < glyph->pointCount; i++) {
+            
+            float x = (float)((glyph->head.xMax + glyph->simple.xCoordinates[i]) - glyph->head.xMax) * font_size / ((float)mf->table_head.unitsPerEm);
+            float y = (float)((glyph->head.yMax - glyph->simple.yCoordinates[i])) * font_size / ((float)mf->table_head.unitsPerEm);
+            
+            printf("%f,%f ", x, (y + offset));
+        }
+        printf("\" />\n");
+    }
+    
+    printf("</svg>\n");
+    
+    myfont_destroy_font_data(mf, font_data);
+    myfont_destroy(mf, true);
+    
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//int mainsdfsfd(int argc, const char * argv[])
 //{
 //    setbuf(stdout, NULL);
 //    
@@ -264,13 +1064,13 @@
 //    mycss_stylesheet_t *stylesheet = mycss_entry_stylesheet(mycss_entry);
 //    
 //    /* simple api */
-//    uint64_t parse_simple_start = myhtml_hperf_clock(NULL);
-//    uint64_t parse_simple_stop = myhtml_hperf_clock(NULL);
+//    uint64_t parse_simple_start = mycore_hperf_clock(NULL);
+//    uint64_t parse_simple_stop = mycore_hperf_clock(NULL);
 //    
 //    
 //    
 //    /* full api */
-//    uint64_t parse_start = myhtml_hperf_clock(NULL);
+//    uint64_t parse_start = mycore_hperf_clock(NULL);
 //    
 //    
 //    modest_finder_t* finder = modest_finder_create();
@@ -280,20 +1080,22 @@
 //    modest_finder_thread_t *finder_thread = modest_finder_thread_create();
 //    modest_finder_thread_init(finder, finder_thread, 4);
 //    
+//#ifndef MyCORE_BUILD_WITHOUT_THREADS
 //    modest_finder_thread_process(modest, finder_thread, myhtml_tree->node_html, stylesheet->sel_list_first);
+//#endif
 //    
 //    finder_thread = modest_finder_thread_destroy(finder_thread, true);
 //    finder = modest_finder_destroy(finder, true);
 //    
 //    
-//    uint64_t parse_stop = myhtml_hperf_clock(NULL);
+//    uint64_t parse_stop = mycore_hperf_clock(NULL);
 //    
 ////    print_tree_after_all(modest, myhtml_tree, myhtml_tree->node_html, mycss_entry);
 //    
 //    printf("\n\n------------\nInformation:\n");
-//    printf("\tTicks/sec: %llu\n", (unsigned long long) myhtml_hperf_res(NULL));
-//    myhtml_hperf_print("\tFound selectors", parse_start, parse_stop, stdout);
-//    myhtml_hperf_print("\tParse and Found Simple selectors", parse_simple_start, parse_simple_stop, stdout);
+//    printf("\tTicks/sec: %llu\n", (unsigned long long) mycore_hperf_res(NULL));
+//    mycore_hperf_print("\tFound selectors", parse_start, parse_stop, stdout);
+//    mycore_hperf_print("\tParse and Found Simple selectors", parse_simple_start, parse_simple_stop, stdout);
 //    printf("\n");
 //    
 ////    printf("\nPrint result:\n");
@@ -318,12 +1120,12 @@
 //    
 //    return 0;
 //}
-//
-//
-//
-//
-//
-//
+
+
+
+
+
+
 
 
 
@@ -966,80 +1768,80 @@
 
 
 
-/*
- Copyright (C) 2017 Alexander Borisov
- 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2.1 of the License, or (at your option) any later version.
- 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- Lesser General Public License for more details.
- 
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free Software
- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- 
- Author: lex.borisov@gmail.com (Alexander Borisov)
- */
-
-#include <string.h>
-#include <myurl/url.h>
-
-int main(int argc, const char * argv[])
-{
-    const char* data_base = "http://lalal.ru/";
-    
-    myurl_t *url = myurl_create();
-    if(url == NULL) {
-        printf("Can't create URL object\n");
-        return EXIT_FAILURE;
-    }
-    
-    if(myurl_init(url)) {
-        printf("Can't init URL object\n");
-        return EXIT_FAILURE;
-    }
-    
-    printf("Parse url \"%s\":\n", data_base);
-    
-    myurl_entry_t *url_base = myurl_parse(url, data_base, strlen(data_base), NULL, NULL);
-    myurl_entry_t *url_relative = myurl_parse(url, "bla.ru/", strlen("bla.ru/"), url_base, NULL);
-    
-    const char *scheme   = myurl_entry_scheme_name(url_base, NULL);
-    char *authority      = myurl_entry_authority_as_string(url_base, NULL);
-    const char *username = myurl_entry_username(url_base, NULL);
-    const char *password = myurl_entry_password(url_base, NULL);
-    char *host           = myurl_entry_host_as_string(url_base, NULL);
-    char *path           = myurl_entry_path_as_string(url_base, NULL);
-    const char *query    = myurl_entry_query(url_base, NULL);
-    const char *fragment = myurl_entry_fragment(url_base, NULL);
-    
-    printf("\tScheme: %s\n"         , (scheme ? scheme : ""));
-    printf("\tScheme port: %u\n"    , myurl_entry_scheme_port(url_base));
-    printf("\tAuthority (%s):\n"    , authority);
-    printf("\t\tUsername: %s\n"     , username);
-    printf("\t\tPassword: %s\n"     , password);
-    printf("\tHost: %s\n"           , host);
-    printf("\tPort is defined: %s\n", (myurl_entry_port_is_defined(url_base) ? "true" : "false"));
-    printf("\tPort: %u\n"           , myurl_entry_port(url_base));
-    printf("\tPath: %s\n"           , path);
-    printf("\tQuery: %s\n"          , (query ? query : ""));
-    printf("\tFragment: %s\n"       , (fragment ? fragment : ""));
-    
-    myurl_entry_free_string(url_base, authority);
-    myurl_entry_free_string(url_base, host);
-    myurl_entry_free_string(url_base, path);
-    
-    myurl_entry_destroy(url_base, true);
-    myurl_destroy(url, true);
-    
-    return 0;
-}
-
+///*
+// Copyright (C) 2017 Alexander Borisov
+// 
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+// 
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+// Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+// 
+// Author: lex.borisov@gmail.com (Alexander Borisov)
+// */
+//
+//#include <string.h>
+//#include <myurl/url.h>
+//
+//int main(int argc, const char * argv[])
+//{
+//    const char* data_base = "http://lalal.ru/";
+//    
+//    myurl_t *url = myurl_create();
+//    if(url == NULL) {
+//        printf("Can't create URL object\n");
+//        return EXIT_FAILURE;
+//    }
+//    
+//    if(myurl_init(url)) {
+//        printf("Can't init URL object\n");
+//        return EXIT_FAILURE;
+//    }
+//    
+//    printf("Parse url \"%s\":\n", data_base);
+//    
+//    myurl_entry_t *url_base = myurl_parse(url, data_base, strlen(data_base), NULL, NULL);
+//    myurl_entry_t *url_relative = myurl_parse(url, "bla.ru/", strlen("bla.ru/"), url_base, NULL);
+//    
+//    const char *scheme   = myurl_entry_scheme_name(url_base, NULL);
+//    char *authority      = myurl_entry_authority_as_string(url_base, NULL);
+//    const char *username = myurl_entry_username(url_base, NULL);
+//    const char *password = myurl_entry_password(url_base, NULL);
+//    char *host           = myurl_entry_host_as_string(url_base, NULL);
+//    char *path           = myurl_entry_path_as_string(url_base, NULL);
+//    const char *query    = myurl_entry_query(url_base, NULL);
+//    const char *fragment = myurl_entry_fragment(url_base, NULL);
+//    
+//    printf("\tScheme: %s\n"         , (scheme ? scheme : ""));
+//    printf("\tScheme port: %u\n"    , myurl_entry_scheme_port(url_base));
+//    printf("\tAuthority (%s):\n"    , authority);
+//    printf("\t\tUsername: %s\n"     , username);
+//    printf("\t\tPassword: %s\n"     , password);
+//    printf("\tHost: %s\n"           , host);
+//    printf("\tPort is defined: %s\n", (myurl_entry_port_is_defined(url_base) ? "true" : "false"));
+//    printf("\tPort: %u\n"           , myurl_entry_port(url_base));
+//    printf("\tPath: %s\n"           , path);
+//    printf("\tQuery: %s\n"          , (query ? query : ""));
+//    printf("\tFragment: %s\n"       , (fragment ? fragment : ""));
+//    
+//    myurl_entry_free_string(url_base, authority);
+//    myurl_entry_free_string(url_base, host);
+//    myurl_entry_free_string(url_base, path);
+//    
+//    myurl_entry_destroy(url_base, true);
+//    myurl_destroy(url, true);
+//    
+//    return 0;
+//}
+//
 
 
 

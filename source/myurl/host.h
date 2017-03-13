@@ -78,7 +78,7 @@ struct myurl_host {
         myurl_host_ipv_t ipv;
         myurl_host_opaque_t opaque;
         myurl_host_domain_t domain;
-    };
+    } value;
     
     myurl_host_type_t type;
 }

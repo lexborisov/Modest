@@ -54,7 +54,7 @@ typedef myfont_table_hhea_t;
 
 struct myfont_font;
 
-mystatus_t myfont_load_table_hhea(struct myfont_font *mf);
+mystatus_t myfont_load_table_hhea(myfont_font_t *mf, uint8_t* data, size_t data_size);
 
 #ifdef __cplusplus
 } /* extern "C" */

@@ -215,7 +215,10 @@ void myhtml_serialization_node_append_text_node(myhtml_tree_node_t* node, mycore
 {
     if(node->token == NULL || node->token->str.data == NULL) return;
     
-    if(node->parent == NULL) return myhtml_serialization_append(node->token->str.data, node->token->str.length, callback, ptr);
+    if(node->parent == NULL) {
+        myhtml_serialization_append(node->token->str.data, node->token->str.length, callback, ptr);
+        return;
+    }
     
     switch (node->parent->tag_id) {
         case MyHTML_TAG_STYLE:

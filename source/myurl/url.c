@@ -327,9 +327,9 @@ const char * myurl_entry_host_domain(myurl_entry_t* url_entry, size_t *length)
     }
         
     if(length)
-        *length = url_entry->host.domain.length;
+        *length = url_entry->host.value.domain.length;
     
-    return url_entry->host.domain.value;
+    return url_entry->host.value.domain.value;
 }
 
 const char * myurl_entry_host_opaque(myurl_entry_t* url_entry, size_t *length)
@@ -342,9 +342,9 @@ const char * myurl_entry_host_opaque(myurl_entry_t* url_entry, size_t *length)
     }
     
     if(length)
-        *length = url_entry->host.opaque.length;
+        *length = url_entry->host.value.opaque.length;
     
-    return url_entry->host.opaque.value;
+    return url_entry->host.value.opaque.value;
 }
 
 unsigned int myurl_entry_host_ipv4(myurl_entry_t* url_entry)
@@ -352,7 +352,7 @@ unsigned int myurl_entry_host_ipv4(myurl_entry_t* url_entry)
     if(url_entry->host.type != MyURL_HOST_TYPE_IPv4)
         return 0;
     
-    return url_entry->host.ipv.pieces[0];
+    return url_entry->host.value.ipv.pieces[0];
 }
 
 unsigned int * myurl_entry_host_ipv6(myurl_entry_t* url_entry)
@@ -360,7 +360,7 @@ unsigned int * myurl_entry_host_ipv6(myurl_entry_t* url_entry)
     if(url_entry->host.type != MyURL_HOST_TYPE_IPv6)
         return NULL;
     
-    return url_entry->host.ipv.pieces;
+    return url_entry->host.value.ipv.pieces;
 }
 
 /* port */
@@ -494,7 +494,9 @@ mystatus_t myurl_entry_host_set(myurl_entry_t* url_entry, const char* host, size
     if(url_entry->url_ref == NULL)
         return MyURL_STATUS_ERROR;
     
-    myurl_host_t new_host = {{}, 0};
+    myurl_host_t new_host;
+    memset(&new_host, 0, sizeof(myurl_host_t));
+    
     mystatus_t status = myurl_host_parser(url_entry->url_ref, &new_host, host, length, (url_entry->scheme.type & MyURL_SCHEME_TYPE_SPECIAL));
     
     if(status)

@@ -292,9 +292,9 @@ static bool mycss_property_parser_background_check_position(mycss_entry_t* entry
     pos_entry->type = value_type;
     
     if(value_type == MyCSS_PROPERTY_VALUE__LENGTH)
-        pos_entry->length = value;
+        pos_entry->value.length = value;
     else if(value_type == MyCSS_PROPERTY_VALUE__PERCENTAGE)
-        pos_entry->percentage = value;
+        pos_entry->value.percentage = value;
     
     return true;
 }
@@ -319,7 +319,7 @@ static bool mycss_property_parser_background_step_size_height(mycss_entry_t* ent
         
         if(value) {
             bg_entry->height = mycss_values_create(entry, sizeof(mycss_values_type_length_percentage_entry_t));
-            bg_entry->height->percentage = value;
+            bg_entry->height->value.percentage = value;
             bg_entry->height->type = value_type;
         }
         else if(value_type == MyCSS_PROPERTY_BACKGROUND_SIZE_AUTO)
@@ -362,7 +362,7 @@ bool mycss_property_parser_background_step_size(mycss_entry_t* entry, mycss_toke
         
         if(value) {
             bg_entry->width = mycss_values_create(entry, sizeof(mycss_values_type_length_percentage_entry_t));
-            bg_entry->width->percentage = value;
+            bg_entry->width->value.percentage = value;
             bg_entry->width->type = value_type;
             
             entry->parser = mycss_property_parser_background_step_size_height;
@@ -934,9 +934,9 @@ bool mycss_property_parser_background_position(mycss_entry_t* entry, mycss_token
         pos_entry->type = value_type;
         
         if(value_type == MyCSS_PROPERTY_VALUE__LENGTH)
-            pos_entry->length = value;
+            pos_entry->value.length = value;
         else if(value_type == MyCSS_PROPERTY_VALUE__PERCENTAGE)
-            pos_entry->percentage = value;
+            pos_entry->value.percentage = value;
         
         return mycss_property_parser_destroy_string(&str, true);
     }
@@ -1090,7 +1090,7 @@ static bool mycss_property_parser_background_size_height(mycss_entry_t* entry, m
         
         if(value) {
             bg_entry->height = mycss_values_create(entry, sizeof(mycss_values_type_length_percentage_entry_t));
-            bg_entry->height->percentage = value;
+            bg_entry->height->value.percentage = value;
             bg_entry->height->type = value_type;
             
             entry->parser = mycss_property_parser_background_size_end;
@@ -1131,7 +1131,7 @@ bool mycss_property_parser_background_size(mycss_entry_t* entry, mycss_token_t* 
         
         if(value) {
             bg_entry->width = mycss_values_create(entry, sizeof(mycss_values_type_length_percentage_entry_t));
-            bg_entry->width->percentage = value;
+            bg_entry->width->value.percentage = value;
             bg_entry->width->type = value_type;
             
             entry->parser = mycss_property_parser_background_size_height;

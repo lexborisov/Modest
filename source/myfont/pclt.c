@@ -20,7 +20,7 @@
 
 #include "myfont/pclt.h"
 
-mystatus_t myfont_load_table_pclt(struct myfont_font *mf)
+mystatus_t myfont_load_table_pclt(myfont_font_t* mf, uint8_t* font_data, size_t data_size)
 {
     memset(&mf->table_pclt, 0, sizeof(myfont_table_pclt_t));
     
@@ -31,11 +31,11 @@ mystatus_t myfont_load_table_pclt(struct myfont_font *mf)
     const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_PCLT];
     
     uint32_t pos = table_offset + 4 + 16 + 16 + 8 + 6 + 4;
-    if(pos > mf->file_size)
+    if(pos > data_size)
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     /* get current data */
-    uint8_t *data = &mf->file_data[table_offset];
+    uint8_t *data = &font_data[table_offset];
     
     tpclt->version = myfont_read_u32_as_net(&data);
     

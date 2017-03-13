@@ -21,7 +21,7 @@
 #include <myurl/url.h>
 #include <myurl/serialization.h>
 #include <myhtml/mystring.h>
-#include <myhtml/utils/mchar_async.h>
+#include <mycore/utils/mchar_async.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -304,7 +304,7 @@ bool test_for_type_second_entry(const char *data, size_t* length, size_t data_si
         fprintf(stderr, "Test FAILURE!\n");
         fprintf(stderr, "\tURL: %.*s\n", (int)url.length, &data[ url.begin ]);
         fprintf(stderr, "\tDomain Type: %d\n", url_entry->host.type);
-        fprintf(stderr, "\tDomain Ip Version Type: %d\n", url_entry->host.ipv.type);
+        fprintf(stderr, "\tDomain Ip Version Type: %d\n", url_entry->host.value.ipv.type);
         fprintf(stderr, "\tExpect Domain Type: %d\n\n", domain_type);
         
         test_destroy_url(url_entry);
@@ -494,11 +494,14 @@ int main(int argc, const char * argv[])
         exit(EXIT_FAILURE);
     }
     
-    MCharOBJ = mchar_async_create(4, 4096);
+    MCharOBJ = mchar_async_create();
     if(MCharOBJ == NULL)
         return EXIT_FAILURE;
     
-    MCharOBJNode = mchar_async_node_add(MCharOBJ);
+    if(mchar_async_init(MCharOBJ, 4, 4096))
+        return EXIT_FAILURE;
+    
+    MCharOBJNode = mchar_async_node_add(MCharOBJ, NULL);
     
     test_read_dir(argv[1]);
     //test_read_dir("/new/C-git/Modest/test/myurl/data");

@@ -45,7 +45,7 @@ typedef myfont_table_vmtx_t;
 
 struct myfont_font;
 
-mystatus_t myfont_load_table_vmtx(struct myfont_font *mf);
+mystatus_t myfont_load_table_vmtx(myfont_font_t* mf, uint8_t* data, size_t data_size);
 
 #ifdef __cplusplus
 } /* extern "C" */

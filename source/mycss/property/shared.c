@@ -66,9 +66,9 @@ bool mycss_property_shared_number(mycss_entry_t* entry, mycss_token_t* token, vo
     mycss_convert_data_to_double(str->data, str->length, &return_num, &length->is_float);
     
     if(length->is_float)
-        length->f = (float)return_num;
+        length->value.f = (float)return_num;
     else
-        length->i = (int)return_num;
+        length->value.i = (int)return_num;
     
     *value = length;
     *value_type = MyCSS_PROPERTY_VALUE__NUMBER;
@@ -96,9 +96,9 @@ bool mycss_property_shared_length(mycss_entry_t* entry, mycss_token_t* token, vo
     mycss_values_length_t *length = mycss_values_create(entry, sizeof(mycss_values_length_t));
     
     if(is_float)
-        length->f = (float)return_num;
+        length->value.f = (float)return_num;
     else
-        length->i = (int)return_num;
+        length->value.i = (int)return_num;
     
     length->is_float = is_float;
     length->type = type;
@@ -135,9 +135,9 @@ bool mycss_property_shared_resolution(mycss_entry_t* entry, mycss_token_t* token
     mycss_values_resolution_t *resolution = mycss_values_create(entry, sizeof(mycss_values_resolution_t));
     
     if(is_float)
-        resolution->f = (float)return_num;
+        resolution->value.f = (float)return_num;
     else
-        resolution->i = (int)return_num;
+        resolution->value.i = (int)return_num;
     
     resolution->is_float = is_float;
     resolution->type = type;
@@ -187,9 +187,9 @@ bool mycss_property_shared_percentage(mycss_entry_t* entry, mycss_token_t* token
     mycss_convert_data_to_double(str->data, str->length, &return_num, &length->is_float);
     
     if(length->is_float)
-        length->f = (float)return_num;
+        length->value.f = (float)return_num;
     else
-        length->i = (int)return_num;
+        length->value.i = (int)return_num;
     
     *value = length;
     *value_type = MyCSS_PROPERTY_VALUE__PERCENTAGE;
@@ -238,8 +238,8 @@ bool mycss_property_shared_color(mycss_entry_t* entry, mycss_token_t* token, voi
             if(color_entry) {
                 mycss_values_color_t *color = mycss_values_create(entry, sizeof(mycss_values_color_t));
                 
-                color->name_id = color_entry->type;
-                color->type    = MyCSS_VALUES_COLOR_TYPE_NAMED;
+                color->value.name_id = color_entry->type;
+                color->type          = MyCSS_VALUES_COLOR_TYPE_NAMED;
                 
                 *value = color;
                 *value_type = MyCSS_PROPERTY_VALUE__COLOR;
@@ -696,7 +696,7 @@ bool mycss_property_shared_font_family(mycss_entry_t* entry, mycss_token_t* toke
             mycss_values_font_family_entry_t *ff_entry = mycss_property_shared_font_family_check(entry, value);
             
             ff_entry->type = MyCSS_VALUES_FONT_FAMILY_TYPE_GENERIC;
-            ff_entry->prop_type = family_type;
+            ff_entry->value.prop_type = family_type;
             
             return true;
         }
@@ -724,7 +724,7 @@ bool mycss_property_shared_font_family(mycss_entry_t* entry, mycss_token_t* toke
             mycss_values_font_family_entry_t *ff_entry = mycss_property_shared_font_family_check(entry, value);
             
             ff_entry->type = MyCSS_VALUES_FONT_FAMILY_TYPE_NAME;
-            ff_entry->str = *str;
+            ff_entry->value.str = *str;
             
             *dont_destroy_str = true;
             return true;

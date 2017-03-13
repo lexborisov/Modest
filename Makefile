@@ -64,9 +64,17 @@ MODEST_BUILD_OBJECT_STATIC  ?= $(AR) crus $2 $1
 MODEST_BUILD_OBJECT_MODULES := $(foreach dir,$(MODEST_BUILD_MODULES_TARGET),$($(dir)_objs))
 
 #********************
+# Sub Directories
+#***************
+BUILD_SUB_DIRS := examples $(TEST_DIR)
+
+#********************
 # Target options
 #***************
-all: shared static
+all: library
+	for f in $(BUILD_SUB_DIRS); do $(MAKE) -C $$f all; done
+
+library: shared static
 
 shared: create $(MODEST_BUILD_MODULES_TARGET_ALL)
 	$(call MODEST_BUILD_OBJECT_SHARED,$(MODEST_BUILD_OBJECT_MODULES),$(call MODEST_LIBRARY_WITH_VERSION))
@@ -78,7 +86,9 @@ static: create $(MODEST_BUILD_MODULES_TARGET_ALL)
 
 clean: $(MODEST_BUILD_MODULES_TARGET_CLEAN)
 	rm -f $(call MODEST_LIBRARY_WITH_VERSION) && rm -f $(call MODEST_LIBRARY_STATIC)
+	rm -rf $(TEST_DIR_BASE)
 	$(call MODEST_BUILD_CLEAN_AFTER)
+	for f in $(BUILD_SUB_DIRS); do $(MAKE) -C $$f clean; done
 
 clone: clean_api $(MODEST_BUILD_MODULES_TARGET_CLONE)
 	find $(INCLUDE_DIR_API) -name "*.h" -exec sed -i '.bak' -E 's/^[ \t]*#[ \t]*include[ \t]*"([^"]+)"/#include <\1>/g' {} \;
@@ -88,6 +98,9 @@ clean_api:
 	rm -rf $(INCLUDE_DIR_API)
 
 create:
-	mkdir -p $(BINARY_DIR_BASE) $(LIB_DIR_BASE)
+	mkdir -p $(BINARY_DIR_BASE) $(LIB_DIR_BASE) $(TEST_DIR_BASE)
 
-.PHONY: all clean clone $(MODEST_BUILD_MODULES_TARGET_ALL)
+test:
+	$(MAKE) -C $(TEST_DIR) run
+
+.PHONY: all clean clone test $(MODEST_BUILD_MODULES_TARGET_ALL)

@@ -20,9 +20,9 @@
 
 #include "myfont/cmap.h"
 
-mystatus_t myfont_table_cmap_format_0(myfont_font_t *mf, myfont_tcmap_entry_t *entry, size_t offset)
+mystatus_t myfont_table_cmap_format_0(myfont_font_t *mf, myfont_tcmap_entry_t *entry, uint8_t* font_data, size_t data_size, size_t offset)
 {
-    if(mf->file_size < (offset + 260)) {
+    if(data_size < (offset + 260)) {
         entry->header = NULL;
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     }
@@ -34,7 +34,7 @@ mystatus_t myfont_table_cmap_format_0(myfont_font_t *mf, myfont_tcmap_entry_t *e
         return MyFONT_STATUS_ERROR_MEMORY_ALLOCATION;
     }
     
-    uint8_t *data = &mf->file_data[offset];
+    uint8_t *data = &font_data[offset];
     
     f0->length = myfont_read_u16(&data);
     f0->language = myfont_read_u16(&data);
@@ -46,9 +46,9 @@ mystatus_t myfont_table_cmap_format_0(myfont_font_t *mf, myfont_tcmap_entry_t *e
     return MyFONT_STATUS_OK;
 }
 
-mystatus_t myfont_table_cmap_format_4(myfont_font_t *mf, myfont_tcmap_entry_t *entry, size_t offset)
+mystatus_t myfont_table_cmap_format_4(myfont_font_t *mf, myfont_tcmap_entry_t *entry, uint8_t* font_data, size_t data_size, size_t offset)
 {
-    uint8_t *data = &mf->file_data[offset];
+    uint8_t *data = &font_data[offset];
     
     myfont_tcmap_format_4_t *f4 = (myfont_tcmap_format_4_t*)myfont_calloc(mf, 1, sizeof(myfont_tcmap_format_4_t));
     
@@ -57,7 +57,7 @@ mystatus_t myfont_table_cmap_format_4(myfont_font_t *mf, myfont_tcmap_entry_t *e
     
     offset += MyFONT_TCMAP_FORMAT_4_FIRST_LENGTH;
     
-    if(mf->file_size < offset) {
+    if(data_size < offset) {
         myfont_free(mf, f4);
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     }
@@ -73,7 +73,7 @@ mystatus_t myfont_table_cmap_format_4(myfont_font_t *mf, myfont_tcmap_entry_t *e
     f4->numGlyphId    = ((f4->length - (16L + 8L * f4->segCount)) & 0xffff) / 2;
     
     offset += sizeof(uint16_t) * (f4->segCount * 5);
-    if(mf->file_size < offset)
+    if(data_size < offset)
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     /* init mem */
@@ -224,7 +224,7 @@ uint16_t myfont_glyph_index_by_codepoint(myfont_font_t *mf, unsigned long codepo
     return 0;
 }
 
-mystatus_t myfont_load_table_cmap(myfont_font_t *mf)
+mystatus_t myfont_load_table_cmap(myfont_font_t *mf, uint8_t* font_data, size_t data_size)
 {
     myfont_table_cmap_t *tcmap = &mf->table_cmap;
     const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_cmap];
@@ -232,11 +232,11 @@ mystatus_t myfont_load_table_cmap(myfont_font_t *mf)
     if(table_offset == 0)
         return MyFONT_STATUS_OK;
     
-    if((table_offset + 4) > mf->file_size)
+    if((table_offset + 4) > data_size)
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     /* get current data */
-    uint8_t *data = &mf->file_data[table_offset];
+    uint8_t *data = &font_data[table_offset];
     
     /* get header */
     tcmap->header.version = myfont_read_u16(&data);
@@ -248,7 +248,7 @@ mystatus_t myfont_load_table_cmap(myfont_font_t *mf)
     size_t size_records = sizeof(myfont_tcmap_record_t) * tcmap->header.numTables;
     size_t size_entries = sizeof(myfont_tcmap_entry_t) * tcmap->header.numTables;
     
-    if(mf->file_size < (size_records + size_entries))
+    if(data_size < (size_records + size_entries))
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     if((tcmap->records = (myfont_tcmap_record_t *)myfont_malloc(mf, size_records)) == NULL)
@@ -271,19 +271,19 @@ mystatus_t myfont_load_table_cmap(myfont_font_t *mf)
     {
         uint32_t offset = tcmap->records[i].offset + table_offset;
         
-        if(mf->file_size <= offset)
+        if(data_size <= offset)
             return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
         
-        data = &mf->file_data[offset];
+        data = &font_data[offset];
         tcmap->entries[i].format = myfont_read_u16(&data);
         
         switch (tcmap->entries[i].format) {
             case 0:
-                myfont_table_cmap_format_0(mf, &tcmap->entries[i], (offset + 2));
+                myfont_table_cmap_format_0(mf, &tcmap->entries[i], font_data, data_size, (offset + 2));
                 break;
                 
             case 4:
-                myfont_table_cmap_format_4(mf, &tcmap->entries[i], (offset + 2));
+                myfont_table_cmap_format_4(mf, &tcmap->entries[i], font_data, data_size, (offset + 2));
                 break;
                 
             default:

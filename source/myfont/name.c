@@ -20,7 +20,7 @@
 
 #include "myfont/name.h"
 
-mystatus_t myfont_load_table_name(myfont_font_t *mf)
+mystatus_t myfont_load_table_name(myfont_font_t *mf, uint8_t* font_data, size_t data_size)
 {
     memset(&mf->table_name, 0, sizeof(myfont_table_name_t));
     
@@ -31,18 +31,18 @@ mystatus_t myfont_load_table_name(myfont_font_t *mf)
     const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_name];
     uint32_t pos = table_offset + 6;
     
-    if(pos > mf->file_size)
+    if(pos > data_size)
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     /* get current data */
-    uint8_t *data = &mf->file_data[table_offset];
+    uint8_t *data = &font_data[table_offset];
     
     tname->format = myfont_read_u16(&data);
     tname->count = myfont_read_u16(&data);
     tname->stringOffset = myfont_read_u16(&data);
     
     pos = pos + (tname->count * 12);
-    if(pos > mf->file_size) {
+    if(pos > data_size) {
         tname->count = 0;
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     }
@@ -66,13 +66,13 @@ mystatus_t myfont_load_table_name(myfont_font_t *mf)
     if(tname->format == 1)
     {
         pos += 2;
-        if(pos > mf->file_size)
+        if(pos > data_size)
             return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
         
         tname->langTagCount = myfont_read_u16(&data);
         
         pos = pos + (tname->langTagCount * 4);
-        if(pos > mf->file_size) {
+        if(pos > data_size) {
             tname->langTagCount = 0;
             return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
         }

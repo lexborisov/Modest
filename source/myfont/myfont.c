@@ -54,8 +54,6 @@ mystatus_t myfont_init(myfont_font_t *mf)
     memset(mf->cache.tables_offset, 0, sizeof(uint32_t) * MyFONT_TKEY_LAST_KEY);
     memset(&mf->header, 0, sizeof(myfont_header_t));
     
-    mf->file_path = NULL;
-    
     return MyFONT_STATUS_OK;
 }
 
@@ -65,17 +63,6 @@ void myfont_clean(myfont_font_t *mf)
     
     memset(mf->cache.tables_offset, 0, sizeof(uint32_t) * MyFONT_TKEY_LAST_KEY);
     memset(&mf->header, 0, sizeof(myfont_header_t));
-    
-    if(mf->file_data) {
-        mycore_free(mf->file_data);
-        mf->file_data = NULL;
-    }
-    
-    if(mf->file_path) {
-        mycore_free(mf->file_path);
-        mf->file_path = NULL;
-    }
-    
     memset(mf, 0, sizeof(myfont_font_t));
 }
 
@@ -85,16 +72,6 @@ myfont_font_t * myfont_destroy(myfont_font_t *mf, bool self_destroy)
         return NULL;
     
     mf->mchar = mchar_async_destroy(mf->mchar, 1);
-    
-    if(mf->file_data) {
-        mycore_free(mf->file_data);
-        mf->file_data = NULL;
-    }
-    
-    if(mf->file_path) {
-        mycore_free(mf->file_path);
-        mf->file_path = NULL;
-    }
     
     if(self_destroy) {
         mycore_free(mf);
@@ -122,8 +99,16 @@ void myfont_free(myfont_font_t *mf, void* data)
     mchar_async_free(mf->mchar, mf->mchar_node_id, data);
 }
 
-mystatus_t myfont_load(myfont_font_t *mf, const char *filepath)
+mystatus_t myfont_load_from_file(myfont_font_t *mf, const char *filepath, uint8_t** return_data, size_t* data_size)
 {
+    if(return_data)
+        *return_data = NULL;
+    
+    if(data_size)
+        *data_size = 0;
+    
+    size_t file_data_size;
+    
     FILE *fh = fopen(filepath, "rb");
     if(fh == NULL)
         return MyFONT_STATUS_ERROR_FILE_OPEN;
@@ -145,30 +130,47 @@ mystatus_t myfont_load(myfont_font_t *mf, const char *filepath)
     }
     
     if(file_size > 0)
-        mf->file_size = (size_t)file_size;
+        file_data_size = (size_t)file_size;
     else {
         fclose(fh);
         return MyFONT_STATUS_ERROR_FILE_TOO_SMALL;
     }
     
-    mf->file_data = (uint8_t*)mycore_malloc(file_size);
+    uint8_t* data = (uint8_t*)mycore_malloc(file_size);
     
-    if(mf->file_data == NULL) {
+    if(data == NULL) {
         fclose(fh);
         return MyFONT_STATUS_ERROR_MEMORY_ALLOCATION;
     }
     
-    if(fread(mf->file_data, 1, file_size, fh) != file_size) {
+    if(fread(data, 1, file_size, fh) != file_size) {
         fclose(fh);
         return MyFONT_STATUS_ERROR_FILE_READ;
     }
     
     fclose(fh);
     
-    if(mf->file_size < 12)
-        return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
+    if(return_data)
+        *return_data = data;
     
-    uint8_t *data = mf->file_data;
+    if(data_size)
+        *data_size = file_data_size;
+    
+    return myfont_load(mf, data, file_data_size);
+}
+
+void * myfont_destroy_font_data(myfont_font_t *mf, uint8_t* return_data)
+{
+    if(return_data)
+        return mycore_free(return_data);
+    
+    return NULL;
+}
+
+mystatus_t myfont_load(myfont_font_t *mf, uint8_t* data, size_t data_size)
+{
+    if(data_size < 12)
+        return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     mf->header.version_major = myfont_read_u16(&data);
     mf->header.version_minor = myfont_read_u16(&data);
@@ -177,7 +179,7 @@ mystatus_t myfont_load(myfont_font_t *mf, const char *filepath)
     mf->header.entrySelector = myfont_read_u16(&data);
     mf->header.rangeShift    = myfont_read_u16(&data);
     
-    if(mf->file_size < (12 + (mf->header.numTables * 16)))
+    if(data_size < (12 + (mf->header.numTables * 16)))
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     for(uint16_t i = 0; i < mf->header.numTables; i++)
@@ -235,48 +237,42 @@ mystatus_t myfont_load(myfont_font_t *mf, const char *filepath)
     if(myfont_check_required_tables(mf))
         return MyFONT_STATUS_ERROR_TABLE_LACKS_REQUIRED;
     
-    mf->file_path = (char *)mycore_calloc(strlen(filepath), sizeof(char));
-    
-    if(mf->file_path) {
-        strncpy(mf->file_path, filepath, strlen(filepath));
-    }
-    
     mystatus_t status;
     
-    if((status = myfont_load_table_cmap(mf)))
+    if((status = myfont_load_table_cmap(mf, data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_CMAP;
     
-    if((status = myfont_load_table_head(mf)))
+    if((status = myfont_load_table_head(mf, data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_HEAD;
     
-    if((status = myfont_load_table_name(mf)))
+    if((status = myfont_load_table_name(mf, data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_NAME;
     
-    if((status = myfont_load_table_os_2(mf)))
+    if((status = myfont_load_table_os_2(mf, data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_OS_2;
     
-    if((status = myfont_load_table_maxp(mf)))
+    if((status = myfont_load_table_maxp(mf, data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_MAXP;
     
-    if((status = myfont_load_table_hhea(mf)))
+    if((status = myfont_load_table_hhea(mf, data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_HHEA;
     
-    if((status = myfont_load_table_hmtx(mf)))
+    if((status = myfont_load_table_hmtx(mf, data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_HMTX;
     
-    if((status = myfont_load_table_loca(mf)))
+    if((status = myfont_load_table_loca(mf, data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_LOCA;
     
-    if((status = myfont_load_table_glyf(mf)))
+    if((status = myfont_load_table_glyf(mf, data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_GLYF;
     
-    if((status = myfont_load_table_vhea(mf)))
+    if((status = myfont_load_table_vhea(mf, data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_VHEA;
     
-    if((status = myfont_load_table_vmtx(mf)))
+    if((status = myfont_load_table_vmtx(mf, data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_VMTX;
     
-    if((status = myfont_load_table_pclt(mf)))
+    if((status = myfont_load_table_pclt(mf, data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_PCLT;
     
     return MyFONT_STATUS_OK;

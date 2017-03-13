@@ -20,7 +20,7 @@
 
 #include "myfont/hhea.h"
 
-mystatus_t myfont_load_table_hhea(myfont_font_t *mf)
+mystatus_t myfont_load_table_hhea(myfont_font_t* mf, uint8_t* font_data, size_t data_size)
 {
     memset(&mf->table_hhea, 0, sizeof(myfont_table_hhea_t));
     
@@ -30,11 +30,11 @@ mystatus_t myfont_load_table_hhea(myfont_font_t *mf)
     myfont_table_hhea_t *thhea = &mf->table_hhea;
     const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_hhea];
     
-    if(mf->file_size < (table_offset + 8 + 6 + 2 + 22 + 2))
+    if(data_size < (table_offset + 8 + 6 + 2 + 22 + 2))
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     /* get current data */
-    uint8_t *data = &mf->file_data[table_offset];
+    uint8_t *data = &font_data[table_offset];
     
     thhea->version = myfont_read_u32(&data);
     

@@ -20,7 +20,7 @@
 
 #include "myfont/vmtx.h"
 
-mystatus_t myfont_load_table_vmtx(myfont_font_t *mf)
+mystatus_t myfont_load_table_vmtx(myfont_font_t* mf, uint8_t* font_data, size_t data_size)
 {
     memset(&mf->table_vmtx, 0, sizeof(myfont_table_vmtx_t));
     
@@ -31,14 +31,14 @@ mystatus_t myfont_load_table_vmtx(myfont_font_t *mf)
     const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_vmtx];
     
     /* get current data */
-    uint8_t *data = &mf->file_data[table_offset];
+    uint8_t *data = &font_data[table_offset];
     uint16_t num_metrics = mf->table_vhea.numOfLongVerMetrics;
     
     if(num_metrics == 0)
         return MyFONT_STATUS_OK;
     
     uint32_t pos = table_offset + (num_metrics * 4);
-    if(pos > mf->file_size)
+    if(pos > data_size)
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     myfont_long_ver_metric_t *lver_metric = (myfont_long_ver_metric_t *)myfont_calloc(mf, num_metrics, sizeof(myfont_long_ver_metric_t));
@@ -60,7 +60,7 @@ mystatus_t myfont_load_table_vmtx(myfont_font_t *mf)
     
     pos = pos + (numOfTSB * 2);
     
-    if(pos > mf->file_size) {
+    if(pos > data_size) {
         myfont_free(mf, lver_metric);
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     }

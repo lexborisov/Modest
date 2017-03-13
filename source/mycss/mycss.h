@@ -26,9 +26,6 @@
 extern "C" {
 #endif
 
-#define MyCSS_DEBUG_MESSAGE(format, ...)
-#define MyCORE_DEBUG_ERROR(format, ...)
-
 #include "mycss/myosi.h"
 #include "mycss/entry.h"
 #include "mycss/tokenizer.h"

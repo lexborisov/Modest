@@ -85,10 +85,6 @@ struct myfont_font {
     myfont_table_pclt_t table_pclt;
     myfont_table_loca_t table_loca;
     
-    char*       file_path;
-    size_t      file_size;
-    uint8_t*    file_data;
-    
     mchar_async_t* mchar;
     size_t mchar_node_id;
 };
@@ -102,7 +98,9 @@ void * myfont_malloc(myfont_font_t* mf, size_t size);
 void * myfont_calloc(myfont_font_t* mf, size_t count, size_t size);
 void myfont_free(myfont_font_t *mf, void* data);
 
-mystatus_t myfont_load(myfont_font_t *mf, const char *filepath);
+mystatus_t myfont_load(myfont_font_t* mf, uint8_t* data, size_t data_size);
+mystatus_t myfont_load_from_file(myfont_font_t* mf, const char* filepath, uint8_t** return_data, size_t* data_size);
+void * myfont_destroy_font_data(myfont_font_t* mf, uint8_t* return_data);
 
 mystatus_t myfont_check_required_tables(myfont_font_t *mf);
 

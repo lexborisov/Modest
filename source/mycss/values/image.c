@@ -63,32 +63,32 @@ mycss_property_value_t mycss_values_image_id_by_name(const char *name, size_t le
 
 void * mycss_values_image_creator_url(mycss_entry_t* entry, mycss_values_image_t* image)
 {
-    image->url = mycss_values_create(entry, sizeof(mycss_values_url_t));
-    return image->url;
+    image->value.url = mycss_values_create(entry, sizeof(mycss_values_url_t));
+    return image->value.url;
 }
 
 void * mycss_values_image_creator_function_image(mycss_entry_t* entry, mycss_values_image_t* image)
 {
-    image->ii = mycss_values_create(entry, sizeof(mycss_values_image_image_t));
-    return image->ii;
+    image->value.ii = mycss_values_create(entry, sizeof(mycss_values_image_image_t));
+    return image->value.ii;
 }
 
 void * mycss_values_image_creator_image_set(mycss_entry_t* entry, mycss_values_image_t* image)
 {
-    image->ii_set = mycss_values_create(entry, sizeof(mycss_values_image_image_set_t));
-    return image->ii_set;
+    image->value.ii_set = mycss_values_create(entry, sizeof(mycss_values_image_image_set_t));
+    return image->value.ii_set;
 }
 
 void * mycss_values_image_creator_element(mycss_entry_t* entry, mycss_values_image_t* image)
 {
-    image->element = mycss_values_create(entry, sizeof(mycss_values_element_t));
-    return image->element;
+    image->value.element = mycss_values_create(entry, sizeof(mycss_values_element_t));
+    return image->value.element;
 }
 
 void * mycss_values_image_creator_cross_fade(mycss_entry_t* entry, mycss_values_image_t* image)
 {
-    image->cross_fade = mycss_values_create(entry, sizeof(mycss_values_cross_fade_t));
-    return image->cross_fade;
+    image->value.cross_fade = mycss_values_create(entry, sizeof(mycss_values_cross_fade_t));
+    return image->value.cross_fade;
 }
 
 

@@ -55,8 +55,8 @@ extern "C" {
 #endif
 
 /* Debug */
-#define MyCORE_DEBUG(format, ...)
-#define MyCORE_DEBUG_ERROR(format, ...)
+#define MyCORE_DEBUG(...) do {} while(0)
+#define MyCORE_DEBUG_ERROR(...) do {} while(0)
 
 #define MyCORE_FAILED(_status_) ((_status_) != MyCORE_STATUS_OK)
 

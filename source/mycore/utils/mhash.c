@@ -41,7 +41,7 @@ size_t mycore_utils_mhash_hash(const char* key, size_t key_size, size_t table_si
 mycore_utils_mhash_t * mycore_utils_mhash_create(void)
 {
     return mycore_calloc(1, sizeof(mycore_utils_mhash_t));
-};
+}
 
 mystatus_t mycore_utils_mhash_init(mycore_utils_mhash_t* mhash, size_t table_size, size_t max_depth)
 {
@@ -73,7 +73,7 @@ mystatus_t mycore_utils_mhash_init(mycore_utils_mhash_t* mhash, size_t table_siz
     mhash->table_size      = table_size;
     
     return MyCORE_STATUS_OK;
-};
+}
 
 void mycore_utils_mhash_clean(mycore_utils_mhash_t* mhash)
 {

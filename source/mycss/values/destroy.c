@@ -377,23 +377,23 @@ mycss_values_image_t * mycss_values_destroy_image(mycss_entry_t* entry, mycss_va
     
     switch (image->type) {
         case MyCSS_PROPERTY_VALUE__URL:
-            image->url = mycss_values_destroy_url(entry, image->url, true);
+            image->value.url = mycss_values_destroy_url(entry, image->value.url, true);
             break;
             
         case MyCSS_PROPERTY_VALUE__IMAGE_FUNCTION:
-            image->ii = mycss_values_destroy_image_image(entry, image->ii, true);
+            image->value.ii = mycss_values_destroy_image_image(entry, image->value.ii, true);
             break;
             
         case MyCSS_PROPERTY_VALUE__IMAGE_SET_FUNCTION:
-            image->ii_set = mycss_values_destroy_image_image_set(entry, image->ii_set, true);
+            image->value.ii_set = mycss_values_destroy_image_image_set(entry, image->value.ii_set, true);
             break;
             
         case MyCSS_PROPERTY_VALUE__ELEMENT_FUNCTION:
-            image->element = mycss_values_destroy_element(entry, image->element, true);
+            image->value.element = mycss_values_destroy_element(entry, image->value.element, true);
             break;
             
         case MyCSS_PROPERTY_VALUE__CROSS_FADE_FUNCTION:
-            image->cross_fade = mycss_values_destroy_cross_fade(entry, image->cross_fade, true);
+            image->value.cross_fade = mycss_values_destroy_cross_fade(entry, image->value.cross_fade, true);
             break;
             
         default:
@@ -543,20 +543,20 @@ mycss_values_background_position_t * mycss_values_destroy_background_position(my
     if(value == NULL)
         return NULL;
     
-    if(value->one.length) {
-        mycss_values_destroy(entry, (void*)value->one.length);
+    if(value->one.value.length) {
+        mycss_values_destroy(entry, (void*)value->one.value.length);
     }
     
-    if(value->two.length) {
-        mycss_values_destroy(entry, (void*)value->two.length);
+    if(value->two.value.length) {
+        mycss_values_destroy(entry, (void*)value->two.value.length);
     }
     
-    if(value->three.length) {
-        mycss_values_destroy(entry, (void*)value->three.length);
+    if(value->three.value.length) {
+        mycss_values_destroy(entry, (void*)value->three.value.length);
     }
     
-    if(value->four.length) {
-        mycss_values_destroy(entry, (void*)value->four.length);
+    if(value->four.value.length) {
+        mycss_values_destroy(entry, (void*)value->four.value.length);
     }
     
     if(self_destroy) {
@@ -574,15 +574,15 @@ mycss_values_background_size_list_t * mycss_values_destroy_background_size(mycss
     
     for(size_t i = 0; i < value->entries_length; i++) {
         if(value->entries[i].width) {
-            if(value->entries[i].width->percentage)
-                mycss_values_destroy(entry, (void*)value->entries[i].width->percentage);
+            if(value->entries[i].width->value.percentage)
+                mycss_values_destroy(entry, (void*)value->entries[i].width->value.percentage);
             
             mycss_values_destroy(entry, (void*)value->entries[i].width);
         }
         
         if(value->entries[i].height) {
-            if(value->entries[i].height->percentage)
-                mycss_values_destroy(entry, (void*)value->entries[i].height->percentage);
+            if(value->entries[i].height->value.percentage)
+                mycss_values_destroy(entry, (void*)value->entries[i].height->value.percentage);
             
             mycss_values_destroy(entry, (void*)value->entries[i].height);
         }

@@ -115,12 +115,13 @@ struct mycss_values_type_list {
     size_t entries_length;
 };
 
-struct mycss_values_type_length_percentage_entry {
-    union {
-        mycss_values_percentage_t* percentage;
-        mycss_values_length_t* length;
-    };
+union mycss_values_type_length_percentage_union {
+    mycss_values_percentage_t* percentage;
+    mycss_values_length_t* length;
+};
     
+struct mycss_values_type_length_percentage_entry {
+    union mycss_values_type_length_percentage_union value;
     unsigned int type;
 };
 
@@ -128,7 +129,7 @@ struct mycss_values_number {
     union {
         int i;
         float f;
-    };
+    } value;
     
     bool is_float;
 };
@@ -137,9 +138,10 @@ struct mycss_values_length {
     union {
         int i;
         float f;
-    };
+    } value;
     
     bool is_float;
+    
     mycss_units_type_t type;
 };
 
@@ -147,7 +149,7 @@ struct mycss_values_percentage {
     union {
         int i;
         float f;
-    };
+    } value;
     
     bool is_float;
 };
@@ -156,7 +158,7 @@ struct mycss_values_angle {
     union {
         int i;
         float f;
-    };
+    } value;
     
     bool is_float;
     mycss_units_type_t type;
@@ -166,7 +168,7 @@ struct mycss_values_resolution {
     union {
         int i;
         float f;
-    };
+    } value;
     
     bool is_float;
     mycss_units_type_t type;
@@ -211,7 +213,7 @@ struct mycss_values_color_alpha_value {
     union {
         mycss_values_number_t number;
         mycss_values_percentage_t percentage;
-    };
+    } value;
     
     mycss_values_color_type_value_t type_value;
 };
@@ -220,7 +222,7 @@ struct mycss_values_color_hue_value {
     union {
         mycss_values_number_t number;
         mycss_values_angle_t angle;
-    };
+    } value;
     
     mycss_values_color_type_value_t type_value;
 };
@@ -267,7 +269,7 @@ struct mycss_values_color {
         mycss_values_color_hwb_t hwb;
         mycss_values_color_gray_t gray;
         mycss_values_color_id_t name_id;
-    };
+    } value;
     
     mycss_values_color_type_t type;
     mycss_values_color_type_value_t type_value;
@@ -308,7 +310,7 @@ struct mycss_values_image {
         mycss_values_image_image_set_t* ii_set;
         mycss_values_element_t* element;
         mycss_values_cross_fade_t* cross_fade;
-    };
+    } value;
     
     mycss_property_value_t type;
 };
@@ -378,7 +380,7 @@ struct mycss_values_gradient_linear {
     union {
         mycss_values_angle_t angle;
         mycss_values_gradient_side_or_corner_t side_or_corner;
-    };
+    } value;
     
     mycss_values_color_stop_list_t color_stop_list;
 };
@@ -400,7 +402,7 @@ struct mycss_values_font_family_entry {
     union {
         mycore_string_t str;
         mycss_property_font_family_t prop_type;
-    };
+    } value;
     
     mycss_values_font_family_type_t type;
 };

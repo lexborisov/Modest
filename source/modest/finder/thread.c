@@ -77,7 +77,7 @@ mystatus_t modest_finder_thread_init(modest_finder_t* finder, modest_finder_thre
     
     /* create threads */
     for(size_t i = 0; i < finder_thread->thread->entries_size; i++) {
-        myhread_entry_create(finder_thread->thread, mythread_function, modest_finder_thread_stream, MyTHREAD_OPT_UNDEF);
+        myhread_entry_create(finder_thread->thread, mythread_function, modest_finder_thread_stream, MyTHREAD_OPT_STOP);
     }
 #endif
     
@@ -101,8 +101,9 @@ modest_finder_thread_t * modest_finder_thread_destroy(modest_finder_thread_t* fi
     finder_thread->declaration_obj = mcobject_async_destroy(finder_thread->declaration_obj, true);
     
 #ifndef MyCORE_BUILD_WITHOUT_THREADS
-    if(finder_thread->thread)
+    if(finder_thread->thread) {
         finder_thread->thread = mythread_destroy(finder_thread->thread, mythread_callback_quit, NULL, true);
+    }
 #endif
     
     if(finder_thread->context_list) {
@@ -134,7 +135,7 @@ void modest_finder_thread_collate_node(modest_t* modest, myhtml_tree_node_t* nod
 
 #ifndef MyCORE_BUILD_WITHOUT_THREADS
 mystatus_t modest_finder_thread_process(modest_t* modest, modest_finder_thread_t* finder_thread,
-                                             myhtml_tree_node_t* scope_node, mycss_selectors_list_t* selector_list)
+                                        myhtml_tree_node_t* scope_node, mycss_selectors_list_t* selector_list)
 {
     finder_thread->base_node = scope_node;
     finder_thread->selector_list = selector_list;

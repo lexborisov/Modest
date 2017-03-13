@@ -38,12 +38,12 @@ struct mythread {
 #else
 /* functions */
 typedef void (*mythread_callback_before_entry_join_f)(mythread_t* mythread, mythread_entry_t* entry, void* ctx);
-typedef void (*mythread_process_f)(void* arg);
+typedef void * (*mythread_process_f)(void* arg);
 typedef void (*mythread_work_f)(mythread_id_t thread_id, void* arg);
-
-void mythread_function_queue_stream(void *arg);
-void mythread_function_queue_batch(void *arg);
-void mythread_function(void *arg);
+    
+void * mythread_function_queue_stream(void *arg);
+void * mythread_function_queue_batch(void *arg);
+void * mythread_function(void *arg);
 
 enum mythread_thread_opt {
     MyTHREAD_OPT_UNDEF = 0x00,
@@ -128,7 +128,7 @@ mystatus_t mythread_entry_status(mythread_entry_t* entry);
 mythread_t * mythread_entry_mythread(mythread_entry_t* entry);
 
 /* API for ports */
-void * mythread_thread_create(mythread_t *mythread, void* process_func, void* ctx);
+void * mythread_thread_create(mythread_t *mythread, mythread_process_f process_func, void* ctx);
 mystatus_t mythread_thread_join(mythread_t *mythread, void* thread);
 mystatus_t mythread_thread_cancel(mythread_t *mythread, void* thread);
 mystatus_t mythread_thread_destroy(mythread_t *mythread, void* thread);

@@ -502,7 +502,7 @@ bool mythread_function_see_opt(mythread_context_t *ctx, volatile mythread_thread
     return false;
 }
 
-void mythread_function_queue_batch(void *arg)
+void * mythread_function_queue_batch(void *arg)
 {
     mythread_context_t *ctx = (mythread_context_t*)arg;
     mythread_t *mythread  = ctx->mythread;
@@ -553,9 +553,11 @@ void mythread_function_queue_batch(void *arg)
         }
     }
     while (1);
+    
+    return NULL;
 }
 
-void mythread_function_queue_stream(void *arg)
+void * mythread_function_queue_stream(void *arg)
 {
     mythread_context_t *ctx = (mythread_context_t*)arg;
     mythread_t * mythread = ctx->mythread;
@@ -607,9 +609,11 @@ void mythread_function_queue_stream(void *arg)
         }
     }
     while(1);
+    
+    return NULL;
 }
 
-void mythread_function(void *arg)
+void * mythread_function(void *arg)
 {
     mythread_context_t *ctx = (mythread_context_t*)arg;
     mythread_t * mythread = ctx->mythread;
@@ -619,7 +623,7 @@ void mythread_function(void *arg)
     do {
         if(mythread->opt & MyTHREAD_OPT_STOP || ctx->opt & MyTHREAD_OPT_STOP)
         {
-            ctx->opt |= MyTHREAD_OPT_DONE;
+            ctx->opt = MyTHREAD_OPT_DONE|MyTHREAD_OPT_STOP;
             mythread_mutex_wait(mythread, ctx->mutex);
             
             if(mythread->opt & MyTHREAD_OPT_QUIT || ctx->opt & MyTHREAD_OPT_QUIT)
@@ -627,7 +631,7 @@ void mythread_function(void *arg)
                 mythread_mutex_close(mythread, ctx->mutex);
                 mythread_nanosleep_destroy(ctx->timespec);
                 
-                ctx->opt = MyTHREAD_OPT_QUIT;
+                ctx->opt = MyTHREAD_OPT_DONE|MyTHREAD_OPT_QUIT;
                 break;
             }
             
@@ -638,13 +642,15 @@ void mythread_function(void *arg)
             mythread_mutex_close(mythread, ctx->mutex);
             mythread_nanosleep_destroy(ctx->timespec);
             
-            ctx->opt = MyTHREAD_OPT_QUIT;
+            ctx->opt = MyTHREAD_OPT_DONE|MyTHREAD_OPT_QUIT;
             break;
         }
         
         ctx->func(ctx->id, ctx);
     }
     while(1);
+    
+    return NULL;
 }
 
 #endif

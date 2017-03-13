@@ -90,9 +90,9 @@ typedef myfont_table_os_2_t;
 
 struct myfont_font;
 
-mystatus_t myfont_load_table_os_2(struct myfont_font *mf);
+mystatus_t myfont_load_table_os_2(myfont_font_t* mf, uint8_t* data, size_t data_size);
 
-int8_t myfont_os_2_panose(struct myfont_font *mf, myfont_table_os_2_panose_t id);
+int8_t myfont_os_2_panose(myfont_font_t* mf, myfont_table_os_2_panose_t id);
 
 #ifdef __cplusplus
 } /* extern "C" */

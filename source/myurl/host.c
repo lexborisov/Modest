@@ -41,10 +41,10 @@ mystatus_t myurl_host_init(myurl_t* url)
 void myurl_host_clean(myurl_t* url, myurl_host_t* host)
 {
     if(host->type == MyURL_HOST_TYPE_DOMAIN)
-        url->callback_free(host->domain.value, url->callback_ctx);
+        url->callback_free(host->value.domain.value, url->callback_ctx);
     
     if(host->type == MyURL_HOST_TYPE_OPAQUE)
-        url->callback_free(host->opaque.value, url->callback_ctx);
+        url->callback_free(host->value.opaque.value, url->callback_ctx);
     
     memset(host, 0, sizeof(myurl_host_t));
 }
@@ -69,8 +69,8 @@ mystatus_t myurl_host_copy(myurl_t* url, myurl_host_t* host_from, myurl_host_t* 
     
     switch (host_from->type) {
         case MyURL_HOST_TYPE_DOMAIN:
-            return myurl_utils_data_copy_set(url, host_from->domain.value, host_from->domain.length,
-                                                  &host_to->domain.value, &host_to->domain.length);
+            return myurl_utils_data_copy_set(url, host_from->value.domain.value, host_from->value.domain.length,
+                                                  &host_to->value.domain.value, &host_to->value.domain.length);
             
         default:
             break;
@@ -105,13 +105,13 @@ mystatus_t myurl_host_parser(myurl_t* url, myurl_host_t* host, const char* data,
         data_length++;
         
         host->type = MyURL_HOST_TYPE_IPv6;
-        return myurl_host_ipv6_parser(&host->ipv, &data[data_length], (data_size - 2));
+        return myurl_host_ipv6_parser(&host->value.ipv, &data[data_length], (data_size - 2));
     }
     
     /* 2 */
     if(is_special == false) {
         host->type = MyURL_HOST_TYPE_OPAQUE;
-        return myurl_host_opaque_host_parser(url, &host->opaque, data, data_size);
+        return myurl_host_opaque_host_parser(url, &host->value.opaque, data, data_size);
     }
     
     /* 3 */
@@ -144,7 +144,7 @@ mystatus_t myurl_host_parser(myurl_t* url, myurl_host_t* host, const char* data,
     
     /* 7 */
     bool failure;
-    if(myurl_host_ipv4_parser(&host->ipv, ascii_domain, ascii_domain_size, &failure) == MyURL_STATUS_OK) {
+    if(myurl_host_ipv4_parser(&host->value.ipv, ascii_domain, ascii_domain_size, &failure) == MyURL_STATUS_OK) {
         url->callback_free(ascii_domain, url->callback_ctx);
         
         host->type = MyURL_HOST_TYPE_IPv4;
@@ -158,8 +158,8 @@ mystatus_t myurl_host_parser(myurl_t* url, myurl_host_t* host, const char* data,
     }
     
     host->type = MyURL_HOST_TYPE_DOMAIN;
-    host->domain.value = ascii_domain;
-    host->domain.length = ascii_domain_size;
+    host->value.domain.value = ascii_domain;
+    host->value.domain.length = ascii_domain_size;
     
     return MyURL_STATUS_OK;
 }

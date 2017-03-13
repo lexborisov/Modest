@@ -53,9 +53,9 @@ typedef myfont_table_head_t;
 
 struct myfont_font;
 
-mystatus_t myfont_load_table_head(struct myfont_font *mf);
+mystatus_t myfont_load_table_head(myfont_font_t *mf, uint8_t* data, size_t data_size);
 
-float myfont_head_yMax_pixel(struct myfont_font *mf, float font_size);
+float myfont_head_yMax_pixel(myfont_font_t *mf, float font_size);
 
 #ifdef __cplusplus
 } /* extern "C" */

@@ -110,7 +110,7 @@ bool mycss_namespace_state_namespace_namespace_ident_string(mycss_entry_t* entry
     
     if(token->type == MyCSS_TOKEN_TYPE_SEMICOLON) {
         mycss_namespace_parser_end(entry, token);
-        MyCSS_DEBUG_MESSAGE("mycss_namespace_state_namespace_namespace_ident_string_semicolon")
+        MyCORE_DEBUG("mycss_namespace_state_namespace_namespace_ident_string_semicolon");
         entry->parser = mycss_parser_token;
     }
     else {
@@ -129,7 +129,7 @@ bool mycss_namespace_state_namespace_namespace_ident_url(mycss_entry_t* entry, m
     
     if(token->type == MyCSS_TOKEN_TYPE_SEMICOLON) {
         mycss_namespace_parser_end(entry, token);
-        MyCSS_DEBUG_MESSAGE("mycss_namespace_state_namespace_namespace_ident_url_semicolon")
+        MyCORE_DEBUG("mycss_namespace_state_namespace_namespace_ident_url_semicolon");
         entry->parser = mycss_parser_token;
     }
     else {
@@ -148,7 +148,7 @@ bool mycss_namespace_state_namespace_namespace_string(mycss_entry_t* entry, mycs
     
     if(token->type == MyCSS_TOKEN_TYPE_SEMICOLON) {
         mycss_namespace_parser_end(entry, token);
-        MyCSS_DEBUG_MESSAGE("mycss_namespace_state_namespace_namespace_string_semicolon")
+        MyCORE_DEBUG("mycss_namespace_state_namespace_namespace_string_semicolon");
         entry->parser = mycss_parser_token;
     }
     else {
@@ -167,7 +167,7 @@ bool mycss_namespace_state_namespace_namespace_url(mycss_entry_t* entry, mycss_t
     
     if(token->type == MyCSS_TOKEN_TYPE_SEMICOLON) {
         mycss_namespace_parser_end(entry, token);
-        MyCSS_DEBUG_MESSAGE("mycss_namespace_state_namespace_namespace_url_semicolon")
+        MyCORE_DEBUG("mycss_namespace_state_namespace_namespace_url_semicolon");
         entry->parser = mycss_parser_token;
     }
     else {

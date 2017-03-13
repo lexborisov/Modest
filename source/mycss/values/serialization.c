@@ -42,11 +42,11 @@ void mycss_values_serialization_number(mycss_values_number_t* value, mycss_callb
     char buff[512];
     
     if(value->is_float) {
-        int len = snprintf(buff, 512, "%0.4f", value->f);
+        int len = snprintf(buff, 512, "%0.4f", value->value.f);
         mycss_values_serialization_to_callback(buff, len, callback, context);
     }
     else {
-        int len = snprintf(buff, 512, "%d", value->i);
+        int len = snprintf(buff, 512, "%d", value->value.i);
         mycss_values_serialization_to_callback(buff, len, callback, context);
     }
 }
@@ -59,11 +59,11 @@ void mycss_values_serialization_length(mycss_values_length_t* value, mycss_callb
     char buff[512];
     
     if(value->is_float) {
-        int len = snprintf(buff, 512, "%0.4f", value->f);
+        int len = snprintf(buff, 512, "%0.4f", value->value.f);
         mycss_values_serialization_to_callback(buff, len, callback, context);
     }
     else {
-        int len = snprintf(buff, 512, "%d", value->i);
+        int len = snprintf(buff, 512, "%d", value->value.i);
         mycss_values_serialization_to_callback(buff, len, callback, context);
     }
     
@@ -81,11 +81,11 @@ void mycss_values_serialization_angle(mycss_values_angle_t* value, mycss_callbac
     char buff[512];
     
     if(value->is_float) {
-        int len = snprintf(buff, 512, "%0.4f", value->f);
+        int len = snprintf(buff, 512, "%0.4f", value->value.f);
         mycss_values_serialization_to_callback(buff, len, callback, context);
     }
     else {
-        int len = snprintf(buff, 512, "%d", value->i);
+        int len = snprintf(buff, 512, "%d", value->value.i);
         mycss_values_serialization_to_callback(buff, len, callback, context);
     }
     
@@ -103,11 +103,11 @@ void mycss_values_serialization_resolution(mycss_values_resolution_t* value, myc
     char buff[512];
     
     if(value->is_float) {
-        int len = snprintf(buff, 512, "%0.4f", value->f);
+        int len = snprintf(buff, 512, "%0.4f", value->value.f);
         mycss_values_serialization_to_callback(buff, len, callback, context);
     }
     else {
-        int len = snprintf(buff, 512, "%d", value->i);
+        int len = snprintf(buff, 512, "%d", value->value.i);
         mycss_values_serialization_to_callback(buff, len, callback, context);
     }
     
@@ -125,11 +125,11 @@ void mycss_values_serialization_percentage(mycss_values_percentage_t* value, myc
     char buff[512];
     
     if(value->is_float) {
-        int len = snprintf(buff, 512, "%0.4f%%", value->f);
+        int len = snprintf(buff, 512, "%0.4f%%", value->value.f);
         mycss_values_serialization_to_callback(buff, len, callback, context);
     }
     else {
-        int len = snprintf(buff, 512, "%d%%", value->i);
+        int len = snprintf(buff, 512, "%d%%", value->value.i);
         mycss_values_serialization_to_callback(buff, len, callback, context);
     }
 }
@@ -138,11 +138,11 @@ void mycss_values_serialization_type_length_percentage(mycss_values_type_length_
 {
     switch (value->type) {
         case MyCSS_PROPERTY_VALUE__LENGTH:
-            mycss_values_serialization_length(value->length, callback, context);
+            mycss_values_serialization_length(value->value.length, callback, context);
             break;
             
         case MyCSS_PROPERTY_VALUE__PERCENTAGE:
-            mycss_values_serialization_percentage(value->percentage, callback, context);
+            mycss_values_serialization_percentage(value->value.percentage, callback, context);
             break;
             
         default: {
@@ -173,7 +173,7 @@ void mycss_values_serialization_color(mycss_values_color_t* value, mycss_callbac
     switch (value->type) {
         case MyCSS_VALUES_COLOR_TYPE_NAMED: {
             size_t length;
-            const char *name = mycss_values_color_name_by_id(value->name_id, &length);
+            const char *name = mycss_values_color_name_by_id(value->value.name_id, &length);
             
             mycss_values_serialization_to_callback(name, length, callback, context);
             break;
@@ -189,25 +189,25 @@ void mycss_values_serialization_color(mycss_values_color_t* value, mycss_callbac
             
             if(value->type_value == MyCSS_VALUES_COLOR_TYPE_VALUE_PERCENTAGE)
             {
-                mycss_values_serialization_percentage(&value->rgba_percentage.r, callback, context);
+                mycss_values_serialization_percentage(&value->value.rgba_percentage.r, callback, context);
                 
                 callback(", ", 2, context);
-                mycss_values_serialization_percentage(&value->rgba_percentage.g, callback, context);
+                mycss_values_serialization_percentage(&value->value.rgba_percentage.g, callback, context);
                 
                 callback(", ", 2, context);
-                mycss_values_serialization_percentage(&value->rgba_percentage.b, callback, context);
-                mycss_values_serialization_color_alpha(&value->rgba_percentage.alpha, callback, context);
+                mycss_values_serialization_percentage(&value->value.rgba_percentage.b, callback, context);
+                mycss_values_serialization_color_alpha(&value->value.rgba_percentage.alpha, callback, context);
             }
             else if(value->type_value == MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER)
             {
-                mycss_values_serialization_number(&value->rgba_number.r, callback, context);
+                mycss_values_serialization_number(&value->value.rgba_number.r, callback, context);
                 
                 callback(", ", 2, context);
-                mycss_values_serialization_number(&value->rgba_number.g, callback, context);
+                mycss_values_serialization_number(&value->value.rgba_number.g, callback, context);
                 
                 callback(", ", 2, context);
-                mycss_values_serialization_number(&value->rgba_number.b, callback, context);
-                mycss_values_serialization_color_alpha(&value->rgba_number.alpha, callback, context);
+                mycss_values_serialization_number(&value->value.rgba_number.b, callback, context);
+                mycss_values_serialization_color_alpha(&value->value.rgba_number.alpha, callback, context);
             }
             
             callback(")", 1, context);
@@ -223,19 +223,19 @@ void mycss_values_serialization_color(mycss_values_color_t* value, mycss_callbac
             else
                 callback("hsla(", 5, context);
             
-            if(value->hsla.hue.type_value == MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER) {
-                mycss_values_serialization_number(&value->hsla.hue.number, callback, context);
+            if(value->value.hsla.hue.type_value == MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER) {
+                mycss_values_serialization_number(&value->value.hsla.hue.value.number, callback, context);
             }
             else {
-                mycss_values_serialization_angle(&value->hsla.hue.angle, callback, context);
+                mycss_values_serialization_angle(&value->value.hsla.hue.value.angle, callback, context);
             }
             
             callback(", ", 2, context);
-            mycss_values_serialization_percentage(&value->hsla.saturation, callback, context);
+            mycss_values_serialization_percentage(&value->value.hsla.saturation, callback, context);
             
             callback(", ", 2, context);
-            mycss_values_serialization_percentage(&value->hsla.lightness, callback, context);
-            mycss_values_serialization_color_alpha(&value->hsla.alpha, callback, context);
+            mycss_values_serialization_percentage(&value->value.hsla.lightness, callback, context);
+            mycss_values_serialization_color_alpha(&value->value.hsla.alpha, callback, context);
             
             callback(")", 1, context);
             
@@ -246,19 +246,19 @@ void mycss_values_serialization_color(mycss_values_color_t* value, mycss_callbac
         {
             callback("hwb(", 4, context);
             
-            if(value->hwb.hue.type_value == MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER) {
-                mycss_values_serialization_number(&value->hwb.hue.number, callback, context);
+            if(value->value.hwb.hue.type_value == MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER) {
+                mycss_values_serialization_number(&value->value.hwb.hue.value.number, callback, context);
             }
             else {
-                mycss_values_serialization_angle(&value->hwb.hue.angle, callback, context);
+                mycss_values_serialization_angle(&value->value.hwb.hue.value.angle, callback, context);
             }
             
             callback(", ", 2, context);
-            mycss_values_serialization_percentage(&value->hwb.saturation, callback, context);
+            mycss_values_serialization_percentage(&value->value.hwb.saturation, callback, context);
             
             callback(", ", 2, context);
-            mycss_values_serialization_percentage(&value->hwb.lightness, callback, context);
-            mycss_values_serialization_color_alpha(&value->hwb.alpha, callback, context);
+            mycss_values_serialization_percentage(&value->value.hwb.lightness, callback, context);
+            mycss_values_serialization_color_alpha(&value->value.hwb.alpha, callback, context);
             
             callback(")", 1, context);
             
@@ -269,8 +269,8 @@ void mycss_values_serialization_color(mycss_values_color_t* value, mycss_callbac
         {
             callback("gray(", 5, context);
             
-            mycss_values_serialization_number(&value->gray.number, callback, context);
-            mycss_values_serialization_color_alpha(&value->gray.alpha, callback, context);
+            mycss_values_serialization_number(&value->value.gray.number, callback, context);
+            mycss_values_serialization_color_alpha(&value->value.gray.alpha, callback, context);
             
             callback(")", 1, context);
             
@@ -284,10 +284,10 @@ void mycss_values_serialization_color(mycss_values_color_t* value, mycss_callbac
             if(value->type_value == MyCSS_VALUES_COLOR_TYPE_VALUE_HEX_8) {
                 unsigned char data[9];
                 
-                mycss_values_serialization_color_hex_two_value(value->hex.r.i, data);
-                mycss_values_serialization_color_hex_two_value(value->hex.g.i, &data[2]);
-                mycss_values_serialization_color_hex_two_value(value->hex.b.i, &data[4]);
-                mycss_values_serialization_color_hex_two_value(value->hex.alpha.number.i, &data[6]);
+                mycss_values_serialization_color_hex_two_value(value->value.hex.r.value.i, data);
+                mycss_values_serialization_color_hex_two_value(value->value.hex.g.value.i, &data[2]);
+                mycss_values_serialization_color_hex_two_value(value->value.hex.b.value.i, &data[4]);
+                mycss_values_serialization_color_hex_two_value(value->value.hex.alpha.value.number.value.i, &data[6]);
                 
                 data[8] = '\0';
                 callback((const char*)data, 8, context);
@@ -295,9 +295,9 @@ void mycss_values_serialization_color(mycss_values_color_t* value, mycss_callbac
             else if(value->type_value == MyCSS_VALUES_COLOR_TYPE_VALUE_HEX_6) {
                 unsigned char data[7];
                 
-                mycss_values_serialization_color_hex_two_value(value->hex.r.i, data);
-                mycss_values_serialization_color_hex_two_value(value->hex.g.i, &data[2]);
-                mycss_values_serialization_color_hex_two_value(value->hex.b.i, &data[4]);
+                mycss_values_serialization_color_hex_two_value(value->value.hex.r.value.i, data);
+                mycss_values_serialization_color_hex_two_value(value->value.hex.g.value.i, &data[2]);
+                mycss_values_serialization_color_hex_two_value(value->value.hex.b.value.i, &data[4]);
                 
                 data[6] = '\0';
                 callback((const char*)data, 6, context);
@@ -305,10 +305,10 @@ void mycss_values_serialization_color(mycss_values_color_t* value, mycss_callbac
             else if(value->type_value == MyCSS_VALUES_COLOR_TYPE_VALUE_HEX_4) {
                 unsigned char data[5];
                 
-                mycss_values_serialization_color_hex_one_value(value->hex.r.i, data);
-                mycss_values_serialization_color_hex_one_value(value->hex.g.i, &data[1]);
-                mycss_values_serialization_color_hex_one_value(value->hex.b.i, &data[2]);
-                mycss_values_serialization_color_hex_one_value(value->hex.alpha.number.i, &data[3]);
+                mycss_values_serialization_color_hex_one_value(value->value.hex.r.value.i, data);
+                mycss_values_serialization_color_hex_one_value(value->value.hex.g.value.i, &data[1]);
+                mycss_values_serialization_color_hex_one_value(value->value.hex.b.value.i, &data[2]);
+                mycss_values_serialization_color_hex_one_value(value->value.hex.alpha.value.number.value.i, &data[3]);
                 
                 data[4] = '\0';
                 callback((const char*)data, 4, context);
@@ -316,9 +316,9 @@ void mycss_values_serialization_color(mycss_values_color_t* value, mycss_callbac
             else if(value->type_value == MyCSS_VALUES_COLOR_TYPE_VALUE_HEX_3) {
                 unsigned char data[4];
                 
-                mycss_values_serialization_color_hex_one_value(value->hex.r.i, data);
-                mycss_values_serialization_color_hex_one_value(value->hex.g.i, &data[1]);
-                mycss_values_serialization_color_hex_one_value(value->hex.b.i, &data[2]);
+                mycss_values_serialization_color_hex_one_value(value->value.hex.r.value.i, data);
+                mycss_values_serialization_color_hex_one_value(value->value.hex.g.value.i, &data[1]);
+                mycss_values_serialization_color_hex_one_value(value->value.hex.b.value.i, &data[2]);
                 
                 data[3] = '\0';
                 callback((const char*)data, 3, context);
@@ -339,11 +339,11 @@ void mycss_values_serialization_color_alpha(mycss_values_color_alpha_value_t* va
     
     if(value->type_value == MyCSS_VALUES_COLOR_TYPE_VALUE_PERCENTAGE) {
         callback(", ", 2, context);
-        mycss_values_serialization_percentage(&value->percentage, callback, context);
+        mycss_values_serialization_percentage(&value->value.percentage, callback, context);
     }
     else if(value->type_value == MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER) {
         callback(", ", 2, context);
-        mycss_values_serialization_number(&value->number, callback, context);
+        mycss_values_serialization_number(&value->value.number, callback, context);
     }
 }
 
@@ -434,7 +434,7 @@ void mycss_values_serialization_image(mycss_values_image_t* image, mycss_callbac
 {
     switch (image->type) {
         case MyCSS_PROPERTY_VALUE__URL:
-            mycss_values_serialization_url(image->url, callback, context);
+            mycss_values_serialization_url(image->value.url, callback, context);
             break;
             
         case MyCSS_PROPERTY_VALUE__IMAGE_FUNCTION: {
@@ -442,23 +442,23 @@ void mycss_values_serialization_image(mycss_values_image_t* image, mycss_callbac
             
             bool o_e = false;
             
-            if(image->ii->image) {
+            if(image->value.ii->image) {
                 o_e = true;
-                mycss_values_serialization_image(image->ii->image, callback, context);
+                mycss_values_serialization_image(image->value.ii->image, callback, context);
             }
-            else if(image->ii->str) {
+            else if(image->value.ii->str) {
                 o_e = true;
                 
                 callback("\"", 1, context);
-                mycss_values_serialization_string(image->ii->str, callback, context);
+                mycss_values_serialization_string(image->value.ii->str, callback, context);
                 callback("\"", 1, context);
             }
             
-            if(image->ii->color) {
+            if(image->value.ii->color) {
                 if(o_e)
                     callback(", ", 2, context);
                 
-                mycss_values_serialization_color(image->ii->color, callback, context);
+                mycss_values_serialization_color(image->value.ii->color, callback, context);
             }
             
             callback(")", 1, context);
@@ -470,9 +470,9 @@ void mycss_values_serialization_image(mycss_values_image_t* image, mycss_callbac
             
             bool o_e = false;
             
-            for(size_t i = 0; i < image->ii_set->options_length; i++)
+            for(size_t i = 0; i < image->value.ii_set->options_length; i++)
             {
-                mycss_values_image_image_set_option_t* option = &image->ii_set->options[i];
+                mycss_values_image_image_set_option_t* option = &image->value.ii_set->options[i];
                 
                 if(option->image) {
                     o_e = true;
@@ -501,12 +501,12 @@ void mycss_values_serialization_image(mycss_values_image_t* image, mycss_callbac
         case MyCSS_PROPERTY_VALUE__ELEMENT_FUNCTION: {
             callback("string(", 7, context);
             
-            mycss_values_serialization_string(&image->element->custom_ident.str, callback, context);
+            mycss_values_serialization_string(&image->value.element->custom_ident.str, callback, context);
             
-            if(image->element->type) {
+            if(image->value.element->type) {
                 callback(", ", 2, context);
                 
-                const char* text_value = mycss_property_index_type_value[image->element->type];
+                const char* text_value = mycss_property_index_type_value[image->value.element->type];
                 callback(text_value, strlen(text_value), context);
             }
             
@@ -517,26 +517,26 @@ void mycss_values_serialization_image(mycss_values_image_t* image, mycss_callbac
         case MyCSS_PROPERTY_VALUE__CROSS_FADE_FUNCTION: {
             callback("cross-fade(", 11, context);
             
-            if(image->cross_fade->mixing_image.percentage) {
-                mycss_values_serialization_percentage(image->cross_fade->mixing_image.percentage, callback, context);
+            if(image->value.cross_fade->mixing_image.percentage) {
+                mycss_values_serialization_percentage(image->value.cross_fade->mixing_image.percentage, callback, context);
             }
             
-            if(image->cross_fade->mixing_image.image) {
-                if(image->cross_fade->mixing_image.percentage)
+            if(image->value.cross_fade->mixing_image.image) {
+                if(image->value.cross_fade->mixing_image.percentage)
                     callback(" ", 1, context);
                 
-                mycss_values_serialization_image(image->cross_fade->mixing_image.image, callback, context);
+                mycss_values_serialization_image(image->value.cross_fade->mixing_image.image, callback, context);
             }
             
-            mycss_values_serialization_string(&image->element->custom_ident.str, callback, context);
+            mycss_values_serialization_string(&image->value.element->custom_ident.str, callback, context);
             
-            if(image->cross_fade->final_image.image) {
+            if(image->value.cross_fade->final_image.image) {
                 callback(", ", 2, context);
-                mycss_values_serialization_image(image->cross_fade->final_image.image, callback, context);
+                mycss_values_serialization_image(image->value.cross_fade->final_image.image, callback, context);
             }
-            else if(image->cross_fade->final_image.color) {
+            else if(image->value.cross_fade->final_image.color) {
                 callback(", ", 2, context);
-                mycss_values_serialization_color(image->cross_fade->final_image.color, callback, context);
+                mycss_values_serialization_color(image->value.cross_fade->final_image.color, callback, context);
             }
             
             callback(")", 1, context);

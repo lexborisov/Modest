@@ -35,7 +35,7 @@ void usage(const char *path, float font_size, size_t codepoint)
 int main(int argc, const char * argv[])
 {
     /* set and get params */
-    const char *path = "../third_party/font/Arkhip.ttf";
+    const char *path = "third_party/font/Arkhip.ttf";
     float font_size = 200.0f;
     
     size_t codepoint;
@@ -67,7 +67,8 @@ int main(int argc, const char * argv[])
     myfont_font_t *mf = myfont_create();
     myfont_init(mf);
     
-    mystatus_t mf_status = myfont_load(mf, path);
+    uint8_t *font_data;
+    mystatus_t mf_status = myfont_load_from_file(mf, path, &font_data, NULL);
     
     if(mf_status) {
         myfont_destroy(mf, true);
@@ -135,6 +136,7 @@ int main(int argc, const char * argv[])
     
     printf("</svg>\n");
     
+    myfont_destroy_font_data(mf, font_data);
     myfont_destroy(mf, true);
     
     return 0;

@@ -28,7 +28,7 @@
  * For Windows
  *
  ***********************************************************************************/
-void * mythread_thread_create(mythread_t *mythread, void* process_func, void* ctx)
+void * mythread_thread_create(mythread_t *mythread, mythread_process_f process_func, void* ctx)
 {
     return CreateThread(NULL,                   // default security attributes
                         0,                      // use default stack size
