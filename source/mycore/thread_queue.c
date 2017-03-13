@@ -375,7 +375,7 @@ mythread_queue_list_entry_t * mythread_queue_list_entry_push(mythread_t** mythre
     
     for(size_t i = 0; i < list_size; i++)
         if(mythread_list[i])
-            mythread_resume(mythread_list[i]);
+            mythread_resume(mythread_list[i], MyTHREAD_OPT_UNDEF);
     
     return entry;
 }
@@ -405,7 +405,7 @@ mythread_queue_list_entry_t * mythread_queue_list_entry_delete(mythread_t** myth
     
     for(size_t i = 0; i < list_size; i++)
         if(mythread_list[i])
-            mythread_resume(mythread_list[i]);
+            mythread_resume(mythread_list[i], MyTHREAD_OPT_UNDEF);
     
     if(destroy_queue && entry->queue)
         mythread_queue_destroy(entry->queue);
@@ -621,32 +621,30 @@ void * mythread_function(void *arg)
     mythread_mutex_wait(mythread, ctx->mutex);
     
     do {
-        if(mythread->opt & MyTHREAD_OPT_STOP || ctx->opt & MyTHREAD_OPT_STOP)
-        {
-            ctx->opt = MyTHREAD_OPT_DONE|MyTHREAD_OPT_STOP;
-            mythread_mutex_wait(mythread, ctx->mutex);
-            
-            if(mythread->opt & MyTHREAD_OPT_QUIT || ctx->opt & MyTHREAD_OPT_QUIT)
-            {
-                mythread_mutex_close(mythread, ctx->mutex);
-                mythread_nanosleep_destroy(ctx->timespec);
-                
-                ctx->opt = MyTHREAD_OPT_DONE|MyTHREAD_OPT_QUIT;
-                break;
+        ctx->func(ctx->id, ctx);
+        
+        ctx->opt |= MyTHREAD_OPT_DONE;
+        
+        if(ctx->opt & MyTHREAD_OPT_WAIT) {
+            while (ctx->opt & MyTHREAD_OPT_WAIT) {
+                mythread_nanosleep_sleep(ctx->timespec);
             }
-            
-            ctx->opt = MyTHREAD_OPT_UNDEF;
         }
-        else if(mythread->opt & MyTHREAD_OPT_QUIT || ctx->opt & MyTHREAD_OPT_QUIT)
+        else {
+            ctx->opt |= MyTHREAD_OPT_STOP;
+            mythread_mutex_wait(mythread, ctx->mutex);
+        }
+        
+        if(mythread->opt & MyTHREAD_OPT_QUIT || ctx->opt & MyTHREAD_OPT_QUIT)
         {
             mythread_mutex_close(mythread, ctx->mutex);
             mythread_nanosleep_destroy(ctx->timespec);
             
-            ctx->opt = MyTHREAD_OPT_DONE|MyTHREAD_OPT_QUIT;
+            ctx->opt = MyTHREAD_OPT_QUIT;
             break;
         }
         
-        ctx->func(ctx->id, ctx);
+        ctx->opt = MyTHREAD_OPT_UNDEF;
     }
     while(1);
     

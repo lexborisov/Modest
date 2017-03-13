@@ -64,7 +64,7 @@ mythread_t * mythread_destroy(mythread_t *mythread, mythread_callback_before_ent
         return NULL;
     
     if(mythread->entries) {
-        mythread_resume(mythread);
+        mythread_resume(mythread, MyTHREAD_OPT_QUIT);
         mythread_quit(mythread, before_join, ctx);
         mycore_free(mythread->entries);
     }
@@ -194,19 +194,19 @@ mystatus_t mythread_suspend(mythread_t *mythread)
     return MyCORE_STATUS_OK;
 }
 
-mystatus_t mythread_resume(mythread_t *mythread)
+mystatus_t mythread_resume(mythread_t *mythread, mythread_thread_opt_t send_opt)
 {
     if(mythread->opt & MyTHREAD_OPT_WAIT) {
-        mythread_option_set(mythread, MyTHREAD_OPT_UNDEF);
+        mythread_option_set(mythread, send_opt);
         return MyCORE_STATUS_OK;
     }
     
-    mythread_option_set(mythread, MyTHREAD_OPT_UNDEF);
+    mythread_option_set(mythread, send_opt);
     
     for (size_t i = 0; i < mythread->entries_length; i++)
     {
         if(mythread->entries[i].context.opt & MyTHREAD_OPT_STOP) {
-            mythread->entries[i].context.opt = MyTHREAD_OPT_UNDEF;
+            mythread->entries[i].context.opt = send_opt;
             
             if(mythread_mutex_post(mythread, mythread->entries[i].context.mutex))
                 return MyCORE_STATUS_ERROR;
@@ -293,19 +293,19 @@ mystatus_t mythread_entry_suspend(mythread_entry_t* entry)
     return MyCORE_STATUS_OK;
 }
 
-mystatus_t mythread_entry_resume(mythread_entry_t* entry)
+mystatus_t mythread_entry_resume(mythread_entry_t* entry, mythread_thread_opt_t send_opt)
 {
     if(entry->context.opt & MyTHREAD_OPT_WAIT) {
-        entry->context.opt = MyTHREAD_OPT_UNDEF;
+        entry->context.opt = send_opt;
     }
     else if(entry->context.opt & MyTHREAD_OPT_STOP) {
-        entry->context.opt = MyTHREAD_OPT_UNDEF;
+        entry->context.opt = send_opt;
         
         if(mythread_mutex_post(entry->context.mythread, entry->context.mutex))
             return MyCORE_STATUS_ERROR;
     }
     else
-        entry->context.opt = MyTHREAD_OPT_UNDEF;
+        entry->context.opt = send_opt;
     
     return MyCORE_STATUS_OK;
 }

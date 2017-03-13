@@ -109,7 +109,7 @@ mythread_id_t myhread_increase_id_by_entry_id(mythread_t* mythread, mythread_id_
 mystatus_t mythread_join(mythread_t *mythread, mythread_callback_before_entry_join_f before_join, void* ctx);
 mystatus_t mythread_quit(mythread_t *mythread, mythread_callback_before_entry_join_f before_join, void* ctx);
 mystatus_t mythread_stop(mythread_t *mythread);
-mystatus_t mythread_resume(mythread_t *mythread);
+mystatus_t mythread_resume(mythread_t *mythread, mythread_thread_opt_t send_opt);
 mystatus_t mythread_suspend(mythread_t *mythread);
 mystatus_t mythread_check_status(mythread_t *mythread);
 
@@ -122,7 +122,7 @@ mystatus_t myhread_entry_create(mythread_t *mythread, mythread_process_f process
 mystatus_t mythread_entry_join(mythread_entry_t* entry, mythread_callback_before_entry_join_f before_join, void* ctx);
 mystatus_t mythread_entry_quit(mythread_entry_t* entry, mythread_callback_before_entry_join_f before_join, void* ctx);
 mystatus_t mythread_entry_stop(mythread_entry_t* entry);
-mystatus_t mythread_entry_resume(mythread_entry_t* entry);
+mystatus_t mythread_entry_resume(mythread_entry_t* entry, mythread_thread_opt_t send_opt);
 mystatus_t mythread_entry_suspend(mythread_entry_t* entry);
 mystatus_t mythread_entry_status(mythread_entry_t* entry);
 mythread_t * mythread_entry_mythread(mythread_entry_t* entry);

@@ -97,14 +97,14 @@ modest_finder_thread_t * modest_finder_thread_destroy(modest_finder_thread_t* fi
     if(finder_thread == NULL)
         return NULL;
     
-    finder_thread->entry_obj = mcobject_async_destroy(finder_thread->entry_obj, true);
-    finder_thread->declaration_obj = mcobject_async_destroy(finder_thread->declaration_obj, true);
-    
 #ifndef MyCORE_BUILD_WITHOUT_THREADS
     if(finder_thread->thread) {
         finder_thread->thread = mythread_destroy(finder_thread->thread, mythread_callback_quit, NULL, true);
     }
 #endif
+    
+    finder_thread->entry_obj = mcobject_async_destroy(finder_thread->entry_obj, true);
+    finder_thread->declaration_obj = mcobject_async_destroy(finder_thread->declaration_obj, true);
     
     if(finder_thread->context_list) {
         mycore_free(finder_thread->context_list);
@@ -143,7 +143,7 @@ mystatus_t modest_finder_thread_process(modest_t* modest, modest_finder_thread_t
     if(finder_thread->finder == NULL)
         return MODEST_STATUS_ERROR;
     
-    mythread_resume(finder_thread->thread);
+    mythread_resume(finder_thread->thread, MyTHREAD_OPT_UNDEF);
     modest_finder_thread_wait_for_all_done(finder_thread);
     
     /* calc result */
@@ -399,8 +399,6 @@ void modest_finder_thread_stream(mythread_id_t thread_id, void* arg)
         
         selector_list = selector_list->next;
     }
-    
-    ctx->opt = MyTHREAD_OPT_STOP|MyTHREAD_OPT_DONE;
 }
 #endif
 

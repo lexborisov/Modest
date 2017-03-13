@@ -253,10 +253,10 @@ void myhtml_tokenizer_post(myhtml_tree_t* tree)
 {
 #ifndef MyCORE_BUILD_WITHOUT_THREADS
     if(tree->myhtml->thread_stream)
-        mythread_resume(tree->myhtml->thread_stream);
+        mythread_resume(tree->myhtml->thread_stream, MyTHREAD_OPT_UNDEF);
     
     if(tree->myhtml->thread_batch)
-        mythread_resume(tree->myhtml->thread_batch);
+        mythread_resume(tree->myhtml->thread_batch, MyTHREAD_OPT_UNDEF);
 #endif
 }
 
