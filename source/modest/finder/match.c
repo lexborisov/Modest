@@ -90,7 +90,7 @@ bool modest_finder_match_attribute_ws(myhtml_token_attr_t* attr, const char* key
                         while(i < attr->value.length)
                         {
                             begin = i;
-                            while(i < attr->value.length && mycore_utils_whithspace(attr->value.data[i], !=, ||)) {i++;}
+                            while(i < attr->value.length && mycore_utils_whithspace(attr->value.data[i], !=, &&)) {i++;}
                             
                             if((i - begin) == value_len && (mycore_strncmp(value, &attr->value.data[begin], value_len) == 0)) {
                                 return true;
@@ -103,7 +103,7 @@ bool modest_finder_match_attribute_ws(myhtml_token_attr_t* attr, const char* key
                         while(i < attr->value.length)
                         {
                             begin = i;
-                            while(i < attr->value.length && mycore_utils_whithspace(attr->value.data[i], !=, ||)) {i++;}
+                            while(i < attr->value.length && mycore_utils_whithspace(attr->value.data[i], !=, &&)) {i++;}
                             
                             if((i - begin) == value_len && (mycore_strncasecmp(value, &attr->value.data[begin], value_len) == 0)) {
                                 return true;
