@@ -167,10 +167,12 @@ void * myfont_destroy_font_data(myfont_font_t *mf, uint8_t* return_data)
     return NULL;
 }
 
-mystatus_t myfont_load(myfont_font_t *mf, uint8_t* data, size_t data_size)
+mystatus_t myfont_load(myfont_font_t *mf, uint8_t* font_data, size_t data_size)
 {
     if(data_size < 12)
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
+    
+    uint8_t* data = font_data;
     
     mf->header.version_major = myfont_read_u16(&data);
     mf->header.version_minor = myfont_read_u16(&data);
@@ -239,40 +241,40 @@ mystatus_t myfont_load(myfont_font_t *mf, uint8_t* data, size_t data_size)
     
     mystatus_t status;
     
-    if((status = myfont_load_table_cmap(mf, data, data_size)))
+    if((status = myfont_load_table_cmap(mf, font_data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_CMAP;
     
-    if((status = myfont_load_table_head(mf, data, data_size)))
+    if((status = myfont_load_table_head(mf, font_data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_HEAD;
     
-    if((status = myfont_load_table_name(mf, data, data_size)))
+    if((status = myfont_load_table_name(mf, font_data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_NAME;
     
-    if((status = myfont_load_table_os_2(mf, data, data_size)))
+    if((status = myfont_load_table_os_2(mf, font_data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_OS_2;
     
-    if((status = myfont_load_table_maxp(mf, data, data_size)))
+    if((status = myfont_load_table_maxp(mf, font_data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_MAXP;
     
-    if((status = myfont_load_table_hhea(mf, data, data_size)))
+    if((status = myfont_load_table_hhea(mf, font_data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_HHEA;
     
-    if((status = myfont_load_table_hmtx(mf, data, data_size)))
+    if((status = myfont_load_table_hmtx(mf, font_data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_HMTX;
     
-    if((status = myfont_load_table_loca(mf, data, data_size)))
+    if((status = myfont_load_table_loca(mf, font_data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_LOCA;
     
-    if((status = myfont_load_table_glyf(mf, data, data_size)))
+    if((status = myfont_load_table_glyf(mf, font_data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_GLYF;
     
-    if((status = myfont_load_table_vhea(mf, data, data_size)))
+    if((status = myfont_load_table_vhea(mf, font_data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_VHEA;
     
-    if((status = myfont_load_table_vmtx(mf, data, data_size)))
+    if((status = myfont_load_table_vmtx(mf, font_data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_VMTX;
     
-    if((status = myfont_load_table_pclt(mf, data, data_size)))
+    if((status = myfont_load_table_pclt(mf, font_data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_PCLT;
     
     return MyFONT_STATUS_OK;

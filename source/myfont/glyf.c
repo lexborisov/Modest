@@ -66,13 +66,13 @@ mystatus_t myfont_glyf_load_data(myfont_font_t *mf, myfont_table_glyph_t *glyph,
 {
     memset(&glyph->head, 0, sizeof(myfont_table_glyf_head_t));
     
+    /* get current data */
+    uint8_t *data = &font_data[offset];
+    
     // load head
     offset += 10;
     if(offset > data_size)
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
-    
-    /* get current data */
-    uint8_t *data = &font_data[offset];
     
     glyph->head.numberOfContours = myfont_read_16(&data);
     glyph->head.xMin = myfont_read_16(&data);
