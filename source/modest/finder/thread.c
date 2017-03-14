@@ -21,7 +21,12 @@
 #include "modest/finder/thread.h"
 
 /* private functions */
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
 static void modest_finder_thread_stream(mythread_id_t thread_id, void* arg);
+#else
+static void modest_finder_thread_stream_single(modest_finder_thread_t* finder_thread, mycss_selectors_list_t* selector_list);
+#endif
+
 static modest_finder_thread_context_t * modest_finder_thread_create_context(modest_finder_thread_t* finder_thread, size_t count);
 //static void modest_finder_thread_callback_found(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_list_t* selector_list,
 //                                                mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec, void* ctx);
@@ -34,6 +39,10 @@ modest_finder_thread_t * modest_finder_thread_create(void)
 
 mystatus_t modest_finder_thread_init(modest_finder_t* finder, modest_finder_thread_t* finder_thread, size_t thread_count)
 {
+#ifdef MyCORE_BUILD_WITHOUT_THREADS
+    thread_count = 1;
+#endif
+    
     finder_thread->finder = finder;
     
     /* objects for nodes */
@@ -133,7 +142,62 @@ void modest_finder_thread_collate_node(modest_t* modest, myhtml_tree_node_t* nod
     }
 }
 
-#ifndef MyCORE_BUILD_WITHOUT_THREADS
+#ifdef MyCORE_BUILD_WITHOUT_THREADS
+mystatus_t modest_finder_thread_process(modest_t* modest, modest_finder_thread_t* finder_thread,
+                                        myhtml_tree_node_t* scope_node, mycss_selectors_list_t* selector_list)
+{
+    finder_thread->base_node = scope_node;
+    finder_thread->selector_list = selector_list;
+    
+    if(finder_thread->finder == NULL)
+        return MODEST_STATUS_ERROR;
+    
+    modest_finder_thread_stream_single(finder_thread, selector_list);
+    
+    /* calc result */
+    modest_finder_thread_context_t* context = finder_thread->context_list;
+    myhtml_tree_node_t* node = scope_node;
+    
+    /* compare results */
+    while(node) {
+        modest_finder_thread_entry_t* entry = context->entry;
+        
+        while(entry) {
+            if(entry->node == node)
+            {
+                if(entry->next)
+                    entry->next->prev = entry->prev;
+                else
+                    context->entry_last = entry->prev;
+                
+                if(entry->prev)
+                    entry->prev->next = entry->next;
+                else
+                    context->entry = entry->next;
+                
+                modest_finder_thread_collate_node(modest, node, entry);
+            }
+            
+            entry = entry->next;
+        }
+        
+        if(node->child)
+            node = node->child;
+        else {
+            while(node != scope_node && node->next == NULL)
+                node = node->parent;
+            
+            if(node == scope_node)
+                break;
+            
+            node = node->next;
+        }
+    }
+    
+    return MyCORE_STATUS_OK;
+}
+
+#else /* end def MyCORE_BUILD_WITHOUT_THREADS */
 mystatus_t modest_finder_thread_process(modest_t* modest, modest_finder_thread_t* finder_thread,
                                         myhtml_tree_node_t* scope_node, mycss_selectors_list_t* selector_list)
 {
@@ -366,6 +430,24 @@ void modest_finder_thread_callback_found(modest_finder_t* finder, myhtml_tree_no
     }
     else {
         thread_context->entry_last = thread_context->entry = entry;
+    }
+}
+
+void modest_finder_thread_stream_single(modest_finder_thread_t* finder_thread, mycss_selectors_list_t* selector_list)
+{
+    modest_finder_thread_found_context_t found_ctx = {finder_thread, finder_thread->context_list};
+    
+    while(selector_list)
+    {
+        for(size_t i = 0; i < selector_list->entries_list_length; i++) {
+            mycss_selectors_entries_list_t *entries = &selector_list->entries_list[i];
+            mycss_selectors_specificity_t spec = entries->specificity;
+            
+            modest_finder_node_combinator_begin(finder_thread->finder, finder_thread->base_node, selector_list,
+                                                entries->entry, &spec, modest_finder_thread_callback_found, &found_ctx);
+        }
+        
+        selector_list = selector_list->next;
     }
 }
 
