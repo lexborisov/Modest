@@ -33,14 +33,12 @@
 #define MyCORE_VERSION_MINOR 1
 #define MyCORE_VERSION_PATCH 0
 
-//#define MyCORE_BUILD_WITHOUT_THREADS
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Format */
-#ifdef IS_OS_WINDOWS
+#if MODEST_BUILD_OS == Windows_NT
 #define MyCORE_FORMAT_Z "%Iu"
 #else
 #define MyCORE_FORMAT_Z "%zu"

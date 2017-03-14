@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -36,8 +36,8 @@
  */
 
 #define MyCSS_VERSION_MAJOR 0
-#define MyCSS_VERSION_MINOR 0
-#define MyCSS_VERSION_PATCH 9
+#define MyCSS_VERSION_MINOR 1
+#define MyCSS_VERSION_PATCH 0
 
 #include <mycore/myosi.h>
 #include <mycore/incoming.h>

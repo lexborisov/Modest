@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -39,6 +39,10 @@
 #include "myfont/loca.h"
 
 #include "mycore/utils/mchar_async.h"
+
+#define MyFONT_VERSION_MAJOR 0
+#define MyFONT_VERSION_MINOR 0
+#define MyFONT_VERSION_PATCH 2
 
 #ifdef __cplusplus
 extern "C" {

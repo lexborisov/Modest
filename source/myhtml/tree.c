@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2015-2016 Alexander Borisov
+ Copyright (C) 2015-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -880,7 +880,7 @@ void myhtml_tree_open_elements_pop(myhtml_tree_t* tree)
     if(tree->open_elements->length)
         tree->open_elements->length--;
     
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
     if(tree->open_elements->length == 0) {
         MyCORE_DEBUG("Pop open elements; Now, Open Elements set 0; Good, if the end of parsing, otherwise is very bad");
     }
@@ -905,7 +905,7 @@ void myhtml_tree_open_elements_remove(myhtml_tree_t* tree, myhtml_tree_node_t* n
         }
     }
     
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
     if(tree->open_elements->length == 0) {
         MyCORE_DEBUG("Remove open elements; Now, Open Elements set 0; Good, if the end of parsing, otherwise is very bad");
     }
@@ -932,7 +932,7 @@ void myhtml_tree_open_elements_pop_until(myhtml_tree_t* tree, myhtml_tag_id_t ta
         }
     }
     
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
     if(tree->open_elements->length == 0) {
         MyCORE_DEBUG("Until open elements; Now, Open Elements set 0; Good, if the end of parsing, otherwise is very bad");
     }
@@ -955,7 +955,7 @@ void myhtml_tree_open_elements_pop_until_by_node(myhtml_tree_t* tree, myhtml_tre
         }
     }
     
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
     if(tree->open_elements->length == 0) {
         MyCORE_DEBUG("Until by node open elements; Now, Open Elements set 0; Good, if the end of parsing, otherwise is very bad");
     }
@@ -976,7 +976,7 @@ void myhtml_tree_open_elements_pop_until_by_index(myhtml_tree_t* tree, size_t id
         }
     }
     
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
     if(tree->open_elements->length == 0) {
         MyCORE_DEBUG("Until by index open elements; Now, Open Elements set 0; Good, if the end of parsing, otherwise is very bad");
     }
@@ -1072,7 +1072,7 @@ void myhtml_tree_generate_implied_end_tags(myhtml_tree_t* tree, myhtml_tag_id_t 
     {
         myhtml_tree_node_t* current_node = myhtml_tree_current_node(tree);
         
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
         if(current_node == NULL) {
             MyCORE_DEBUG_ERROR("Generate implied end tags; Current node is NULL! This is very bad");
         }
@@ -1114,7 +1114,7 @@ void myhtml_tree_generate_all_implied_end_tags(myhtml_tree_t* tree, myhtml_tag_i
     {
         myhtml_tree_node_t* current_node = myhtml_tree_current_node(tree);
         
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
         if(current_node == NULL) {
             MyCORE_DEBUG_ERROR("Generate all implied end tags; Current node is NULL! This is very bad");
         }
@@ -1173,7 +1173,7 @@ void myhtml_tree_reset_insertion_mode_appropriately(myhtml_tree_t* tree)
         // step 2
         myhtml_tree_node_t* node = list[i];
         
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
         if(node == NULL) {
             MyCORE_DEBUG_ERROR("Reset insertion mode appropriately; node is NULL! This is very bad");
         }
@@ -1216,7 +1216,7 @@ void myhtml_tree_reset_insertion_mode_appropriately(myhtml_tree_t* tree)
                     return;
                 }
                 
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
                 if(ancestor == 0) {
                     MyCORE_DEBUG_ERROR("Reset insertion mode appropriately; Ancestor is 0! This is very, very bad");
                 }
@@ -1334,7 +1334,7 @@ myhtml_tree_list_t * myhtml_tree_active_formatting_destroy(myhtml_tree_t* tree)
 
 bool myhtml_tree_active_formatting_is_marker(myhtml_tree_t* tree, myhtml_tree_node_t* node)
 {
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
     if(node == NULL) {
         MyCORE_DEBUG_ERROR("Active formatting is marker; node is NULL!");
     }
@@ -1370,7 +1370,7 @@ void myhtml_tree_active_formatting_pop(myhtml_tree_t* tree)
     if(tree->active_formatting->length)
         tree->active_formatting->length--;
     
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
     if(tree->active_formatting->length == 0) {
         MyCORE_DEBUG("Pop active formatting; length is 0");
     }
@@ -1395,7 +1395,7 @@ void myhtml_tree_active_formatting_remove(myhtml_tree_t* tree, myhtml_tree_node_
         }
     }
     
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
     if(tree->active_formatting->length == 0) {
         // MyCORE_DEBUG("Remove active formatting; length is 0");
     }
@@ -1409,7 +1409,7 @@ void myhtml_tree_active_formatting_remove_by_index(myhtml_tree_t* tree, size_t i
     memmove(&list[idx], &list[idx + 1], sizeof(myhtml_tree_node_t*) * (tree->active_formatting->length - idx));
     tree->active_formatting->length--;
     
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
     if(tree->active_formatting->length == 0) {
         MyCORE_DEBUG("Remove active formatting by index; length is 0");
     }
@@ -1432,7 +1432,7 @@ void myhtml_tree_active_formatting_append_with_check(myhtml_tree_t* tree, myhtml
     {
         i--;
         
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
         if(list[i] == NULL) {
             MyCORE_DEBUG("Appen active formatting with check; list[" MyCORE_FORMAT_Z "] is NULL", i);
         }
@@ -1501,7 +1501,7 @@ void myhtml_tree_active_formatting_up_to_last_marker(myhtml_tree_t* tree)
     if(tree->active_formatting->length == 0)
         return;
     
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
     if(list[ tree->active_formatting->length ] == NULL) {
         MyCORE_DEBUG("Up to last marker active formatting; list[" MyCORE_FORMAT_Z "] is NULL", tree->active_formatting->length);
     }
@@ -1511,7 +1511,7 @@ void myhtml_tree_active_formatting_up_to_last_marker(myhtml_tree_t* tree)
     {
         tree->active_formatting->length--;
         
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
         if(list[ tree->active_formatting->length ] == NULL) {
             MyCORE_DEBUG("Up to last marker active formatting; list[" MyCORE_FORMAT_Z "] is NULL", tree->active_formatting->length);
         }
@@ -1534,7 +1534,7 @@ myhtml_tree_node_t * myhtml_tree_active_formatting_between_last_marker(myhtml_tr
     {
         i--;
         
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
         if(list[i] == NULL) {
             MyCORE_DEBUG("Between last marker active formatting; list[" MyCORE_FORMAT_Z "] is NULL", i);
         }
@@ -1573,7 +1573,7 @@ void myhtml_tree_active_formatting_reconstruction(myhtml_tree_t* tree)
     {
         af_idx--;
         
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
         if(list[af_idx] == NULL) {
             MyCORE_DEBUG("Formatting reconstruction; Step 4--6; list[" MyCORE_FORMAT_Z "] is NULL", af_idx);
         }
@@ -1589,7 +1589,7 @@ void myhtml_tree_active_formatting_reconstruction(myhtml_tree_t* tree)
     
     while (af_idx < af->length)
     {
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
         if(list[af_idx] == NULL) {
             MyCORE_DEBUG("Formatting reconstruction; Next steps; list[" MyCORE_FORMAT_Z "] is NULL", af_idx);
         }
@@ -1615,7 +1615,7 @@ bool myhtml_tree_adoption_agency_algorithm(myhtml_tree_t* tree, myhtml_token_nod
     myhtml_tree_node_t**  afe_list     = tree->active_formatting->list;
     myhtml_tree_node_t*   current_node = oel_list[oel_curr_index];
     
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
     if(current_node == NULL) {
         MyCORE_DEBUG_ERROR("Adoption agency algorithm; Current node is NULL");
     }
@@ -1726,7 +1726,7 @@ bool myhtml_tree_adoption_agency_algorithm(myhtml_tree_t* tree, myhtml_token_nod
         
         /* %EXTERNAL% VALIDATOR:RULES TOKEN STATUS:AAA_BEGIN LEVEL:INFO */
         
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
         if(oel_format_el_idx == 0) {
             MyCORE_DEBUG_ERROR("Adoption agency algorithm; Step 11; oel_format_el_idx is 0; Bad!");
         }
@@ -1735,7 +1735,7 @@ bool myhtml_tree_adoption_agency_algorithm(myhtml_tree_t* tree, myhtml_token_nod
         // step 12
         myhtml_tree_node_t* common_ancestor = oel_list[oel_format_el_idx - 1];
         
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
         if(common_ancestor == NULL) {
             MyCORE_DEBUG_ERROR("Adoption agency algorithm; Step 11; common_ancestor is NULL");
         }
@@ -1771,7 +1771,7 @@ bool myhtml_tree_adoption_agency_algorithm(myhtml_tree_t* tree, myhtml_token_nod
             
             node = oel_list[node_index];
             
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
             if(node == NULL) {
                 MyCORE_DEBUG_ERROR("Adoption agency algorithm; Step 13.3; node is NULL");
             }
@@ -1814,7 +1814,7 @@ bool myhtml_tree_adoption_agency_algorithm(myhtml_tree_t* tree, myhtml_token_nod
             if(last == furthest_block) {
                 bookmark = afe_node_index + 1;
                 
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
                 if(bookmark >= tree->active_formatting->length) {
                     MyCORE_DEBUG_ERROR("Adoption agency algorithm; Step 13.8; bookmark >= open_elements length");
                 }
@@ -1865,7 +1865,7 @@ bool myhtml_tree_adoption_agency_algorithm(myhtml_tree_t* tree, myhtml_token_nod
         if(afe_index < bookmark)
             bookmark--;
         
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
         if(bookmark >= tree->active_formatting->length) {
             MyCORE_DEBUG_ERROR("Adoption agency algorithm; Before Step 18; bookmark (" MyCORE_FORMAT_Z ") >= open_elements length", bookmark);
         }
@@ -1900,7 +1900,7 @@ myhtml_tree_node_t * myhtml_tree_appropriate_place_inserting(myhtml_tree_t* tree
     myhtml_tree_node_t* adjusted_location;
     
     if(tree->foster_parenting) {
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
         if(target == NULL) {
             MyCORE_DEBUG_ERROR("Appropriate place inserting; Step 2; target is NULL in return value! This IS very bad");
         }
@@ -1951,7 +1951,7 @@ myhtml_tree_node_t * myhtml_tree_appropriate_place_inserting(myhtml_tree_t* tree
                     break;
                 }
                 
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
                 if(idx_table == 0) {
                     MyCORE_DEBUG_ERROR("Appropriate place inserting; Step 2.5; idx_table is 0");
                 }
@@ -1969,7 +1969,7 @@ myhtml_tree_node_t * myhtml_tree_appropriate_place_inserting(myhtml_tree_t* tree
         }
     }
     else {
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
         if(target == NULL) {
             MyCORE_DEBUG_ERROR("Appropriate place inserting; Step 3-5; target is NULL in return value! This IS very bad");
         }
@@ -1991,7 +1991,7 @@ myhtml_tree_node_t * myhtml_tree_appropriate_place_inserting_in_tree(myhtml_tree
     myhtml_tree_node_t* adjusted_location;
     
     if(target->tree->foster_parenting) {
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
         if(target == NULL) {
             MyCORE_DEBUG_ERROR("Appropriate place inserting; Step 2; target is NULL in return value! This IS very bad");
         }
@@ -2047,7 +2047,7 @@ myhtml_tree_node_t * myhtml_tree_appropriate_place_inserting_in_tree(myhtml_tree
                     break;
                 }
                 
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
                 if(idx_table == 0) {
                     MyCORE_DEBUG_ERROR("Appropriate place inserting; Step 2.5; idx_table is 0");
                 }
@@ -2066,7 +2066,7 @@ myhtml_tree_node_t * myhtml_tree_appropriate_place_inserting_in_tree(myhtml_tree
         }
     }
     else {
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
         if(target == NULL) {
             MyCORE_DEBUG_ERROR("Appropriate place inserting; Step 3-5; target is NULL in return value! This IS very bad");
         }
@@ -2138,7 +2138,7 @@ void myhtml_tree_template_insertion_pop(myhtml_tree_t* tree)
     if(tree->template_insertion->length)
         tree->template_insertion->length--;
 
-#ifdef DEBUG_MODE
+#ifdef MyCORE_BUILD_DEBUG
     if(tree->template_insertion->length == 0) {
         MyCORE_DEBUG("Pop template insertion; length is 0");
     }

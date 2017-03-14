@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -24,6 +24,10 @@
 
 #include <myhtml/myhtml.h>
 #include <mycss/mycss.h>
+
+#define MODEST_VERSION_MAJOR 0
+#define MODEST_VERSION_MINOR 0
+#define MODEST_VERSION_PATCH 6
 
 #ifdef __cplusplus
 extern "C" {

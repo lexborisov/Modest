@@ -24,9 +24,9 @@
 
 #include <mycore/myosi.h>
 
-#define MyHTML_VERSION_MAJOR 3
+#define MyHTML_VERSION_MAJOR 4
 #define MyHTML_VERSION_MINOR 0
-#define MyHTML_VERSION_PATCH 2
+#define MyHTML_VERSION_PATCH 0
 
 #ifdef __cplusplus
 extern "C" {

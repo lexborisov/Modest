@@ -24,6 +24,10 @@
 
 #include <myhtml/myosi.h>
 
+#define MyURL_VERSION_MAJOR 0
+#define MyURL_VERSION_MINOR 1
+#define MyURL_VERSION_PATCH 0
+
 #ifdef __cplusplus
 extern "C" {
 #endif

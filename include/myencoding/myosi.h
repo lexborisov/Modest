@@ -24,8 +24,8 @@
 
 #include <mycore/myosi.h>
 
-#define MyENCODING_VERSION_MAJOR 1
-#define MyENCODING_VERSION_MINOR 0
+#define MyENCODING_VERSION_MAJOR 0
+#define MyENCODING_VERSION_MINOR 1
 #define MyENCODING_VERSION_PATCH 0
 
 #ifdef __cplusplus
