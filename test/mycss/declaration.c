@@ -256,7 +256,7 @@ test_stat_t test_read_dir(const char* dir_path, test_read_dir_callback_f callbac
 bool test_process_elements(test_data_t *test_data, myhtml_collection_t *collection, test_stat_t* result_stat);
 mycore_string_raw_t test_process_result_from_node(test_data_t *test_data, myhtml_tree_node_t *node);
 mycore_string_raw_t test_process_serialize_stype(test_data_t *test_data, const char* style, size_t style_size);
-void test_process_serialize_callback(const char* buffer, size_t size, void* ctx);
+mystatus_t test_process_serialize_callback(const char* buffer, size_t size, void* ctx);
 
 bool test_process_callback(const char* filename, size_t filename_len, void* context)
 {
@@ -367,7 +367,7 @@ mycore_string_raw_t test_process_serialize_stype(test_data_t *test_data, const c
     return str;
 }
 
-void test_process_serialize_callback(const char* buffer, size_t size, void* ctx)
+mystatus_t test_process_serialize_callback(const char* buffer, size_t size, void* ctx)
 {
     mycore_string_raw_t *str = (mycore_string_raw_t*)ctx;
     
@@ -376,6 +376,8 @@ void test_process_serialize_callback(const char* buffer, size_t size, void* ctx)
     
     memcpy(&str->data[ str->length ], buffer, sizeof(char) * size);
     str->length += size;
+    
+    return MyCORE_STATUS_OK;
 }
 
 int main(int argc, const char * argv[])

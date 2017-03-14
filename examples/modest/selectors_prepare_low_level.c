@@ -29,13 +29,16 @@
 #include <mycss/selectors/init.h>
 #include <mycss/selectors/serialization.h>
 
-void serialization_callback(const char* data, size_t len, void* ctx)
+mystatus_t serialization_callback(const char* data, size_t len, void* ctx)
 {
     printf("%.*s", (int)len, data);
+    return MyCORE_STATUS_OK;
 }
 
-void serialization_bad_selectors(const char* buffer, size_t size, void* ctx) {
-    printf("%.*s", (int)size, buffer);
+mystatus_t serialization_bad_selectors(const char* data, size_t len, void* ctx)
+{
+    printf("%.*s", (int)len, data);
+    return MyCORE_STATUS_OK;
 }
 
 myhtml_tree_t * parse_html(myhtml_t* myhtml, const char* data, size_t data_size)

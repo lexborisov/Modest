@@ -29,9 +29,10 @@
 #define DIE(msg, ...) do { fprintf(stderr, msg, ##__VA_ARGS__); exit(EXIT_FAILURE); } while(0)
 #define check_status(msg, ...) do {if(status) DIE(msg, ##__VA_ARGS__);} while(0)
 
-void serialization_callback(const char* data, size_t len, void* ctx)
+mystatus_t serialization_callback(const char* data, size_t len, void* ctx)
 {
     printf("%.*s", (int)len, data);
+    return MyCORE_STATUS_OK;
 }
 
 myhtml_tree_t * parse_html(const char* data, size_t data_size, myhtml_callback_tree_node_f cai, void* cai_ctx)

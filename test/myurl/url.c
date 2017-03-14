@@ -94,10 +94,12 @@ test_res_t test_load_file(const char* filename)
     return (test_res_t){file_data, (size_t)size};
 }
 
-void test_serialization_callback(const char* data, size_t len, void* ctx)
+mystatus_t test_serialization_callback(const char* data, size_t len, void* ctx)
 {
     mycore_string_t *str = ctx;
     mycore_string_append(str, data, len);
+    
+    return MyCORE_STATUS_OK;
 }
 
 myurl_entry_t * test_parse_url(const char *data, size_t length, myurl_entry_t* base_url)

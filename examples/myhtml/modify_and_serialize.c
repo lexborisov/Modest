@@ -22,9 +22,10 @@
  *  @param  size
  *  @param  ptr
  */
-void write_output(const char *buffer, size_t size, void *ptr)
+mystatus_t write_output(const char* data, size_t len, void* ctx)
 {
-    fwrite(buffer, 1, size, stdout);
+    printf("%.*s", (int)len, data);
+    return MyCORE_STATUS_OK;
 }
 
 /**

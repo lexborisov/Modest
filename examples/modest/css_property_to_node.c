@@ -68,9 +68,10 @@ mycss_entry_t * parse_css(const char* data, size_t data_size)
     return entry;
 }
 
-void serialization_callback(const char* data, size_t len, void* ctx)
+mystatus_t serialization_callback(const char* data, size_t len, void* ctx)
 {
     printf("%.*s", (int)len, data);
+    return MyCORE_STATUS_OK;
 }
 
 void print_result(modest_t* modest, myhtml_tree_t* myhtml_tree, myhtml_tree_node_t* scope_node, mycss_entry_t *mycss_entry)

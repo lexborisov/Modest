@@ -157,9 +157,10 @@ struct res_argv get_argv(int len, int argc, const char ** argv)
     return rargv;
 }
 
-void serialization_callback(const char* data, size_t len, void* ctx)
+mystatus_t serialization_callback(const char* data, size_t len, void* ctx)
 {
     printf("%.*s", (int)len, data);
+    return MyCORE_STATUS_OK;
 }
 
 int main(int argc, const char * argv[])
