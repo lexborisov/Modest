@@ -29,9 +29,14 @@
 #include <stdint.h>
 #include <inttypes.h>
 
+#define MyCORE_STR_HELPER(x) #x
+#define MyCORE_STR(x) MyCORE_STR_HELPER(x)
+
 #define MyCORE_VERSION_MAJOR 0
 #define MyCORE_VERSION_MINOR 1
 #define MyCORE_VERSION_PATCH 0
+
+#define MyCORE_VERSION_STRING MyCORE_STR(MyCORE_VERSION_MAJOR) MyCORE_STR(.) MyCORE_STR(MyCORE_VERSION_MINOR) MyCORE_STR(.) MyCORE_STR(MyCORE_VERSION_PATCH)
 
 #ifdef __cplusplus
 extern "C" {

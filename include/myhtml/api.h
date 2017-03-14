@@ -38,6 +38,8 @@
 #define MyHTML_VERSION_MINOR 0
 #define MyHTML_VERSION_PATCH 0
 
+#define MyHTML_VERSION_STRING MyCORE_STR(MyHTML_VERSION_MAJOR) MyCORE_STR(.) MyCORE_STR(MyHTML_VERSION_MINOR) MyCORE_STR(.) MyCORE_STR(MyHTML_VERSION_PATCH)
+
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>

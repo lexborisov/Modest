@@ -22,12 +22,15 @@
 #define MODEST_MYOSI_H
 #pragma once
 
+#include "mycore/myosi.h"
 #include "myhtml/myhtml.h"
 #include "mycss/mycss.h"
 
 #define MODEST_VERSION_MAJOR 0
 #define MODEST_VERSION_MINOR 0
 #define MODEST_VERSION_PATCH 6
+
+#define MODEST_VERSION_STRING MyCORE_STR(MODEST_VERSION_MAJOR) MyCORE_STR(.) MyCORE_STR(MODEST_VERSION_MINOR) MyCORE_STR(.) MyCORE_STR(MODEST_VERSION_PATCH)
 
 #ifdef __cplusplus
 extern "C" {
