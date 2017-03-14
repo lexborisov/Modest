@@ -18,11 +18,11 @@
  Authors: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#ifdef MyCORE_WITH_PERF
-#include <windows.h>
-
 #include "mycore/myosi.h"
 #include "mycore/perf.h"
+
+#ifdef MyCORE_WITH_PERF
+#include <windows.h>
 
 struct mycore_perf {
     LARGE_INTEGER start;

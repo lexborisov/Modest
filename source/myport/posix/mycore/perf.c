@@ -18,15 +18,15 @@
  Authors: lex.borisov@gmail.com (Alexander Borisov)
 */
 
+#include "mycore/myosi.h"
+#include "mycore/perf.h"
+
 #ifdef MyCORE_WITH_PERF
 
 #if MODEST_BUILD_OS == Darwin || MODEST_BUILD_OS == FreeBSD
 #include <sys/sysctl.h>
 #elif MODEST_BUILD_OS == Linux
 #endif
-
-#include "mycore/myosi.h"
-#include "mycore/perf.h"
 
 struct mycore_perf {
     unsigned long long start;
