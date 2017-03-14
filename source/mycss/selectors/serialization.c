@@ -22,7 +22,7 @@
 #include "mycss/selectors/myosi_resource.h"
 
 void mycss_selectors_serialization_chain(mycss_selectors_t* selectors, mycss_selectors_entry_t* selector,
-                                         mycss_callback_serialization_f callback, void* context)
+                                         mycore_callback_serialize_f callback, void* context)
 {
     while(selector) {
         if(selector->combinator == MyCSS_SELECTORS_COMBINATOR_DESCENDANT)
@@ -46,7 +46,7 @@ void mycss_selectors_serialization_chain(mycss_selectors_t* selectors, mycss_sel
 }
 
 bool mycss_selectors_serialization_list(mycss_selectors_t* selectors, mycss_selectors_list_t* selectors_list,
-                                        mycss_callback_serialization_f callback, void* context)
+                                        mycore_callback_serialize_f callback, void* context)
 {
     while(selectors_list) {
         for(size_t i = 0; i < selectors_list->entries_list_length; i++)
@@ -78,7 +78,7 @@ bool mycss_selectors_serialization_list(mycss_selectors_t* selectors, mycss_sele
 }
 
 bool mycss_selectors_serialization_selector(mycss_selectors_t* selectors, mycss_selectors_entry_t* selector,
-                                            mycss_callback_serialization_f callback, void* context)
+                                            mycore_callback_serialize_f callback, void* context)
 {
     switch(selector->type) {
         case MyCSS_SELECTORS_TYPE_ELEMENT: {

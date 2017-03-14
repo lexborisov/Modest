@@ -2471,14 +2471,14 @@ mycore_strncasecmp(const char* str1, const char* str2, size_t size);
  * Tree fragment serialization 
  * The same as myhtml_serialization_tree_buffer function
  */
-bool
+mystatus_t
 myhtml_serialization(myhtml_tree_node_t* scope_node, mycore_string_raw_t* str);
 
 /**
  * Only one tree node serialization
  * The same as myhtml_serialization_node_buffer function
  */
-bool
+mystatus_t
 myhtml_serialization_node(myhtml_tree_node_t* node, mycore_string_raw_t* str);
 
 /**
@@ -2490,7 +2490,7 @@ myhtml_serialization_node(myhtml_tree_node_t* node, mycore_string_raw_t* str);
  *
  * @return true if successful, otherwise false
  */
-bool
+mystatus_t
 myhtml_serialization_tree_buffer(myhtml_tree_node_t* scope_node, mycore_string_raw_t* str);
 
 /**
@@ -2502,7 +2502,7 @@ myhtml_serialization_tree_buffer(myhtml_tree_node_t* scope_node, mycore_string_r
  *
  * @return true if successful, otherwise false
  */
-bool
+mystatus_t
 myhtml_serialization_node_buffer(myhtml_tree_node_t* node, mycore_string_raw_t* str);
 
 /**
@@ -2515,7 +2515,7 @@ myhtml_serialization_node_buffer(myhtml_tree_node_t* node, mycore_string_raw_t* 
  *
  * @return true if successful, otherwise false
  */
-bool
+mystatus_t
 myhtml_serialization_tree_callback(myhtml_tree_node_t* scope_node,
                                    mycore_callback_serialize_f callback, void* ptr);
 
@@ -2529,7 +2529,7 @@ myhtml_serialization_tree_callback(myhtml_tree_node_t* scope_node,
  *
  * @return true if successful, otherwise false
  */
-bool
+mystatus_t
 myhtml_serialization_node_callback(myhtml_tree_node_t* node,
                                    mycore_callback_serialize_f callback, void* ptr);
 

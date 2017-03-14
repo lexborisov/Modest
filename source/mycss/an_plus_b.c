@@ -91,7 +91,7 @@ void mycss_an_plus_b_parser_expectations_error(mycss_entry_t* entry)
 //// An+B Serialization
 ////
 /////////////////////////////////////////////////////////
-void mycss_an_plus_b_serialization(mycss_an_plus_b_entry_t* anb_entry, mycss_callback_serialization_f callback, void* context)
+void mycss_an_plus_b_serialization(mycss_an_plus_b_entry_t* anb_entry, mycore_callback_serialize_f callback, void* context)
 {
     char data[512];
     

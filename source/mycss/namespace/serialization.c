@@ -20,7 +20,7 @@
 
 #include "mycss/namespace/serialization.h"
 
-void mycss_namespace_serialization_stylesheet(mycss_namespace_stylesheet_t* ns_stylesheet, mycss_callback_serialization_f callback, void* context)
+void mycss_namespace_serialization_stylesheet(mycss_namespace_stylesheet_t* ns_stylesheet, mycore_callback_serialize_f callback, void* context)
 {
     mycss_namespace_entry_t* ns_entry = ns_stylesheet->entry_first;
     
@@ -43,7 +43,7 @@ void mycss_namespace_serialization_stylesheet(mycss_namespace_stylesheet_t* ns_s
     }
 }
 
-void mycss_namespace_serialization_entry(mycss_namespace_t* ns, mycss_namespace_entry_t* ns_entry, mycss_callback_serialization_f callback, void* context, bool with_vbar)
+void mycss_namespace_serialization_entry(mycss_namespace_t* ns, mycss_namespace_entry_t* ns_entry, mycore_callback_serialize_f callback, void* context, bool with_vbar)
 {
     if(ns_entry->name && ns_entry->name->length) {
         callback(ns_entry->name->data, ns_entry->name->length, context);

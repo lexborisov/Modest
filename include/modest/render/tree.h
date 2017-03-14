@@ -42,7 +42,7 @@ void modest_render_tree_clean_all(modest_render_tree_t* render_tree);
 modest_render_tree_t * modest_render_tree_destroy(modest_render_tree_t* render_tree, bool self_destroy);
 
 void modest_render_tree_serialization(myhtml_tree_t* html_tree, modest_render_tree_t* tree,
-                                      modest_render_tree_node_t* scope_node, mycss_callback_serialization_f callback, void* context);
+                                      modest_render_tree_node_t* scope_node, mycore_callback_serialize_f callback, void* context);
 
 #ifdef __cplusplus
 } /* extern "C" */

@@ -59,7 +59,7 @@ modest_render_tree_t * modest_render_tree_destroy(modest_render_tree_t* render_t
 }
 
 void modest_render_tree_serialization(myhtml_tree_t* html_tree, modest_render_tree_t* tree,
-                                      modest_render_tree_node_t* scope_node, mycss_callback_serialization_f callback, void* context)
+                                      modest_render_tree_node_t* scope_node, mycore_callback_serialize_f callback, void* context)
 {
     modest_render_tree_node_t* node = scope_node;
     size_t depth = 0;

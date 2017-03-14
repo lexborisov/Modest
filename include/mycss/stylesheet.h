@@ -49,7 +49,7 @@ mystatus_t mycss_stylesheet_init(mycss_stylesheet_t* stylesheet, mycss_entry_t* 
 mystatus_t mycss_stylesheet_clean_all(mycss_stylesheet_t* stylesheet);
 mycss_stylesheet_t * mycss_stylesheet_destroy(mycss_stylesheet_t* stylesheet, bool self_destroy);
 
-void mycss_stylesheet_serialization(mycss_stylesheet_t* stylesheet, mycss_callback_serialization_f callback, void* context);
+void mycss_stylesheet_serialization(mycss_stylesheet_t* stylesheet, mycore_callback_serialize_f callback, void* context);
 
 #ifdef __cplusplus
 } /* extern "C" */

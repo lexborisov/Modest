@@ -122,7 +122,7 @@ void modest_render_tree_node_append_before(modest_render_tree_node_t* target, mo
     target->prev = node;
 }
 
-void modest_render_tree_node_serialization(myhtml_tree_t* html_tree, modest_render_tree_node_t* node, mycss_callback_serialization_f callback, void* context)
+void modest_render_tree_node_serialization(myhtml_tree_t* html_tree, modest_render_tree_node_t* node, mycore_callback_serialize_f callback, void* context)
 {
     callback("<", 1, context);
     

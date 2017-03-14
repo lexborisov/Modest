@@ -138,7 +138,7 @@ typedef struct mycore_string mycore_string_t;
 typedef struct mycore_incoming_buffer mycore_incoming_buffer_t;
 
 /* callbacks */
-typedef void (*mycore_callback_serialize_f)(const char* buffer, size_t size, void* ctx);
+typedef mystatus_t (*mycore_callback_serialize_f)(const char* buffer, size_t size, void* ctx);
 
 void * mycore_malloc(size_t size);
 void * mycore_realloc(void* dst, size_t size);

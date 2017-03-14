@@ -23,18 +23,18 @@
 #include "mycss/property/resources_name.h"
 #include "mycore/utils/resources.h"
 
-static void mycss_values_serialization_to_callback(const char* data, size_t len, mycss_callback_serialization_f callback, void* context)
+static void mycss_values_serialization_to_callback(const char* data, size_t len, mycore_callback_serialize_f callback, void* context)
 {
     if(len > 0)
         callback(data, len, context);
 }
 
-void mycss_values_serialization_string(mycore_string_t* str, mycss_callback_serialization_f callback, void* context)
+void mycss_values_serialization_string(mycore_string_t* str, mycore_callback_serialize_f callback, void* context)
 {
     callback(str->data, str->length, context);
 }
 
-void mycss_values_serialization_number(mycss_values_number_t* value, mycss_callback_serialization_f callback, void* context)
+void mycss_values_serialization_number(mycss_values_number_t* value, mycore_callback_serialize_f callback, void* context)
 {
     if(value == NULL)
         return;
@@ -51,29 +51,7 @@ void mycss_values_serialization_number(mycss_values_number_t* value, mycss_callb
     }
 }
 
-void mycss_values_serialization_length(mycss_values_length_t* value, mycss_callback_serialization_f callback, void* context)
-{
-    if(value == NULL)
-        return;
-    
-    char buff[512];
-    
-    if(value->is_float) {
-        int len = snprintf(buff, 512, "%0.4f", value->value.f);
-        mycss_values_serialization_to_callback(buff, len, callback, context);
-    }
-    else {
-        int len = snprintf(buff, 512, "%d", value->value.i);
-        mycss_values_serialization_to_callback(buff, len, callback, context);
-    }
-    
-    if(value->type < MyCSS_UNIT_TYPE_LAST_ENTRY) {
-        const char* name = mycss_units_index_name[ value->type ];
-        callback(name, strlen(name), context);
-    }
-}
-
-void mycss_values_serialization_angle(mycss_values_angle_t* value, mycss_callback_serialization_f callback, void* context)
+void mycss_values_serialization_length(mycss_values_length_t* value, mycore_callback_serialize_f callback, void* context)
 {
     if(value == NULL)
         return;
@@ -95,7 +73,7 @@ void mycss_values_serialization_angle(mycss_values_angle_t* value, mycss_callbac
     }
 }
 
-void mycss_values_serialization_resolution(mycss_values_resolution_t* value, mycss_callback_serialization_f callback, void* context)
+void mycss_values_serialization_angle(mycss_values_angle_t* value, mycore_callback_serialize_f callback, void* context)
 {
     if(value == NULL)
         return;
@@ -117,7 +95,29 @@ void mycss_values_serialization_resolution(mycss_values_resolution_t* value, myc
     }
 }
 
-void mycss_values_serialization_percentage(mycss_values_percentage_t* value, mycss_callback_serialization_f callback, void* context)
+void mycss_values_serialization_resolution(mycss_values_resolution_t* value, mycore_callback_serialize_f callback, void* context)
+{
+    if(value == NULL)
+        return;
+    
+    char buff[512];
+    
+    if(value->is_float) {
+        int len = snprintf(buff, 512, "%0.4f", value->value.f);
+        mycss_values_serialization_to_callback(buff, len, callback, context);
+    }
+    else {
+        int len = snprintf(buff, 512, "%d", value->value.i);
+        mycss_values_serialization_to_callback(buff, len, callback, context);
+    }
+    
+    if(value->type < MyCSS_UNIT_TYPE_LAST_ENTRY) {
+        const char* name = mycss_units_index_name[ value->type ];
+        callback(name, strlen(name), context);
+    }
+}
+
+void mycss_values_serialization_percentage(mycss_values_percentage_t* value, mycore_callback_serialize_f callback, void* context)
 {
     if(value == NULL)
         return;
@@ -134,7 +134,7 @@ void mycss_values_serialization_percentage(mycss_values_percentage_t* value, myc
     }
 }
 
-void mycss_values_serialization_type_length_percentage(mycss_values_type_length_percentage_entry_t* value, mycss_callback_serialization_f callback, void* context)
+void mycss_values_serialization_type_length_percentage(mycss_values_type_length_percentage_entry_t* value, mycore_callback_serialize_f callback, void* context)
 {
     switch (value->type) {
         case MyCSS_PROPERTY_VALUE__LENGTH:
@@ -165,7 +165,7 @@ static void mycss_values_serialization_color_hex_two_value(int value, unsigned c
     data[1] = mycore_string_hex_to_char_map[ (unsigned int)((value) ^ ((value >> 4) << 4)) ];
 }
 
-void mycss_values_serialization_color(mycss_values_color_t* value, mycss_callback_serialization_f callback, void* context)
+void mycss_values_serialization_color(mycss_values_color_t* value, mycore_callback_serialize_f callback, void* context)
 {
     if(value == NULL)
         return;
@@ -332,7 +332,7 @@ void mycss_values_serialization_color(mycss_values_color_t* value, mycss_callbac
     }
 }
 
-void mycss_values_serialization_color_alpha(mycss_values_color_alpha_value_t* value, mycss_callback_serialization_f callback, void* context)
+void mycss_values_serialization_color_alpha(mycss_values_color_alpha_value_t* value, mycore_callback_serialize_f callback, void* context)
 {
     if(value == NULL)
         return;
@@ -347,7 +347,7 @@ void mycss_values_serialization_color_alpha(mycss_values_color_alpha_value_t* va
     }
 }
 
-void mycss_values_serialization_text_decoration_line(mycss_values_text_decoration_line_t value, mycss_callback_serialization_f callback, void* context)
+void mycss_values_serialization_text_decoration_line(mycss_values_text_decoration_line_t value, mycore_callback_serialize_f callback, void* context)
 {
     const char *text_value = NULL;
     
@@ -381,7 +381,7 @@ void mycss_values_serialization_text_decoration_line(mycss_values_text_decoratio
     }
 }
 
-void mycss_values_serialization_text_decoration_skip(mycss_values_text_decoration_skip_t value, mycss_callback_serialization_f callback, void* context)
+void mycss_values_serialization_text_decoration_skip(mycss_values_text_decoration_skip_t value, mycore_callback_serialize_f callback, void* context)
 {
     const char *text_value = NULL;
     
@@ -423,14 +423,14 @@ void mycss_values_serialization_text_decoration_skip(mycss_values_text_decoratio
     }
 }
 
-void mycss_values_serialization_url(mycss_values_url_t* url, mycss_callback_serialization_f callback, void* context)
+void mycss_values_serialization_url(mycss_values_url_t* url, mycore_callback_serialize_f callback, void* context)
 {
     callback("url(", 4, context);
     callback(url->str.data, url->str.length, context);
     callback(")", 1, context);
 }
 
-void mycss_values_serialization_image(mycss_values_image_t* image, mycss_callback_serialization_f callback, void* context)
+void mycss_values_serialization_image(mycss_values_image_t* image, mycore_callback_serialize_f callback, void* context)
 {
     switch (image->type) {
         case MyCSS_PROPERTY_VALUE__URL:
@@ -552,7 +552,7 @@ void mycss_values_serialization_image(mycss_values_image_t* image, mycss_callbac
     }
 }
 
-void mycss_values_serialization_background_size_entry(mycss_values_background_size_entry_t* bg_size_entry, mycss_callback_serialization_f callback, void* context)
+void mycss_values_serialization_background_size_entry(mycss_values_background_size_entry_t* bg_size_entry, mycore_callback_serialize_f callback, void* context)
 {
     if(bg_size_entry->scale) {
         const char* text_value = mycss_property_index_type_value[bg_size_entry->scale];
@@ -571,7 +571,7 @@ void mycss_values_serialization_background_size_entry(mycss_values_background_si
     }
 }
 
-void mycss_values_serialization_border(mycss_values_border_t* border, mycss_callback_serialization_f callback, void* context)
+void mycss_values_serialization_border(mycss_values_border_t* border, mycore_callback_serialize_f callback, void* context)
 {
     bool o_e = false;
     

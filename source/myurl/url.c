@@ -170,12 +170,12 @@ void * myurl_callback_memory_context(myurl_t* url)
 
 /* api entry */
 /* callback for as_string */
-static void myurl_entry_host_callback_for_as_string(const char* data, size_t len, void* ctx)
+static mystatus_t myurl_entry_host_callback_for_as_string(const char* data, size_t len, void* ctx)
 {
     myurl_utils_serialization_ctx_t *obj_ctx = ctx;
     
     if(obj_ctx->error)
-        return;
+        return MyCORE_STATUS_ERROR;
     
     if((obj_ctx->length + len + 1) >= obj_ctx->size) {
         size_t new_size = obj_ctx->length + len + 128;
@@ -193,6 +193,8 @@ static void myurl_entry_host_callback_for_as_string(const char* data, size_t len
     
     memcpy(&obj_ctx->data[ obj_ctx->length ], data, sizeof(char) * len);
     obj_ctx->length += len;
+    
+    return MyCORE_STATUS_OK;
 }
 
 static char * myurl_as_string(myurl_entry_t* url_entry, size_t *length, myurl_callback_serialization_func_f func)

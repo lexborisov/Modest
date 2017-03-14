@@ -20,7 +20,7 @@
 
 #include "modest/node/serialization.h"
 
-void modest_node_raw_serialization_declaration(mycss_entry_t* mycss_entry, mycss_declaration_entry_t* decl, mycss_property_type_t property_type, mycss_callback_serialization_f callback, void* context, bool* is_use)
+void modest_node_raw_serialization_declaration(mycss_entry_t* mycss_entry, mycss_declaration_entry_t* decl, mycss_property_type_t property_type, mycore_callback_serialize_f callback, void* context, bool* is_use)
 {
     if(decl == NULL)
         return;
@@ -36,7 +36,7 @@ void modest_node_raw_serialization_declaration(mycss_entry_t* mycss_entry, mycss
     }
 }
 
-//bool modest_node_raw_serialization(mycss_entry_t* mycss_entry, modest_node_t* mnode, mycss_callback_serialization_f callback, void* context)
+//bool modest_node_raw_serialization(mycss_entry_t* mycss_entry, modest_node_t* mnode, mycore_callback_serialize_f callback, void* context)
 //{
 //    bool is_use = false;
 //    
@@ -56,7 +56,7 @@ void modest_node_raw_serialization_callback(mycore_utils_avl_tree_node_t* node, 
     modest_node_raw_serialization_declaration(ctx->modest->mycss_entry, raw_declr->declaration, (mycss_property_type_t)node->type, ctx->callback, ctx->context, &ctx->is_use);
 }
 
-bool modest_node_raw_serialization(modest_t* modest, modest_node_t* mnode, mycss_callback_serialization_f callback, void* context)
+bool modest_node_raw_serialization(modest_t* modest, modest_node_t* mnode, mycore_callback_serialize_f callback, void* context)
 {
     modest_node_serialization_context_t ctx = {modest, callback, context, 0};
     

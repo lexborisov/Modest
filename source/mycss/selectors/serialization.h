@@ -30,9 +30,9 @@ extern "C" {
 #include "mycss/namespace/serialization.h"
 #include "mycss/declaration/serialization.h"
 
-void mycss_selectors_serialization_chain(mycss_selectors_t* selectors, mycss_selectors_entry_t* selector, mycss_callback_serialization_f callback, void* context);
-bool mycss_selectors_serialization_list(mycss_selectors_t* selectors, mycss_selectors_list_t* selectors_list, mycss_callback_serialization_f callback, void* context);
-bool mycss_selectors_serialization_selector(mycss_selectors_t* selectors, mycss_selectors_entry_t* selector, mycss_callback_serialization_f callback, void* context);
+void mycss_selectors_serialization_chain(mycss_selectors_t* selectors, mycss_selectors_entry_t* selector, mycore_callback_serialize_f callback, void* context);
+bool mycss_selectors_serialization_list(mycss_selectors_t* selectors, mycss_selectors_list_t* selectors_list, mycore_callback_serialize_f callback, void* context);
+bool mycss_selectors_serialization_selector(mycss_selectors_t* selectors, mycss_selectors_entry_t* selector, mycore_callback_serialize_f callback, void* context);
 
 #ifdef __cplusplus
 } /* extern "C" */
