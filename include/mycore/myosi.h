@@ -43,7 +43,7 @@ extern "C" {
 #endif
 
 /* Format */
-#if MODEST_BUILD_OS == Windows_NT
+#ifdef MyCORE_OS_WINDOWS_NT
 #define MyCORE_FORMAT_Z "%Iu"
 #else
 #define MyCORE_FORMAT_Z "%zu"

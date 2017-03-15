@@ -61,31 +61,8 @@ if(NOT DEFINED MODEST_OPTIMIZATION_LEVEL)
   set(MODEST_OPTIMIZATION_LEVEL "-O2")
 endif()
 
-if(NOT DEFINED MODEST_BUILD_WITHOUT_THREADS)
-    set(MODEST_BUILD_WITHOUT_THREADS "NO")
-endif()
-
-################
-## extern mem functions
-#########################
-if(DEFINED MODEST_EXTERN_MALLOC)
-    add_definitions(-DMODEST_EXTERN_MALLOC=${MODEST_EXTERN_MALLOC})
-    add_definitions(-DMyHTML_EXTERN_MALLOC=${MODEST_EXTERN_MALLOC})
-endif()
-
-if(DEFINED MODEST_EXTERN_REALLOC)
-    add_definitions(-DMODEST_EXTERN_REALLOC=${MODEST_EXTERN_REALLOC})
-    add_definitions(-DMyHTML_EXTERN_REALLOC=${MODEST_EXTERN_REALLOC})
-endif()
-
-if(DEFINED MODEST_EXTERN_CALLOC)
-    add_definitions(-DMODEST_EXTERN_CALLOC=${MODEST_EXTERN_CALLOC})
-    add_definitions(-DMyHTML_EXTERN_CALLOC=${MODEST_EXTERN_CALLOC})
-endif()
-
-if(DEFINED MODEST_EXTERN_FREE)
-    add_definitions(-DMODEST_EXTERN_FREE=${MODEST_EXTERN_FREE})
-    add_definitions(-DMyHTML_EXTERN_FREE=${MODEST_EXTERN_FREE})
+if(NOT DEFINED MyCORE_BUILD_WITHOUT_THREADS)
+    set(MyCORE_BUILD_WITHOUT_THREADS "NO")
 endif()
 
 ################
@@ -100,106 +77,110 @@ option(MODEST_INSTALL_HEADER "Install header files" ON)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${MODEST_OPTIMIZATION_LEVEL}")
 
 include_directories(${MODEST_PROJECT_SOURCE})
-FILE(GLOB_RECURSE ALL_SOURCE_LIST "${MODEST_PROJECT_SOURCE}/*.c")
+#FILE(GLOB_RECURSE ALL_SOURCE_LIST "${MODEST_PROJECT_SOURCE}/*.c")
+FILE(GLOB MODEST_MODULE_LIST "${MODEST_PROJECT_SOURCE}/[^.]*")
 
-if (!UNIX AND WIN32)
-  if(${CMAKE_CL_64})
-    add_definitions(-D_WIN64)
-  else()
-    add_definitions(-D_WIN32)
-  endif()
-endif()
+list(FIND MODEST_MODULE_LIST "/new/C-git/Modest/projects/../source/myport/" ALL_SOURCE_LISTDDD)
 
-if(${CMAKE_C_COMPILER_ID} STREQUAL MSVC)
-  add_definitions(/wd4100 /wd4255 /wd4820 /wd4668)
-  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+message(STATUS ${ALL_SOURCE_LISTDDD})
+
+# if (!UNIX AND WIN32)
+#   if(${CMAKE_CL_64})
+#     add_definitions(-D_WIN64)
+#   else()
+#     add_definitions(-D_WIN32)
+#   endif()
+# endif()
+
+# if(${CMAKE_C_COMPILER_ID} STREQUAL MSVC)
+#   add_definitions(/wd4100 /wd4255 /wd4820 /wd4668)
+#   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
   
-  message(STATUS "Windows set definitions")
-else()
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall --std=c99 -fPIC")
+#   message(STATUS "Windows set definitions")
+# else()
+#   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall --std=c99 -fPIC")
   
-  if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    add_definitions(-D_POSIX_C_SOURCE=199309L)
-  endif()
+#   if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+#     add_definitions(-D_POSIX_C_SOURCE=199309L)
+#   endif()
   
-  if(MODEST_BUILD_WITHOUT_THREADS STREQUAL "NO")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pthread")
-  endif()
-endif()
+#   if(MyCORE_BUILD_WITHOUT_THREADS STREQUAL "NO")
+#     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pthread")
+#   endif()
+# endif()
 
-if(MODEST_BUILD_WITHOUT_THREADS STREQUAL "YES")
-  message(STATUS "Build without POSIX Threads")
-  add_definitions(-DMODEST_BUILD_WITHOUT_THREADS)
-  add_definitions(-DMyHTML_BUILD_WITHOUT_THREADS)
-else()
-  message(STATUS "Build with POSIX Threads")
-endif()
+# if(MyCORE_BUILD_WITHOUT_THREADS STREQUAL "YES")
+#   message(STATUS "Build without POSIX Threads")
+#   add_definitions(-DMyCORE_BUILD_WITHOUT_THREADS)
+# else()
+#   message(STATUS "Build with POSIX Threads")
+# endif()
 
-################
-## build
-#########################
-if(MODEST_BUILD_SHARED)
-  add_library(${MODEST_PROJECT_NAME} SHARED ${ALL_SOURCE_LIST})
-  set_target_properties(${MODEST_PROJECT_NAME} PROPERTIES OUTPUT_NAME ${MODEST_PROJECT_NAME})
-  set_target_properties(${MODEST_PROJECT_NAME} PROPERTIES VERSION ${MODEST_VERSION_STRING} SOVERSION ${MODEST_VERSION_MAJOR})
-endif()
+# ################
+# ## build
+# #########################
+# if(MODEST_BUILD_SHARED)
+#   add_library(${MODEST_PROJECT_NAME} SHARED ${ALL_SOURCE_LIST})
+#   set_target_properties(${MODEST_PROJECT_NAME} PROPERTIES OUTPUT_NAME ${MODEST_PROJECT_NAME})
+#   set_target_properties(${MODEST_PROJECT_NAME} PROPERTIES VERSION ${MODEST_VERSION_STRING} SOVERSION ${MODEST_VERSION_MAJOR})
+# endif()
 
-if(MODEST_BUILD_STATIC)
-  add_library(${MODEST_PROJECT_LIB_NAME_STATIC} STATIC ${ALL_SOURCE_LIST})
-  set_target_properties(${MODEST_PROJECT_LIB_NAME_STATIC} PROPERTIES OUTPUT_NAME ${MODEST_PROJECT_LIB_NAME_STATIC})
-  set_target_properties(${MODEST_PROJECT_LIB_NAME_STATIC} PROPERTIES VERSION ${MODEST_VERSION_STRING} SOVERSION ${MODEST_VERSION_MAJOR})
-endif()
+# if(MODEST_BUILD_STATIC)
+#   add_library(${MODEST_PROJECT_LIB_NAME_STATIC} STATIC ${ALL_SOURCE_LIST})
+#   set_target_properties(${MODEST_PROJECT_LIB_NAME_STATIC} PROPERTIES OUTPUT_NAME ${MODEST_PROJECT_LIB_NAME_STATIC})
+#   set_target_properties(${MODEST_PROJECT_LIB_NAME_STATIC} PROPERTIES VERSION ${MODEST_VERSION_STRING} SOVERSION ${MODEST_VERSION_MAJOR})
+# endif()
 
-################
-## install
-#########################
-if(MODEST_INSTALL_HEADER)
-  install(DIRECTORY "${MODEST_PROJECT_API_HEADER}" DESTINATION "include" FILES_MATCHING PATTERN "*.h")
-endif()
+# ################
+# ## install
+# #########################
+# if(MODEST_INSTALL_HEADER)
+#   install(DIRECTORY "${MODEST_PROJECT_API_HEADER}" DESTINATION "include" FILES_MATCHING PATTERN "*.h")
+# endif()
 
-if(MODEST_BUILD_SHARED)
-  install(TARGETS ${MODEST_PROJECT_LIB_NAME}
-  RUNTIME DESTINATION "${INSTALL_DLL_EXE_DIR}"
-  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
-endif()
+# if(MODEST_BUILD_SHARED)
+#   install(TARGETS ${MODEST_PROJECT_LIB_NAME}
+#   RUNTIME DESTINATION "${INSTALL_DLL_EXE_DIR}"
+#   LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+# endif()
 
-if(MODEST_BUILD_STATIC)
-  install(TARGETS ${MODEST_PROJECT_LIB_NAME_STATIC}
-  RUNTIME DESTINATION "${INSTALL_DLL_EXE_DIR}"
-  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
-endif()
+# if(MODEST_BUILD_STATIC)
+#   install(TARGETS ${MODEST_PROJECT_LIB_NAME_STATIC}
+#   RUNTIME DESTINATION "${INSTALL_DLL_EXE_DIR}"
+#   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+# endif()
 
-################
-## Build an RPM.
-#########################
-set(CPACK_PACKAGE_VERSION ${MODEST_VERSION_STRING})
+# ################
+# ## Build an RPM.
+# #########################
+# set(CPACK_PACKAGE_VERSION ${MODEST_VERSION_STRING})
 
-if(MODEST_PLATFORM STREQUAL "Debian")
-  set(CPACK_GENERATOR "DEB")
-elseif(MODEST_PLATFORM STREQUAL "Redhat")
-  set(CPACK_GENERATOR "RPM")
-elseif(MODEST_PLATFORM STREQUAL "SuSe")
-  set(CPACK_GENERATOR "RPM")
-else()
-  set(CPACK_GENERATOR "TGZ")
-endif()
+# if(MODEST_PLATFORM STREQUAL "Debian")
+#   set(CPACK_GENERATOR "DEB")
+# elseif(MODEST_PLATFORM STREQUAL "Redhat")
+#   set(CPACK_GENERATOR "RPM")
+# elseif(MODEST_PLATFORM STREQUAL "SuSe")
+#   set(CPACK_GENERATOR "RPM")
+# else()
+#   set(CPACK_GENERATOR "TGZ")
+# endif()
 
-set(CPACK_PACKAGE_NAME "modest")
-set(CPACK_PACKAGE_RELEASE 1)
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Modest is a fast HTML Render implemented as a pure C99 library with no outside dependencies.")
-set(CPACK_PACKAGE_CONTACT "Alexander Borisov")
-set(CPACK_PACKAGE_VENDOR "Alexander Borisov")
+# set(CPACK_PACKAGE_NAME "modest")
+# set(CPACK_PACKAGE_RELEASE 1)
+# set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Modest is a fast HTML Render implemented as a pure C99 library with no outside dependencies.")
+# set(CPACK_PACKAGE_CONTACT "Alexander Borisov")
+# set(CPACK_PACKAGE_VENDOR "Alexander Borisov")
 
-if(32BIT)
-  set(CPACK_RPM_PACKAGE_ARCHITECTURE i686)
-else()
-  set(CPACK_RPM_PACKAGE_ARCHITECTURE x86_64)
-endif()
+# if(32BIT)
+#   set(CPACK_RPM_PACKAGE_ARCHITECTURE i686)
+# else()
+#   set(CPACK_RPM_PACKAGE_ARCHITECTURE x86_64)
+# endif()
 
-if(MODEST_BUILD_WITHOUT_THREADS STREQUAL "YES")
-  set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_PACKAGE_RELEASE}-without-threads.${CPACK_RPM_PACKAGE_ARCHITECTURE}")
-else()
-  set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_PACKAGE_RELEASE}.${CPACK_RPM_PACKAGE_ARCHITECTURE}")
-endif()
+# if(MyCORE_BUILD_WITHOUT_THREADS STREQUAL "YES")
+#   set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_PACKAGE_RELEASE}-without-threads.${CPACK_RPM_PACKAGE_ARCHITECTURE}")
+# else()
+#   set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_PACKAGE_RELEASE}.${CPACK_RPM_PACKAGE_ARCHITECTURE}")
+# endif()
 
-include(CPack)
+# include(CPack)

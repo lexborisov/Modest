@@ -53,6 +53,7 @@ include $(MODEST_BUILD_MODULES_MAKEFILES_LIST)
 #***************
 MODEST_CFLAGS += -DMODEST_BUILD_OS=$(MODEST_BUILD_OS)
 MODEST_CFLAGS += -DMODEST_PORT_NAME=$(MODEST_PORT_NAME)
+MODEST_CFLAGS += $(call MODEST_UTILS_TO_UPCASE,-DMyCORE_OS_$(MODEST_BUILD_OS))
 
 override CFLAGS += $(MODEST_CFLAGS)
 override LDFLAGS += $(MODEST_LDFLAGS)
@@ -63,11 +64,20 @@ override LDFLAGS += $(MODEST_LDFLAGS)
 MODEST_BUILD_OBJECT_SHARED  ?= $(CC) -shared $(LDFLAGS) $(MODEST_LDFLAGS) $1 -o $2
 MODEST_BUILD_OBJECT_STATIC  ?= $(AR) crus $2 $1
 MODEST_BUILD_OBJECT_MODULES := $(foreach dir,$(MODEST_BUILD_MODULES_TARGET),$($(dir)_objs))
+MODEST_BUILD_OBJECT_MODULES := $(foreach dir,$(MODEST_BUILD_MODULES_TARGET),$($(dir)_objs))
 
 #********************
 # Sub Directories
 #***************
 BUILD_SUB_DIRS := examples $(TEST_DIR)
+
+#********************
+# Install
+#***************
+MODEST_INSTALL_LIB    ?= lib
+MODEST_INSTALL_HEADER ?= include
+MODEST_INSTALL_CREATE_DIR := mkdir -p $(PREFIX)/$(MODEST_INSTALL_HEADER) $(PREFIX)/$(MODEST_INSTALL_LIB) 
+MODEST_INSTALL_COMMAND := $(MODEST_INSTALL_CREATE_DIR) $(MODEST_UTILS_NEW_LINE) cp -av $(LIB_DIR_BASE)/* $(PREFIX)/$(MODEST_INSTALL_LIB) $(MODEST_UTILS_NEW_LINE) cp -r $(INCLUDE_DIR_API)/* $(PREFIX)/$(MODEST_INSTALL_HEADER)
 
 #********************
 # Target options
@@ -101,7 +111,10 @@ clean_api:
 create:
 	mkdir -p $(BINARY_DIR_BASE) $(LIB_DIR_BASE) $(TEST_DIR_BASE)
 
-test:
+install: 
+	$(MODEST_INSTALL_COMMAND)
+
+test: library
 	$(MAKE) -C $(TEST_DIR) run
 
 .PHONY: all clean clone test $(MODEST_BUILD_MODULES_TARGET_ALL)
