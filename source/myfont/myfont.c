@@ -143,7 +143,7 @@ mystatus_t myfont_load_from_file(myfont_font_t *mf, const char *filepath, uint8_
         return MyFONT_STATUS_ERROR_MEMORY_ALLOCATION;
     }
     
-    if(fread(data, 1, file_size, fh) != file_size) {
+    if(mycore_fread(data, 1, file_size, fh) != file_size) {
         mycore_fclose(fh);
         return MyFONT_STATUS_ERROR_FILE_READ;
     }
