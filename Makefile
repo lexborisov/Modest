@@ -12,6 +12,8 @@ CC ?= gcc
 
 .DEFAULT_GOAL := all
 
+DESCRIPTION := Modest is a fast HTML renderer implemented as a pure C99 library with no outside dependencies
+
 #********************
 # other Makefile
 #***************
@@ -23,6 +25,7 @@ include Makefile.cfg
 MODEST_BUILD_MODULES ?= $(dir $(wildcard $(SRCDIR)/*/))
 MODEST_BUILD_MODULES := $(patsubst %myport/,%myport/$(strip $(MODEST_PORT_NAME))/,$(MODEST_BUILD_MODULES))
 MODEST_BUILD_MODULES_LIST := $(foreach dir,$(MODEST_BUILD_MODULES),$(word 2, $(subst $(MODEST_DIR_SEPARATOR), , $(dir))) )
+MODEST_BUILD_MODULES_LIST_WITHOUT_PORT := $(strip $(foreach dir,$(MODEST_BUILD_MODULES_LIST),$(patsubst myport,,$(dir))))
 MODEST_BUILD_MODULES_MAKEFILES_LIST := $(foreach dir,$(MODEST_BUILD_MODULES),$(dir)Makefile.mk)
 
 #********************
@@ -74,10 +77,42 @@ BUILD_SUB_DIRS := examples $(TEST_DIR)
 #********************
 # Install
 #***************
-MODEST_INSTALL_LIB    ?= lib
-MODEST_INSTALL_HEADER ?= include
-MODEST_INSTALL_CREATE_DIR := mkdir -p $(PREFIX)/$(MODEST_INSTALL_HEADER) $(PREFIX)/$(MODEST_INSTALL_LIB) 
-MODEST_INSTALL_COMMAND := $(MODEST_INSTALL_CREATE_DIR) $(MODEST_UTILS_NEW_LINE) cp -av $(LIB_DIR_BASE)/* $(PREFIX)/$(MODEST_INSTALL_LIB) $(MODEST_UTILS_NEW_LINE) cp -r $(INCLUDE_DIR_API)/* $(PREFIX)/$(MODEST_INSTALL_HEADER)
+MODEST_INSTALL_LIBRARY := lib
+MODEST_INSTALL_HEADER  := include
+
+libdir     ?= $(prefix)/$(MODEST_INSTALL_LIBRARY)
+includedir ?= $(prefix)/$(MODEST_INSTALL_HEADER)
+
+MODEST_INSTALL_CREATE_DIR := mkdir -p $(prefix)/$(MODEST_INSTALL_HEADER) $(prefix)/$(MODEST_INSTALL_LIBRARY) 
+MODEST_INSTALL_COMMAND := $(MODEST_INSTALL_CREATE_DIR) $(MODEST_UTILS_NEW_LINE) cp -av $(LIB_DIR_BASE)/* $(libdir) $(MODEST_UTILS_NEW_LINE) cp -r $(INCLUDE_DIR_API)/* $(includedir)
+
+#********************
+# Uninstall
+#***************
+MODEST_UNINSTALL_MK_COMMAND :=
+MODEST_UNINSTALL_FILE    := uninstal.mk
+MODEST_UNINSTALL_HEADERS := $(foreach name,$(MODEST_BUILD_MODULES_LIST_WITHOUT_PORT),rm -rf $(includedir)/$(name) \$$(MODEST_UTILS_NEW_LINE))
+MODEST_UNINSTALL_LIBRARY := $(foreach path,$(wildcard $(LIB_DIR_BASE)/lib*),rm -rf $(libdir)/$(notdir $(path)) \$$(MODEST_UTILS_NEW_LINE))
+MODEST_UNINSTALL_COMMAND = echo "MODEST_UNINSTALL_MK_COMMAND = $(MODEST_UNINSTALL_HEADERS) $(MODEST_UNINSTALL_LIBRARY)" > $(MODEST_UNINSTALL_FILE)
+
+-include $(MODEST_UNINSTALL_FILE)
+
+#********************
+# PKG-CONFIG
+#***************
+MODEST_PKG_CONFIG_FILE := modest.pc
+MODEST_PKG_CONFIG_CFLAGS := $(foreach name,$(MODEST_BUILD_MODULES_LIST_WITHOUT_PORT),-I$\{includedir}/$(name))
+MODEST_PKG_CONFIG_PROCESS = \
+$(SED) \
+-e 's,@version\@,$(MODEST_VERSION_STRING),g' \
+-e 's,@prefix\@,$(prefix),g' \
+-e 's,@exec_prefix\@,$(exec_prefix),g' \
+-e 's,@libdir\@,$(MODEST_INSTALL_LIBRARY),g' \
+-e 's,@includedir\@,$(MODEST_INSTALL_HEADER),g' \
+-e 's,@cflags\@,$(MODEST_PKG_CONFIG_CFLAGS),g' \
+-e 's,@libname\@,$(LIB_NAME),g' \
+-e 's,@description\@,$(DESCRIPTION),g' \
+$1 > $2
 
 #********************
 # Target options
@@ -113,8 +148,15 @@ create:
 
 install: 
 	$(MODEST_INSTALL_COMMAND)
+	$(MODEST_UNINSTALL_COMMAND)
+
+uninstall: 
+	$(MODEST_UNINSTALL_MK_COMMAND)
 
 test: library
 	$(MAKE) -C $(TEST_DIR) run
+
+make-pc-file:
+	$(call MODEST_PKG_CONFIG_PROCESS,$(MODEST_PKG_CONFIG_FILE).in, $(MODEST_PKG_CONFIG_FILE))
 
 .PHONY: all clean clone test $(MODEST_BUILD_MODULES_TARGET_ALL)
