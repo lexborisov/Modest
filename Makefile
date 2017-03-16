@@ -3,12 +3,32 @@ SRCDIR := source
 
 CC ?= gcc
 
+# make rules
+#	all —- build all components (libraries, examples, tests) (default)
+#	library -- build only static and shared library
+#	shared -- build only shared library
+#	static -- build only static library
+#	clean -- clean up current build directory
+#	clone -- copy all headers from source to include directories and modify local include (#include "...") to global (#include <...>)
+#	clean_api -- remove all headers from include directory
+#	create -- create directories for binary, libraries, tests
+#	install -- install libraries and headers on your system
+#	uninstall -- delete libraries and headers on your system
+#	test -- run all tests
+#	make-pc-file -- create pkg-config file
+#
 # ARGS
+# 	prefix, default /usr/local
+# 	OS, if not defined try to get from "uname -s"
+# 	MODEST_OPTIMIZATION_LEVEL, default -O2
+# 	MyCORE_BUILD_WITHOUT_THREADS, YES or (NO or undefined), default undefined
+# 	MyCORE_BUILD_DEBUG, YES or (NO or undefined), default undefined
+# 	MyCORE_WITH_PERF, YES or (NO or undefined), default undefined, try build with timers (rdtsc or some), OS dependent, may not work on some systems, 
+# 	MODEST_INSTALL_HEADER, default "include"
+# 	MODEST_INSTALL_LIBRARY, default "lib"
+# 	MODEST_INSTALL_WITHOUT_HEADERS, YES or (NO or undefined), default undefined
 #
-# MODEST_OPTIMIZATION_LEVEL, default -O2
-# MyCORE_BUILD_WITHOUT_THREADS, YES or (NO or undefined), default undefined
-# MyCORE_BUILD_DEBUG, default undefined
-#
+# If OS build rules not exists we try make library with POSIX threads
 
 .DEFAULT_GOAL := all
 
@@ -83,15 +103,24 @@ MODEST_INSTALL_HEADER  := include
 libdir     ?= $(prefix)/$(MODEST_INSTALL_LIBRARY)
 includedir ?= $(prefix)/$(MODEST_INSTALL_HEADER)
 
-MODEST_INSTALL_CREATE_DIR := mkdir -p $(prefix)/$(MODEST_INSTALL_HEADER) $(prefix)/$(MODEST_INSTALL_LIBRARY) 
-MODEST_INSTALL_COMMAND := $(MODEST_INSTALL_CREATE_DIR) $(MODEST_UTILS_NEW_LINE) cp -av $(LIB_DIR_BASE)/* $(libdir) $(MODEST_UTILS_NEW_LINE) cp -r $(INCLUDE_DIR_API)/* $(includedir)
+MODEST_INSTALL_CREATE_DIR := mkdir -p $(prefix)/$(MODEST_INSTALL_LIBRARY) 
+MODEST_INSTALL_COMMAND := $(MODEST_INSTALL_CREATE_DIR) $(MODEST_UTILS_NEW_LINE) cp -av $(LIB_DIR_BASE)/* $(libdir)
+
+ifneq ($(MODEST_INSTALL_WITHOUT_HEADERS),YES)
+	MODEST_INSTALL_CREATE_DIR += $(prefix)/$(MODEST_INSTALL_HEADER)
+	MODEST_INSTALL_COMMAND += $(MODEST_UTILS_NEW_LINE) cp -av $(INCLUDE_DIR_API)/* $(includedir)
+endif
 
 #********************
 # Uninstall
 #***************
 MODEST_UNINSTALL_MK_COMMAND :=
-MODEST_UNINSTALL_FILE    := uninstal.mk
-MODEST_UNINSTALL_HEADERS := $(foreach name,$(MODEST_BUILD_MODULES_LIST_WITHOUT_PORT),rm -rf $(includedir)/$(name) \$$(MODEST_UTILS_NEW_LINE))
+MODEST_UNINSTALL_FILE := uninstal.mk
+
+ifneq ($(MODEST_INSTALL_WITHOUT_HEADERS),YES)
+	MODEST_UNINSTALL_HEADERS := $(foreach name,$(MODEST_BUILD_MODULES_LIST_WITHOUT_PORT),rm -rf $(includedir)/$(name) \$$(MODEST_UTILS_NEW_LINE))
+endif
+
 MODEST_UNINSTALL_LIBRARY := $(foreach path,$(wildcard $(LIB_DIR_BASE)/lib*),rm -rf $(libdir)/$(notdir $(path)) \$$(MODEST_UTILS_NEW_LINE))
 MODEST_UNINSTALL_COMMAND = echo "MODEST_UNINSTALL_MK_COMMAND = $(MODEST_UNINSTALL_HEADERS) $(MODEST_UNINSTALL_LIBRARY)" > $(MODEST_UNINSTALL_FILE)
 
