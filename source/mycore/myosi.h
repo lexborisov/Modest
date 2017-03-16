@@ -148,16 +148,18 @@ void * mycore_realloc(void* dst, size_t size);
 void * mycore_calloc(size_t num, size_t size);
 void * mycore_free(void* dst);
 
-/**
- * Platform-specific hdef performance clock queries.
- * Implemented in perf.c
- */
-
-///** Get clock resolution */
-//uint64_t mycore_hperf_res(mystatus_t *status);
-//
-///** Get current value in clock ticks */
-//uint64_t mycore_hperf_clock(mystatus_t *status);
+/* io */
+FILE * mycore_fopen(const char *filename, const char *mode);
+int mycore_fclose(FILE *stream);
+    
+size_t mycore_fread(void *buffer, size_t size, size_t count, FILE *stream);
+size_t mycore_fwrite(const void *buffer, size_t size, size_t count, FILE *stream);
+int mycore_fflush(FILE *stream);
+int mycore_fseek(FILE* stream, long offset, int origin);
+long mycore_ftell(FILE* stream);
+int mycore_ferror(FILE *stream);
+    
+void mycore_setbuf(FILE *stream, char *buffer);
 
 #ifdef __cplusplus
 } /* extern "C" */

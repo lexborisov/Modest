@@ -47,6 +47,16 @@ int mycore_fflush(FILE *stream)
     return fflush(stream);
 }
 
+int mycore_fseek(FILE* stream, long offset, int origin)
+{
+    return fseek(stream, offset, origin);
+}
+
+long mycore_ftell(FILE* stream)
+{
+    return ftell(stream);
+}
+
 int mycore_ferror(FILE *stream)
 {
     return ferror(stream);

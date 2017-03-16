@@ -12,7 +12,7 @@ CC ?= gcc
 
 .DEFAULT_GOAL := all
 
-DESCRIPTION := Modest is a fast HTML renderer implemented as a pure C99 library with no outside dependencies
+DESCRIPTION := fast HTML renderer library with no outside dependency
 
 #********************
 # other Makefile

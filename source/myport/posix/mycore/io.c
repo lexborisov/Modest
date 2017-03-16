@@ -22,7 +22,7 @@
 #include <stdarg.h>
 
 /* FILE */
-FILE * mycore_fopen(const char *restrict filename, const char *restrict mode)
+FILE * mycore_fopen(const char *filename, const char *mode)
 {
     return fopen(filename, mode);
 }
@@ -32,12 +32,12 @@ int mycore_fclose(FILE *stream)
     return fclose(stream);
 }
 
-size_t mycore_fread(void *restrict buffer, size_t size, size_t count, FILE *restrict stream)
+size_t mycore_fread(void *buffer, size_t size, size_t count, FILE *stream)
 {
     return fread(buffer, size, count, stream);
 }
 
-size_t mycore_fwrite(const void *restrict buffer, size_t size, size_t count, FILE *restrict stream)
+size_t mycore_fwrite(const void *buffer, size_t size, size_t count, FILE *stream)
 {
     return fwrite(buffer, size, count, stream);
 }
@@ -47,15 +47,23 @@ int mycore_fflush(FILE *stream)
     return fflush(stream);
 }
 
+int mycore_fseek(FILE* stream, long offset, int origin)
+{
+    return fseek(stream, offset, origin);
+}
+
+long mycore_ftell(FILE* stream)
+{
+    return ftell(stream);
+}
+
 int mycore_ferror(FILE *stream)
 {
     return ferror(stream);
 }
 
 /* setbuf */
-void mycore_setbuf(FILE *restrict stream, char *restrict buffer)
+void mycore_setbuf(FILE *stream, char *buffer)
 {
     setbuf(stream, buffer);
 }
-
-

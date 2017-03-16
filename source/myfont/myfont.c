@@ -109,46 +109,46 @@ mystatus_t myfont_load_from_file(myfont_font_t *mf, const char *filepath, uint8_
     
     size_t file_data_size;
     
-    FILE *fh = fopen(filepath, "rb");
+    FILE *fh = mycore_fopen(filepath, "rb");
     if(fh == NULL)
         return MyFONT_STATUS_ERROR_FILE_OPEN;
     
-    if(fseek(fh, 0L, SEEK_END)) {
-        fclose(fh);
+    if(mycore_fseek(fh, 0L, SEEK_END)) {
+        mycore_fclose(fh);
         return MyFONT_STATUS_ERROR_FILE_SEEK;
     }
     
-    long file_size = ftell(fh);
+    long file_size = mycore_ftell(fh);
     if(file_size == -1) {
-        fclose(fh);
+        mycore_fclose(fh);
         return MyFONT_STATUS_ERROR_FILE_TELL;
     }
     
-    if(fseek(fh, 0L, SEEK_SET)) {
-        fclose(fh);
+    if(mycore_fseek(fh, 0L, SEEK_SET)) {
+        mycore_fclose(fh);
         return MyFONT_STATUS_ERROR_FILE_SEEK;
     }
     
     if(file_size > 0)
         file_data_size = (size_t)file_size;
     else {
-        fclose(fh);
+        mycore_fclose(fh);
         return MyFONT_STATUS_ERROR_FILE_TOO_SMALL;
     }
     
     uint8_t* data = (uint8_t*)mycore_malloc(file_size);
     
     if(data == NULL) {
-        fclose(fh);
+        mycore_fclose(fh);
         return MyFONT_STATUS_ERROR_MEMORY_ALLOCATION;
     }
     
     if(fread(data, 1, file_size, fh) != file_size) {
-        fclose(fh);
+        mycore_fclose(fh);
         return MyFONT_STATUS_ERROR_FILE_READ;
     }
     
-    fclose(fh);
+    mycore_fclose(fh);
     
     if(return_data)
         *return_data = data;
