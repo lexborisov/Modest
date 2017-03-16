@@ -166,7 +166,7 @@ clean: $(MODEST_BUILD_MODULES_TARGET_CLEAN)
 	for f in $(BUILD_SUB_DIRS); do $(MAKE) -C $$f clean; done
 
 clone: clean_api $(MODEST_BUILD_MODULES_TARGET_CLONE)
-	find $(INCLUDE_DIR_API) -name "*.h" -exec sed -i '.bak' -E 's/^[ \t]*#[ \t]*include[ \t]*"([^"]+)"/#include <\1>/g' {} \;
+	$(call MODEST_CLONE_SED_HEADER_COMMAND)
 	find $(INCLUDE_DIR_API) -name "*.h.bak" -exec rm -f {} \;
 
 clean_api:

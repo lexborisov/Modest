@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2015-2017 Alexander Borisov
+ Copyright (C) 2015-2016 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -20,7 +20,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <myhtml/api.h>
+
+#include <myencoding/encoding.h>
 
 #include "example.h"
 
@@ -67,32 +68,61 @@ struct res_html load_html_file(const char* filename)
     }
 
     fclose(fh);
-
+    
     struct res_html res = {html, (size_t)size};
     return res;
 }
 
+void print_encoding(myencoding_t encoding)
+{
+    printf("Character encoding is ");
+    
+    switch (encoding) {
+        case MyENCODING_UTF_8:          printf("UTF-8");          break;
+        case MyENCODING_UTF_16LE:       printf("UTF_16LE");       break;
+        case MyENCODING_UTF_16BE:       printf("UTF_16BE");       break;
+        case MyENCODING_KOI8_R:         printf("KOI8_R");         break;
+        case MyENCODING_WINDOWS_1251:   printf("WINDOWS_1251");   break;
+        case MyENCODING_X_MAC_CYRILLIC: printf("X_MAC_CYRILLIC"); break;
+        case MyENCODING_IBM866:         printf("IBM866");         break;
+        case MyENCODING_ISO_8859_5:     printf("ISO_8859_5");     break;
+        default:
+            printf("UNKNOWN");
+            break;
+    }
+    
+    printf("\n");
+}
+
 int main(int argc, const char * argv[])
 {
-    if (argc != 2) {
-        printf("Bad ARGV!\nUse: detect_encoding_in_meta_high_level <path_to_html_file>\n");
+    const char* path;
+    
+    if (argc == 2) {
+        path = argv[1];
+    }
+    else {
+        printf("Bad ARGV!\nUse: detect_encoding_high_level <path_to_html_file>\n");
         exit(EXIT_FAILURE);
     }
     
-    struct res_html res = load_html_file(argv[1]);
+    struct res_html res = load_html_file(path);
     
-    myencoding_t encoding = myencoding_prescan_stream_to_determine_encoding(res.html, res.size);
+    myencoding_t encoding;
     
-    if(encoding == MyENCODING_NOT_DETERMINED) {
-        printf("Can't detect encoding\n");
+    // try detect by BOM
+    if (myencoding_detect_bom(res.html, res.size, &encoding)) {
+        print_encoding(encoding);
+    } else if (myencoding_detect(res.html, res.size, &encoding)) {
+        print_encoding(encoding);
+    } else if (encoding != MyENCODING_DEFAULT) {
+        printf("It is possible that ");
+        print_encoding(encoding);
+    } else {
+        printf("I could not identify character encoding\n");
     }
-    else {
-        const char *encoding_name = myencoding_name_by_id(encoding, NULL);
-        printf("Encoding: %s\n", encoding_name);
-    }
-    
+
     free(res.html);
-    
     return 0;
 }
 

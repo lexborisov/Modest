@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -15,33 +15,18 @@
  License along with this library; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  
- Author: lex.borisov@gmail.com (Alexander Borisov)
+ Author: vincent.torri@gmail.com (Vincent Torri)
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#ifndef MyHTML_EXAMPLE_EXAMPLE_H
+#define MyHTML_EXAMPLE_EXAMPLE_H
+#pragma once
 
-#include <myhtml/api.h>
+/* Format */
+#ifdef _WIN32
+    #define MyCORE_FMT_Z "%Iu"
+#else
+    #define MyCORE_FMT_Z "%zu"
+#endif
 
-int main(int argc, const char * argv[])
-{
-    const char *name = "cp1251";
-    myencoding_t encoding;
-    
-    if(myencoding_by_name(name, strlen(name), &encoding))
-    {
-        if(encoding == MyENCODING_WINDOWS_1251) {
-            printf("Detected Encoding: windows-1251\n");
-            return 0;
-        }
-    }
-    
-    printf("Detected Encoding: something wrong\n");
-    
-    return 0;
-}
-
-
-
-
+#endif /* MyHTML_EXAMPLE_EXAMPLE_H */

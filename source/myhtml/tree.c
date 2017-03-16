@@ -2047,12 +2047,6 @@ myhtml_tree_node_t * myhtml_tree_appropriate_place_inserting_in_tree(myhtml_tree
                     break;
                 }
                 
-#ifdef MyCORE_BUILD_DEBUG
-                if(idx_table == 0) {
-                    MyCORE_DEBUG_ERROR("Appropriate place inserting; Step 2.5; idx_table is 0");
-                }
-#endif
-                
                 // step 2.6-7
                 adjusted_location = target;
                 
