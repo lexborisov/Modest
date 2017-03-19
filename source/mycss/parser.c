@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -43,10 +43,10 @@ bool mycss_parser_token(mycss_entry_t* entry, mycss_token_t* token, bool last_re
             break;
             
         case MyCSS_TOKEN_TYPE_AT_KEYWORD: {
-            myhtml_string_t str;
+            mycore_string_t str;
             mycss_token_data_to_string(entry, token, &str, true, true);
             
-            if(myhtml_strcmp(str.data, "namespace") == 0) {
+            if(mycore_strcmp(str.data, "namespace") == 0) {
                 mycss_namespace_t *ns = entry->ns;
                 
                 ns->ns_stylesheet = &entry->stylesheet->ns_stylesheet;
@@ -58,7 +58,7 @@ bool mycss_parser_token(mycss_entry_t* entry, mycss_token_t* token, bool last_re
                 entry->parser = mycss_parser_token_drop_at_rule;
             }
             
-            myhtml_string_destroy(&str, false);
+            mycore_string_destroy(&str, false);
             
             mycss_entry_parser_list_push(entry, mycss_parser_token, entry->parser_switch, MyCSS_TOKEN_TYPE_UNDEF, false);
             break;

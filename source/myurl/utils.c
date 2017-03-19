@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -21,7 +21,7 @@
 #include "myurl/url.h"
 #include "myurl/utils.h"
 #include "myurl/resources.h"
-#include "myhtml/utils/resources.h"
+#include "mycore/utils/resources.h"
 
 /* data */
 char * myurl_utils_data_copy(myurl_t* url, const char* data, size_t size)
@@ -36,7 +36,7 @@ char * myurl_utils_data_copy(myurl_t* url, const char* data, size_t size)
     return copy;
 }
 
-myurl_status_t myurl_utils_data_copy_set(myurl_t* url, const char* data, size_t size, char** to, size_t* to_length)
+mystatus_t myurl_utils_data_copy_set(myurl_t* url, const char* data, size_t size, char** to, size_t* to_length)
 {
     if(data == NULL) {
         *to = NULL;
@@ -74,7 +74,7 @@ myurl_status_t myurl_utils_data_copy_set(myurl_t* url, const char* data, size_t 
     return MyURL_STATUS_OK;
 }
 
-myurl_status_t myurl_utils_data_copy_append(myurl_t* url, const char* data, size_t size, char** to, size_t* to_length)
+mystatus_t myurl_utils_data_copy_append(myurl_t* url, const char* data, size_t size, char** to, size_t* to_length)
 {
     if(data == NULL) {
         if(*to)
@@ -161,11 +161,11 @@ char * myurl_utils_percent_encode(myurl_t* url, const char* data, size_t size, c
     while(len < size)
     {
         if(encode_set[ u_data[len] ] == 0x00) {
-            const char *two_hex = myhtml_string_char_to_two_hex_value[ u_data[len] ];
+            const char *two_hex = mycore_string_char_to_two_hex_value[ u_data[len] ];
             
             *out = '%'; out++;
-            *out = (char)myhtml_string_chars_uppercase_map[ (unsigned char)two_hex[0] ]; out++;
-            *out = (char)myhtml_string_chars_uppercase_map[ (unsigned char)two_hex[1] ]; out++;
+            *out = (char)mycore_string_chars_uppercase_map[ (unsigned char)two_hex[0] ]; out++;
+            *out = (char)mycore_string_chars_uppercase_map[ (unsigned char)two_hex[1] ]; out++;
             *out = '\0';
         }
         else {
@@ -197,11 +197,11 @@ size_t myurl_utils_percent_decode_bytes_in_data(char* data, size_t size)
             size_t pos = len;
             len++;
             
-            if(myhtml_string_chars_hex_map[ u_data[len] ] != 0xFF &&
-               myhtml_string_chars_hex_map[ u_data[(len + 1)] ] != 0xFF)
+            if(mycore_string_chars_hex_map[ u_data[len] ] != 0xFF &&
+               mycore_string_chars_hex_map[ u_data[(len + 1)] ] != 0xFF)
             {
-                tmp = myhtml_string_chars_hex_map[ u_data[len] ];
-                tmp = (tmp << 4) | myhtml_string_chars_hex_map[ u_data[(len + 1)] ];
+                tmp = mycore_string_chars_hex_map[ u_data[len] ];
+                tmp = (tmp << 4) | mycore_string_chars_hex_map[ u_data[(len + 1)] ];
                 
                 u_data[(pos - offset)] = tmp;
                 
@@ -245,7 +245,7 @@ bool myurl_utils_is_windows_drive_letter(const char* data, size_t length, size_t
     if(length >= size)
         return false;
     
-    return myhtml_string_alpha_character[ (unsigned char)data[(length - 1)] ] != 0xff &&
+    return mycore_string_alpha_character[ (unsigned char)data[(length - 1)] ] != 0xff &&
         (data[length] == ':' || data[length] == '|');
 }
 
@@ -453,7 +453,7 @@ size_t myurl_convert_integer_to_hex_data_without_check_buffer(long digit, char* 
 //    mchar_async_free(parser->mchar, parser->node_idx, (char*)parse_data->data);
 //    
 //    if(self_destroy) {
-//        myhtml_free(parse_data);
+//        mycore_free(parse_data);
 //    }
 //}
 

@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -47,7 +47,7 @@ mycss_selectors_object_attribute_t * mycss_selectors_value_attribute_create(mycs
 /////////////////////////////////////////////////////////
 void * mycss_selectors_value_undef_destroy(mycss_entry_t* entry, mycss_selectors_type_t type, int sub_type, void* value, bool self_destroy)
 {
-    myhtml_string_destroy(mycss_selector_value_string(value), false);
+    mycore_string_destroy(mycss_selector_value_string(value), false);
     mcobject_free(entry->mcobject_string_entries, value);
     
     return NULL;
@@ -55,7 +55,7 @@ void * mycss_selectors_value_undef_destroy(mycss_entry_t* entry, mycss_selectors
 
 void * mycss_selectors_value_id_destroy(mycss_entry_t* entry, mycss_selectors_type_t type, int sub_type, void* value, bool self_destroy)
 {
-    myhtml_string_destroy(mycss_selector_value_string(value), false);
+    mycore_string_destroy(mycss_selector_value_string(value), false);
     
     if(self_destroy) {
         mcobject_free(entry->mcobject_string_entries, value);
@@ -67,7 +67,7 @@ void * mycss_selectors_value_id_destroy(mycss_entry_t* entry, mycss_selectors_ty
 
 void * mycss_selectors_value_class_destroy(mycss_entry_t* entry, mycss_selectors_type_t type, int sub_type, void* value, bool self_destroy)
 {
-    myhtml_string_destroy(mycss_selector_value_string(value), false);
+    mycore_string_destroy(mycss_selector_value_string(value), false);
     
     if(self_destroy) {
         mcobject_free(entry->mcobject_string_entries, value);
@@ -79,7 +79,7 @@ void * mycss_selectors_value_class_destroy(mycss_entry_t* entry, mycss_selectors
 
 void * mycss_selectors_value_element_destroy(mycss_entry_t* entry, mycss_selectors_type_t type, int sub_type, void* value, bool self_destroy)
 {
-    myhtml_string_destroy(mycss_selector_value_string(value), false);
+    mycore_string_destroy(mycss_selector_value_string(value), false);
     
     if(self_destroy) {
         mcobject_free(entry->mcobject_string_entries, value);
@@ -92,7 +92,7 @@ void * mycss_selectors_value_element_destroy(mycss_entry_t* entry, mycss_selecto
 void * mycss_selectors_value_attribute_destroy(mycss_entry_t* entry, mycss_selectors_type_t type, int sub_type, void* value, bool self_destroy)
 {
     if(mycss_selector_value_attribute(value)->value) {
-        myhtml_string_destroy(mycss_selector_value_attribute(value)->value, false);
+        mycore_string_destroy(mycss_selector_value_attribute(value)->value, false);
         mcobject_free(entry->mcobject_string_entries, mycss_selector_value_attribute(value)->value);
     }
     
@@ -128,10 +128,10 @@ void * mycss_selectors_value_pseudo_class_function_current_create(mycss_entry_t*
 
 void * mycss_selectors_value_pseudo_class_function_dir_create(mycss_entry_t* entry, bool set_clean)
 {
-    myhtml_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
+    mycore_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
     
     if(set_clean)
-        myhtml_string_clean_all(str);
+        mycore_string_clean_all(str);
     
     return str;
 }
@@ -154,7 +154,7 @@ void * mycss_selectors_value_pseudo_class_function_lang_create(mycss_entry_t* en
     
     if(set_clean) {
         lang->next = NULL;
-        myhtml_string_clean_all(&lang->str);
+        mycore_string_clean_all(&lang->str);
     }
     
     return lang;
@@ -227,7 +227,7 @@ void * mycss_selectors_value_pseudo_class_function_current_destroy(mycss_entry_t
 
 void * mycss_selectors_value_pseudo_class_function_dir_destroy(mycss_entry_t* entry, void* value, bool self_destroy)
 {
-    return myhtml_string_destroy(value, self_destroy);
+    return mycore_string_destroy(value, self_destroy);
 }
 
 void * mycss_selectors_value_pseudo_class_function_drop_destroy(mycss_entry_t* entry, void* value, bool self_destroy)
@@ -253,7 +253,7 @@ void * mycss_selectors_value_pseudo_class_function_lang_destroy(mycss_entry_t* e
     mycss_selectors_value_lang_t *lang_entry = mycss_selector_value_lang(value);
     
     while(lang_entry) {
-        myhtml_string_destroy(&lang_entry->str, false);
+        mycore_string_destroy(&lang_entry->str, false);
         lang_entry = lang_entry->next;
     }
     

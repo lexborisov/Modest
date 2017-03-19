@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -33,13 +33,13 @@ modest_node_t * modest_node_create(modest_t* modest)
     return mnode;
 }
 
-modest_status_t modest_node_init(modest_t* modest, modest_node_t *mnode)
+mystatus_t modest_node_init(modest_t* modest, modest_node_t *mnode)
 {
     mnode->stylesheet = modest_style_sheet_create(modest);
     if(mnode->stylesheet == NULL)
         return MODEST_STATUS_ERROR_MEMORY_ALLOCATION;
     
-    modest_status_t status = modest_style_sheet_init(modest, mnode->stylesheet);
+    mystatus_t status = modest_style_sheet_init(modest, mnode->stylesheet);
     if(status)
         return MODEST_STATUS_ERROR;
     
@@ -70,7 +70,7 @@ void modest_node_raw_declaration_set_by_type(modest_t* modest, modest_node_t *mn
 
 mycss_declaration_entry_t * modest_node_declaration_by_type(modest_t* modest, modest_node_t *mnode, mycss_property_type_t type)
 {
-    myhtml_utils_avl_tree_node_t *find_node = myhtml_utils_avl_tree_search_by_type(modest->style_avl_tree, mnode->avl_tree_node, type);
+    mycore_utils_avl_tree_node_t *find_node = mycore_utils_avl_tree_search_by_type(modest->style_avl_tree, mnode->avl_tree_node, type);
     
     if(find_node)
         return ((modest_style_raw_declaration_t*)find_node->value)->declaration;
@@ -80,13 +80,13 @@ mycss_declaration_entry_t * modest_node_declaration_by_type(modest_t* modest, mo
 
 modest_style_raw_declaration_t * modest_node_raw_declaration_by_type(modest_t* modest, modest_node_t *mnode, mycss_property_type_t type)
 {
-    myhtml_utils_avl_tree_node_t *find_node = myhtml_utils_avl_tree_search_by_type(modest->style_avl_tree, mnode->avl_tree_node, type);
+    mycore_utils_avl_tree_node_t *find_node = mycore_utils_avl_tree_search_by_type(modest->style_avl_tree, mnode->avl_tree_node, type);
     return (find_node ? find_node->value : NULL);
 }
 
 void modest_node_raw_declaration_set_by_type(modest_t* modest, modest_node_t *mnode, mycss_property_type_t type, modest_style_raw_declaration_t *raw_declr)
 {
-    myhtml_utils_avl_tree_add(modest->style_avl_tree, &mnode->avl_tree_node, type, raw_declr);
+    mycore_utils_avl_tree_add(modest->style_avl_tree, &mnode->avl_tree_node, type, raw_declr);
 }
 
 #endif /* MODEST_NODE_FULL_RAW */

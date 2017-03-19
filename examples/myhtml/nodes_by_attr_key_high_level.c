@@ -64,7 +64,7 @@ struct res_html load_html_file(const char* filename)
     
     size_t nread = fread(html, 1, size, fh);
     if (nread != size) {
-        fprintf(stderr, "could not read %ld bytes (" MyHTML_FMT_Z " bytes done)\n", size, nread);
+        fprintf(stderr, "could not read %ld bytes (" MyCORE_FMT_Z " bytes done)\n", size, nread);
         exit(EXIT_FAILURE);
     }
     
@@ -72,6 +72,12 @@ struct res_html load_html_file(const char* filename)
     
     struct res_html res = {html, (size_t)size};
     return res;
+}
+
+mystatus_t serialization_callback(const char* data, size_t len, void* ctx)
+{
+    printf("%.*s", (int)len, data);
+    return MyCORE_STATUS_OK;
 }
 
 int main(int argc, const char * argv[])
@@ -99,15 +105,15 @@ int main(int argc, const char * argv[])
     myhtml_tree_init(tree, myhtml);
     
     // parse html
-    myhtml_parse(tree, MyHTML_ENCODING_UTF_8, res.html, res.size);
+    myhtml_parse(tree, MyENCODING_UTF_8, res.html, res.size);
     
     // get and print
     myhtml_collection_t *collection = myhtml_get_nodes_by_attribute_key(tree, NULL, NULL, attr_key, strlen(attr_key), NULL);
     
     for(size_t i = 0; i < collection->length; i++)
-        myhtml_tree_print_node(tree, collection->list[i], stdout);
+        myhtml_serialization_node_callback(collection->list[i], serialization_callback, NULL);
     
-    printf("Total found: " MyHTML_FMT_Z "\n", collection->length);
+    printf("Total found: " MyCORE_FMT_Z "\n", collection->length);
     
     myhtml_collection_destroy(collection);
     

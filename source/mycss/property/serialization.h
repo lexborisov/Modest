@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -30,8 +30,8 @@
 extern "C" {
 #endif
 
-void mycss_property_serialization_type_name(mycss_property_type_t prop_type, mycss_callback_serialization_f callback, void* context);
-void mycss_property_serialization_value(unsigned int value_type, void* value, mycss_callback_serialization_f callback, void* context);
+void mycss_property_serialization_type_name(mycss_property_type_t prop_type, mycore_callback_serialize_f callback, void* context);
+void mycss_property_serialization_value(unsigned int value_type, void* value, mycore_callback_serialize_f callback, void* context);
 
 #ifdef __cplusplus
 } /* extern "C" */

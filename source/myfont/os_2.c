@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -20,7 +20,7 @@
 
 #include "myfont/os_2.h"
 
-myfont_status_t myfont_load_table_os_2(myfont_font_t *mf)
+mystatus_t myfont_load_table_os_2(myfont_font_t* mf, uint8_t* font_data, size_t data_size)
 {
     memset(&mf->table_os_2, 0, sizeof(myfont_table_os_2_t));
     
@@ -31,10 +31,10 @@ myfont_status_t myfont_load_table_os_2(myfont_font_t *mf)
     const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_OS_2];
     
     /* get current data */
-    uint8_t *data = &mf->file_data[table_offset];
+    uint8_t *data = &font_data[table_offset];
     uint32_t pos = table_offset + 32 + 10 + 16 + 4 + 16;
     
-    if(pos > mf->file_size)
+    if(pos > data_size)
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     tos_2->version = myfont_read_u16(&data);
@@ -77,7 +77,7 @@ myfont_status_t myfont_load_table_os_2(myfont_font_t *mf)
     switch (tos_2->version) {
         case 1:
             pos += 8;
-            if(pos > mf->file_size)
+            if(pos > data_size)
                 return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
             
             tos_2->ulCodePageRange1 = myfont_read_u32(&data);
@@ -88,7 +88,7 @@ myfont_status_t myfont_load_table_os_2(myfont_font_t *mf)
         case 3:
         case 4:
             pos += 18;
-            if(pos > mf->file_size)
+            if(pos > data_size)
                 return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
             
             tos_2->ulCodePageRange1 = myfont_read_u32(&data);
@@ -102,7 +102,7 @@ myfont_status_t myfont_load_table_os_2(myfont_font_t *mf)
             break;
         case 5:
             pos += 22;
-            if(pos > mf->file_size)
+            if(pos > data_size)
                 return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
             
             tos_2->ulCodePageRange1 = myfont_read_u32(&data);

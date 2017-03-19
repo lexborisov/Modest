@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -257,24 +257,24 @@ bool mycss_selectors_function_parser_nth_with_selectors_need_of(mycss_entry_t* e
         mycss_selectors_t *selectors = entry->selectors;
         mycss_selectors_entry_t *selector = selectors->entry_last;
         
-        myhtml_string_t str;
+        mycore_string_t str;
         mycss_token_data_to_string(entry, token, &str, true, false);
         
         mycss_an_plus_b_entry_t *anb = mycss_selector_value_an_plus_b(selector->value);
         
-        if(myhtml_strcasecmp(str.data, "of") != 0) {
+        if(mycore_strcasecmp(str.data, "of") != 0) {
             if((selector->flags & MyCSS_SELECTORS_FLAGS_SELECTOR_BAD) == 0)
                 selector->flags |= MyCSS_SELECTORS_FLAGS_SELECTOR_BAD;
             
             anb->of = NULL;
             
-            myhtml_string_destroy(&str, false);
+            mycore_string_destroy(&str, false);
             
             entry->parser = mycss_selectors_function_parser_state_drop_component_value;
             return true;
         }
         
-        myhtml_string_destroy(&str, false);
+        mycore_string_destroy(&str, false);
         
         /* create and switch entry, and create selector */
         mycss_selectors_list_t *current_list = selectors->list_last;
@@ -407,16 +407,16 @@ bool mycss_selectors_function_parser_drop(mycss_entry_t* entry, mycss_token_t* t
         
         mycss_selectors_function_drop_type_t drop_val = mycss_selector_value_drop(selector->value);
         
-        myhtml_string_t str;
+        mycore_string_t str;
         mycss_token_data_to_string(entry, token, &str, true, false);
 
-        if(myhtml_strcasecmp(str.data ,"active") == 0) {
+        if(mycore_strcasecmp(str.data ,"active") == 0) {
             drop_val |= MyCSS_SELECTORS_FUNCTION_DROP_TYPE_ACTIVE;
         }
-        else if(myhtml_strcasecmp(str.data ,"valid") == 0) {
+        else if(mycore_strcasecmp(str.data ,"valid") == 0) {
             drop_val |= MyCSS_SELECTORS_FUNCTION_DROP_TYPE_VALID;
         }
-        else if(myhtml_strcasecmp(str.data ,"invalid") == 0) {
+        else if(mycore_strcasecmp(str.data ,"invalid") == 0) {
             drop_val |= MyCSS_SELECTORS_FUNCTION_DROP_TYPE_INVALID;
         }
         else {
@@ -426,7 +426,7 @@ bool mycss_selectors_function_parser_drop(mycss_entry_t* entry, mycss_token_t* t
         
         selector->value = (void*)drop_val;
         
-        myhtml_string_destroy(&str, false);
+        mycore_string_destroy(&str, false);
         
         entry->parser = mycss_selectors_function_parser_drop_after;
     }

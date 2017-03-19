@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
 #pragma once
 
 #include "mycss/myosi.h"
-#include "myhtml/utils.h"
+#include "mycore/utils.h"
 
 #define mycss_units_is_angel_type(type)           (type >= 1  && type <= 4)
 #define mycss_units_is_frequency_type(type)       (type >= 5  && type <= 6)

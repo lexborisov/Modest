@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -28,7 +28,7 @@ typedef struct modest_render_tree_node modest_render_tree_node_t;
 #include "modest/render/tree.h"
 
 #include "myhtml/tree.h"
-#include "myhtml/utils/mcobject.h"
+#include "mycore/utils/mcobject.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -62,7 +62,7 @@ void modest_render_tree_node_remove(modest_render_tree_node_t* node);
 void modest_render_tree_node_append_after(modest_render_tree_node_t* target, modest_render_tree_node_t* node);
 void modest_render_tree_node_append_before(modest_render_tree_node_t* target, modest_render_tree_node_t* node);
 
-void modest_render_tree_node_serialization(myhtml_tree_t* html_tree, modest_render_tree_node_t* node, mycss_callback_serialization_f callback, void* context);
+void modest_render_tree_node_serialization(myhtml_tree_t* html_tree, modest_render_tree_node_t* node, mycore_callback_serialize_f callback, void* context);
 
 #ifdef __cplusplus
 } /* extern "C" */

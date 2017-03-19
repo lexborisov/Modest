@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -24,7 +24,7 @@
 
 #include "myurl/myosi.h"
 #include "myurl/scheme_const.h"
-#include "myhtml/utils.h"
+#include "mycore/utils.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -69,7 +69,7 @@ myurl_scheme_t * myurl_scheme_destroy(myurl_t* url, myurl_scheme_t* scheme, bool
 const myurl_scheme_entry_t * myurl_scheme_find_entry(const char* name, size_t length);
 myurl_scheme_id_t myurl_scheme_id_by_name(const char *name, size_t length);
 
-myurl_status_t myurl_scheme_copy(myurl_t* url, myurl_scheme_t* from, myurl_scheme_t* to);
+mystatus_t myurl_scheme_copy(myurl_t* url, myurl_scheme_t* from, myurl_scheme_t* to);
 
 #ifdef __cplusplus
 } /* extern "C" */

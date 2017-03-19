@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -22,6 +22,12 @@
 #define MyHTML_MyCSS_MYOSI_H
 #pragma once
 
+#define MyCSS_VERSION_MAJOR 0
+#define MyCSS_VERSION_MINOR 1
+#define MyCSS_VERSION_PATCH 0
+
+#define MyCSS_VERSION_STRING MyCORE_STR(MyCSS_VERSION_MAJOR) MyCORE_STR(.) MyCORE_STR(MyCSS_VERSION_MINOR) MyCORE_STR(.) MyCORE_STR(MyCSS_VERSION_PATCH)
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -31,7 +37,7 @@ extern "C" {
 // base
 /*
  Very important!!!
- see modest/myosi.h:modest_status_t
+ see modest/myosi.h:mystatus_t
 */
 enum mycss_status {
     MyCSS_STATUS_OK                                     = 0x000000,
@@ -260,10 +266,9 @@ typedef struct mycss_string_res mycss_string_res_t;
 
 typedef size_t (*mycss_tokenizer_state_f)(mycss_entry_t* entry, mycss_token_t* token, const char* css, size_t css_offset, size_t css_size);
 typedef mycss_token_t * (*mycss_token_ready_callback_f)(mycss_entry_t* entry, mycss_token_t* token);
-typedef size_t (*mycss_string_process_state_f)(myhtml_string_t* str, const char* data, size_t length, size_t size, mycss_string_res_t *out_res);
+typedef size_t (*mycss_string_process_state_f)(mycore_string_t* str, const char* data, size_t length, size_t size, mycss_string_res_t *out_res);
 typedef bool (*mycss_parser_token_f)(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 typedef bool (*mycss_an_plus_b_state_f)(mycss_entry_t* entry, mycss_an_plus_b_t* anb, mycss_an_plus_b_entry_t* anb_entry, mycss_token_t* token);
-typedef void (*mycss_callback_serialization_f)(const char* buffer, size_t size, void* ctx);
 
 #ifdef __cplusplus
 } /* extern "C" */

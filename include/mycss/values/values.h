@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -26,7 +26,7 @@
 #include <mycss/values/units.h>
 #include <mycss/values/color_const.h>
 #include <mycss/property/const.h>
-#include <myhtml/utils/mchar_async.h>
+#include <mycore/utils/mchar_async.h>
 #include <myhtml/mystring.h>
 #include <mycss/declaration/myosi.h>
 
@@ -115,12 +115,13 @@ struct mycss_values_type_list {
     size_t entries_length;
 };
 
-struct mycss_values_type_length_percentage_entry {
-    union {
-        mycss_values_percentage_t* percentage;
-        mycss_values_length_t* length;
-    };
+union mycss_values_type_length_percentage_union {
+    mycss_values_percentage_t* percentage;
+    mycss_values_length_t* length;
+};
     
+struct mycss_values_type_length_percentage_entry {
+    union mycss_values_type_length_percentage_union value;
     unsigned int type;
 };
 
@@ -128,7 +129,7 @@ struct mycss_values_number {
     union {
         int i;
         float f;
-    };
+    } value;
     
     bool is_float;
 };
@@ -137,9 +138,10 @@ struct mycss_values_length {
     union {
         int i;
         float f;
-    };
+    } value;
     
     bool is_float;
+    
     mycss_units_type_t type;
 };
 
@@ -147,7 +149,7 @@ struct mycss_values_percentage {
     union {
         int i;
         float f;
-    };
+    } value;
     
     bool is_float;
 };
@@ -156,7 +158,7 @@ struct mycss_values_angle {
     union {
         int i;
         float f;
-    };
+    } value;
     
     bool is_float;
     mycss_units_type_t type;
@@ -166,14 +168,14 @@ struct mycss_values_resolution {
     union {
         int i;
         float f;
-    };
+    } value;
     
     bool is_float;
     mycss_units_type_t type;
 };
 
 struct mycss_values_custom_ident {
-    myhtml_string_t str;
+    mycore_string_t str;
 };
 
 /*
@@ -211,7 +213,7 @@ struct mycss_values_color_alpha_value {
     union {
         mycss_values_number_t number;
         mycss_values_percentage_t percentage;
-    };
+    } value;
     
     mycss_values_color_type_value_t type_value;
 };
@@ -220,7 +222,7 @@ struct mycss_values_color_hue_value {
     union {
         mycss_values_number_t number;
         mycss_values_angle_t angle;
-    };
+    } value;
     
     mycss_values_color_type_value_t type_value;
 };
@@ -267,7 +269,7 @@ struct mycss_values_color {
         mycss_values_color_hwb_t hwb;
         mycss_values_color_gray_t gray;
         mycss_values_color_id_t name_id;
-    };
+    } value;
     
     mycss_values_color_type_t type;
     mycss_values_color_type_value_t type_value;
@@ -287,7 +289,7 @@ struct mycss_values_color_stop_list {
  URL
  */
 struct mycss_values_url {
-    myhtml_string_t str;
+    mycore_string_t str;
 };
 
 /*
@@ -308,7 +310,7 @@ struct mycss_values_image {
         mycss_values_image_image_set_t* ii_set;
         mycss_values_element_t* element;
         mycss_values_cross_fade_t* cross_fade;
-    };
+    } value;
     
     mycss_property_value_t type;
 };
@@ -320,14 +322,14 @@ struct mycss_values_image_list {
 
 /* image() */
 struct mycss_values_image_image {
-    myhtml_string_t* str;
+    mycore_string_t* str;
     mycss_values_image_t* image;
     mycss_values_color_t* color;
 };
 
 /* image-set() */
 struct mycss_values_image_image_set_option {
-    myhtml_string_t* str;
+    mycore_string_t* str;
     mycss_values_image_t* image;
     mycss_values_resolution_t* resolution;
 };
@@ -378,7 +380,7 @@ struct mycss_values_gradient_linear {
     union {
         mycss_values_angle_t angle;
         mycss_values_gradient_side_or_corner_t side_or_corner;
-    };
+    } value;
     
     mycss_values_color_stop_list_t color_stop_list;
 };
@@ -398,9 +400,9 @@ typedef mycss_values_font_family_type_t;
 
 struct mycss_values_font_family_entry {
     union {
-        myhtml_string_t str;
+        mycore_string_t str;
         mycss_property_font_family_t prop_type;
-    };
+    } value;
     
     mycss_values_font_family_type_t type;
 };

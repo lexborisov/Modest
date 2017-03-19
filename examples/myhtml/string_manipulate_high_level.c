@@ -23,6 +23,11 @@
 #include <string.h>
 #include <myhtml/api.h>
 
+mystatus_t serialization_callback(const char* data, size_t len, void* ctx)
+{
+    printf("%.*s", (int)len, data);
+    return MyCORE_STATUS_OK;
+}
 
 int main(int argc, const char * argv[])
 {
@@ -37,11 +42,11 @@ int main(int argc, const char * argv[])
     myhtml_tree_init(tree, myhtml);
     
     // parse html
-    myhtml_parse(tree, MyHTML_ENCODING_UTF_8, html, strlen(html));
+    myhtml_parse(tree, MyENCODING_UTF_8, html, strlen(html));
     
     // print original tree
     printf("Original Tree:\n");
-    myhtml_tree_print_node_children(tree, myhtml_tree_get_document(tree), stdout, 0);
+    myhtml_serialization_tree_callback(myhtml_tree_get_node_html(tree), serialization_callback, NULL);
     
     printf("Change word: manipulate => test\n");
     
@@ -51,18 +56,18 @@ int main(int argc, const char * argv[])
     if(collection && collection->list && collection->length)
     {
         myhtml_tree_node_t *text_node = collection->list[0];
-        myhtml_string_t *str = myhtml_node_string(text_node);
+        mycore_string_t *str = myhtml_node_string(text_node);
         
         // change data
-        char *data = myhtml_string_data(str);
+        char *data = mycore_string_data(str);
         
-        for (size_t i = 0; i < myhtml_string_length(str); i++)
+        for (size_t i = 0; i < mycore_string_length(str); i++)
         {
             if(data[i] == 'm') {
                 sprintf(&data[i], "test");
                 
                 // set new length
-                myhtml_string_length_set(str, (i + 4));
+                mycore_string_length_set(str, (i + 4));
                 break;
             }
         }
@@ -70,7 +75,7 @@ int main(int argc, const char * argv[])
     
     printf("Changed Tree:\n");
     // print tree
-    myhtml_tree_print_node_children(tree, myhtml_tree_get_document(tree), stdout, 0);
+    myhtml_serialization_tree_callback(myhtml_tree_get_node_html(tree), serialization_callback, NULL);
     
     // release resources
     myhtml_tree_destroy(tree);

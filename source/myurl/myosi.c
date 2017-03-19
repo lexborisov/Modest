@@ -23,16 +23,16 @@
 
 void * myurl_callback_malloc(size_t size, void* ctx)
 {
-    return myhtml_malloc(size);
+    return mycore_malloc(size);
 }
 
 void * myurl_callback_realloc(void* value, size_t size, void* ctx)
 {
-    return myhtml_realloc(value, size);
+    return mycore_realloc(value, size);
 }
 
 void * myurl_callback_free(void* value, void* ctx)
 {
-    myhtml_free(value);
+    mycore_free(value);
     return NULL;
 }

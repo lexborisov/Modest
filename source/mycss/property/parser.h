@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -34,7 +34,7 @@ extern "C" {
 
 /* custom added */
 bool mycss_property_parser_background_position_check(mycss_values_background_position_t *position);
-bool mycss_property_parser_destroy_string(myhtml_string_t* str, bool return_value);
+bool mycss_property_parser_destroy_string(mycore_string_t* str, bool return_value);
 bool mycss_property_parser_switcher_to_find_important(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_property_parser_text_decoration_line_not_none(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_property_parser_text_decoration_line_after(mycss_entry_t* entry, mycss_token_t* token, bool last_response);

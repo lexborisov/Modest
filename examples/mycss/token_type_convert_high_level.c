@@ -28,29 +28,29 @@
 
 mycss_token_t * token_ready_callback(mycss_entry_t* entry, mycss_token_t* token)
 {
-    myhtml_string_t str;
+    mycore_string_t str;
     mycss_token_data_to_string(entry, token, &str, true);
 
     if(mycss_token_type(token) == MyCSS_TOKEN_TYPE_NUMBER)
     {
         double return_num;
-        mycss_convert_data_to_double(myhtml_string_data(&str), myhtml_string_length(&str), &return_num, NULL);
+        mycss_convert_data_to_double(mycore_string_data(&str), mycore_string_length(&str), &return_num, NULL);
 
-        printf("Number %s: %f\n", myhtml_string_data(&str), return_num);
+        printf("Number %s: %f\n", mycore_string_data(&str), return_num);
     }
     else if(mycss_token_type(token) == MyCSS_TOKEN_TYPE_UNICODE_RANGE)
     {
         size_t start, end;
-        mycss_convert_unicode_range_to_codepoint(myhtml_string_data(&str), myhtml_string_length(&str),
+        mycss_convert_unicode_range_to_codepoint(mycore_string_data(&str), mycore_string_length(&str),
                                                  &start, &end);
 
         if(end)
-            printf("Unicode range U+%s: " MyHTML_FMT_Z "-" MyHTML_FMT_Z "\n", myhtml_string_data(&str), start, end);
+            printf("Unicode range U+%s: " MyCORE_FMT_Z "-" MyCORE_FMT_Z "\n", mycore_string_data(&str), start, end);
         else
-            printf("Unicode range U+%s: " MyHTML_FMT_Z "\n", myhtml_string_data(&str), start);
+            printf("Unicode range U+%s: " MyCORE_FMT_Z "\n", mycore_string_data(&str), start);
     }
 
-    myhtml_string_destroy(&str, false);
+    mycore_string_destroy(&str, false);
 
     return token;
 }
@@ -61,7 +61,7 @@ int main(int argc, const char * argv[])
 
     // basic init
     mycss_t *mycss = mycss_create();
-    mycss_status_t status = mycss_init(mycss);
+    mystatus_t status = mycss_init(mycss);
 
     // check initialization
     if (MyCSS_FAILED(status)) return EXIT_FAILURE;
@@ -74,7 +74,7 @@ int main(int argc, const char * argv[])
     mycss_entry_token_ready_callback(entry, token_ready_callback);
 
     // parse css
-    mycss_parse(entry, MyHTML_ENCODING_UTF_8, css, strlen(css));
+    mycss_parse(entry, MyENCODING_UTF_8, css, strlen(css));
 
     // release resurces
     mycss_entry_destroy(entry, true);

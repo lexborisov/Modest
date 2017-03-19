@@ -24,6 +24,12 @@
 
 #include "myhtml/myosi.h"
 
+#define MyURL_VERSION_MAJOR 0
+#define MyURL_VERSION_MINOR 1
+#define MyURL_VERSION_PATCH 0
+
+#define MyURL_VERSION_STRING MyCORE_STR(MyURL_VERSION_MAJOR) MyCORE_STR(.) MyCORE_STR(MyURL_VERSION_MINOR) MyCORE_STR(.) MyCORE_STR(MyURL_VERSION_PATCH)
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -32,7 +38,7 @@ typedef struct myhtml_url myurl_t;
 typedef struct myurl_entry myurl_entry_t;
 
 typedef size_t (*myurl_state_f)(myurl_t* url, myurl_entry_t* url_entry, myurl_entry_t* url_base, const char* data, size_t data_length, size_t data_size);
-typedef void (*myurl_callback_serialization_func_f)(myurl_entry_t* url_entry, myhtml_callback_serialize_f callback, void* ctx);
+typedef void (*myurl_callback_serialization_func_f)(myurl_entry_t* url_entry, mycore_callback_serialize_f callback, void* ctx);
     
 typedef void * (*myurl_callback_malloc_f)(size_t size, void *ctx);
 typedef void * (*myurl_callback_realloc_f)(void* value, size_t size, void *ctx);

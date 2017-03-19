@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -30,7 +30,7 @@ extern "C" {
 #include "mycss/entry.h"
 #include "myhtml/mystring.h"
 
-const char * mycss_convert_split_dimension_string(myhtml_string_t* str, double* value, bool* is_float);
+const char * mycss_convert_split_dimension_string(mycore_string_t* str, double* value, bool* is_float);
 
 size_t mycss_convert_data_to_integer(const char* data, size_t size, long* return_num);
 size_t mycss_convert_data_to_double(const char *data, size_t size, double *return_num, bool* is_float);

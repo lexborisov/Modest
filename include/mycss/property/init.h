@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -25,7 +25,7 @@
 #include <mycss/property/myosi.h>
 #include <mycss/property/parser.h>
 #include <mycss/values/serialization.h>
-#include <myhtml/utils.h>
+#include <mycore/utils.h>
 
 #ifdef __cplusplus
 extern "C" {

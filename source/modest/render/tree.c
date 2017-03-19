@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -22,16 +22,16 @@
 
 modest_render_tree_t * modest_render_tree_create(void)
 {
-    return myhtml_calloc(1, sizeof(modest_render_tree_t));
+    return mycore_calloc(1, sizeof(modest_render_tree_t));
 }
 
-modest_status_t modest_render_tree_init(modest_render_tree_t* render_tree)
+mystatus_t modest_render_tree_init(modest_render_tree_t* render_tree)
 {
     render_tree->mc_nodes = mcobject_create();
     if(render_tree->mc_nodes == NULL)
         return MODEST_STATUS_ERROR_MEMORY_ALLOCATION;
     
-    myhtml_status_t myhtml_status = mcobject_init(render_tree->mc_nodes, 1024, sizeof(modest_render_tree_node_t));
+    mystatus_t myhtml_status = mcobject_init(render_tree->mc_nodes, 1024, sizeof(modest_render_tree_node_t));
     if(myhtml_status)
         return MODEST_STATUS_ERROR;
     
@@ -51,7 +51,7 @@ modest_render_tree_t * modest_render_tree_destroy(modest_render_tree_t* render_t
     render_tree->mc_nodes = mcobject_destroy(render_tree->mc_nodes, true);
     
     if(self_destroy) {
-        myhtml_free(render_tree);
+        mycore_free(render_tree);
         return NULL;
     }
     
@@ -59,7 +59,7 @@ modest_render_tree_t * modest_render_tree_destroy(modest_render_tree_t* render_t
 }
 
 void modest_render_tree_serialization(myhtml_tree_t* html_tree, modest_render_tree_t* tree,
-                                      modest_render_tree_node_t* scope_node, mycss_callback_serialization_f callback, void* context)
+                                      modest_render_tree_node_t* scope_node, mycore_callback_serialize_f callback, void* context)
 {
     modest_render_tree_node_t* node = scope_node;
     size_t depth = 0;

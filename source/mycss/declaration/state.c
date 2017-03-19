@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -99,11 +99,11 @@ bool mycss_declaration_state_colon_before_important(mycss_entry_t* entry, mycss_
 bool mycss_declaration_state_colon_important(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     if(token->type == MyCSS_TOKEN_TYPE_IDENT) {
-        myhtml_string_t str;
+        mycore_string_t str;
         mycss_token_data_to_string(entry, token, &str, true, true);
         
-        if(myhtml_strcmp(str.data, "important") == 0) {
-            myhtml_string_destroy(&str, false);
+        if(mycore_strcmp(str.data, "important") == 0) {
+            mycore_string_destroy(&str, false);
             
             entry->parser = mycss_declaration_state_colon_delim_after_important;
             (entry->declaration->entry_last)->is_important = true;
@@ -111,7 +111,7 @@ bool mycss_declaration_state_colon_important(mycss_entry_t* entry, mycss_token_t
             return true;
         }
         
-        myhtml_string_destroy(&str, false);
+        mycore_string_destroy(&str, false);
         
         /* parse error */
         entry->parser = mycss_declaration_state_parse_error;

@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -20,11 +20,11 @@
 
 #include "mycss/tokenizer.h"
 #include "mycss/tokenizer_resource.h"
-#include "myhtml/utils/resources.h"
+#include "mycore/utils/resources.h"
 
-mycss_status_t mycss_tokenizer_chunk(mycss_entry_t* entry, const char* css, size_t css_length)
+mystatus_t mycss_tokenizer_chunk(mycss_entry_t* entry, const char* css, size_t css_length)
 {
-    entry->current_buffer = myhtml_incoming_buffer_add(entry->current_buffer, entry->mcobject_incoming_buffer,
+    entry->current_buffer = mycore_incoming_buffer_add(entry->current_buffer, entry->mcobject_incoming_buffer,
                                                        css, css_length);
     
     if(entry->current_buffer == NULL)
@@ -35,7 +35,7 @@ mycss_status_t mycss_tokenizer_chunk(mycss_entry_t* entry, const char* css, size
         entry->first_buffer = entry->current_buffer;
     
     if(entry->token == NULL) {
-        entry->token = (mycss_token_t*)myhtml_calloc(1, sizeof(mycss_token_t));
+        entry->token = (mycss_token_t*)mycore_calloc(1, sizeof(mycss_token_t));
         
         if(entry->token == NULL)
             return MyCSS_STATUS_ERROR_TOKENIZER_TOKEN_ALLOCATION;
@@ -44,7 +44,7 @@ mycss_status_t mycss_tokenizer_chunk(mycss_entry_t* entry, const char* css, size
     return mycss_tokenizer_process(entry, css, css_length);
 }
 
-mycss_status_t mycss_tokenizer_process(mycss_entry_t* entry, const char* css, size_t css_length)
+mystatus_t mycss_tokenizer_process(mycss_entry_t* entry, const char* css, size_t css_length)
 {
     /*
      Why use utf-8 when the declaration says utf-16?
@@ -57,16 +57,16 @@ mycss_status_t mycss_tokenizer_process(mycss_entry_t* entry, const char* css, si
      
      As well, this mimics the behavior of HTML’s <meta charset> attribute.
      */
-    if(entry->encoding == MyHTML_ENCODING_UTF_16LE || entry->encoding == MyHTML_ENCODING_UTF_16BE)
-        entry->encoding = MyHTML_ENCODING_UTF_8;
+    if(entry->encoding == MyENCODING_UTF_16LE || entry->encoding == MyENCODING_UTF_16BE)
+        entry->encoding = MyENCODING_UTF_8;
     
     mycss_t* mycss = entry->mycss;
     mycss_tokenizer_state_f* state_f = mycss->parse_state_func;
     
-    myhtml_incoming_buffer_t *current = entry->current_buffer;
+    mycore_incoming_buffer_t *current = entry->current_buffer;
     
     do {
-        myhtml_incoming_buffer_t *mt = entry->current_buffer;
+        mycore_incoming_buffer_t *mt = entry->current_buffer;
         mt->length = 0;
         
         while (mt->length < mt->size) {
@@ -82,14 +82,14 @@ mycss_status_t mycss_tokenizer_process(mycss_entry_t* entry, const char* css, si
     return MyCSS_STATUS_OK;
 }
 
-mycss_status_t mycss_tokenizer_end(mycss_entry_t* entry)
+mystatus_t mycss_tokenizer_end(mycss_entry_t* entry)
 {
     mycss_t* mycss = entry->mycss;
     mycss_tokenizer_state_f* state_f = mycss->parse_state_func;
     
     if(entry->state != MyCSS_TOKENIZER_STATE_DATA)
     {
-        myhtml_incoming_buffer_t *mt = entry->current_buffer;
+        mycore_incoming_buffer_t *mt = entry->current_buffer;
         size_t end_state = (MyCSS_TOKENIZER_STATE_LAST_ENTRY + entry->state);
         
         mt->length = state_f[end_state](entry, entry->token, mt->data, mt->length, mt->size);
@@ -116,7 +116,7 @@ size_t mycss_tokenizer_state_set_current_buffer_for_continue(mycss_entry_t* entr
     if(css_offset >= css_minus_offset)
         return css_offset;
     
-    myhtml_incoming_buffer_t *buffer = entry->current_buffer;
+    mycore_incoming_buffer_t *buffer = entry->current_buffer;
     
     size_t need = (css_minus_offset - css_offset);
     size_t position = buffer->offset - need;
@@ -134,11 +134,11 @@ size_t mycss_tokenizer_state_set_current_buffer_for_continue(mycss_entry_t* entr
 
 size_t mycss_tokenizer_token_strcasecmp(mycss_entry_t* entry, mycss_token_t* token, const char* to, size_t to_length)
 {
-    myhtml_incoming_buffer_t *buffer = myhtml_incoming_buffer_find_by_position(entry->current_buffer, token->begin);
+    mycore_incoming_buffer_t *buffer = mycore_incoming_buffer_find_by_position(entry->current_buffer, token->begin);
     
     size_t token_offset = token->begin - buffer->offset;
     
-    return myhtml_incoming_buffer_escaped_case_cmp(&buffer, to, to_length, &token_offset);
+    return mycore_incoming_buffer_escaped_case_cmp(&buffer, to, to_length, &token_offset);
 }
 
 //////////////////////
@@ -668,7 +668,7 @@ size_t mycss_tokenizer_state_solidus_comment_end(mycss_entry_t* entry, mycss_tok
         if(css[css_offset] == '/') {
             if(css_offset == 0)
             {
-                myhtml_incoming_buffer_t *buffer = entry->current_buffer->prev;
+                mycore_incoming_buffer_t *buffer = entry->current_buffer->prev;
                 
                 while(buffer && buffer->size == 0)
                     buffer = buffer->prev;
@@ -1052,7 +1052,7 @@ size_t mycss_tokenizer_state_letter_u(mycss_entry_t* entry, mycss_token_t* token
             return css_offset;
         }
         
-        if(myhtml_string_chars_hex_map[ (const unsigned char)(css[css_offset]) ] != 0xff ||
+        if(mycore_string_chars_hex_map[ (const unsigned char)(css[css_offset]) ] != 0xff ||
            css[css_offset] == '?')
         {
             token->begin += 2;
@@ -1075,7 +1075,7 @@ size_t mycss_tokenizer_state_letter_u(mycss_entry_t* entry, mycss_token_t* token
 
 size_t mycss_tokenizer_state_letter_u_next(mycss_entry_t* entry, mycss_token_t* token, const char* css, size_t css_offset, size_t css_size)
 {
-    if(myhtml_string_chars_hex_map[ (const unsigned char)(css[css_offset]) ] != 0xff ||
+    if(mycore_string_chars_hex_map[ (const unsigned char)(css[css_offset]) ] != 0xff ||
        css[css_offset] == '?')
     {
         token->begin += 2;
@@ -1186,9 +1186,9 @@ size_t mycss_tokenizer_state_delim_single_code_point(mycss_entry_t* entry, mycss
 //// init tokenizer
 ////
 /////////////////////////////////////////////////////////
-mycss_status_t mycss_tokenizer_state_init(mycss_t* mycss)
+mystatus_t mycss_tokenizer_state_init(mycss_t* mycss)
 {
-    mycss->parse_state_func = (mycss_tokenizer_state_f*)myhtml_calloc((MyCSS_TOKENIZER_STATE_LAST_ENTRY * 2), sizeof(mycss_tokenizer_state_f));
+    mycss->parse_state_func = (mycss_tokenizer_state_f*)mycore_calloc((MyCSS_TOKENIZER_STATE_LAST_ENTRY * 2), sizeof(mycss_tokenizer_state_f));
     
     if(mycss->parse_state_func == NULL)
         return MyCSS_STATUS_ERROR_TOKENIZER_STATE_ALLOCATION;
@@ -1361,7 +1361,7 @@ mycss_status_t mycss_tokenizer_state_init(mycss_t* mycss)
 void mycss_tokenizer_state_destroy(mycss_t* mycss)
 {
     if(mycss->parse_state_func) {
-        free(mycss->parse_state_func);
+        mycore_free(mycss->parse_state_func);
         mycss->parse_state_func = NULL;
     }
 }

@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -56,11 +56,11 @@ bool mycss_property_parser_image_function_image(mycss_entry_t* entry, mycss_toke
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     mycss_values_image_t *image = (mycss_values_image_t*)declr_entry->value;
-    mycss_values_image_image_t *image_image = image->ii;
+    mycss_values_image_image_t *image_image = image->value.ii;
     
     void *value = NULL;
     unsigned int value_type = 0;
@@ -82,7 +82,7 @@ bool mycss_property_parser_image_function_image(mycss_entry_t* entry, mycss_toke
     
     if(token->type == MyCSS_TOKEN_TYPE_STRING)
     {
-        myhtml_string_t *ns_str = mycss_values_create(entry, sizeof(myhtml_string_t));
+        mycore_string_t *ns_str = mycss_values_create(entry, sizeof(mycore_string_t));
         mycss_token_data_to_string(entry, token, ns_str, true, false);
         
         image_image->str = ns_str;
@@ -134,11 +134,11 @@ bool mycss_property_parser_image_function_image_color(mycss_entry_t* entry, mycs
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     mycss_values_image_t *image = (mycss_values_image_t*)declr_entry->value;
-    mycss_values_image_image_t *image_image = image->ii;
+    mycss_values_image_image_t *image_image = image->value.ii;
     
     void *value = NULL;
     unsigned int value_type = 0;
@@ -186,11 +186,11 @@ bool mycss_property_parser_image_function_image_set(mycss_entry_t* entry, mycss_
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     mycss_values_image_t *image = (mycss_values_image_t*)declr_entry->value;
-    mycss_values_image_image_set_t *ii_set = image->ii_set;
+    mycss_values_image_image_set_t *ii_set = image->value.ii_set;
     
     void *value = NULL;
     unsigned int value_type = 0;
@@ -214,7 +214,7 @@ bool mycss_property_parser_image_function_image_set(mycss_entry_t* entry, mycss_
     
     if(token->type == MyCSS_TOKEN_TYPE_STRING)
     {
-        myhtml_string_t *ns_str = mycss_values_create(entry, sizeof(myhtml_string_t));
+        mycore_string_t *ns_str = mycss_values_create(entry, sizeof(mycore_string_t));
         mycss_token_data_to_string(entry, token, ns_str, true, false);
         
         mycss_values_image_image_set_option_t *ii_entry = mycss_property_parser_image_function_get_next_option(entry, ii_set);
@@ -233,11 +233,11 @@ bool mycss_property_parser_image_function_image_set_resolution(mycss_entry_t* en
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     mycss_values_image_t *image = (mycss_values_image_t*)declr_entry->value;
-    mycss_values_image_image_set_t *ii_set = image->ii_set;
+    mycss_values_image_image_set_t *ii_set = image->value.ii_set;
     
     void *value = NULL;
     unsigned int value_type = 0;
@@ -282,7 +282,7 @@ bool mycss_property_parser_image_function_string(mycss_entry_t* entry, mycss_tok
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     mycss_values_image_t *image = (mycss_values_image_t*)declr_entry->value;
-    mycss_values_element_t *element = image->element;
+    mycss_values_element_t *element = image->value.element;
     
     void *value = &element->custom_ident;
     
@@ -336,9 +336,9 @@ bool mycss_property_parser_image_function_string_wait_ident(mycss_entry_t* entry
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     mycss_values_image_t *image = (mycss_values_image_t*)declr_entry->value;
-    mycss_values_element_t *element = image->element;
+    mycss_values_element_t *element = image->value.element;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_token_data_to_string(entry, token, &str, true, false);
     
     element->type = mycss_property_value_type_by_name(str.data, str.length);
@@ -370,9 +370,9 @@ bool mycss_property_parser_image_function_cross_fade(mycss_entry_t* entry, mycss
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     mycss_values_image_t *image = (mycss_values_image_t*)declr_entry->value;
-    mycss_values_cross_fade_t *cross_fade = image->cross_fade;
+    mycss_values_cross_fade_t *cross_fade = image->value.cross_fade;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     
     void *value = NULL;
     unsigned int value_type = 0;
@@ -411,9 +411,9 @@ bool mycss_property_parser_image_function_cross_fade_mixing_after_percentage(myc
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     mycss_values_image_t *image = (mycss_values_image_t*)declr_entry->value;
-    mycss_values_cross_fade_t *cross_fade = image->cross_fade;
+    mycss_values_cross_fade_t *cross_fade = image->value.cross_fade;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     
     void *value = NULL;
     unsigned int value_type = 0;
@@ -465,9 +465,9 @@ bool mycss_property_parser_image_function_cross_fade_final(mycss_entry_t* entry,
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     mycss_values_image_t *image = (mycss_values_image_t*)declr_entry->value;
-    mycss_values_cross_fade_t *cross_fade = image->cross_fade;
+    mycss_values_cross_fade_t *cross_fade = image->value.cross_fade;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     
     void *value = NULL;
     unsigned int value_type = 0;

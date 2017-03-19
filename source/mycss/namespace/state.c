@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -23,10 +23,10 @@
 bool mycss_namespace_state_namespace(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
     if(token->type == MyCSS_TOKEN_TYPE_AT_KEYWORD) {
-        myhtml_string_t str;
+        mycore_string_t str;
         mycss_token_data_to_string(entry, token, &str, true, true);
         
-        if(myhtml_strcmp(str.data, "namespace") == 0) {
+        if(mycore_strcmp(str.data, "namespace") == 0) {
             entry->parser = mycss_namespace_state_namespace_namespace;
         }
         else {
@@ -34,7 +34,7 @@ bool mycss_namespace_state_namespace(mycss_entry_t* entry, mycss_token_t* token,
             entry->parser = mycss_parser_token;
         }
         
-        myhtml_string_destroy(&str, false);
+        mycore_string_destroy(&str, false);
     }
     else {
         mycss_namespace_parser_expectations_error(entry, token);
@@ -110,7 +110,7 @@ bool mycss_namespace_state_namespace_namespace_ident_string(mycss_entry_t* entry
     
     if(token->type == MyCSS_TOKEN_TYPE_SEMICOLON) {
         mycss_namespace_parser_end(entry, token);
-        MyCSS_DEBUG_MESSAGE("mycss_namespace_state_namespace_namespace_ident_string_semicolon")
+        MyCORE_DEBUG("mycss_namespace_state_namespace_namespace_ident_string_semicolon");
         entry->parser = mycss_parser_token;
     }
     else {
@@ -129,7 +129,7 @@ bool mycss_namespace_state_namespace_namespace_ident_url(mycss_entry_t* entry, m
     
     if(token->type == MyCSS_TOKEN_TYPE_SEMICOLON) {
         mycss_namespace_parser_end(entry, token);
-        MyCSS_DEBUG_MESSAGE("mycss_namespace_state_namespace_namespace_ident_url_semicolon")
+        MyCORE_DEBUG("mycss_namespace_state_namespace_namespace_ident_url_semicolon");
         entry->parser = mycss_parser_token;
     }
     else {
@@ -148,7 +148,7 @@ bool mycss_namespace_state_namespace_namespace_string(mycss_entry_t* entry, mycs
     
     if(token->type == MyCSS_TOKEN_TYPE_SEMICOLON) {
         mycss_namespace_parser_end(entry, token);
-        MyCSS_DEBUG_MESSAGE("mycss_namespace_state_namespace_namespace_string_semicolon")
+        MyCORE_DEBUG("mycss_namespace_state_namespace_namespace_string_semicolon");
         entry->parser = mycss_parser_token;
     }
     else {
@@ -167,7 +167,7 @@ bool mycss_namespace_state_namespace_namespace_url(mycss_entry_t* entry, mycss_t
     
     if(token->type == MyCSS_TOKEN_TYPE_SEMICOLON) {
         mycss_namespace_parser_end(entry, token);
-        MyCSS_DEBUG_MESSAGE("mycss_namespace_state_namespace_namespace_url_semicolon")
+        MyCORE_DEBUG("mycss_namespace_state_namespace_namespace_url_semicolon");
         entry->parser = mycss_parser_token;
     }
     else {

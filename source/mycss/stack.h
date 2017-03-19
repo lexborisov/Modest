@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -42,11 +42,11 @@ struct mycss_stack {
 typedef mycss_stack_t;
 
 mycss_stack_t * mycss_stack_create(void);
-mycss_status_t mycss_stack_init(mycss_stack_t *stack, size_t size);
+mystatus_t mycss_stack_init(mycss_stack_t *stack, size_t size);
 void mycss_stack_clean(mycss_stack_t *stack);
 mycss_stack_t * mycss_stack_destroy(mycss_stack_t *stack, bool self_destroy);
 
-mycss_status_t mycss_stack_push(mycss_stack_t *stack, void* value, mycss_parser_token_f parser);
+mystatus_t mycss_stack_push(mycss_stack_t *stack, void* value, mycss_parser_token_f parser);
 mycss_stack_entry_t * mycss_stack_pop(mycss_stack_t *stack);
 mycss_stack_entry_t * mycss_stack_current(mycss_stack_t *stack);
 

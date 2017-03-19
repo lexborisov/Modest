@@ -21,7 +21,7 @@
 #include <myurl/url.h>
 #include <myurl/serialization.h>
 #include <myhtml/mystring.h>
-#include <myhtml/utils/mchar_async.h>
+#include <mycore/utils/mchar_async.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -94,10 +94,12 @@ test_res_t test_load_file(const char* filename)
     return (test_res_t){file_data, (size_t)size};
 }
 
-void test_serialization_callback(const char* data, size_t len, void* ctx)
+mystatus_t test_serialization_callback(const char* data, size_t len, void* ctx)
 {
-    myhtml_string_t *str = ctx;
-    myhtml_string_append(str, data, len);
+    mycore_string_t *str = ctx;
+    mycore_string_append(str, data, len);
+    
+    return MyCORE_STATUS_OK;
 }
 
 myurl_entry_t * test_parse_url(const char *data, size_t length, myurl_entry_t* base_url)
@@ -235,8 +237,8 @@ bool test_for_type_first_entry(const char *data, size_t* length, size_t data_siz
         return true;
     }
     
-    myhtml_string_t cmp_str = {0};
-    myhtml_string_init(MCharOBJ, MCharOBJNode, &cmp_str, 1024);
+    mycore_string_t cmp_str = {0};
+    mycore_string_init(MCharOBJ, MCharOBJNode, &cmp_str, 1024);
     
     myurl_serialization(url_entry, false, test_serialization_callback, &cmp_str);
     
@@ -248,12 +250,12 @@ bool test_for_type_first_entry(const char *data, size_t* length, size_t data_siz
         fprintf(stderr, "\tResult: %.*s\n", (int)cmp_str.length, cmp_str.data);
         fprintf(stderr, "\tExpect: %.*s\n\n", (int)expect.length, &data[expect.begin]);
         
-        myhtml_string_destroy(&cmp_str, false);
+        mycore_string_destroy(&cmp_str, false);
         test_destroy_url(url_entry);
         return true;
     }
     
-    myhtml_string_destroy(&cmp_str, false);
+    mycore_string_destroy(&cmp_str, false);
     test_destroy_url(url_entry);
     
     return true;
@@ -304,15 +306,15 @@ bool test_for_type_second_entry(const char *data, size_t* length, size_t data_si
         fprintf(stderr, "Test FAILURE!\n");
         fprintf(stderr, "\tURL: %.*s\n", (int)url.length, &data[ url.begin ]);
         fprintf(stderr, "\tDomain Type: %d\n", url_entry->host.type);
-        fprintf(stderr, "\tDomain Ip Version Type: %d\n", url_entry->host.ipv.type);
+        fprintf(stderr, "\tDomain Ip Version Type: %d\n", url_entry->host.value.ipv.type);
         fprintf(stderr, "\tExpect Domain Type: %d\n\n", domain_type);
         
         test_destroy_url(url_entry);
         return true;
     }
     
-    myhtml_string_t cmp_str = {0};
-    myhtml_string_init(MCharOBJ, MCharOBJNode, &cmp_str, 1024);
+    mycore_string_t cmp_str = {0};
+    mycore_string_init(MCharOBJ, MCharOBJNode, &cmp_str, 1024);
     
     myurl_serialization(url_entry, false, test_serialization_callback, &cmp_str);
     
@@ -324,12 +326,12 @@ bool test_for_type_second_entry(const char *data, size_t* length, size_t data_si
         fprintf(stderr, "\tResult: %.*s\n", (int)cmp_str.length, cmp_str.data);
         fprintf(stderr, "\tExpect: %.*s\n\n", (int)expect.length, &data[expect.begin]);
         
-        myhtml_string_destroy(&cmp_str, false);
+        mycore_string_destroy(&cmp_str, false);
         test_destroy_url(url_entry);
         return true;
     }
     
-    myhtml_string_destroy(&cmp_str, false);
+    mycore_string_destroy(&cmp_str, false);
     test_destroy_url(url_entry);
     
     return true;
@@ -378,8 +380,8 @@ bool test_for_type_third_entry(const char *data, size_t* length, size_t data_siz
         return true;
     }
     
-    myhtml_string_t cmp_str = {0};
-    myhtml_string_init(MCharOBJ, MCharOBJNode, &cmp_str, 1024);
+    mycore_string_t cmp_str = {0};
+    mycore_string_init(MCharOBJ, MCharOBJNode, &cmp_str, 1024);
     
     myurl_serialization(url_entry, false, test_serialization_callback, &cmp_str);
     
@@ -392,12 +394,12 @@ bool test_for_type_third_entry(const char *data, size_t* length, size_t data_siz
         fprintf(stderr, "\tResult: %.*s\n", (int)cmp_str.length, cmp_str.data);
         fprintf(stderr, "\tExpect: %.*s\n\n", (int)expect.length, &data[expect.begin]);
         
-        myhtml_string_destroy(&cmp_str, false);
+        mycore_string_destroy(&cmp_str, false);
         test_destroy_url(url_entry);
         return true;
     }
     
-    myhtml_string_destroy(&cmp_str, false);
+    mycore_string_destroy(&cmp_str, false);
     test_destroy_url(url_entry);
     
     return true;
@@ -494,11 +496,14 @@ int main(int argc, const char * argv[])
         exit(EXIT_FAILURE);
     }
     
-    MCharOBJ = mchar_async_create(4, 4096);
+    MCharOBJ = mchar_async_create();
     if(MCharOBJ == NULL)
         return EXIT_FAILURE;
     
-    MCharOBJNode = mchar_async_node_add(MCharOBJ);
+    if(mchar_async_init(MCharOBJ, 4, 4096))
+        return EXIT_FAILURE;
+    
+    MCharOBJNode = mchar_async_node_add(MCharOBJ, NULL);
     
     test_read_dir(argv[1]);
     //test_read_dir("/new/C-git/Modest/test/myurl/data");

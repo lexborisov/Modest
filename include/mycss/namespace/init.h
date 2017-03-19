@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -31,16 +31,16 @@ extern "C" {
 #include <myhtml/mynamespace.h>
 
 mycss_namespace_t * mycss_namespace_create(void);
-mycss_status_t mycss_namespace_init(mycss_entry_t* entry, mycss_namespace_t* ns);
+mystatus_t mycss_namespace_init(mycss_entry_t* entry, mycss_namespace_t* ns);
 void mycss_namespace_clean(mycss_namespace_t* ns);
-mycss_status_t mycss_namespace_clean_all(mycss_namespace_t* ns);
+mystatus_t mycss_namespace_clean_all(mycss_namespace_t* ns);
 mycss_namespace_t * mycss_namespace_destroy(mycss_namespace_t* ns, bool self_destroy);
 
-mycss_status_t mycss_namespace_stylesheet_init(mycss_namespace_stylesheet_t* ns_stylesheet, mycss_entry_t* entry);
-mycss_status_t mycss_namespace_stylesheet_clean(mycss_namespace_stylesheet_t* ns_stylesheet, mycss_entry_t* entry);
+mystatus_t mycss_namespace_stylesheet_init(mycss_namespace_stylesheet_t* ns_stylesheet, mycss_entry_t* entry);
+mystatus_t mycss_namespace_stylesheet_clean(mycss_namespace_stylesheet_t* ns_stylesheet, mycss_entry_t* entry);
 mycss_namespace_stylesheet_t * mycss_namespace_stylesheet_destroy(mycss_namespace_stylesheet_t* ns_stylesheet, mycss_entry_t* entry, bool self_destroy);
 
-mycss_status_t mycss_namespace_stylesheet_init_default(mycss_namespace_stylesheet_t* ns_stylesheet, mycss_entry_t* entry, const char* url, size_t url_length, myhtml_namespace_t def_ns);
+mystatus_t mycss_namespace_stylesheet_init_default(mycss_namespace_stylesheet_t* ns_stylesheet, mycss_entry_t* entry, const char* url, size_t url_length, myhtml_namespace_t def_ns);
 void mycss_namespace_stylesheet_append_default(mycss_namespace_stylesheet_t* ns_stylesheet, mycss_namespace_entry_t* ns_entry);
 void mycss_namespace_stylesheet_destroy_default(mycss_namespace_stylesheet_t* ns_stylesheet, mycss_entry_t* entry);
 

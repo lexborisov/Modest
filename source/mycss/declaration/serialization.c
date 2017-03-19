@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -21,7 +21,7 @@
 #include "mycss/declaration/serialization.h"
 #include "mycss/declaration/serialization_resources.h"
 
-static void mycss_declaration_serialization_important_if_need(mycss_declaration_entry_t* dec_entry, mycss_callback_serialization_f callback, void* context)
+static void mycss_declaration_serialization_important_if_need(mycss_declaration_entry_t* dec_entry, mycore_callback_serialize_f callback, void* context)
 {
     if(dec_entry->is_important) {
         callback(" !important", 11, context);
@@ -29,7 +29,7 @@ static void mycss_declaration_serialization_important_if_need(mycss_declaration_
 }
 
 bool mycss_declaration_serialization_entry(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
-                                           mycss_callback_serialization_f callback, void* context)
+                                           mycore_callback_serialize_f callback, void* context)
 {
     if(dec_entry == NULL)
         return false;
@@ -42,7 +42,7 @@ bool mycss_declaration_serialization_entry(mycss_entry_t* entry, mycss_declarati
 }
 
 bool mycss_declaration_serialization_entry_only_value(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
-                                                      mycss_callback_serialization_f callback, void* context)
+                                                      mycore_callback_serialize_f callback, void* context)
 {
     if(dec_entry == NULL)
         return false;
@@ -52,7 +52,7 @@ bool mycss_declaration_serialization_entry_only_value(mycss_entry_t* entry, mycs
 
 bool mycss_declaration_serialization_entry_by_type(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
                                                    mycss_property_type_t property_type,
-                                                   mycss_callback_serialization_f callback, void* context)
+                                                   mycore_callback_serialize_f callback, void* context)
 {
     if(dec_entry == NULL || property_type >= MyCSS_PROPERTY_TYPE_LAST_ENTRY)
         return false;
@@ -66,7 +66,7 @@ bool mycss_declaration_serialization_entry_by_type(mycss_entry_t* entry, mycss_d
 
 bool mycss_declaration_serialization_entry_only_value_by_type(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
                                                               mycss_property_type_t property_type,
-                                                              mycss_callback_serialization_f callback, void* context)
+                                                              mycore_callback_serialize_f callback, void* context)
 {
     if(dec_entry == NULL || property_type >= MyCSS_PROPERTY_TYPE_LAST_ENTRY)
         return false;
@@ -76,7 +76,7 @@ bool mycss_declaration_serialization_entry_only_value_by_type(mycss_entry_t* ent
 
 
 void mycss_declaration_serialization_entries(mycss_entry_t* entry, mycss_declaration_entry_t* first_dec_entry,
-                                             mycss_callback_serialization_f callback, void* context)
+                                             mycore_callback_serialize_f callback, void* context)
 {
     if(first_dec_entry == NULL)
         return;
@@ -94,7 +94,7 @@ void mycss_declaration_serialization_entries(mycss_entry_t* entry, mycss_declara
 }
 
 bool mycss_declaration_serialization_undef(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
-                                           mycss_callback_serialization_f callback, void* context)
+                                           mycore_callback_serialize_f callback, void* context)
 {
     if(dec_entry == NULL)
         return false;
@@ -106,7 +106,7 @@ bool mycss_declaration_serialization_undef(mycss_entry_t* entry, mycss_declarati
 }
 
 bool mycss_declaration_serialization_shorthand_four(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
-                                           mycss_callback_serialization_f callback, void* context)
+                                           mycore_callback_serialize_f callback, void* context)
 {
     if(dec_entry == NULL || dec_entry->value == NULL)
         return false;
@@ -146,7 +146,7 @@ bool mycss_declaration_serialization_shorthand_four(mycss_entry_t* entry, mycss_
 }
 
 bool mycss_declaration_serialization_shorthand_two(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
-                                                   mycss_callback_serialization_f callback, void* context)
+                                                   mycore_callback_serialize_f callback, void* context)
 {
     if(dec_entry == NULL || dec_entry->value == NULL)
         return false;
@@ -172,7 +172,7 @@ bool mycss_declaration_serialization_shorthand_two(mycss_entry_t* entry, mycss_d
 }
 
 bool mycss_declaration_serialization_shorthand_two_type(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
-                                                        mycss_callback_serialization_f callback, void* context)
+                                                        mycore_callback_serialize_f callback, void* context)
 {
     if(dec_entry == NULL || dec_entry->value == NULL)
         return false;
@@ -195,7 +195,7 @@ bool mycss_declaration_serialization_shorthand_two_type(mycss_entry_t* entry, my
 }
 
 bool mycss_declaration_serialization_type_list(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
-                                               mycss_callback_serialization_f callback, void* context)
+                                               mycore_callback_serialize_f callback, void* context)
 {
     if(dec_entry == NULL)
         return false;
@@ -218,7 +218,7 @@ bool mycss_declaration_serialization_type_list(mycss_entry_t* entry, mycss_decla
 }
 
 bool mycss_declaration_serialization_text_decoration(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
-                                                     mycss_callback_serialization_f callback, void* context)
+                                                     mycore_callback_serialize_f callback, void* context)
 {
     if(dec_entry == NULL)
         return false;
@@ -255,7 +255,7 @@ bool mycss_declaration_serialization_text_decoration(mycss_entry_t* entry, mycss
 }
 
 bool mycss_declaration_serialization_font_family(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
-                                                 mycss_callback_serialization_f callback, void* context)
+                                                 mycore_callback_serialize_f callback, void* context)
 {
     if(dec_entry == NULL)
         return false;
@@ -271,11 +271,11 @@ bool mycss_declaration_serialization_font_family(mycss_entry_t* entry, mycss_dec
             callback(", ", 2, context);
         
         if(font_family->entries[i].type == MyCSS_VALUES_FONT_FAMILY_TYPE_GENERIC) {
-            mycss_property_serialization_value(font_family->entries[i].prop_type, NULL, callback, context);
+            mycss_property_serialization_value(font_family->entries[i].value.prop_type, NULL, callback, context);
         }
         else if(font_family->entries[i].type == MyCSS_VALUES_FONT_FAMILY_TYPE_NAME) {
             callback("\"", 1, context);
-            myhtml_string_t *str = &font_family->entries[i].str;
+            mycore_string_t *str = &font_family->entries[i].value.str;
             callback(str->data, str->length, context);
             callback("\"", 1, context);
         }
@@ -286,7 +286,7 @@ bool mycss_declaration_serialization_font_family(mycss_entry_t* entry, mycss_dec
 }
 
 bool mycss_declaration_serialization_font(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
-                                          mycss_callback_serialization_f callback, void* context)
+                                          mycore_callback_serialize_f callback, void* context)
 {
     if(dec_entry == NULL)
         return false;
@@ -345,7 +345,7 @@ bool mycss_declaration_serialization_font(mycss_entry_t* entry, mycss_declaratio
 }
 
 bool mycss_declaration_serialization_border_radius(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
-                                                   mycss_callback_serialization_f callback, void* context)
+                                                   mycore_callback_serialize_f callback, void* context)
 {
     if(dec_entry == NULL)
         return false;
@@ -427,7 +427,7 @@ bool mycss_declaration_serialization_border_radius(mycss_entry_t* entry, mycss_d
 }
 
 bool mycss_declaration_serialization_text_decoration_line(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
-                                                        mycss_callback_serialization_f callback, void* context)
+                                                        mycore_callback_serialize_f callback, void* context)
 {
     if(dec_entry == NULL)
         return false;
@@ -442,7 +442,7 @@ bool mycss_declaration_serialization_text_decoration_line(mycss_entry_t* entry, 
 }
 
 bool mycss_declaration_serialization_text_decoration_skip(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
-                                                          mycss_callback_serialization_f callback, void* context)
+                                                          mycore_callback_serialize_f callback, void* context)
 {
     if(dec_entry == NULL)
         return false;
@@ -457,7 +457,7 @@ bool mycss_declaration_serialization_text_decoration_skip(mycss_entry_t* entry, 
 }
 
 bool mycss_declaration_serialization_background(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
-                                                mycss_callback_serialization_f callback, void* context)
+                                                mycore_callback_serialize_f callback, void* context)
 {
     if(dec_entry == NULL)
         return false;
@@ -521,7 +521,7 @@ bool mycss_declaration_serialization_background(mycss_entry_t* entry, mycss_decl
 }
 
 bool mycss_declaration_serialization_background_image(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
-                                                      mycss_callback_serialization_f callback, void* context)
+                                                      mycore_callback_serialize_f callback, void* context)
 {
     if(dec_entry == NULL)
         return false;
@@ -544,7 +544,7 @@ bool mycss_declaration_serialization_background_image(mycss_entry_t* entry, mycs
 }
 
 bool mycss_declaration_serialization_background_repeat(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
-                                                       mycss_callback_serialization_f callback, void* context)
+                                                       mycore_callback_serialize_f callback, void* context)
 {
     if(dec_entry == NULL)
         return false;
@@ -574,7 +574,7 @@ bool mycss_declaration_serialization_background_repeat(mycss_entry_t* entry, myc
 }
 
 bool mycss_declaration_serialization_background_position(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
-                                                         mycss_callback_serialization_f callback, void* context)
+                                                         mycore_callback_serialize_f callback, void* context)
 {
     if(dec_entry == NULL)
         return false;
@@ -587,23 +587,23 @@ bool mycss_declaration_serialization_background_position(mycss_entry_t* entry, m
     
     if(position->one.type) {
         o_e = true;
-        mycss_property_serialization_value(position->one.type, position->one.length, callback, context);
+        mycss_property_serialization_value(position->one.type, position->one.value.length, callback, context);
     }
     
     if(position->two.type) {
         if(o_e) callback(" ", 1, context); else o_e = true;
-        mycss_property_serialization_value(position->two.type, position->two.length, callback, context);
+        mycss_property_serialization_value(position->two.type, position->two.value.length, callback, context);
     }
     
     if(position->three.type) {
         if(o_e) callback(" ", 1, context); else o_e = true;
-        mycss_property_serialization_value(position->three.type, position->three.length, callback, context);
+        mycss_property_serialization_value(position->three.type, position->three.value.length, callback, context);
     }
     
     if(position->four.type) {
         if(o_e) callback(" ", 1, context);
         
-        mycss_property_serialization_value(position->four.type, position->four.length, callback, context);
+        mycss_property_serialization_value(position->four.type, position->four.value.length, callback, context);
     }
     
     mycss_declaration_serialization_important_if_need(dec_entry, callback, context);
@@ -612,7 +612,7 @@ bool mycss_declaration_serialization_background_position(mycss_entry_t* entry, m
 }
 
 bool mycss_declaration_serialization_background_size(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
-                                                     mycss_callback_serialization_f callback, void* context)
+                                                     mycore_callback_serialize_f callback, void* context)
 {
     if(dec_entry == NULL)
         return false;
@@ -635,7 +635,7 @@ bool mycss_declaration_serialization_background_size(mycss_entry_t* entry, mycss
 }
 
 bool mycss_declaration_serialization_border_x(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry,
-                                              mycss_callback_serialization_f callback, void* context)
+                                              mycore_callback_serialize_f callback, void* context)
 {
     if(dec_entry == NULL)
         return false;

@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -19,7 +19,7 @@
 */
 
 #include "mycss/values/color_parser.h"
-#include "myhtml/utils/resources.h"
+#include "mycore/utils/resources.h"
 
 bool mycss_values_color_parser_undef(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
@@ -51,39 +51,39 @@ static bool mycss_values_color_parser_find_end(mycss_entry_t* entry, mycss_token
 
 static void mycss_values_color_parser_set_percentage_value(mycss_entry_t* entry, mycss_token_t* token, mycss_values_percentage_t *color_rgb)
 {
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_token_data_to_string(entry, token, &str, true, false);
     
     double return_num;
     mycss_convert_data_to_double(str.data, str.length, &return_num, &color_rgb->is_float);
     
     if(color_rgb->is_float)
-        color_rgb->f = (float)return_num;
+        color_rgb->value.f = (float)return_num;
     else
-        color_rgb->i = (int)return_num;
+        color_rgb->value.i = (int)return_num;
     
-    myhtml_string_destroy(&str, false);
+    mycore_string_destroy(&str, false);
 }
 
 static void mycss_values_color_parser_set_number_value(mycss_entry_t* entry, mycss_token_t* token, mycss_values_number_t *color_rgb)
 {
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_token_data_to_string(entry, token, &str, true, false);
     
     double return_num;
     mycss_convert_data_to_double(str.data, str.length, &return_num, &color_rgb->is_float);
     
     if(color_rgb->is_float)
-        color_rgb->f = (float)return_num;
+        color_rgb->value.f = (float)return_num;
     else
-        color_rgb->i = (int)return_num;
+        color_rgb->value.i = (int)return_num;
     
-    myhtml_string_destroy(&str, false);
+    mycore_string_destroy(&str, false);
 }
 
 static bool mycss_values_color_parser_set_angle_value(mycss_entry_t* entry, mycss_token_t* token, mycss_values_angle_t *angle)
 {
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_token_data_to_string(entry, token, &str, true, false);
     
     bool is_float;
@@ -92,7 +92,7 @@ static bool mycss_values_color_parser_set_angle_value(mycss_entry_t* entry, mycs
     size_t consume_length = mycss_convert_data_to_double(str.data, str.length, &return_num, &is_float);
     mycss_units_type_t type = mycss_units_type_by_name(&str.data[consume_length], (str.length - consume_length));
     
-    myhtml_string_destroy(&str, false);
+    mycore_string_destroy(&str, false);
     
     switch (type) {
         case MyCSS_UNIT_TYPE_DEG:
@@ -106,9 +106,9 @@ static bool mycss_values_color_parser_set_angle_value(mycss_entry_t* entry, mycs
     }
     
     if(is_float)
-        angle->f = (float)return_num;
+        angle->value.f = (float)return_num;
     else
-        angle->i = (int)return_num;
+        angle->value.i = (int)return_num;
     
     angle->is_float = is_float;
     angle->type = type;
@@ -120,14 +120,14 @@ static bool mycss_values_color_parser_rgb_full(mycss_entry_t* entry, mycss_token
 {
     if(token->type == MyCSS_TOKEN_TYPE_PERCENTAGE)
     {
-        mycss_values_color_parser_set_percentage_value(entry, token, &color->rgba_percentage.r);
+        mycss_values_color_parser_set_percentage_value(entry, token, &color->value.rgba_percentage.r);
         
         color->type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_PERCENTAGE;
         entry->parser = mycss_values_color_parser_rgb_before_g_percentage;
     }
     else if(token->type == MyCSS_TOKEN_TYPE_NUMBER)
     {
-        mycss_values_color_parser_set_number_value(entry, token, &color->rgba_number.r);
+        mycss_values_color_parser_set_number_value(entry, token, &color->value.rgba_number.r);
         
         color->type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
         entry->parser = mycss_values_color_parser_rgb_before_g_number;
@@ -217,7 +217,7 @@ bool mycss_values_color_parser_rgb_g_percentage(mycss_entry_t* entry, mycss_toke
     }
     
     mycss_values_color_t *color = declr_entry->value;
-    mycss_values_color_parser_set_percentage_value(entry, token, &color->rgba_percentage.g);
+    mycss_values_color_parser_set_percentage_value(entry, token, &color->value.rgba_percentage.g);
     
     entry->parser = mycss_values_color_parser_rgb_before_b_percentage;
     
@@ -259,7 +259,7 @@ bool mycss_values_color_parser_rgb_b_percentage(mycss_entry_t* entry, mycss_toke
     }
     
     mycss_values_color_t *color = declr_entry->value;
-    mycss_values_color_parser_set_percentage_value(entry, token, &color->rgba_percentage.b);
+    mycss_values_color_parser_set_percentage_value(entry, token, &color->value.rgba_percentage.b);
     
     entry->parser = mycss_values_color_parser_rgb_before_alpha_percentage;
     return true;
@@ -307,12 +307,12 @@ bool mycss_values_color_parser_rgb_alpha_percentage(mycss_entry_t* entry, mycss_
     mycss_values_color_t *color = declr_entry->value;
     
     if(token->type == MyCSS_TOKEN_TYPE_PERCENTAGE) {
-        mycss_values_color_parser_set_percentage_value(entry, token, &color->rgba_percentage.alpha.percentage);
-        color->rgba_percentage.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_PERCENTAGE;
+        mycss_values_color_parser_set_percentage_value(entry, token, &color->value.rgba_percentage.alpha.value.percentage);
+        color->value.rgba_percentage.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_PERCENTAGE;
     }
     else if(token->type == MyCSS_TOKEN_TYPE_NUMBER) {
-        mycss_values_color_parser_set_number_value(entry, token, &color->rgba_percentage.alpha.number);
-        color->rgba_percentage.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
+        mycss_values_color_parser_set_number_value(entry, token, &color->value.rgba_percentage.alpha.value.number);
+        color->value.rgba_percentage.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
     }
     else {
         mycss_values_color_parser_switch_parser(entry);
@@ -364,7 +364,7 @@ bool mycss_values_color_parser_rgb_g_number(mycss_entry_t* entry, mycss_token_t*
     }
     
     mycss_values_color_t *color = declr_entry->value;
-    mycss_values_color_parser_set_number_value(entry, token, &color->rgba_number.g);
+    mycss_values_color_parser_set_number_value(entry, token, &color->value.rgba_number.g);
     
     entry->parser = mycss_values_color_parser_rgb_before_b_number;
     return true;
@@ -408,7 +408,7 @@ bool mycss_values_color_parser_rgb_b_number(mycss_entry_t* entry, mycss_token_t*
     }
     
     mycss_values_color_t *color = declr_entry->value;
-    mycss_values_color_parser_set_number_value(entry, token, &color->rgba_number.b);
+    mycss_values_color_parser_set_number_value(entry, token, &color->value.rgba_number.b);
     
     entry->parser = mycss_values_color_parser_rgb_before_alpha_number;
     return true;
@@ -456,12 +456,12 @@ bool mycss_values_color_parser_rgb_alpha_number(mycss_entry_t* entry, mycss_toke
     mycss_values_color_t *color = declr_entry->value;
     
     if(token->type == MyCSS_TOKEN_TYPE_PERCENTAGE) {
-        mycss_values_color_parser_set_percentage_value(entry, token, &color->rgba_number.alpha.percentage);
-        color->rgba_number.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_PERCENTAGE;
+        mycss_values_color_parser_set_percentage_value(entry, token, &color->value.rgba_number.alpha.value.percentage);
+        color->value.rgba_number.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_PERCENTAGE;
     }
     else if(token->type == MyCSS_TOKEN_TYPE_NUMBER) {
-        mycss_values_color_parser_set_number_value(entry, token, &color->rgba_number.alpha.number);
-        color->rgba_number.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
+        mycss_values_color_parser_set_number_value(entry, token, &color->value.rgba_number.alpha.value.number);
+        color->value.rgba_number.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
     }
     else {
         mycss_values_color_parser_switch_parser(entry);
@@ -478,7 +478,7 @@ bool mycss_values_color_parser_rgb_alpha_number(mycss_entry_t* entry, mycss_toke
 static bool mycss_values_color_parser_hsla_full(mycss_entry_t* entry, mycss_token_t* token, mycss_values_color_t *color)
 {
     if(token->type == MyCSS_TOKEN_TYPE_DIMENSION) {
-        if(mycss_values_color_parser_set_angle_value(entry, token, &color->hsla.hue.angle) == false) {
+        if(mycss_values_color_parser_set_angle_value(entry, token, &color->value.hsla.hue.value.angle) == false) {
             mycss_values_color_parser_switch_parser(entry);
             return false;
         }
@@ -487,7 +487,7 @@ static bool mycss_values_color_parser_hsla_full(mycss_entry_t* entry, mycss_toke
     }
     else if(token->type == MyCSS_TOKEN_TYPE_NUMBER)
     {
-        mycss_values_color_parser_set_number_value(entry, token, &color->hsla.hue.number);
+        mycss_values_color_parser_set_number_value(entry, token, &color->value.hsla.hue.value.number);
         color->type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
     }
     else {
@@ -573,7 +573,7 @@ bool mycss_values_color_parser_hsl_saturation(mycss_entry_t* entry, mycss_token_
     }
     
     mycss_values_color_t *color = declr_entry->value;
-    mycss_values_color_parser_set_percentage_value(entry, token, &color->hsla.saturation);
+    mycss_values_color_parser_set_percentage_value(entry, token, &color->value.hsla.saturation);
     
     entry->parser = mycss_values_color_parser_hsl_before_lightness;
     return true;
@@ -617,7 +617,7 @@ bool mycss_values_color_parser_hsl_lightness(mycss_entry_t* entry, mycss_token_t
     }
     
     mycss_values_color_t *color = declr_entry->value;
-    mycss_values_color_parser_set_percentage_value(entry, token, &color->hsla.lightness);
+    mycss_values_color_parser_set_percentage_value(entry, token, &color->value.hsla.lightness);
     
     entry->parser = mycss_values_color_parser_hsl_before_alpha;
     return true;
@@ -665,12 +665,12 @@ bool mycss_values_color_parser_hsl_alpha(mycss_entry_t* entry, mycss_token_t* to
     mycss_values_color_t *color = declr_entry->value;
     
     if(token->type == MyCSS_TOKEN_TYPE_PERCENTAGE) {
-        mycss_values_color_parser_set_percentage_value(entry, token, &color->hsla.alpha.percentage);
-        color->hsla.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_PERCENTAGE;
+        mycss_values_color_parser_set_percentage_value(entry, token, &color->value.hsla.alpha.value.percentage);
+        color->value.hsla.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_PERCENTAGE;
     }
     else if(token->type == MyCSS_TOKEN_TYPE_NUMBER) {
-        mycss_values_color_parser_set_number_value(entry, token, &color->hsla.alpha.number);
-        color->hsla.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
+        mycss_values_color_parser_set_number_value(entry, token, &color->value.hsla.alpha.value.number);
+        color->value.hsla.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
     }
     else {
         mycss_values_color_parser_switch_parser(entry);
@@ -686,10 +686,10 @@ bool mycss_values_color_parser_hsl_alpha(mycss_entry_t* entry, mycss_token_t* to
  */
 static unsigned int mycss_values_color_parser_hex_get_by_two(unsigned char* u_data)
 {
-    return (myhtml_string_chars_hex_map[ u_data[0] ] << 4) | myhtml_string_chars_hex_map[ u_data[1] ];
+    return (mycore_string_chars_hex_map[ u_data[0] ] << 4) | mycore_string_chars_hex_map[ u_data[1] ];
 }
 
-bool mycss_values_color_parser_hex(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_values_color_parser_hex(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, mycore_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_HASH)
         return true;
@@ -702,50 +702,50 @@ bool mycss_values_color_parser_hex(mycss_entry_t* entry, mycss_token_t* token, v
     
     switch (str->length) {
         case 6:
-            color->hex.r.i = (int)mycss_values_color_parser_hex_get_by_two(u_data);
-            color->hex.g.i = (int)mycss_values_color_parser_hex_get_by_two(&u_data[2]);
-            color->hex.b.i = (int)mycss_values_color_parser_hex_get_by_two(&u_data[4]);
-            color->hex.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_UNDEF;
+            color->value.hex.r.value.i = (int)mycss_values_color_parser_hex_get_by_two(u_data);
+            color->value.hex.g.value.i = (int)mycss_values_color_parser_hex_get_by_two(&u_data[2]);
+            color->value.hex.b.value.i = (int)mycss_values_color_parser_hex_get_by_two(&u_data[4]);
+            color->value.hex.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_UNDEF;
             
             color->type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_HEX_6;
             break;
         case 8:
-            color->hex.r.i = (int)mycss_values_color_parser_hex_get_by_two(u_data);
-            color->hex.g.i = (int)mycss_values_color_parser_hex_get_by_two(&u_data[2]);
-            color->hex.b.i = (int)mycss_values_color_parser_hex_get_by_two(&u_data[4]);
+            color->value.hex.r.value.i = (int)mycss_values_color_parser_hex_get_by_two(u_data);
+            color->value.hex.g.value.i = (int)mycss_values_color_parser_hex_get_by_two(&u_data[2]);
+            color->value.hex.b.value.i = (int)mycss_values_color_parser_hex_get_by_two(&u_data[4]);
             
-            color->hex.alpha.number.i = (int)mycss_values_color_parser_hex_get_by_two(&u_data[6]);
-            color->hex.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
+            color->value.hex.alpha.value.number.value.i = (int)mycss_values_color_parser_hex_get_by_two(&u_data[6]);
+            color->value.hex.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
             
             color->type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_HEX_8;
             break;
         case 3:
-            color->hex.r.i = (int)(myhtml_string_chars_hex_map[ u_data[0] ]);
-            color->hex.r.i = (color->hex.r.i << 4) | color->hex.r.i;
+            color->value.hex.r.value.i = (int)(mycore_string_chars_hex_map[ u_data[0] ]);
+            color->value.hex.r.value.i = (color->value.hex.r.value.i << 4) | color->value.hex.r.value.i;
             
-            color->hex.g.i = (int)(myhtml_string_chars_hex_map[ u_data[1] ]);
-            color->hex.g.i = (color->hex.g.i << 4) | color->hex.g.i;
+            color->value.hex.g.value.i = (int)(mycore_string_chars_hex_map[ u_data[1] ]);
+            color->value.hex.g.value.i = (color->value.hex.g.value.i << 4) | color->value.hex.g.value.i;
             
-            color->hex.b.i = (int)(myhtml_string_chars_hex_map[ u_data[2] ]);
-            color->hex.b.i = (color->hex.b.i << 4) | color->hex.b.i;
+            color->value.hex.b.value.i = (int)(mycore_string_chars_hex_map[ u_data[2] ]);
+            color->value.hex.b.value.i = (color->value.hex.b.value.i << 4) | color->value.hex.b.value.i;
             
-            color->hex.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_UNDEF;
+            color->value.hex.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_UNDEF;
             
             color->type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_HEX_3;
             break;
         case 4:
-            color->hex.r.i = (int)(myhtml_string_chars_hex_map[ u_data[0] ]);
-            color->hex.r.i = (color->hex.r.i << 4) | color->hex.r.i;
+            color->value.hex.r.value.i = (int)(mycore_string_chars_hex_map[ u_data[0] ]);
+            color->value.hex.r.value.i = (color->value.hex.r.value.i << 4) | color->value.hex.r.value.i;
             
-            color->hex.g.i = (int)(myhtml_string_chars_hex_map[ u_data[1] ]);
-            color->hex.g.i = (color->hex.g.i << 4) | color->hex.g.i;
+            color->value.hex.g.value.i = (int)(mycore_string_chars_hex_map[ u_data[1] ]);
+            color->value.hex.g.value.i = (color->value.hex.g.value.i << 4) | color->value.hex.g.value.i;
             
-            color->hex.b.i = (int)(myhtml_string_chars_hex_map[ u_data[2] ]);
-            color->hex.b.i = (color->hex.b.i << 4) | color->hex.b.i;
+            color->value.hex.b.value.i = (int)(mycore_string_chars_hex_map[ u_data[2] ]);
+            color->value.hex.b.value.i = (color->value.hex.b.value.i << 4) | color->value.hex.b.value.i;
             
-            color->hex.alpha.number.i = (int)(myhtml_string_chars_hex_map[ u_data[3] ]);
-            color->hex.alpha.number.i = (color->hex.alpha.number.i << 4) | color->hex.alpha.number.i;
-            color->hex.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
+            color->value.hex.alpha.value.number.value.i = (int)(mycore_string_chars_hex_map[ u_data[3] ]);
+            color->value.hex.alpha.value.number.value.i = (color->value.hex.alpha.value.number.value.i << 4) | color->value.hex.alpha.value.number.value.i;
+            color->value.hex.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
             
             color->type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_HEX_4;
             break;
@@ -771,7 +771,7 @@ bool mycss_values_color_parser_hex(mycss_entry_t* entry, mycss_token_t* token, v
 static bool mycss_values_color_parser_hwb_hue(mycss_entry_t* entry, mycss_token_t* token, mycss_values_color_t *color)
 {
     if(token->type == MyCSS_TOKEN_TYPE_DIMENSION) {
-        if(mycss_values_color_parser_set_angle_value(entry, token, &color->hwb.hue.angle) == false) {
+        if(mycss_values_color_parser_set_angle_value(entry, token, &color->value.hwb.hue.value.angle) == false) {
             mycss_values_color_parser_switch_parser(entry);
             return false;
         }
@@ -780,7 +780,7 @@ static bool mycss_values_color_parser_hwb_hue(mycss_entry_t* entry, mycss_token_
     }
     else if(token->type == MyCSS_TOKEN_TYPE_NUMBER)
     {
-        mycss_values_color_parser_set_number_value(entry, token, &color->hwb.hue.number);
+        mycss_values_color_parser_set_number_value(entry, token, &color->value.hwb.hue.value.number);
         color->type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
     }
     else {
@@ -845,7 +845,7 @@ bool mycss_values_color_parser_hwb_whiteness(mycss_entry_t* entry, mycss_token_t
     }
     
     mycss_values_color_t *color = declr_entry->value;
-    mycss_values_color_parser_set_percentage_value(entry, token, &color->hwb.saturation);
+    mycss_values_color_parser_set_percentage_value(entry, token, &color->value.hwb.saturation);
     
     entry->parser = mycss_values_color_parser_hwb_before_blackness;
     return true;
@@ -889,7 +889,7 @@ bool mycss_values_color_parser_hwb_blackness(mycss_entry_t* entry, mycss_token_t
     }
     
     mycss_values_color_t *color = declr_entry->value;
-    mycss_values_color_parser_set_percentage_value(entry, token, &color->hwb.lightness);
+    mycss_values_color_parser_set_percentage_value(entry, token, &color->value.hwb.lightness);
     
     entry->parser = mycss_values_color_parser_hwb_before_alpha;
     return true;
@@ -937,12 +937,12 @@ bool mycss_values_color_parser_hwb_alpha(mycss_entry_t* entry, mycss_token_t* to
     mycss_values_color_t *color = declr_entry->value;
     
     if(token->type == MyCSS_TOKEN_TYPE_PERCENTAGE) {
-        mycss_values_color_parser_set_percentage_value(entry, token, &color->hwb.alpha.percentage);
-        color->hwb.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_PERCENTAGE;
+        mycss_values_color_parser_set_percentage_value(entry, token, &color->value.hwb.alpha.value.percentage);
+        color->value.hwb.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_PERCENTAGE;
     }
     else if(token->type == MyCSS_TOKEN_TYPE_NUMBER) {
-        mycss_values_color_parser_set_number_value(entry, token, &color->hwb.alpha.number);
-        color->hwb.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
+        mycss_values_color_parser_set_number_value(entry, token, &color->value.hwb.alpha.value.number);
+        color->value.hwb.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
     }
     else {
         mycss_values_color_parser_switch_parser(entry);
@@ -972,7 +972,7 @@ bool mycss_values_color_parser_gray(mycss_entry_t* entry, mycss_token_t* token, 
     
     if(token->type == MyCSS_TOKEN_TYPE_NUMBER)
     {
-        mycss_values_color_parser_set_number_value(entry, token, &color->gray.number);
+        mycss_values_color_parser_set_number_value(entry, token, &color->value.gray.number);
         color->type = MyCSS_VALUES_COLOR_TYPE_GRAY;
         
         entry->parser = mycss_values_color_parser_gray_before_alpha;
@@ -1027,12 +1027,12 @@ bool mycss_values_color_parser_gray_alpha(mycss_entry_t* entry, mycss_token_t* t
     mycss_values_color_t *color = declr_entry->value;
     
     if(token->type == MyCSS_TOKEN_TYPE_PERCENTAGE) {
-        mycss_values_color_parser_set_percentage_value(entry, token, &color->gray.alpha.percentage);
-        color->gray.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_PERCENTAGE;
+        mycss_values_color_parser_set_percentage_value(entry, token, &color->value.gray.alpha.value.percentage);
+        color->value.gray.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_PERCENTAGE;
     }
     else if(token->type == MyCSS_TOKEN_TYPE_NUMBER) {
-        mycss_values_color_parser_set_number_value(entry, token, &color->gray.alpha.number);
-        color->gray.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
+        mycss_values_color_parser_set_number_value(entry, token, &color->value.gray.alpha.value.number);
+        color->value.gray.alpha.type_value = MyCSS_VALUES_COLOR_TYPE_VALUE_NUMBER;
     }
     else {
         mycss_values_color_parser_switch_parser(entry);

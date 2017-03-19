@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -22,6 +22,8 @@
 #define MyFONT_MyFONT_H
 #pragma once
 
+#include <string.h>
+
 #include <myfont/myosi.h>
 #include <myfont/cmap.h>
 #include <myfont/head.h>
@@ -36,7 +38,13 @@
 #include <myfont/pclt.h>
 #include <myfont/loca.h>
 
-#include <myhtml/utils/mchar_async.h>
+#include <mycore/utils/mchar_async.h>
+
+#define MyFONT_VERSION_MAJOR 0
+#define MyFONT_VERSION_MINOR 0
+#define MyFONT_VERSION_PATCH 2
+
+#define MyFONT_VERSION_STRING MyCORE_STR(MyFONT_VERSION_MAJOR) MyCORE_STR(.) MyCORE_STR(MyFONT_VERSION_MINOR) MyCORE_STR(.) MyCORE_STR(MyFONT_VERSION_PATCH)
 
 #ifdef __cplusplus
 extern "C" {
@@ -83,16 +91,12 @@ struct myfont_font {
     myfont_table_pclt_t table_pclt;
     myfont_table_loca_t table_loca;
     
-    char*       file_path;
-    size_t      file_size;
-    uint8_t*    file_data;
-    
     mchar_async_t* mchar;
     size_t mchar_node_id;
 };
 
 myfont_font_t * myfont_create(void);
-myfont_status_t myfont_init(myfont_font_t *mf);
+mystatus_t myfont_init(myfont_font_t *mf);
 void myfont_clean(myfont_font_t *mf);
 myfont_font_t * myfont_destroy(myfont_font_t *mf, bool self_destroy);
 
@@ -100,10 +104,11 @@ void * myfont_malloc(myfont_font_t* mf, size_t size);
 void * myfont_calloc(myfont_font_t* mf, size_t count, size_t size);
 void myfont_free(myfont_font_t *mf, void* data);
 
-myfont_status_t myfont_load(myfont_font_t *mf, const char *filepath);
+mystatus_t myfont_load(myfont_font_t* mf, uint8_t* data, size_t data_size);
+mystatus_t myfont_load_from_file(myfont_font_t* mf, const char* filepath, uint8_t** return_data, size_t* data_size);
+void * myfont_destroy_font_data(myfont_font_t* mf, uint8_t* return_data);
 
-void myfont_font_print_exists_table(myfont_font_t *mf, FILE *file);
-myfont_status_t myfont_check_required_tables(myfont_font_t *mf);
+mystatus_t myfont_check_required_tables(myfont_font_t *mf);
 
 float myfont_metrics_baseline(myfont_font_t *mf, float font_size);
 float myfont_metrics_ascender(myfont_font_t *mf, float font_size);
@@ -113,11 +118,11 @@ float myfont_metrics_x_height(myfont_font_t *mf, float font_size);
 float myfont_metrics_cap_height(myfont_font_t *mf, float font_size);
 float myfont_metrics_font_height(myfont_font_t *mf, float font_size);
 
-float myfont_metrics_width(myfont_font_t *mf, unsigned long codepoint, float font_size, myfont_status_t* status);
-float myfont_metrics_height(myfont_font_t *mf, unsigned long codepoint, float font_size, myfont_status_t* status);
-float myfont_metrics_glyph_offset_y(myfont_font_t *mf, unsigned long codepoint, float font_size, myfont_status_t* status);
+float myfont_metrics_width(myfont_font_t *mf, unsigned long codepoint, float font_size, mystatus_t* status);
+float myfont_metrics_height(myfont_font_t *mf, unsigned long codepoint, float font_size, mystatus_t* status);
+float myfont_metrics_glyph_offset_y(myfont_font_t *mf, unsigned long codepoint, float font_size, mystatus_t* status);
 
-myfont_status_t myfont_load_table(myfont_font_t *mf, void *table, size_t size, enum myfont_table_key tkey);
+mystatus_t myfont_load_table(myfont_font_t *mf, void *table, size_t size, enum myfont_table_key tkey);
 
 int16_t myfont_table_version_major(uint32_t version);
 int16_t myfont_table_version_minor(uint32_t version);

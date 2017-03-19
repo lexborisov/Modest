@@ -28,9 +28,9 @@ int main(int argc, const char * argv[])
 {
     char *css = "@charset \"cp1251\"; #best-id {}";
     
-    myhtml_encoding_t encoding = mycss_encoding_check_charset_rule(css, strlen(css));
+    myencoding_t encoding = mycss_encoding_check_charset_rule(css, strlen(css));
     
-    if(encoding == MyHTML_ENCODING_WINDOWS_1251)
+    if(encoding == MyENCODING_WINDOWS_1251)
         printf("Detected Encoding: windows-1251\n");
     else
         printf("Detected Encoding: something wrong\n");

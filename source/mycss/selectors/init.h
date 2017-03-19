@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -31,9 +31,9 @@ extern "C" {
 #include "mycss/selectors/list.h"
 
 mycss_selectors_t * mycss_selectors_create(void);
-mycss_status_t mycss_selectors_init(mycss_entry_t* entry, mycss_selectors_t* selectors);
+mystatus_t mycss_selectors_init(mycss_entry_t* entry, mycss_selectors_t* selectors);
 void mycss_selectors_clean(mycss_selectors_t* selectors);
-mycss_status_t mycss_selectors_clean_all(mycss_selectors_t* selectors);
+mystatus_t mycss_selectors_clean_all(mycss_selectors_t* selectors);
 mycss_selectors_t * mycss_selectors_destroy(mycss_selectors_t* selectors, bool self_destroy);
 
 void mycss_selectors_entry_clean(mycss_selectors_entry_t* sel_entry);
@@ -41,8 +41,8 @@ mycss_selectors_entry_t * mycss_selectors_entry_destroy(mycss_selectors_t* selec
 
 void * mycss_selectors_entry_value_destroy(mycss_entry_t* entry, mycss_selectors_entry_t* selector_entry, bool destroy_self);
 
-mycss_selectors_list_t * mycss_selectors_parse(mycss_selectors_t* selectors, myhtml_encoding_t encoding, const char* data, size_t data_size, mycss_status_t* out_status);
-mycss_selectors_list_t * mycss_selectors_parse_by_function(mycss_selectors_t* selectors, mycss_parser_token_f func, myhtml_encoding_t encoding, const char* data, size_t data_size, mycss_status_t* out_status);
+mycss_selectors_list_t * mycss_selectors_parse(mycss_selectors_t* selectors, myencoding_t encoding, const char* data, size_t data_size, mystatus_t* out_status);
+mycss_selectors_list_t * mycss_selectors_parse_by_function(mycss_selectors_t* selectors, mycss_parser_token_f func, myencoding_t encoding, const char* data, size_t data_size, mystatus_t* out_status);
 
 mycss_selectors_entry_t * mycss_selectors_entry_find_first(mycss_selectors_entry_t* selector);
 

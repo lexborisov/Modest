@@ -63,7 +63,7 @@ struct res_html load_html_file(const char* filename)
     
     size_t nread = fread(html, 1, size, fh);
     if (nread != size) {
-        fprintf(stderr, "could not read %ld bytes (" MyHTML_FMT_Z " bytes done)\n", size, nread);
+        fprintf(stderr, "could not read %ld bytes (" MyCORE_FMT_Z " bytes done)\n", size, nread);
         exit(EXIT_FAILURE);
     }
 
@@ -73,15 +73,15 @@ struct res_html load_html_file(const char* filename)
     return res;
 }
 
-void colorize_print(myhtml_incoming_buffer_t *inc_buf, size_t begin, size_t length, const char* color)
+void colorize_print(mycore_incoming_buffer_t *inc_buf, size_t begin, size_t length, const char* color)
 {
     if(length) {
-        inc_buf = myhtml_incoming_buffer_find_by_position(inc_buf, begin);
+        inc_buf = mycore_incoming_buffer_find_by_position(inc_buf, begin);
         printf("%s%.*s\e[0m", color, (int)length, &inc_buf->data[(begin - inc_buf->offset)]);
     }
 }
 
-size_t colorize_print_attributes(myhtml_tree_t* tree, myhtml_tree_attr_t* attr, myhtml_incoming_buffer_t *inc_buf, size_t last_pos)
+size_t colorize_print_attributes(myhtml_tree_t* tree, myhtml_tree_attr_t* attr, mycore_incoming_buffer_t *inc_buf, size_t last_pos)
 {
     while(attr) {
         if(attr->raw_key_length)
@@ -127,7 +127,7 @@ size_t colorize_print_attributes(myhtml_tree_t* tree, myhtml_tree_attr_t* attr, 
 
 void * colorize_callback_before_token_done(myhtml_tree_t* tree, myhtml_token_node_t* token, void* ctx)
 {
-    myhtml_incoming_buffer_t *inc_buf = tree->incoming_buf_first;
+    mycore_incoming_buffer_t *inc_buf = tree->incoming_buf_first;
     
     size_t last_pos = token->raw_begin + token->raw_length;
     
@@ -202,7 +202,7 @@ int main(int argc, const char * argv[])
     myhtml_callback_before_token_done_set(tree, colorize_callback_before_token_done, NULL);
     
     // parse html
-    myhtml_parse(tree, MyHTML_ENCODING_UTF_8, res.html, res.size);
+    myhtml_parse(tree, MyENCODING_UTF_8, res.html, res.size);
     
     printf("\n");
     

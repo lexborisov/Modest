@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -20,7 +20,7 @@
 
 #include "mycss/tokenizer_global.h"
 #include "mycss/tokenizer_resource.h"
-#include "myhtml/utils/resources.h"
+#include "mycore/utils/resources.h"
 
 /////////////////////////////////////////////////////////
 //// Global back
@@ -676,7 +676,7 @@ size_t mycss_tokenizer_global_state_unicode_range(mycss_entry_t* entry, mycss_to
     
     while(css_offset < css_size)
     {
-        if(myhtml_string_chars_hex_map[ u_css[css_offset] ] != 0xff)
+        if(mycore_string_chars_hex_map[ u_css[css_offset] ] != 0xff)
         {
             entry->help_counter++;
             
@@ -758,7 +758,7 @@ size_t mycss_tokenizer_global_state_unicode_range_minus(mycss_entry_t* entry, my
     
     while(css_offset < css_size)
     {
-        if(myhtml_string_chars_hex_map[ u_css[css_offset] ] != 0xff)
+        if(mycore_string_chars_hex_map[ u_css[css_offset] ] != 0xff)
         {
             entry->help_counter++;
             

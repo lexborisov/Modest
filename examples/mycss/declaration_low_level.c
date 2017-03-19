@@ -25,9 +25,10 @@
 #include <mycss/mycss.h>
 #include <mycss/declaration/init.h>
 
-void serialization_callback(const char* data, size_t len, void* ctx)
+mystatus_t serialization_callback(const char* data, size_t len, void* ctx)
 {
     printf("%.*s", (int)len, data);
+    return MyCORE_STATUS_OK;
 }
 
 int main(int argc, const char * argv[])
@@ -36,7 +37,7 @@ int main(int argc, const char * argv[])
 
     // basic init
     mycss_t *mycss = mycss_create();
-    mycss_status_t status = mycss_init(mycss);
+    mystatus_t status = mycss_init(mycss);
 
     // check initialization
     if (MyCSS_FAILED(status)) return EXIT_FAILURE;
@@ -50,8 +51,8 @@ int main(int argc, const char * argv[])
     printf("\t%s", declaration);
     printf("\n");
 
-    mycss_status_t out_status;
-    mycss_declaration_entry_t *dec_entry = mycss_declaration_parse(entry->declaration, MyHTML_ENCODING_UTF_8,
+    mystatus_t out_status;
+    mycss_declaration_entry_t *dec_entry = mycss_declaration_parse(entry->declaration, MyENCODING_UTF_8,
                                                                    declaration, strlen(declaration), &out_status);
 
     /* print result */

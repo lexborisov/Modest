@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -33,7 +33,7 @@
 /////////////////////////////////////////////////////////
 bool mycss_check_two_code_points_valid_escape_chunk(mycss_entry_t* entry, size_t css_offset)
 {
-    myhtml_incoming_buffer_t* buffer = entry->current_buffer;
+    mycore_incoming_buffer_t* buffer = entry->current_buffer;
     
     MyCSS_CHECK_CHUNK_POSITION_AND_SET_IF_NEED
     
@@ -51,7 +51,7 @@ bool mycss_check_two_code_points_valid_escape_chunk(mycss_entry_t* entry, size_t
 
 bool mycss_check_three_code_points_would_start_identifier_chunk(mycss_entry_t* entry, size_t css_offset)
 {
-    myhtml_incoming_buffer_t* buffer = entry->current_buffer;
+    mycore_incoming_buffer_t* buffer = entry->current_buffer;
     
     MyCSS_CHECK_CHUNK_POSITION_AND_SET_IF_NEED
     const unsigned char *u_css = (const unsigned char*)buffer->data;
@@ -82,7 +82,7 @@ bool mycss_check_three_code_points_would_start_identifier_chunk(mycss_entry_t* e
 
 bool mycss_check_three_code_points_would_start_number_chunk(mycss_entry_t* entry, size_t css_offset)
 {
-    myhtml_incoming_buffer_t* buffer = entry->current_buffer;
+    mycore_incoming_buffer_t* buffer = entry->current_buffer;
     
     MyCSS_CHECK_CHUNK_POSITION_AND_SET_IF_NEED
     

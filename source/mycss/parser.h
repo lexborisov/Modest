@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -35,7 +35,7 @@ extern "C" {
 #include "mycss/selectors/state.h"
 #include "mycss/selectors/parser.h"
 #include "mycss/declaration/state.h"
-#include "myhtml/incoming.h"
+#include "mycore/incoming.h"
 
 mycss_token_t * mycss_parser_token_ready_callback_function(mycss_entry_t* entry, mycss_token_t* token);
 

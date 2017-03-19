@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -20,7 +20,7 @@
 
 #include "mycss/property/parser.h"
 
-bool mycss_property_parser_destroy_string(myhtml_string_t* str, bool return_value)
+bool mycss_property_parser_destroy_string(mycore_string_t* str, bool return_value)
 {
     mycss_property_shared_destroy_string(str);
     return return_value;
@@ -47,7 +47,7 @@ bool mycss_property_parser_width(mycss_entry_t* entry, mycss_token_t* token, boo
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_width(entry, token, &declr_entry->value, &declr_entry->value_type, &str)) {
@@ -62,7 +62,7 @@ bool mycss_property_parser_height(mycss_entry_t* entry, mycss_token_t* token, bo
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_height(entry, token, &declr_entry->value, &declr_entry->value_type, &str))
@@ -76,7 +76,7 @@ bool mycss_property_parser_max_width(mycss_entry_t* entry, mycss_token_t* token,
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_length_percentage(entry, token, &dec_entry->value, &dec_entry->value_type, &str))
@@ -116,7 +116,7 @@ bool mycss_property_parser_min_width(mycss_entry_t* entry, mycss_token_t* token,
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_length_percentage(entry, token, &dec_entry->value, &dec_entry->value_type, &str) ||
@@ -134,7 +134,7 @@ bool mycss_property_parser_min_height(mycss_entry_t* entry, mycss_token_t* token
 }
 
 /* padding */
-mycss_declaration_entry_t * mycss_property_parser_padding_shared(mycss_entry_t* entry, mycss_token_t* token, myhtml_string_t* str)
+mycss_declaration_entry_t * mycss_property_parser_padding_shared(mycss_entry_t* entry, mycss_token_t* token, mycore_string_t* str)
 {
     void *value = NULL;
     unsigned int value_type = 0;
@@ -173,7 +173,7 @@ bool mycss_property_parser_padding(mycss_entry_t* entry, mycss_token_t* token, b
         return true;
     }
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     
     if(value->one == NULL)
     {
@@ -212,7 +212,7 @@ bool mycss_property_parser_padding_X(mycss_entry_t* entry, mycss_token_t* token,
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_length_percentage(entry, token, &dec_entry->value, &dec_entry->value_type, &str) ||
@@ -266,7 +266,7 @@ bool mycss_property_parser_padding_inline_end(mycss_entry_t* entry, mycss_token_
 }
 
 /* margin */
-mycss_declaration_entry_t * mycss_property_parser_margin_shared(mycss_entry_t* entry, mycss_token_t* token, myhtml_string_t* str)
+mycss_declaration_entry_t * mycss_property_parser_margin_shared(mycss_entry_t* entry, mycss_token_t* token, mycore_string_t* str)
 {
     void *value = NULL;
     unsigned int value_type = 0;
@@ -306,7 +306,7 @@ bool mycss_property_parser_margin(mycss_entry_t* entry, mycss_token_t* token, bo
         return true;
     }
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     
     if(value->one == NULL)
     {
@@ -345,7 +345,7 @@ bool mycss_property_parser_margin_X(mycss_entry_t* entry, mycss_token_t* token, 
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_length(entry, token, &dec_entry->value, &dec_entry->value_type, &str) ||
@@ -405,7 +405,7 @@ bool mycss_property_parser_display(mycss_entry_t* entry, mycss_token_t* token, b
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     
     if(token->type == MyCSS_TOKEN_TYPE_IDENT)
     {
@@ -459,7 +459,7 @@ bool mycss_property_parser_display(mycss_entry_t* entry, mycss_token_t* token, b
 }
 
 /* border */
-mycss_declaration_entry_t * mycss_property_parser_border_width_shared(mycss_entry_t* entry, mycss_token_t* token, myhtml_string_t* str)
+mycss_declaration_entry_t * mycss_property_parser_border_width_shared(mycss_entry_t* entry, mycss_token_t* token, mycore_string_t* str)
 {
     void *value = NULL;
     unsigned int value_type = 0;
@@ -478,7 +478,7 @@ mycss_declaration_entry_t * mycss_property_parser_border_width_shared(mycss_entr
 }
 
 static mycss_declaration_entry_t * mycss_property_parser_border_color_shared(mycss_entry_t* entry, mycss_token_t* token,
-                                                                             myhtml_string_t* str, mycss_parser_token_f return_parser,
+                                                                             mycore_string_t* str, mycss_parser_token_f return_parser,
                                                                              unsigned int type)
 {
     void *value = NULL;
@@ -504,7 +504,7 @@ static mycss_declaration_entry_t * mycss_property_parser_border_color_shared(myc
     return NULL;
 }
 
-mycss_declaration_entry_t * mycss_property_parser_border_style_shared(mycss_entry_t* entry, mycss_token_t* token, myhtml_string_t* str)
+mycss_declaration_entry_t * mycss_property_parser_border_style_shared(mycss_entry_t* entry, mycss_token_t* token, mycore_string_t* str)
 {
     unsigned int value_type = 0;
     
@@ -542,7 +542,7 @@ bool mycss_property_parser_border_top(mycss_entry_t* entry, mycss_token_t* token
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     unsigned int value_type = 0;
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
@@ -658,7 +658,7 @@ bool mycss_property_parser_border_width(mycss_entry_t* entry, mycss_token_t* tok
         return true;
     }
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     
     if(value->one == NULL)
     {
@@ -697,7 +697,7 @@ bool mycss_property_parser_border_top_width(mycss_entry_t* entry, mycss_token_t*
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_line_width(entry, token, &declr_entry->value, &declr_entry->value_type, &str)) {
@@ -764,7 +764,7 @@ bool mycss_property_parser_border_style(mycss_entry_t* entry, mycss_token_t* tok
         return true;
     }
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     
     if(value->one == NULL)
     {
@@ -803,7 +803,7 @@ bool mycss_property_parser_border_top_style(mycss_entry_t* entry, mycss_token_t*
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_line_style(entry, token, &declr_entry->value_type, &str)) {
@@ -850,7 +850,7 @@ bool mycss_property_parser_border_inline_end_style(mycss_entry_t* entry, mycss_t
 }
 
 /* border radius */
-static mycss_declaration_entry_t * mycss_property_parser_border_radius_shared(mycss_entry_t* entry, mycss_token_t* token, myhtml_string_t* str, bool is_first)
+static mycss_declaration_entry_t * mycss_property_parser_border_radius_shared(mycss_entry_t* entry, mycss_token_t* token, mycore_string_t* str, bool is_first)
 {
     void *value = NULL;
     unsigned int value_type = 0;
@@ -878,7 +878,7 @@ static mycss_declaration_entry_t * mycss_property_parser_border_radius_shared(my
 }
 
 static bool mycss_property_parser_border_radius_two_shared(mycss_entry_t* entry, mycss_token_t* token,
-                                                    mycss_values_shorthand_two_type_t *short_two_type, myhtml_string_t* str)
+                                                    mycss_values_shorthand_two_type_t *short_two_type, mycore_string_t* str)
 {
     if(mycss_property_shared_length_percentage(entry, token, &short_two_type->two, &short_two_type->type_two, str)) {
         return true;
@@ -899,7 +899,7 @@ bool mycss_property_parser_border_radius_two(mycss_entry_t* entry, mycss_token_t
         return true;
     }
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     
     if(((mycss_values_shorthand_two_type_t*)(value->one->value))->two == NULL)
     {
@@ -983,7 +983,7 @@ bool mycss_property_parser_border_radius(mycss_entry_t* entry, mycss_token_t* to
         return true;
     }
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     
     if(value->one == NULL)
     {
@@ -1053,7 +1053,7 @@ bool mycss_property_parser_border_top_right_radius(mycss_entry_t* entry, mycss_t
         return true;
     }
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     
     if(short_two_type->one == NULL)
     {
@@ -1096,7 +1096,7 @@ bool mycss_property_parser_border_color(mycss_entry_t* entry, mycss_token_t* tok
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     mycss_values_shorthand_four_t *value = dec_entry->value;
@@ -1208,7 +1208,7 @@ bool mycss_property_parser_box_sizing(mycss_entry_t* entry, mycss_token_t* token
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
         return mycss_property_shared_switch_to_parse_error(entry);
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_token_data_to_string(entry, token, &str, true, false);
     
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
@@ -1236,7 +1236,7 @@ bool mycss_property_parser_vertical_align(mycss_entry_t* entry, mycss_token_t* t
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_length_percentage(entry, token, &dec_entry->value, &dec_entry->value_type, &str))
@@ -1278,7 +1278,7 @@ bool mycss_property_parser_line_height(mycss_entry_t* entry, mycss_token_t* toke
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_line_height(entry, token, &dec_entry->value, &dec_entry->value_type, &str))
@@ -1293,7 +1293,7 @@ bool mycss_property_parser_color(mycss_entry_t* entry, mycss_token_t* token, boo
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     bool parser_changed = false;
@@ -1330,7 +1330,7 @@ bool mycss_property_parser_position(mycss_entry_t* entry, mycss_token_t* token, 
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
@@ -1364,7 +1364,7 @@ bool mycss_property_parser_z_index(mycss_entry_t* entry, mycss_token_t* token, b
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_number(entry, token, &dec_entry->value, &dec_entry->value_type, &str))
@@ -1400,7 +1400,7 @@ bool mycss_property_parser_cursor(mycss_entry_t* entry, mycss_token_t* token, bo
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
@@ -1465,7 +1465,7 @@ bool mycss_property_parser_float(mycss_entry_t* entry, mycss_token_t* token, boo
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
@@ -1500,7 +1500,7 @@ bool mycss_property_parser_float_displace(mycss_entry_t* entry, mycss_token_t* t
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
@@ -1533,7 +1533,7 @@ bool mycss_property_parser_top(mycss_entry_t* entry, mycss_token_t* token, bool 
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_length_percentage(entry, token, &dec_entry->value, &dec_entry->value_type, &str))
@@ -1584,7 +1584,7 @@ bool mycss_property_parser_clear(mycss_entry_t* entry, mycss_token_t* token, boo
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
@@ -1616,7 +1616,7 @@ bool mycss_property_parser_clear_after(mycss_entry_t* entry, mycss_token_t* toke
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
@@ -1656,7 +1656,7 @@ bool mycss_property_parser_overflow(mycss_entry_t* entry, mycss_token_t* token, 
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
@@ -1690,7 +1690,7 @@ bool mycss_property_parser_overflow_wrap(mycss_entry_t* entry, mycss_token_t* to
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
@@ -1732,7 +1732,7 @@ bool mycss_property_parser_visibility(mycss_entry_t* entry, mycss_token_t* token
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
@@ -1764,7 +1764,7 @@ bool mycss_property_parser_font_weight(mycss_entry_t* entry, mycss_token_t* toke
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_font_weight(entry, token, &dec_entry->value_type, &str))
@@ -1778,7 +1778,7 @@ bool mycss_property_parser_font_size(mycss_entry_t* entry, mycss_token_t* token,
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_font_size(entry, token, &dec_entry->value, &dec_entry->value_type, &str))
@@ -1792,7 +1792,7 @@ bool mycss_property_parser_font_size_adjust(mycss_entry_t* entry, mycss_token_t*
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_number(entry, token, &dec_entry->value, &dec_entry->value_type, &str))
@@ -1827,7 +1827,7 @@ bool mycss_property_parser_font_stretch(mycss_entry_t* entry, mycss_token_t* tok
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_font_stretch(entry, token, &dec_entry->value_type, &str))
@@ -1841,7 +1841,7 @@ bool mycss_property_parser_font_style(mycss_entry_t* entry, mycss_token_t* token
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_font_style(entry, token, &dec_entry->value_type, &str))
@@ -1874,7 +1874,7 @@ bool mycss_property_parser_font_family(mycss_entry_t* entry, mycss_token_t* toke
     if(mycss_property_shared_check_declaration_end(entry, token))
         return true;
     
-    myhtml_string_t str = {0}; bool dont_destroy_str;
+    mycore_string_t str = {0}; bool dont_destroy_str;
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_font_family(entry, token, &dec_entry->value, &dec_entry->value_type, &dont_destroy_str, &str)) {
@@ -1921,7 +1921,7 @@ bool mycss_property_parser_font_step_wait_family(mycss_entry_t* entry, mycss_tok
     if(dec_entry->value == NULL)
         return mycss_property_shared_switch_to_parse_error(entry);
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_values_font_t *font = (mycss_values_font_t*)dec_entry->value;
     
     void *value = NULL;
@@ -1967,7 +1967,7 @@ bool mycss_property_parser_font_step_wait_line_height(mycss_entry_t* entry, mycs
     void *value = NULL;
     unsigned int value_type = 0;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_values_font_t *font = (mycss_values_font_t*)dec_entry->value;
     
     if(mycss_property_shared_line_height(entry, token, &value, &value_type, &str)) {
@@ -2010,7 +2010,7 @@ bool mycss_property_parser_font_step_after_size(mycss_entry_t* entry, mycss_toke
     unsigned int value_type = 0;
     bool dont_destroy_str;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_values_font_t *font = (mycss_values_font_t*)dec_entry->value;
     
     if(mycss_property_shared_font_family(entry, token, &value, &value_type, &dont_destroy_str, &str)) {
@@ -2038,7 +2038,7 @@ bool mycss_property_parser_font_step_one(mycss_entry_t* entry, mycss_token_t* to
     if(mycss_property_shared_check_declaration_end(entry, token))
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(dec_entry->value == NULL)
@@ -2120,7 +2120,7 @@ bool mycss_property_parser_font(mycss_entry_t* entry, mycss_token_t* token, bool
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     dec_entry->value = mycss_values_create(entry, sizeof(mycss_values_font_t));
@@ -2206,7 +2206,7 @@ bool mycss_property_parser_text_align(mycss_entry_t* entry, mycss_token_t* token
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
@@ -2242,7 +2242,7 @@ bool mycss_property_parser_text_align_all(mycss_entry_t* entry, mycss_token_t* t
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
@@ -2277,7 +2277,7 @@ bool mycss_property_parser_text_align_last(mycss_entry_t* entry, mycss_token_t* 
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
@@ -2313,7 +2313,7 @@ bool mycss_property_parser_white_space(mycss_entry_t* entry, mycss_token_t* toke
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
@@ -2346,7 +2346,7 @@ bool mycss_property_parser_text_transform(mycss_entry_t* entry, mycss_token_t* t
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
@@ -2379,7 +2379,7 @@ bool mycss_property_parser_word_break(mycss_entry_t* entry, mycss_token_t* token
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
@@ -2410,7 +2410,7 @@ bool mycss_property_parser_line_break(mycss_entry_t* entry, mycss_token_t* token
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
@@ -2442,7 +2442,7 @@ bool mycss_property_parser_tab_size(mycss_entry_t* entry, mycss_token_t* token, 
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_number(entry, token, &dec_entry->value, &dec_entry->value_type, &str) ||
@@ -2460,7 +2460,7 @@ bool mycss_property_parser_hyphens(mycss_entry_t* entry, mycss_token_t* token, b
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
@@ -2496,7 +2496,7 @@ bool mycss_property_parser_text_justify(mycss_entry_t* entry, mycss_token_t* tok
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
@@ -2528,7 +2528,7 @@ bool mycss_property_parser_word_spacing(mycss_entry_t* entry, mycss_token_t* tok
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_length_percentage(entry, token, &dec_entry->value, &dec_entry->value_type, &str) ||
@@ -2546,7 +2546,7 @@ bool mycss_property_parser_letter_spacing(mycss_entry_t* entry, mycss_token_t* t
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_length(entry, token, &dec_entry->value, &dec_entry->value_type, &str) ||
@@ -2564,7 +2564,7 @@ bool mycss_property_parser_direction(mycss_entry_t* entry, mycss_token_t* token,
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
@@ -2594,7 +2594,7 @@ bool mycss_property_parser_unicode_bidi(mycss_entry_t* entry, mycss_token_t* tok
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
@@ -2628,7 +2628,7 @@ bool mycss_property_parser_writing_mode(mycss_entry_t* entry, mycss_token_t* tok
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
@@ -2661,7 +2661,7 @@ bool mycss_property_parser_text_orientation(mycss_entry_t* entry, mycss_token_t*
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
@@ -2692,7 +2692,7 @@ bool mycss_property_parser_glyph_orientation_vertical(mycss_entry_t* entry, mycs
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)

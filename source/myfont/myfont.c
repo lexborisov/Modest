@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -32,18 +32,27 @@ const char myfont_table_name[][5] = {
 
 myfont_font_t * myfont_create(void)
 {
-    return (myfont_font_t *)myhtml_calloc(1, sizeof(myfont_font_t));
+    return (myfont_font_t *)mycore_calloc(1, sizeof(myfont_font_t));
 }
 
-myfont_status_t myfont_init(myfont_font_t *mf)
+mystatus_t myfont_init(myfont_font_t *mf)
 {
-    mf->mchar = mchar_async_create(64, (4096 * 2));
-    mf->mchar_node_id = mchar_async_node_add(mf->mchar);
+    mystatus_t status;
+    
+    mf->mchar = mchar_async_create();
+    if(mf->mchar == NULL)
+        return MyCORE_STATUS_ERROR_MEMORY_ALLOCATION;
+    
+    if((status = mchar_async_init(mf->mchar, 64, (4096 * 2))))
+        return status;
+    
+    mf->mchar_node_id = mchar_async_node_add(mf->mchar, &status);
+    
+    if(status)
+        return status;
     
     memset(mf->cache.tables_offset, 0, sizeof(uint32_t) * MyFONT_TKEY_LAST_KEY);
     memset(&mf->header, 0, sizeof(myfont_header_t));
-    
-    mf->file_path = NULL;
     
     return MyFONT_STATUS_OK;
 }
@@ -54,17 +63,6 @@ void myfont_clean(myfont_font_t *mf)
     
     memset(mf->cache.tables_offset, 0, sizeof(uint32_t) * MyFONT_TKEY_LAST_KEY);
     memset(&mf->header, 0, sizeof(myfont_header_t));
-    
-    if(mf->file_data) {
-        myhtml_free(mf->file_data);
-        mf->file_data = NULL;
-    }
-    
-    if(mf->file_path) {
-        myhtml_free(mf->file_path);
-        mf->file_path = NULL;
-    }
-    
     memset(mf, 0, sizeof(myfont_font_t));
 }
 
@@ -75,18 +73,8 @@ myfont_font_t * myfont_destroy(myfont_font_t *mf, bool self_destroy)
     
     mf->mchar = mchar_async_destroy(mf->mchar, 1);
     
-    if(mf->file_data) {
-        myhtml_free(mf->file_data);
-        mf->file_data = NULL;
-    }
-    
-    if(mf->file_path) {
-        myhtml_free(mf->file_path);
-        mf->file_path = NULL;
-    }
-    
     if(self_destroy) {
-        myhtml_free(mf);
+        mycore_free(mf);
         return NULL;
     }
     
@@ -111,53 +99,80 @@ void myfont_free(myfont_font_t *mf, void* data)
     mchar_async_free(mf->mchar, mf->mchar_node_id, data);
 }
 
-myfont_status_t myfont_load(myfont_font_t *mf, const char *filepath)
+mystatus_t myfont_load_from_file(myfont_font_t *mf, const char *filepath, uint8_t** return_data, size_t* data_size)
 {
-    FILE *fh = fopen(filepath, "rb");
+    if(return_data)
+        *return_data = NULL;
+    
+    if(data_size)
+        *data_size = 0;
+    
+    size_t file_data_size;
+    
+    FILE *fh = mycore_fopen(filepath, "rb");
     if(fh == NULL)
         return MyFONT_STATUS_ERROR_FILE_OPEN;
     
-    if(fseek(fh, 0L, SEEK_END)) {
-        fclose(fh);
+    if(mycore_fseek(fh, 0L, SEEK_END)) {
+        mycore_fclose(fh);
         return MyFONT_STATUS_ERROR_FILE_SEEK;
     }
     
-    long file_size = ftell(fh);
+    long file_size = mycore_ftell(fh);
     if(file_size == -1) {
-        fclose(fh);
+        mycore_fclose(fh);
         return MyFONT_STATUS_ERROR_FILE_TELL;
     }
     
-    if(fseek(fh, 0L, SEEK_SET)) {
-        fclose(fh);
+    if(mycore_fseek(fh, 0L, SEEK_SET)) {
+        mycore_fclose(fh);
         return MyFONT_STATUS_ERROR_FILE_SEEK;
     }
     
     if(file_size > 0)
-        mf->file_size = (size_t)file_size;
+        file_data_size = (size_t)file_size;
     else {
-        fclose(fh);
+        mycore_fclose(fh);
         return MyFONT_STATUS_ERROR_FILE_TOO_SMALL;
     }
     
-    mf->file_data = (uint8_t*)myhtml_malloc(file_size);
+    uint8_t* data = (uint8_t*)mycore_malloc(file_size);
     
-    if(mf->file_data == NULL) {
-        fclose(fh);
+    if(data == NULL) {
+        mycore_fclose(fh);
         return MyFONT_STATUS_ERROR_MEMORY_ALLOCATION;
     }
     
-    if(fread(mf->file_data, 1, file_size, fh) != file_size) {
-        fclose(fh);
+    if(mycore_fread(data, 1, file_size, fh) != file_size) {
+        mycore_fclose(fh);
         return MyFONT_STATUS_ERROR_FILE_READ;
     }
     
-    fclose(fh);
+    mycore_fclose(fh);
     
-    if(mf->file_size < 12)
+    if(return_data)
+        *return_data = data;
+    
+    if(data_size)
+        *data_size = file_data_size;
+    
+    return myfont_load(mf, data, file_data_size);
+}
+
+void * myfont_destroy_font_data(myfont_font_t *mf, uint8_t* return_data)
+{
+    if(return_data)
+        return mycore_free(return_data);
+    
+    return NULL;
+}
+
+mystatus_t myfont_load(myfont_font_t *mf, uint8_t* font_data, size_t data_size)
+{
+    if(data_size < 12)
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
-    uint8_t *data = mf->file_data;
+    uint8_t* data = font_data;
     
     mf->header.version_major = myfont_read_u16(&data);
     mf->header.version_minor = myfont_read_u16(&data);
@@ -166,7 +181,7 @@ myfont_status_t myfont_load(myfont_font_t *mf, const char *filepath)
     mf->header.entrySelector = myfont_read_u16(&data);
     mf->header.rangeShift    = myfont_read_u16(&data);
     
-    if(mf->file_size < (12 + (mf->header.numTables * 16)))
+    if(data_size < (12 + (mf->header.numTables * 16)))
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     for(uint16_t i = 0; i < mf->header.numTables; i++)
@@ -224,54 +239,48 @@ myfont_status_t myfont_load(myfont_font_t *mf, const char *filepath)
     if(myfont_check_required_tables(mf))
         return MyFONT_STATUS_ERROR_TABLE_LACKS_REQUIRED;
     
-    mf->file_path = (char *)myhtml_calloc(strlen(filepath), sizeof(char));
+    mystatus_t status;
     
-    if(mf->file_path) {
-        strncpy(mf->file_path, filepath, strlen(filepath));
-    }
-    
-    myfont_status_t status;
-    
-    if((status = myfont_load_table_cmap(mf)))
+    if((status = myfont_load_table_cmap(mf, font_data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_CMAP;
     
-    if((status = myfont_load_table_head(mf)))
+    if((status = myfont_load_table_head(mf, font_data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_HEAD;
     
-    if((status = myfont_load_table_name(mf)))
+    if((status = myfont_load_table_name(mf, font_data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_NAME;
     
-    if((status = myfont_load_table_os_2(mf)))
+    if((status = myfont_load_table_os_2(mf, font_data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_OS_2;
     
-    if((status = myfont_load_table_maxp(mf)))
+    if((status = myfont_load_table_maxp(mf, font_data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_MAXP;
     
-    if((status = myfont_load_table_hhea(mf)))
+    if((status = myfont_load_table_hhea(mf, font_data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_HHEA;
     
-    if((status = myfont_load_table_hmtx(mf)))
+    if((status = myfont_load_table_hmtx(mf, font_data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_HMTX;
     
-    if((status = myfont_load_table_loca(mf)))
+    if((status = myfont_load_table_loca(mf, font_data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_LOCA;
     
-    if((status = myfont_load_table_glyf(mf)))
+    if((status = myfont_load_table_glyf(mf, font_data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_GLYF;
     
-    if((status = myfont_load_table_vhea(mf)))
+    if((status = myfont_load_table_vhea(mf, font_data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_VHEA;
     
-    if((status = myfont_load_table_vmtx(mf)))
+    if((status = myfont_load_table_vmtx(mf, font_data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_VMTX;
     
-    if((status = myfont_load_table_pclt(mf)))
+    if((status = myfont_load_table_pclt(mf, font_data, data_size)))
         return MyFONT_STATUS_ERROR_TABLE_LOAD_PCLT;
     
     return MyFONT_STATUS_OK;
 }
 
-myfont_status_t myfont_check_required_tables(myfont_font_t *mf)
+mystatus_t myfont_check_required_tables(myfont_font_t *mf)
 {
     if(mf->cache.tables_offset[ MyFONT_TKEY_cmap ] == 0 ||
        mf->cache.tables_offset[ MyFONT_TKEY_glyf ] == 0 ||
@@ -285,17 +294,6 @@ myfont_status_t myfont_check_required_tables(myfont_font_t *mf)
         return MyFONT_STATUS_ERROR_TABLE_LACKS_REQUIRED;
     
     return MyFONT_STATUS_OK;
-}
-
-void myfont_font_print_exists_table(myfont_font_t *mf, FILE *file)
-{
-    size_t i;
-    for(i = 0; i < MyFONT_TKEY_LAST_KEY; i++)
-    { 
-        if(mf->cache.tables_offset[i]) {
-            fprintf(file, "%s = %u\n", myfont_table_name[i], mf->cache.tables_offset[i]);
-        }
-    }
 }
 
 // metrics
@@ -334,7 +332,7 @@ float myfont_metrics_x_height(myfont_font_t *mf, float font_size)
     
     if(xheight == 0)
     {
-        myfont_status_t mf_status;
+        mystatus_t mf_status;
         uint16_t glyph_index = myfont_glyph_index_by_codepoint(mf, (unsigned long)('x'), &mf_status);
         
         if(mf_status == MyFONT_STATUS_OK) {
@@ -360,7 +358,7 @@ float myfont_metrics_cap_height(myfont_font_t *mf, float font_size)
     
     if(cap_height == 0)
     {
-        myfont_status_t mf_status;
+        mystatus_t mf_status;
         uint16_t glyph_index = myfont_glyph_index_by_codepoint(mf, (unsigned long)('H'), &mf_status);
         
         if(mf_status == MyFONT_STATUS_OK) {
@@ -378,12 +376,12 @@ float myfont_metrics_font_height(myfont_font_t *mf, float font_size)
 }
 
 // width, height and ...
-float myfont_metrics_width(myfont_font_t *mf, unsigned long codepoint, float font_size, myfont_status_t* status)
+float myfont_metrics_width(myfont_font_t *mf, unsigned long codepoint, float font_size, mystatus_t* status)
 {
     if(mf->table_hhea.numberOfHMetrics == 0 || mf->table_hmtx.hMetrics == NULL)
         return 0.0f;
     
-    myfont_status_t mf_status;
+    mystatus_t mf_status;
     
     uint16_t glyph_index = myfont_glyph_index_by_codepoint(mf, codepoint, &mf_status);
     
@@ -397,12 +395,12 @@ float myfont_metrics_width(myfont_font_t *mf, unsigned long codepoint, float fon
     return (float)(mf->table_hmtx.hMetrics[glyph_index].advanceWidth) * font_size / (float)(mf->table_head.unitsPerEm);
 }
 
-float myfont_metrics_height(myfont_font_t *mf, unsigned long codepoint, float font_size, myfont_status_t* status)
+float myfont_metrics_height(myfont_font_t *mf, unsigned long codepoint, float font_size, mystatus_t* status)
 {
     if(mf->table_vhea.numOfLongVerMetrics == 0 || mf->table_vmtx.vMetrics == NULL)
         return myfont_metrics_font_height(mf, font_size);
     
-    myfont_status_t mf_status;
+    mystatus_t mf_status;
     
     uint16_t glyph_index = myfont_glyph_index_by_codepoint(mf, codepoint, &mf_status);
     
@@ -416,9 +414,9 @@ float myfont_metrics_height(myfont_font_t *mf, unsigned long codepoint, float fo
     return (float)(mf->table_vmtx.vMetrics[glyph_index].advanceHeight) * font_size / (float)(mf->table_head.unitsPerEm);
 }
 
-float myfont_metrics_glyph_offset_y(myfont_font_t *mf, unsigned long codepoint, float font_size, myfont_status_t* status)
+float myfont_metrics_glyph_offset_y(myfont_font_t *mf, unsigned long codepoint, float font_size, mystatus_t* status)
 {
-    myfont_status_t mf_status;
+    mystatus_t mf_status;
     
     uint16_t glyph_index = myfont_glyph_index_by_codepoint(mf, codepoint, &mf_status);
     

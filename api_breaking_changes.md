@@ -1,3 +1,11 @@
+0.0.5 => 0.0.6
+===========
+* MyHTML split to MyHTML and MyCORE
+* Removed all io print functions to file: ```myhtml_tree_print_by_node```, ```myhtml_tree_print_node_children```, ```myhtml_tree_print_node```; Use serializations instead of their
+* If you use encoding enum, like ```MyHTML_ENCODING_UTF8```, now it ```MyENCODING_UTF_8```, i.e ```MyHTML_ENCODING_* => MyENCODING_*```
+* Functions migrated to MyCORE from MyHTML: ```myhtml_incoming_buffer_*``` => ```mycore_incoming_buffer_*```, ```myhtml_string*``` => ```mycore_string*```, ```myhtml_utils*``` => ```mycore_utils*```
+
+
 0.0.1 => 0.0.4
 ===========
 Removed all depending on the Tree. Now you can get a tree of nodes ```myhtml_node_tree```

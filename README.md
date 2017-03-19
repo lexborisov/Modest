@@ -8,14 +8,24 @@ Modest is a fast HTML renderer implemented as a pure C99 library with no outside
 
 * Mailing List: [https://groups.google.com/forum/#!forum/modest-engine](https://groups.google.com/forum/#!forum/modest-engine)
 * IRC: [#modest-engine on `irc.freenode.net <http://freenode.net>`](http://webchat.freenode.net?channels=%23modest-engine)
-* Or you can ask questions on [stackoverflow.com](https://stackoverflow.com/questions/ask?tags=modest) by modest tag
 * Public [tracker by trello](https://trello.com/b/sdqpT8Ep/modest)
 
 ## Now
 
 ```text
-The current version is 0.0.5 - devel
+The current version is 0.0.6 - devel
 ```
+
+## Features
+
+* MyCORE — base module, it is used by all other modules
+* MyHTML — HTML parser by [specification](https://html.spec.whatwg.org/multipage/)
+* MyCSS —  CSS parserand modules by [specification](https://drafts.csswg.org/)
+* MyENCODING — work with character encodings, detecting encoding, convert encodings by [specification](https://encoding.spec.whatwg.org/)
+* MyFONT — work with font, metrics, calculating size and more by [specification](https://www.microsoft.com/en-us/Typography/SpecificationsOverview.aspx)
+* MyURL — URL parser by [specification](https://url.spec.whatwg.org/)
+* MyPORT — system depended code: threads (if build with threads, default), work with memory, io, timers
+* Modest — renderer
 
 ## Introduction
 
@@ -42,7 +52,7 @@ Alexander Borisov <lex.borisov@gmail.com>
 
 ## COPYRIGHT AND LICENSE
 
-Copyright (C) 2015-2016 Alexander Borisov
+Copyright (C) 2015-2017 Alexander Borisov
 
 This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version.
 

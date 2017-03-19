@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -22,13 +22,13 @@
 #include "mycss/selectors/myosi_resource.h"
 
 void mycss_selectors_serialization_chain(mycss_selectors_t* selectors, mycss_selectors_entry_t* selector,
-                                         mycss_callback_serialization_f callback, void* context)
+                                         mycore_callback_serialize_f callback, void* context)
 {
     while(selector) {
         if(selector->combinator == MyCSS_SELECTORS_COMBINATOR_DESCENDANT)
             callback(" ", 1, context);
         else if(selector->combinator == MyCSS_SELECTORS_COMBINATOR_UNDEF) {
-            /* fprintf(fh, "") */
+            /* "" */
         }
         else {
             callback(" ", 1, context);
@@ -46,7 +46,7 @@ void mycss_selectors_serialization_chain(mycss_selectors_t* selectors, mycss_sel
 }
 
 bool mycss_selectors_serialization_list(mycss_selectors_t* selectors, mycss_selectors_list_t* selectors_list,
-                                        mycss_callback_serialization_f callback, void* context)
+                                        mycore_callback_serialize_f callback, void* context)
 {
     while(selectors_list) {
         for(size_t i = 0; i < selectors_list->entries_list_length; i++)
@@ -78,7 +78,7 @@ bool mycss_selectors_serialization_list(mycss_selectors_t* selectors, mycss_sele
 }
 
 bool mycss_selectors_serialization_selector(mycss_selectors_t* selectors, mycss_selectors_entry_t* selector,
-                                            mycss_callback_serialization_f callback, void* context)
+                                            mycore_callback_serialize_f callback, void* context)
 {
     switch(selector->type) {
         case MyCSS_SELECTORS_TYPE_ELEMENT: {
@@ -114,7 +114,7 @@ bool mycss_selectors_serialization_selector(mycss_selectors_t* selectors, mycss_
             
             /* value */
             if(mycss_selector_value_attribute(selector->value)->value) {
-                myhtml_string_t *str_value = mycss_selector_value_attribute(selector->value)->value;
+                mycore_string_t *str_value = mycss_selector_value_attribute(selector->value)->value;
                 callback(str_value->data, str_value->length, context);
             }
             
@@ -203,7 +203,7 @@ bool mycss_selectors_serialization_selector(mycss_selectors_t* selectors, mycss_
                 case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_DIR:
                 {
                     if(selector->value) {
-                        myhtml_string_t *str_fname = mycss_selector_value_string(selector->value);
+                        mycore_string_t *str_fname = mycss_selector_value_string(selector->value);
                         callback(str_fname->data, str_fname->length, context);
                     }
                     

@@ -90,7 +90,7 @@ test_res_t test_load_file(const char* filename)
 
     size_t nread = fread(file_data, 1, size, fh);
     if (nread != size) {
-        fprintf(stderr, "Could not read %ld bytes (" MyHTML_FMT_Z " bytes done)\n", size, nread);
+        fprintf(stderr, "Could not read %ld bytes (" MyCORE_FORMAT_Z " bytes done)\n", size, nread);
         exit(EXIT_FAILURE);
     }
 
@@ -99,29 +99,29 @@ test_res_t test_load_file(const char* filename)
     return (test_res_t){file_data, (size_t)size};
 }
 
-void test_init_str_raw(myhtml_string_raw_t* str, size_t size)
+void test_init_str_raw(mycore_string_raw_t* str, size_t size)
 {
     str->size   = size;
     str->length = 0;
-    str->data   = (char*)myhtml_malloc(str->size * sizeof(char));
+    str->data   = (char*)mycore_malloc(str->size * sizeof(char));
     
     if(str->data == NULL) {
-        fprintf(stderr, "Can't allocation resources for myhtml_string_raw_t object\n");
+        fprintf(stderr, "Can't allocation resources for mycore_string_raw_t object\n");
         exit(EXIT_FAILURE);
     }
 }
 
-void test_reallocate_str(myhtml_string_raw_t *str, size_t size)
+void test_reallocate_str(mycore_string_raw_t *str, size_t size)
 {
-    str->data = (char*)myhtml_realloc(str->data, size * sizeof(char));
+    str->data = (char*)mycore_realloc(str->data, size * sizeof(char));
     
     if(str->data == NULL) {
-        fprintf(stderr, "Can't reallocation resources for myhtml_string_raw_t object\n");
+        fprintf(stderr, "Can't reallocation resources for mycore_string_raw_t object\n");
         exit(EXIT_FAILURE);
     }
 }
 
-void test_str_set_term(myhtml_string_raw_t *str)
+void test_str_set_term(mycore_string_raw_t *str)
 {
     if((str->length + 1) >= str->size)
         test_reallocate_str(str, 64);
@@ -129,11 +129,11 @@ void test_str_set_term(myhtml_string_raw_t *str)
     str->data[ str->length ] = '\0';
 }
 
-myhtml_string_raw_t test_combine_to_style(const char* one, size_t one_len, const char* two, size_t two_len)
+mycore_string_raw_t test_combine_to_style(const char* one, size_t one_len, const char* two, size_t two_len)
 {
     size_t new_size = one_len + two_len;
     
-    myhtml_string_raw_t str = {0};
+    mycore_string_raw_t str = {0};
     test_init_str_raw(&str, (new_size + 2));
     
     memcpy(str.data, one, sizeof(char) * one_len);
@@ -239,7 +239,7 @@ test_stat_t test_read_dir(const char* dir_path, test_read_dir_callback_f callbac
                 continue;
             
             result_stat.total++;
-            printf(MyHTML_FMT_Z ") %s: ", result_stat.total, ent->d_name);
+            printf(MyCORE_FORMAT_Z ") %s: ", result_stat.total, ent->d_name);
             
             if(callback(path, (strlen(ent->d_name) + path_len + 1), context)) {
                 result_stat.good++;
@@ -254,9 +254,9 @@ test_stat_t test_read_dir(const char* dir_path, test_read_dir_callback_f callbac
 
 /* test */
 bool test_process_elements(test_data_t *test_data, myhtml_collection_t *collection, test_stat_t* result_stat);
-myhtml_string_raw_t test_process_result_from_node(test_data_t *test_data, myhtml_tree_node_t *node);
-myhtml_string_raw_t test_process_serialize_stype(test_data_t *test_data, const char* style, size_t style_size);
-void test_process_serialize_callback(const char* buffer, size_t size, void* ctx);
+mycore_string_raw_t test_process_result_from_node(test_data_t *test_data, myhtml_tree_node_t *node);
+mycore_string_raw_t test_process_serialize_stype(test_data_t *test_data, const char* style, size_t style_size);
+mystatus_t test_process_serialize_callback(const char* buffer, size_t size, void* ctx);
 
 bool test_process_callback(const char* filename, size_t filename_len, void* context)
 {
@@ -265,7 +265,7 @@ bool test_process_callback(const char* filename, size_t filename_len, void* cont
     test_stat_t result_stat = {0};
     
     /* parse html */
-    myhtml_status_t status = myhtml_parse(test_data->tree, MyHTML_ENCODING_UTF_8, html_data.data, html_data.size);
+    myhtml_status_t status = myhtml_parse(test_data->tree, MyENCODING_UTF_8, html_data.data, html_data.size);
     if(status) {
         fprintf(stderr, "Could parse HTML from file %s error code %d\n", filename, status);
         exit(EXIT_FAILURE);
@@ -283,12 +283,12 @@ bool test_process_callback(const char* filename, size_t filename_len, void* cont
         printf("\tResult: ");
     }
     
-    printf("count(" MyHTML_FMT_Z ") good(" MyHTML_FMT_Z ") bad(" MyHTML_FMT_Z ")\n", result_stat.total, result_stat.good, (result_stat.total - result_stat.good));
+    printf("count(" MyCORE_FORMAT_Z ") good(" MyCORE_FORMAT_Z ") bad(" MyCORE_FORMAT_Z ")\n", result_stat.total, result_stat.good, (result_stat.total - result_stat.good));
     
     test_data->stat.good += result_stat.good;
     test_data->stat.total += result_stat.total;
     
-    myhtml_free(html_data.data);
+    mycore_free(html_data.data);
     return true;
 }
 
@@ -306,10 +306,10 @@ bool test_process_elements(test_data_t *test_data, myhtml_collection_t *collecti
         const char* name = myhtml_attribute_value(attr_name, &name_length);
         const char* value = myhtml_attribute_value(attr_value, &value_length);
         
-        myhtml_string_raw_t style = test_combine_to_style(name, name_length, value, value_length);
+        mycore_string_raw_t style = test_combine_to_style(name, name_length, value, value_length);
         
-        myhtml_string_raw_t correct_result = test_process_result_from_node(test_data, node);
-        myhtml_string_raw_t parse_result = test_process_serialize_stype(test_data, style.data, style.length);
+        mycore_string_raw_t correct_result = test_process_result_from_node(test_data, node);
+        mycore_string_raw_t parse_result = test_process_serialize_stype(test_data, style.data, style.length);
         
         result_stat->total++;
         
@@ -326,9 +326,9 @@ bool test_process_elements(test_data_t *test_data, myhtml_collection_t *collecti
             printf("\tBad: name=\"%s\" value=\"%s\" need=\"%s\" result=\"%s\"\n", name, value, correct_result.data, parse_result.data);
         }
 
-        myhtml_string_raw_destroy(&style, false);
-        myhtml_string_raw_destroy(&correct_result, false);
-        myhtml_string_raw_destroy(&parse_result, false);
+        mycore_string_raw_destroy(&style, false);
+        mycore_string_raw_destroy(&correct_result, false);
+        mycore_string_raw_destroy(&parse_result, false);
         
         mycss_entry_clean_all(test_data->entry);
     }
@@ -336,11 +336,11 @@ bool test_process_elements(test_data_t *test_data, myhtml_collection_t *collecti
     return true;
 }
 
-myhtml_string_raw_t test_process_result_from_node(test_data_t *test_data, myhtml_tree_node_t *node)
+mycore_string_raw_t test_process_result_from_node(test_data_t *test_data, myhtml_tree_node_t *node)
 {
-    myhtml_string_raw_t str = {0};
+    mycore_string_raw_t str = {0};
     
-    if(myhtml_serialization_node_buffer(node->child, &str) == false) {
+    if(myhtml_serialization_node_buffer(node->child, &str)) {
         fprintf(stderr, "Could serialization HTML node\n");
         exit(EXIT_FAILURE);
     }
@@ -348,13 +348,13 @@ myhtml_string_raw_t test_process_result_from_node(test_data_t *test_data, myhtml
     return str;
 }
 
-myhtml_string_raw_t test_process_serialize_stype(test_data_t *test_data, const char* style, size_t style_size)
+mycore_string_raw_t test_process_serialize_stype(test_data_t *test_data, const char* style, size_t style_size)
 {
-    myhtml_string_raw_t str;
+    mycore_string_raw_t str;
     test_init_str_raw(&str, 4096);
     
     mycss_status_t status;
-    mycss_declaration_entry_t *declaration = mycss_declaration_parse(test_data->entry->declaration, MyHTML_ENCODING_UTF_8, style, style_size, &status);
+    mycss_declaration_entry_t *declaration = mycss_declaration_parse(test_data->entry->declaration, MyENCODING_UTF_8, style, style_size, &status);
     
     if(status) {
         fprintf(stderr, "Could parse CSS Style (%d): %s\n", status, style);
@@ -367,15 +367,17 @@ myhtml_string_raw_t test_process_serialize_stype(test_data_t *test_data, const c
     return str;
 }
 
-void test_process_serialize_callback(const char* buffer, size_t size, void* ctx)
+mystatus_t test_process_serialize_callback(const char* buffer, size_t size, void* ctx)
 {
-    myhtml_string_raw_t *str = (myhtml_string_raw_t*)ctx;
+    mycore_string_raw_t *str = (mycore_string_raw_t*)ctx;
     
     if((str->length + size) >= str->size)
         test_reallocate_str(str, 4096);
     
     memcpy(&str->data[ str->length ], buffer, sizeof(char) * size);
     str->length += size;
+    
+    return MyCORE_STATUS_OK;
 }
 
 int main(int argc, const char * argv[])
@@ -398,7 +400,7 @@ int main(int argc, const char * argv[])
     test_read_dir(argv[1], test_process_callback, &test_data);
     
     size_t bad_count = (test_data.stat.total - test_data.stat.good);
-    printf("\nTotal: " MyHTML_FMT_Z "; Good: " MyHTML_FMT_Z "; Bad: " MyHTML_FMT_Z "\n", test_data.stat.total, test_data.stat.good, bad_count);
+    printf("\nTotal: " MyCORE_FORMAT_Z "; Good: " MyCORE_FORMAT_Z "; Bad: " MyCORE_FORMAT_Z "\n", test_data.stat.total, test_data.stat.good, bad_count);
     
     test_declaration_destroy_myhtml(test_data.tree);
     test_declaration_destroy_mycss(test_data.entry);

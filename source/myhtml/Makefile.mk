@@ -1,14 +1,10 @@
-find_files_h = $(wildcard $(SRCDIR)/myhtml/$(dir)/*.h)
-find_files_c = $(wildcard $(SRCDIR)/myhtml/$(dir)/*.c)
+myhtml_dirs := .
+myhtml_objs := $(call MODEST_UTILS_OBJS,myhtml,$(myhtml_dirs))
 
-SUBDIRS := . utils
-HDRS += $(foreach dir,$(SUBDIRS),$(find_files_h))
-SRCS += $(foreach dir,$(SUBDIRS),$(find_files_c))
+myhtml_all: $(myhtml_objs)
 
-myhtml_clone: MyHTML_DIR_$(SUBDIRS)
-	mkdir -p $(INCLUDE_TMP)/myhtml/utils
-	cp $(SRCDIR)/myhtml/utils/*.h $(INCLUDE_TMP)/myhtml/utils
+myhtml_clean: 
+	rm -f $(myhtml_objs)
 
-MyHTML_DIR_$(SUBDIRS):
-	mkdir -p $(INCLUDE_TMP)/myhtml/$(patsubst MyHTML_DIR_%,%,$@)
-	cp $(SRCDIR)/myhtml/$(patsubst MyHTML_DIR_%,%,$@)/*.h $(INCLUDE_TMP)/myhtml/$(patsubst MyHTML_DIR_%,%,$@)/
+myhtml_clone: 
+	$(call MODEST_UTILS_HDRS_CLONE,myhtml,$(myhtml_dirs))

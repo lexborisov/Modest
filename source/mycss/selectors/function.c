@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -20,7 +20,7 @@
 
 #include "mycss/selectors/function.h"
 #include "mycss/selectors/function_resource.h"
-#include "myhtml/utils/resources.h"
+#include "mycore/utils/resources.h"
 
 /////////////////////////////////////////////////////////
 //// Functions for a find Begin Function
@@ -28,15 +28,15 @@
 /////////////////////////////////////////////////////////
 const mycss_selectots_function_begin_entry_t * mycss_function_begin_entry_by_name(const char* name, size_t length)
 {
-    size_t idx = ((myhtml_string_chars_lowercase_map[ (const unsigned char)name[0] ] *
-                   myhtml_string_chars_lowercase_map[ (const unsigned char)name[(length - 1)] ] *
+    size_t idx = ((mycore_string_chars_lowercase_map[ (const unsigned char)name[0] ] *
+                   mycore_string_chars_lowercase_map[ (const unsigned char)name[(length - 1)] ] *
                    length)
                   % MyCSS_SELECTORS_FUNCTION_NAME_STATIC_SIZE) + 1;
     
     while (mycss_selectors_function_begin_map_index[idx].name)
     {
         if(mycss_selectors_function_begin_map_index[idx].length == length) {
-            if(myhtml_strncasecmp(mycss_selectors_function_begin_map_index[idx].name, name, length) == 0)
+            if(mycore_strncasecmp(mycss_selectors_function_begin_map_index[idx].name, name, length) == 0)
                 return &mycss_selectors_function_begin_map_index[idx];
             
             if(mycss_selectors_function_begin_map_index[idx].next)

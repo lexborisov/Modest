@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -21,7 +21,7 @@
 #include "myurl/url.h"
 #include "myurl/scheme.h"
 #include "myurl/scheme_resources.h"
-#include "myhtml/utils/resources.h"
+#include "mycore/utils/resources.h"
 
 void myurl_scheme_clean(myurl_t* url, myurl_scheme_t* scheme)
 {
@@ -49,15 +49,15 @@ myurl_scheme_t * myurl_scheme_destroy(myurl_t* url, myurl_scheme_t* scheme, bool
 
 const myurl_scheme_entry_t * myurl_scheme_find_entry(const char* name, size_t length)
 {
-    size_t idx = ((myhtml_string_chars_lowercase_map[ (const unsigned char)name[0] ] *
-                   myhtml_string_chars_lowercase_map[ (const unsigned char)name[(length - 1)] ] *
+    size_t idx = ((mycore_string_chars_lowercase_map[ (const unsigned char)name[0] ] *
+                   mycore_string_chars_lowercase_map[ (const unsigned char)name[(length - 1)] ] *
                    length)
                   % MyURL_SCHEME_STATIC_INDEX_LENGTH) + 1;
     
     while (myurl_scheme_entry_static_index[idx].name)
     {
         if(myurl_scheme_entry_static_index[idx].name_length == length) {
-            if(myhtml_strncasecmp(myurl_scheme_entry_static_index[idx].name, name, length) == 0)
+            if(mycore_strncasecmp(myurl_scheme_entry_static_index[idx].name, name, length) == 0)
                 return &myurl_scheme_entry_static_index[idx];
             
             if(myurl_scheme_entry_static_index[idx].next)
@@ -86,7 +86,7 @@ myurl_scheme_id_t myurl_scheme_id_by_name(const char *name, size_t length)
     return MyURL_SCHEME_ID_UNDEF;
 }
 
-myurl_status_t myurl_scheme_copy(myurl_t* url, myurl_scheme_t* from, myurl_scheme_t* to)
+mystatus_t myurl_scheme_copy(myurl_t* url, myurl_scheme_t* from, myurl_scheme_t* to)
 {
     memcpy(to, from, sizeof(myurl_scheme_t));
     

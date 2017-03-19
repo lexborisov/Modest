@@ -31,14 +31,14 @@
 extern "C" {
 #endif
 
-void myurl_serialization_authority(myurl_entry_t* url_entry, myhtml_callback_serialize_f callback, void* ctx);
-void myurl_serialization_host(myurl_entry_t* url_entry, myhtml_callback_serialize_f callback, void* ctx);
-void myurl_serialization_auth_host_port(myurl_entry_t* url_entry, myhtml_callback_serialize_f callback, void* ctx);
-void myurl_serialization_path(myurl_entry_t* url_entry, myhtml_callback_serialize_f callback, void* ctx);
-void myurl_serialization_fragment(myurl_entry_t* url_entry, myhtml_callback_serialize_f callback, void* ctx);
-void myurl_serialization_with_fragment(myurl_entry_t* url_entry, myhtml_callback_serialize_f callback, void* ctx);
-void myurl_serialization_without_fragment(myurl_entry_t* url_entry, myhtml_callback_serialize_f callback, void* ctx);
-void myurl_serialization(myurl_entry_t* url_entry, bool exclude_fragment_flag, myhtml_callback_serialize_f callback, void* ctx);
+void myurl_serialization_authority(myurl_entry_t* url_entry, mycore_callback_serialize_f callback, void* ctx);
+void myurl_serialization_host(myurl_entry_t* url_entry, mycore_callback_serialize_f callback, void* ctx);
+void myurl_serialization_auth_host_port(myurl_entry_t* url_entry, mycore_callback_serialize_f callback, void* ctx);
+void myurl_serialization_path(myurl_entry_t* url_entry, mycore_callback_serialize_f callback, void* ctx);
+void myurl_serialization_fragment(myurl_entry_t* url_entry, mycore_callback_serialize_f callback, void* ctx);
+void myurl_serialization_with_fragment(myurl_entry_t* url_entry, mycore_callback_serialize_f callback, void* ctx);
+void myurl_serialization_without_fragment(myurl_entry_t* url_entry, mycore_callback_serialize_f callback, void* ctx);
+void myurl_serialization(myurl_entry_t* url_entry, bool exclude_fragment_flag, mycore_callback_serialize_f callback, void* ctx);
 
 #ifdef __cplusplus
 } /* extern "C" */

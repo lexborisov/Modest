@@ -45,7 +45,7 @@ struct myurl_path_t {
 typedef myurl_path_t;
 
 myurl_path_t * myurl_path_create(myurl_t* url);
-myurl_status_t myurl_path_init(myurl_t* url, myurl_path_t* path, size_t begin_size);
+mystatus_t myurl_path_init(myurl_t* url, myurl_path_t* path, size_t begin_size);
 void myurl_path_clean(myurl_t* url, myurl_path_t* path);
 myurl_path_t * myurl_path_destroy(myurl_t* url, myurl_path_t* path, bool destroy_self);
 
@@ -54,7 +54,7 @@ myurl_path_entry_t * myurl_path_push(myurl_t* url, myurl_path_t* path, char* dat
 myurl_path_entry_t * myurl_path_push_to_index(myurl_t* url, myurl_path_t* path, size_t index, char* data, size_t length);
 myurl_path_entry_t * myurl_path_current(myurl_path_t* path);
 myurl_path_entry_t * myurl_path_pop(myurl_path_t* path);
-myurl_status_t myurl_path_copy(myurl_t* url, myurl_path_t* path_from, myurl_path_t* path_to);
+mystatus_t myurl_path_copy(myurl_t* url, myurl_path_t* path_from, myurl_path_t* path_to);
 
 void myurl_path_remove_by_index(myurl_t* url, myurl_path_t* path, size_t index);
 

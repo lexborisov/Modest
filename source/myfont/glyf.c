@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -20,7 +20,7 @@
 
 #include "myfont/glyf.h"
 
-myfont_status_t myfont_load_table_glyf(struct myfont_font *mf)
+mystatus_t myfont_load_table_glyf(myfont_font_t* mf, uint8_t* font_data, size_t data_size)
 {
     memset(&mf->table_glyf, 0, sizeof(myfont_table_glyf_t));
     
@@ -38,7 +38,7 @@ myfont_status_t myfont_load_table_glyf(struct myfont_font *mf)
     for(uint16_t i = 0; i < mf->table_maxp.numGlyphs; i++)
     {
         uint32_t offset = mf->cache.tables_offset[MyFONT_TKEY_glyf] + mf->table_loca.offsets[i];
-        myfont_status_t status = myfont_glyf_load_data(mf, &glyphs[i], offset);
+        mystatus_t status = myfont_glyf_load_data(mf, &glyphs[i], font_data, data_size, offset);
         
         if(status)
             return status;
@@ -49,7 +49,7 @@ myfont_status_t myfont_load_table_glyf(struct myfont_font *mf)
     return MyFONT_STATUS_OK;
 }
 
-myfont_status_t myfont_glyf_load(myfont_font_t *mf, myfont_table_glyph_t *glyph, uint16_t glyph_index)
+mystatus_t myfont_glyf_load(myfont_font_t *mf, myfont_table_glyph_t *glyph, uint8_t* font_data, size_t data_size, uint16_t glyph_index)
 {
     memset(glyph, 0, sizeof(myfont_table_glyph_t));
     
@@ -59,20 +59,20 @@ myfont_status_t myfont_glyf_load(myfont_font_t *mf, myfont_table_glyph_t *glyph,
     uint16_t offset = myfont_loca_get_offset(mf, glyph_index);
     offset += mf->cache.tables_offset[MyFONT_TKEY_glyf];
     
-    return myfont_glyf_load_data(mf, glyph, offset);
+    return myfont_glyf_load_data(mf, glyph, font_data, data_size, offset);
 }
 
-myfont_status_t myfont_glyf_load_data(myfont_font_t *mf, myfont_table_glyph_t *glyph, uint32_t offset)
+mystatus_t myfont_glyf_load_data(myfont_font_t *mf, myfont_table_glyph_t *glyph, uint8_t* font_data, size_t data_size, uint32_t offset)
 {
     memset(&glyph->head, 0, sizeof(myfont_table_glyf_head_t));
     
+    /* get current data */
+    uint8_t *data = &font_data[offset];
+    
     // load head
     offset += 10;
-    if(offset > mf->file_size)
+    if(offset > data_size)
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
-    
-    /* get current data */
-    uint8_t *data = &mf->file_data[offset];
     
     glyph->head.numberOfContours = myfont_read_16(&data);
     glyph->head.xMin = myfont_read_16(&data);
@@ -81,12 +81,12 @@ myfont_status_t myfont_glyf_load_data(myfont_font_t *mf, myfont_table_glyph_t *g
     glyph->head.yMax = myfont_read_16(&data);
     
     if(glyph->head.numberOfContours > 0)
-        return myfont_glyf_load_simple(mf, glyph, data, offset);
+        return myfont_glyf_load_simple(mf, glyph, data, data_size, offset);
     
     return MyFONT_STATUS_OK;
 }
 
-myfont_status_t myfont_glyf_load_simple(myfont_font_t *mf, myfont_table_glyph_t *glyph, uint8_t *data, uint32_t offset)
+mystatus_t myfont_glyf_load_simple(myfont_font_t *mf, myfont_table_glyph_t *glyph, uint8_t *data, size_t data_size, uint32_t offset)
 {
     uint16_t *endPtsOfContours = (uint16_t *)myfont_calloc(mf, glyph->head.numberOfContours, sizeof(uint16_t));
     
@@ -95,7 +95,7 @@ myfont_status_t myfont_glyf_load_simple(myfont_font_t *mf, myfont_table_glyph_t 
     
     offset = offset + (glyph->head.numberOfContours * 2) + 2;
     
-    if(offset > mf->file_size)
+    if(offset > data_size)
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     for(uint16_t i = 0; i < glyph->head.numberOfContours; i++) {
@@ -108,7 +108,7 @@ myfont_status_t myfont_glyf_load_simple(myfont_font_t *mf, myfont_table_glyph_t 
     
     /* instruction */
     offset += glyph->simple.instructionLength;
-    if(offset > mf->file_size)
+    if(offset > data_size)
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     if(glyph->simple.instructionLength) {
@@ -121,10 +121,10 @@ myfont_status_t myfont_glyf_load_simple(myfont_font_t *mf, myfont_table_glyph_t 
         data += glyph->simple.instructionLength;
     }
     
-    return myfont_glyf_load_simple_flags(mf, glyph, data, offset);
+    return myfont_glyf_load_simple_flags(mf, glyph, data, data_size, offset);
 }
 
-myfont_status_t myfont_glyf_load_simple_flags(myfont_font_t *mf, myfont_table_glyph_t *glyph, uint8_t *data, uint32_t offset)
+mystatus_t myfont_glyf_load_simple_flags(myfont_font_t *mf, myfont_table_glyph_t *glyph, uint8_t *data, size_t data_size, uint32_t offset)
 {
     uint8_t *flags = (uint8_t *)myfont_calloc(mf, glyph->pointCount, sizeof(uint8_t));
     
@@ -134,7 +134,7 @@ myfont_status_t myfont_glyf_load_simple_flags(myfont_font_t *mf, myfont_table_gl
     uint16_t i = 0;
     while(i < glyph->pointCount)
     {
-        if(offset >= mf->file_size) {
+        if(offset >= data_size) {
             myfont_free(mf, flags);
             return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
         }
@@ -143,7 +143,7 @@ myfont_status_t myfont_glyf_load_simple_flags(myfont_font_t *mf, myfont_table_gl
         
         if(flags[i] & MyFONT_GLYF_SML_FLAGS_repeat)
         {
-            if(offset >= mf->file_size) {
+            if(offset >= data_size) {
                 myfont_free(mf, flags);
                 return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
             }
@@ -168,10 +168,10 @@ myfont_status_t myfont_glyf_load_simple_flags(myfont_font_t *mf, myfont_table_gl
     
     glyph->simple.flags = flags;
     
-    return myfont_glyf_load_simple_coordinates(mf, glyph, data, offset);
+    return myfont_glyf_load_simple_coordinates(mf, glyph, data, data_size, offset);
 }
 
-myfont_status_t myfont_glyf_load_simple_coordinates(myfont_font_t *mf, myfont_table_glyph_t *glyph, uint8_t *data, uint32_t offset)
+mystatus_t myfont_glyf_load_simple_coordinates(myfont_font_t *mf, myfont_table_glyph_t *glyph, uint8_t *data, size_t data_size, uint32_t offset)
 {
     /* alloc resources */
     int16_t *xCoordinates = (int16_t *)myfont_calloc(mf, glyph->pointCount, sizeof(int16_t));
@@ -192,7 +192,7 @@ myfont_status_t myfont_glyf_load_simple_coordinates(myfont_font_t *mf, myfont_ta
     {
         if(flags[i] & MyFONT_GLYF_SML_FLAGS_x_ShortVector)
         {
-            if(offset >= mf->file_size) {
+            if(offset >= data_size) {
                 myfont_free(mf, xCoordinates);
                 myfont_free(mf, yCoordinates);
                 return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
@@ -209,7 +209,7 @@ myfont_status_t myfont_glyf_load_simple_coordinates(myfont_font_t *mf, myfont_ta
         {
             offset++;
             
-            if(offset >= mf->file_size) {
+            if(offset >= data_size) {
                 myfont_free(mf, xCoordinates);
                 myfont_free(mf, yCoordinates);
                 return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
@@ -232,7 +232,7 @@ myfont_status_t myfont_glyf_load_simple_coordinates(myfont_font_t *mf, myfont_ta
     {
         if(flags[i] & MyFONT_GLYF_SML_FLAGS_y_ShortVector)
         {
-            if(offset >= mf->file_size) {
+            if(offset >= data_size) {
                 myfont_free(mf, xCoordinates);
                 myfont_free(mf, yCoordinates);
                 return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
@@ -248,7 +248,7 @@ myfont_status_t myfont_glyf_load_simple_coordinates(myfont_font_t *mf, myfont_ta
         else {
             offset++;
             
-            if(offset >= mf->file_size) {
+            if(offset >= data_size) {
                 myfont_free(mf, xCoordinates);
                 myfont_free(mf, yCoordinates);
                 return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;

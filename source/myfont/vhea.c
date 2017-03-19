@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -20,7 +20,7 @@
 
 #include "myfont/vhea.h"
 
-myfont_status_t myfont_load_table_vhea(myfont_font_t *mf)
+mystatus_t myfont_load_table_vhea(myfont_font_t *mf, uint8_t* font_data, size_t data_size)
 {
     memset(&mf->table_vhea, 0, sizeof(myfont_table_vhea_t));
     
@@ -30,11 +30,11 @@ myfont_status_t myfont_load_table_vhea(myfont_font_t *mf)
     myfont_table_vhea_t *tvhea = &mf->table_vhea;
     const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_vhea];
     
-    if((table_offset + 4 + 32) > mf->file_size)
+    if((table_offset + 4 + 32) > data_size)
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     /* get current data */
-    uint8_t *data = &mf->file_data[table_offset];
+    uint8_t *data = &font_data[table_offset];
     
     tvhea->version = myfont_read_u32_as_net(&data);
     tvhea->Ascender = myfont_read_16(&data);

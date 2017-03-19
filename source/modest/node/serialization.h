@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -34,13 +34,13 @@ extern "C" {
 
 struct modest_node_serialization_context {
     modest_t* modest;
-    mycss_callback_serialization_f callback;
+    mycore_callback_serialize_f callback;
     void* context;
     bool is_use;
 }
 typedef modest_node_serialization_context_t;
 
-bool modest_node_raw_serialization(modest_t* modest, modest_node_t* mnode, mycss_callback_serialization_f callback, void* context);
+bool modest_node_raw_serialization(modest_t* modest, modest_node_t* mnode, mycore_callback_serialize_f callback, void* context);
 
 #ifdef __cplusplus
 } /* extern "C" */
