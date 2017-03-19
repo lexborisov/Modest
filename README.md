@@ -20,12 +20,12 @@ The current version is 0.0.6 - devel
 
 * MyCORE — base module, it is used by all other modules
 * MyHTML — HTML parser by [specification](https://html.spec.whatwg.org/multipage/)
-* MyCSS —  CSS parserand modules by [specification](https://drafts.csswg.org/)
+* MyCSS —  CSS parser and modules by [specification](https://drafts.csswg.org/)
 * MyENCODING — work with character encodings, detecting encoding, convert encodings by [specification](https://encoding.spec.whatwg.org/)
 * MyFONT — work with font, metrics, calculating size and more by [specification](https://www.microsoft.com/en-us/Typography/SpecificationsOverview.aspx)
 * MyURL — URL parser by [specification](https://url.spec.whatwg.org/)
 * MyPORT — system depended code: threads (if build with threads, default), work with memory, io, timers
-* Modest — renderer
+* Modest — calculating, compare, renderer
 
 ## Introduction
 
