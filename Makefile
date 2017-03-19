@@ -67,6 +67,11 @@ MODEST_UTILS_HDRS_CLONE_DIRS = $(foreach dir,$(strip $(patsubst %./,%,$(foreach 
 MODEST_UTILS_HDRS_CLONE = $(info Clone for $1) $(call MODEST_UTILS_HDRS_CLONE_DIRS,$1,$2) $(MODEST_UTILS_NEW_LINE) $(call MODEST_UTILS_HDRS_CLONE_CMND,$1,$2)
 
 #********************
+# MyPORT
+#***************
+MyPORT_SELECTED_PORT = myport/$(strip $(MODEST_PORT_NAME))
+
+#********************
 # Include all modules Makefile.mk
 #***************
 include $(MODEST_BUILD_MODULES_MAKEFILES_LIST)
@@ -76,7 +81,7 @@ include $(MODEST_BUILD_MODULES_MAKEFILES_LIST)
 #***************
 MODEST_CFLAGS += -DMODEST_BUILD_OS=$(MODEST_BUILD_OS)
 MODEST_CFLAGS += -DMODEST_PORT_NAME=$(MODEST_PORT_NAME)
-MODEST_CFLAGS += $(call MODEST_UTILS_TO_UPCASE,-DMyCORE_OS_$(MODEST_BUILD_OS))
+MODEST_CFLAGS += $(patsubst -DMY%,-DMy%,$(call MODEST_UTILS_TO_UPCASE,-DMyCORE_OS_$(MODEST_BUILD_OS)))
 
 override CFLAGS += $(MODEST_CFLAGS)
 override LDFLAGS += $(MODEST_LDFLAGS)
