@@ -15,18 +15,19 @@ CC ?= gcc
 #	install -- install libraries and headers on your system
 #	uninstall -- delete libraries and headers on your system
 #	test -- run all tests
+#	modules -- print modules list: Module name, Description, Dependencies
 #	make-pc-file -- create pkg-config file
 #
 # ARGS
 # 	prefix, default /usr/local
 # 	OS, if not defined try to get from "uname -s"
-# 	MODEST_OPTIMIZATION_LEVEL, default -O2
+# 	PROJECT_OPTIMIZATION_LEVEL, default -O2
 # 	MyCORE_BUILD_WITHOUT_THREADS, YES or (NO or undefined), default undefined
 # 	MyCORE_BUILD_DEBUG, YES or (NO or undefined), default undefined
 # 	MyCORE_WITH_PERF, YES or (NO or undefined), default undefined, try build with timers (rdtsc or some), OS dependent, may not work on some systems, 
-# 	MODEST_INSTALL_HEADER, default "include"
-# 	MODEST_INSTALL_LIBRARY, default "lib"
-# 	MODEST_INSTALL_WITHOUT_HEADERS, YES or (NO or undefined), default undefined
+# 	PROJECT_INSTALL_HEADER, default "include"
+# 	PROJECT_INSTALL_LIBRARY, default "lib"
+# 	PROJECT_INSTALL_WITHOUT_HEADERS, YES or (NO or undefined), default undefined
 #
 # If OS build rules not exists we try make library with POSIX threads
 
@@ -77,6 +78,12 @@ MyPORT_SELECTED_PORT = myport/$(strip $(MODEST_PORT_NAME))
 include $(MODEST_BUILD_MODULES_MAKEFILES_LIST)
 
 #********************
+# Modules info
+#***************
+MODEST_BUILD_MODULES_INFO_DEP = $(foreach dep,$(strip $($1_dependencies)), $(dep))
+MODEST_BUILD_MODULES_INFO := $(foreach name,$(MODEST_BUILD_MODULES_LIST_WITHOUT_PORT),$(MODEST_UTILS_NEW_LINE)Module: $(name)$(MODEST_UTILS_NEW_LINE)Description: $($(name)_description)$(MODEST_UTILS_NEW_LINE)Dependencies:$(call MODEST_BUILD_MODULES_INFO_DEP,$(name))$(MODEST_UTILS_NEW_LINE))
+
+#********************
 # Set ARGS for flags
 #***************
 MODEST_CFLAGS += -DMODEST_BUILD_OS=$(MODEST_BUILD_OS)
@@ -102,17 +109,17 @@ BUILD_SUB_DIRS := examples $(TEST_DIR)
 #********************
 # Install
 #***************
-MODEST_INSTALL_LIBRARY := lib
-MODEST_INSTALL_HEADER  := include
+PROJECT_INSTALL_LIBRARY := lib
+PROJECT_INSTALL_HEADER  := include
 
-libdir     ?= $(prefix)/$(MODEST_INSTALL_LIBRARY)
-includedir ?= $(prefix)/$(MODEST_INSTALL_HEADER)
+libdir     ?= $(prefix)/$(PROJECT_INSTALL_LIBRARY)
+includedir ?= $(prefix)/$(PROJECT_INSTALL_HEADER)
 
-MODEST_INSTALL_CREATE_DIR := mkdir -p $(prefix)/$(MODEST_INSTALL_LIBRARY) 
+MODEST_INSTALL_CREATE_DIR := mkdir -p $(prefix)/$(PROJECT_INSTALL_LIBRARY) 
 MODEST_INSTALL_COMMAND := $(MODEST_INSTALL_CREATE_DIR) $(MODEST_UTILS_NEW_LINE) cp -av $(LIB_DIR_BASE)/* $(libdir)
 
-ifneq ($(MODEST_INSTALL_WITHOUT_HEADERS),YES)
-	MODEST_INSTALL_CREATE_DIR += $(prefix)/$(MODEST_INSTALL_HEADER)
+ifneq ($(PROJECT_INSTALL_WITHOUT_HEADERS),YES)
+	MODEST_INSTALL_CREATE_DIR += $(prefix)/$(PROJECT_INSTALL_HEADER)
 	MODEST_INSTALL_COMMAND += $(MODEST_UTILS_NEW_LINE) cp -av $(INCLUDE_DIR_API)/* $(includedir)
 endif
 
@@ -122,7 +129,7 @@ endif
 MODEST_UNINSTALL_MK_COMMAND :=
 MODEST_UNINSTALL_FILE := uninstal.mk
 
-ifneq ($(MODEST_INSTALL_WITHOUT_HEADERS),YES)
+ifneq ($(PROJECT_INSTALL_WITHOUT_HEADERS),YES)
 	MODEST_UNINSTALL_HEADERS := $(foreach name,$(MODEST_BUILD_MODULES_LIST_WITHOUT_PORT),rm -rf $(includedir)/$(name) \$$(MODEST_UTILS_NEW_LINE))
 endif
 
@@ -138,11 +145,11 @@ MODEST_PKG_CONFIG_FILE := modest.pc
 MODEST_PKG_CONFIG_CFLAGS := $(foreach name,$(MODEST_BUILD_MODULES_LIST_WITHOUT_PORT),-I$\{includedir}/$(name))
 MODEST_PKG_CONFIG_PROCESS = \
 $(SED) \
--e 's,@version\@,$(MODEST_VERSION_STRING),g' \
+-e 's,@version\@,$(PROJECT_VERSION_STRING),g' \
 -e 's,@prefix\@,$(prefix),g' \
 -e 's,@exec_prefix\@,$(exec_prefix),g' \
--e 's,@libdir\@,$(MODEST_INSTALL_LIBRARY),g' \
--e 's,@includedir\@,$(MODEST_INSTALL_HEADER),g' \
+-e 's,@libdir\@,$(PROJECT_INSTALL_LIBRARY),g' \
+-e 's,@includedir\@,$(PROJECT_INSTALL_HEADER),g' \
 -e 's,@cflags\@,$(MODEST_PKG_CONFIG_CFLAGS),g' \
 -e 's,@libname\@,$(LIB_NAME),g' \
 -e 's,@description\@,$(DESCRIPTION),g' \
@@ -192,5 +199,8 @@ test: library
 
 make-pc-file:
 	$(call MODEST_PKG_CONFIG_PROCESS,$(MODEST_PKG_CONFIG_FILE).in, $(MODEST_PKG_CONFIG_FILE))
+
+modules:
+	$(info $(MODEST_BUILD_MODULES_INFO))
 
 .PHONY: all clean clone test $(MODEST_BUILD_MODULES_TARGET_ALL)

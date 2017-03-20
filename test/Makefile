@@ -53,9 +53,9 @@ include $(BINARY_BUILD_MODULES_MAKEFILES_LIST)
 #********************
 # Set ARGS for flags
 #***************
-CFLAGS  += $(BINARY_CFLAGS)
-LDFLAGS += $(BINARY_LDFLAGS)
-LDLIBS  += $(BINARY_LIBRARIES)
+override CFLAGS  += $(BINARY_CFLAGS)
+override LDFLAGS += $(BINARY_LDFLAGS)
+override LDLIBS  += $(BINARY_LIBRARIES)
 
 #********************
 # Objects
