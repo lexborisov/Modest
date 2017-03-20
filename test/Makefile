@@ -15,6 +15,7 @@ CC ?= gcc
 # other Makefile
 #***************
 BINARY_PATH_RELATIVE := ..
+MODEST_SOURCE := $(BINARY_PATH_RELATIVE)/source
 include $(BINARY_PATH_RELATIVE)/Makefile.bin.cfg
 
 BINARY_TO_DIR := $(BINARY_PATH_RELATIVE)/$(TEST_DIR_BASE)

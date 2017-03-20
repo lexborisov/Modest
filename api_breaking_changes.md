@@ -5,7 +5,6 @@
 * If you use encoding enum, like ```MyHTML_ENCODING_UTF8```, now it ```MyENCODING_UTF_8```, i.e ```MyHTML_ENCODING_* => MyENCODING_*```
 * Functions migrated to MyCORE from MyHTML: ```myhtml_incoming_buffer_*``` => ```mycore_incoming_buffer_*```, ```myhtml_string*``` => ```mycore_string*```, ```myhtml_utils*``` => ```mycore_utils*```
 
-
 0.0.1 => 0.0.4
 ===========
 Removed all depending on the Tree. Now you can get a tree of nodes ```myhtml_node_tree```
