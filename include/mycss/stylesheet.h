@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -45,11 +45,11 @@ struct mycss_stylesheet {
 };
 
 mycss_stylesheet_t * mycss_stylesheet_create(void);
-mycss_status_t mycss_stylesheet_init(mycss_stylesheet_t* stylesheet, mycss_entry_t* entry);
-mycss_status_t mycss_stylesheet_clean_all(mycss_stylesheet_t* stylesheet);
+mystatus_t mycss_stylesheet_init(mycss_stylesheet_t* stylesheet, mycss_entry_t* entry);
+mystatus_t mycss_stylesheet_clean_all(mycss_stylesheet_t* stylesheet);
 mycss_stylesheet_t * mycss_stylesheet_destroy(mycss_stylesheet_t* stylesheet, bool self_destroy);
 
-void mycss_stylesheet_serialization(mycss_stylesheet_t* stylesheet, mycss_callback_serialization_f callback, void* context);
+void mycss_stylesheet_serialization(mycss_stylesheet_t* stylesheet, mycore_callback_serialize_f callback, void* context);
 
 #ifdef __cplusplus
 } /* extern "C" */

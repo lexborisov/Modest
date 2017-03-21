@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -25,11 +25,13 @@
 
 modest_t * modest_create(void)
 {
-    return (modest_t*)myhtml_calloc(1, sizeof(modest_t));
+    return (modest_t*)mycore_calloc(1, sizeof(modest_t));
 }
 
-modest_status_t modest_init(modest_t* modest)
+mystatus_t modest_init(modest_t* modest)
 {
+    mystatus_t status;
+    
     /* Modest nodes */
     modest->mnode_obj = mcobject_async_create();
     if(modest->mnode_obj == NULL)
@@ -61,29 +63,33 @@ modest_status_t modest_init(modest_t* modest)
     
     
     /* Modest style type */
-    modest->mstyle_type_obj = mchar_async_create(12, (4096 * 5));
+    modest->mstyle_type_obj = mchar_async_create();
     if(modest->mstyle_type_obj == NULL)
         return MODEST_STATUS_ERROR_STYLE_TYPE_CREATE;
     
-    modest->mstyle_type_node_id = mchar_async_node_add(modest->mstyle_type_obj);
+    if((status = mchar_async_init(modest->mstyle_type_obj, 12, (4096 * 5))))
+        return status;
     
+    modest->mstyle_type_node_id = mchar_async_node_add(modest->mstyle_type_obj, &status);
+    if(status)
+        return status;
     
     /* for raw declaration style */
     modest->mraw_style_declaration_obj = mcobject_create();
     if(modest->mraw_style_declaration_obj == NULL)
         return MODEST_STATUS_ERROR_STYLE_DECLARATION_CREATE;
     
-    myhtml_status_t myhtml_status = mcobject_init(modest->mraw_style_declaration_obj, 256, sizeof(modest_style_raw_declaration_t));
+    mystatus_t myhtml_status = mcobject_init(modest->mraw_style_declaration_obj, 256, sizeof(modest_style_raw_declaration_t));
     if(myhtml_status)
         return MODEST_STATUS_ERROR_STYLE_DECLARATION_INIT;
     
     
     /* styles tree */
-    modest->style_avl_tree = myhtml_utils_avl_tree_create();
+    modest->style_avl_tree = mycore_utils_avl_tree_create();
     if(modest->style_avl_tree == NULL)
         return MODEST_STATUS_ERROR_AVL_TREE_CREATE;
     
-    myhtml_status = myhtml_utils_avl_tree_init(modest->style_avl_tree);
+    myhtml_status = mycore_utils_avl_tree_init(modest->style_avl_tree);
     if(myhtml_status)
         return MODEST_STATUS_ERROR_AVL_TREE_INIT;
     
@@ -94,7 +100,7 @@ void modest_clean(modest_t* modest)
 {
     mcobject_async_clean(modest->mnode_obj);
     mcobject_async_clean(modest->mstylesheet_obj);
-    myhtml_utils_avl_tree_clean(modest->style_avl_tree);
+    mycore_utils_avl_tree_clean(modest->style_avl_tree);
 }
 
 modest_t * modest_destroy(modest_t* modest, bool self_destroy)
@@ -104,10 +110,10 @@ modest_t * modest_destroy(modest_t* modest, bool self_destroy)
     
     modest->mnode_obj = mcobject_async_destroy(modest->mnode_obj, true);
     modest->mstylesheet_obj = mcobject_async_destroy(modest->mstylesheet_obj, true);
-    modest->style_avl_tree = myhtml_utils_avl_tree_destroy(modest->style_avl_tree, true);
+    modest->style_avl_tree = mycore_utils_avl_tree_destroy(modest->style_avl_tree, true);
     
     if(self_destroy) {
-        myhtml_free(modest);
+        mycore_free(modest);
         return NULL;
     }
     

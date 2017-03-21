@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -132,24 +132,24 @@ bool mycss_selectors_state_combinator(mycss_entry_t* entry, mycss_token_t* token
     switch (token->type) {
         case MyCSS_TOKEN_TYPE_COLUMN: {
             *entry->selectors->combinator = MyCSS_SELECTORS_COMBINATOR_COLUMN;
-            MyCSS_DEBUG_MESSAGE("mycss_selectors_state_combinator_column")
+            MyCORE_DEBUG("mycss_selectors_state_combinator_column");
             entry->parser = entry->parser_switch;
             break;
         }
         case MyCSS_TOKEN_TYPE_DELIM: {
             if(*token->data == '+') {
                 *entry->selectors->combinator = MyCSS_SELECTORS_COMBINATOR_NEXT_SIBLING;
-                MyCSS_DEBUG_MESSAGE("mycss_selectors_state_combinator_plus")
+                MyCORE_DEBUG("mycss_selectors_state_combinator_plus");
                 entry->parser = entry->parser_switch;
             }
             else if(*token->data == '>') {
                 *entry->selectors->combinator = MyCSS_SELECTORS_COMBINATOR_CHILD;
-                MyCSS_DEBUG_MESSAGE("mycss_selectors_state_combinator_greater_than")
+                MyCORE_DEBUG("mycss_selectors_state_combinator_greater_than");
                 entry->parser = mycss_selectors_state_combinator_greater_than;
             }
             else if(*token->data == '~') {
                 *entry->selectors->combinator = MyCSS_SELECTORS_COMBINATOR_FOLLOWING_SIBLING;
-                MyCSS_DEBUG_MESSAGE("mycss_selectors_state_combinator_tilde")
+                MyCORE_DEBUG("mycss_selectors_state_combinator_tilde");
                 entry->parser = entry->parser_switch;
             }
             else {
@@ -175,7 +175,7 @@ bool mycss_selectors_state_combinator_greater_than(mycss_entry_t* entry, mycss_t
     if(token->type == MyCSS_TOKEN_TYPE_DELIM) {
         if(*token->data == '>') {
             *entry->selectors->combinator = MyCSS_SELECTORS_COMBINATOR_DESCENDANT;
-            MyCSS_DEBUG_MESSAGE("mycss_selectors_state_combinator_greater_than_greater_than")
+            MyCORE_DEBUG("mycss_selectors_state_combinator_greater_than_greater_than");
             entry->parser = entry->parser_switch;
         }
         else {
@@ -573,7 +573,7 @@ bool mycss_selectors_state_simple_selector(mycss_entry_t* entry, mycss_token_t* 
     switch (token->type) {
         case MyCSS_TOKEN_TYPE_IDENT: {
             mycss_selectors_parser_selector_ident_type(entry, token);
-            MyCSS_DEBUG_MESSAGE("mycss_selectors_state_simple_selector_ident")
+            MyCORE_DEBUG("mycss_selectors_state_simple_selector_ident");
             
             entry->parser = mycss_selectors_state_simple_selector_ident;
             break;
@@ -582,7 +582,7 @@ bool mycss_selectors_state_simple_selector(mycss_entry_t* entry, mycss_token_t* 
             // HAND_EDIT_BEGIN
             if(*token->data == '*') {
                 mycss_selectors_parser_selector_ident_type(entry, token);
-                MyCSS_DEBUG_MESSAGE("mycss_selectors_state_simple_selector_asterisk")
+                MyCORE_DEBUG("mycss_selectors_state_simple_selector_asterisk");
                 
                 entry->parser = mycss_selectors_state_simple_selector_ident;
             }
@@ -613,7 +613,7 @@ bool mycss_selectors_state_simple_selector(mycss_entry_t* entry, mycss_token_t* 
         }
         case MyCSS_TOKEN_TYPE_HASH: {
             mycss_selectors_parser_selector_id(entry, token);
-            MyCSS_DEBUG_MESSAGE("mycss_selectors_state_simple_selector_hash")
+            MyCORE_DEBUG("mycss_selectors_state_simple_selector_hash");
             entry->parser = entry->parser_switch;
             break;
         }
@@ -772,7 +772,7 @@ bool mycss_selectors_state_simple_selector_left_bracket_ident(mycss_entry_t* ent
         }
         case MyCSS_TOKEN_TYPE_RIGHT_SQUARE_BRACKET: {
             mycss_selectors_parser_selector_end(entry, token);
-            MyCSS_DEBUG_MESSAGE("mycss_selectors_state_simple_selector_left_bracket_ident_right_bracket")
+            MyCORE_DEBUG("mycss_selectors_state_simple_selector_left_bracket_ident_right_bracket");
             entry->parser = entry->parser_switch;
             break;
         }
@@ -815,7 +815,7 @@ bool mycss_selectors_state_simple_selector_colon(mycss_entry_t* entry, mycss_tok
     switch (token->type) {
         case MyCSS_TOKEN_TYPE_IDENT: {
             mycss_selectors_parser_selector_pseudo_class(entry, token);
-            MyCSS_DEBUG_MESSAGE("mycss_selectors_state_simple_selector_colon_ident")
+            MyCORE_DEBUG("mycss_selectors_state_simple_selector_colon_ident");
             entry->parser = entry->parser_switch;
             break;
         }
@@ -841,7 +841,7 @@ bool mycss_selectors_state_simple_selector_colon_colon(mycss_entry_t* entry, myc
 {
     if(token->type == MyCSS_TOKEN_TYPE_IDENT) {
         mycss_selectors_parser_selector_pseudo_element(entry, token);
-        MyCSS_DEBUG_MESSAGE("mycss_selectors_state_simple_selector_colon_colon_ident")
+        MyCORE_DEBUG("mycss_selectors_state_simple_selector_colon_colon_ident");
         entry->parser = entry->parser_switch;
     }
     else if(token->type == MyCSS_TOKEN_TYPE_FUNCTION) {
@@ -860,7 +860,7 @@ bool mycss_selectors_state_simple_selector_colon_colon_function(mycss_entry_t* e
 {
     if(token->type == MyCSS_TOKEN_TYPE_RIGHT_PARENTHESIS) {
         mycss_selectors_parser_selector_pseudo_element_function_end(entry, token);
-        MyCSS_DEBUG_MESSAGE("mycss_selectors_state_simple_selector_colon_colon_function_right_parenthesis")
+        MyCORE_DEBUG("mycss_selectors_state_simple_selector_colon_colon_function_right_parenthesis");
         entry->parser = entry->parser_switch;
     }
     else {
@@ -876,7 +876,7 @@ bool mycss_selectors_state_simple_selector_colon_function(mycss_entry_t* entry, 
 {
     if(token->type == MyCSS_TOKEN_TYPE_RIGHT_PARENTHESIS) {
         mycss_selectors_parser_selector_pseudo_class_function_end(entry, token);
-        MyCSS_DEBUG_MESSAGE("mycss_selectors_state_simple_selector_colon_function_right_parenthesis")
+        MyCORE_DEBUG("mycss_selectors_state_simple_selector_colon_function_right_parenthesis");
         entry->parser = entry->parser_switch;
     }
     else {
@@ -893,7 +893,7 @@ bool mycss_selectors_state_simple_selector_full_stop(mycss_entry_t* entry, mycss
 {
     if(token->type == MyCSS_TOKEN_TYPE_IDENT) {
         mycss_selectors_parser_selector_class(entry, token);
-        MyCSS_DEBUG_MESSAGE("mycss_selectors_state_simple_selector_full_stop_ident")
+        MyCORE_DEBUG("mycss_selectors_state_simple_selector_full_stop_ident");
         entry->parser = entry->parser_switch;
     }
     else {
@@ -910,14 +910,14 @@ bool mycss_selectors_state_simple_selector_vertical_bar(mycss_entry_t* entry, my
     if(token->type == MyCSS_TOKEN_TYPE_IDENT) {
         mycss_selectors_parser_selector_after_namespace(entry, token);
         mycss_selectors_parser_selector_end(entry, token);
-        MyCSS_DEBUG_MESSAGE("mycss_selectors_state_simple_selector_vertical_bar_ident")
+        MyCORE_DEBUG("mycss_selectors_state_simple_selector_vertical_bar_ident");
         entry->parser = entry->parser_switch;
     }
     else if(token->type == MyCSS_TOKEN_TYPE_DELIM) {
         if(*token->data == '*') {
             mycss_selectors_parser_selector_after_namespace(entry, token);
             mycss_selectors_parser_selector_end(entry, token);
-            MyCSS_DEBUG_MESSAGE("mycss_selectors_state_simple_selector_vertical_bar_asterisk")
+            MyCORE_DEBUG("mycss_selectors_state_simple_selector_vertical_bar_asterisk");
             entry->parser = entry->parser_switch;
         }
         else {
@@ -964,14 +964,14 @@ bool mycss_selectors_state_simple_selector_ident_vertical_bar(mycss_entry_t* ent
     if(token->type == MyCSS_TOKEN_TYPE_IDENT) {
         mycss_selectors_parser_selector_after_namespace(entry, token);
         mycss_selectors_parser_selector_end(entry, token);
-        MyCSS_DEBUG_MESSAGE("mycss_selectors_state_simple_selector_ident_vertical_bar_ident")
+        MyCORE_DEBUG("mycss_selectors_state_simple_selector_ident_vertical_bar_ident");
         entry->parser = entry->parser_switch;
     }
     else if(token->type == MyCSS_TOKEN_TYPE_DELIM) {
         if(*token->data == '*') {
             mycss_selectors_parser_selector_after_namespace(entry, token);
             mycss_selectors_parser_selector_end(entry, token);
-            MyCSS_DEBUG_MESSAGE("mycss_selectors_state_simple_selector_ident_vertical_bar_asterisk")
+            MyCORE_DEBUG("mycss_selectors_state_simple_selector_ident_vertical_bar_asterisk");
             entry->parser = entry->parser_switch;
         }
         else {
@@ -1064,7 +1064,7 @@ bool mycss_selectors_state_left_bracket_after_wq_name_attr(mycss_entry_t* entry,
         }
         case MyCSS_TOKEN_TYPE_RIGHT_SQUARE_BRACKET: {
             mycss_selectors_parser_selector_end(entry, token);
-            MyCSS_DEBUG_MESSAGE("mycss_selectors_state_shared_after_wq_name_attr_right_bracket")
+            MyCORE_DEBUG("mycss_selectors_state_shared_after_wq_name_attr_right_bracket");
             entry->parser = entry->parser_switch;
             break;
         }
@@ -1089,7 +1089,7 @@ bool mycss_selectors_state_shared_after_attr_modifier(mycss_entry_t* entry, mycs
     
     if(token->type == MyCSS_TOKEN_TYPE_RIGHT_SQUARE_BRACKET) {
         mycss_selectors_parser_selector_end(entry, token);
-        MyCSS_DEBUG_MESSAGE("mycss_selectors_state_shared_after_attr_modifier_right_bracket")
+        MyCORE_DEBUG("mycss_selectors_state_shared_after_attr_modifier_right_bracket");
         entry->parser = entry->parser_switch;
     }
     else {
@@ -1119,7 +1119,7 @@ bool mycss_selectors_state_shared_after_attribute_value(mycss_entry_t* entry, my
     }
     else if(token->type == MyCSS_TOKEN_TYPE_RIGHT_SQUARE_BRACKET) {
         mycss_selectors_parser_selector_end(entry, token);
-        MyCSS_DEBUG_MESSAGE("mycss_selectors_state_shared_after_attribute_value_right_bracket")
+        MyCORE_DEBUG("mycss_selectors_state_shared_after_attribute_value_right_bracket");
         entry->parser = entry->parser_switch;
     }
     else {

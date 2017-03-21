@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -159,7 +159,7 @@ bool modest_finder_selector_sub_type_pseudo_class_function_nth_child_check_selec
 bool modest_finder_selector_sub_type_pseudo_class_function_nth_child(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(selector->value == NULL)
-        return NULL;
+        return false;
     
     mycss_an_plus_b_entry_t *anb = mycss_selector_value_an_plus_b(selector->value);
     
@@ -226,7 +226,7 @@ bool modest_finder_selector_sub_type_pseudo_class_function_nth_column(modest_fin
 bool modest_finder_selector_sub_type_pseudo_class_function_nth_last_child(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(selector->value == NULL)
-        return NULL;
+        return false;
     
     mycss_an_plus_b_entry_t *anb = mycss_selector_value_an_plus_b(selector->value);
     
@@ -290,7 +290,7 @@ bool modest_finder_selector_sub_type_pseudo_class_function_nth_last_column(modes
 bool modest_finder_selector_sub_type_pseudo_class_function_nth_last_of_type(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(selector->value == NULL)
-        return NULL;
+        return false;
     
     mycss_an_plus_b_entry_t *anb = mycss_selector_value_an_plus_b(selector->value);
     
@@ -322,7 +322,7 @@ bool modest_finder_selector_sub_type_pseudo_class_function_nth_last_of_type(mode
 bool modest_finder_selector_sub_type_pseudo_class_function_nth_of_type(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if(selector->value == NULL)
-        return NULL;
+        return false;
     
     mycss_an_plus_b_entry_t *anb = mycss_selector_value_an_plus_b(selector->value);
     
@@ -420,15 +420,15 @@ bool modest_finder_selector_sub_type_pseudo_class_checked(modest_finder_t* finde
         while (attr)
         {
             if(attr->key.length == 4) {
-                if(myhtml_strncasecmp("type", attr->key.data, 4) == 0)
+                if(mycore_strncasecmp("type", attr->key.data, 4) == 0)
                 {
                     if(attr->value.length == 8) {
-                        if(myhtml_strncasecmp("checkbox", attr->value.data, 8) == 0) {
+                        if(mycore_strncasecmp("checkbox", attr->value.data, 8) == 0) {
                             return modest_finder_match_attribute_only_key(base_node->token->attr_first, "checked", 7);
                         }
                     }
                     else if(attr->value.length == 5) {
-                        if(myhtml_strncasecmp("radio", attr->value.data, 5) == 0) {
+                        if(mycore_strncasecmp("radio", attr->value.data, 5) == 0) {
                             return modest_finder_match_attribute_only_key(base_node->token->attr_first, "checked", 7);
                         }
                     }

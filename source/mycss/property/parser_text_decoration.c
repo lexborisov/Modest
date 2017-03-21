@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -54,7 +54,7 @@ bool mycss_property_parser_text_decoration(mycss_entry_t* entry, mycss_token_t* 
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     mycss_values_text_decoration_t *text_decoration;
     
@@ -208,7 +208,7 @@ bool mycss_property_parser_text_decoration_color(mycss_entry_t* entry, mycss_tok
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     bool parser_changed = false;
@@ -247,7 +247,7 @@ bool mycss_property_parser_text_decoration_skip(mycss_entry_t* entry, mycss_toke
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
         return mycss_property_shared_switch_to_parse_error(entry);
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     unsigned int value = 0;
@@ -278,7 +278,7 @@ bool mycss_property_parser_text_decoration_skip_not_none(mycss_entry_t* entry, m
         return false;
     }
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_text_decoration_skip(entry, token, (unsigned int*)dec_entry->value, &dec_entry->value_type, &str, false))
@@ -309,7 +309,7 @@ bool mycss_property_parser_text_decoration_style(mycss_entry_t* entry, mycss_tok
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
         return mycss_property_shared_switch_to_parse_error(entry);
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_text_decoration_style(entry, token, &dec_entry->value_type, &str))
@@ -326,7 +326,7 @@ bool mycss_property_parser_text_decoration_line(mycss_entry_t* entry, mycss_toke
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
         return mycss_property_shared_switch_to_parse_error(entry);
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     unsigned int value = 0;
@@ -358,7 +358,7 @@ bool mycss_property_parser_text_decoration_line_not_none(mycss_entry_t* entry, m
         return false;
     }
     
-    myhtml_string_t str = {0};
+    mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
     if(mycss_property_shared_text_decoration_line(entry, token, (unsigned int*)dec_entry->value, &dec_entry->value_type, &str, false))

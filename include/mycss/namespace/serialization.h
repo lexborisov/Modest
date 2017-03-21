@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -29,8 +29,8 @@
 extern "C" {
 #endif
 
-void mycss_namespace_serialization_stylesheet(mycss_namespace_stylesheet_t* ns_stylesheet, mycss_callback_serialization_f callback, void* context);
-void mycss_namespace_serialization_entry(mycss_namespace_t* ns, mycss_namespace_entry_t* ns_entry, mycss_callback_serialization_f callback, void* context, bool with_vbar);
+void mycss_namespace_serialization_stylesheet(mycss_namespace_stylesheet_t* ns_stylesheet, mycore_callback_serialize_f callback, void* context);
+void mycss_namespace_serialization_entry(mycss_namespace_t* ns, mycss_namespace_entry_t* ns_entry, mycore_callback_serialize_f callback, void* context, bool with_vbar);
 
 #ifdef __cplusplus
 } /* extern "C" */

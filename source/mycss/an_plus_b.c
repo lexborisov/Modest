@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -19,19 +19,19 @@
 */
 
 #include "mycss/an_plus_b.h"
-#include "myhtml/utils/resources.h"
+#include "mycore/utils/resources.h"
 
 mycss_an_plus_b_t * mycss_an_plus_b_create(void)
 {
-    return (mycss_an_plus_b_t*)myhtml_calloc(1, sizeof(mycss_an_plus_b_t));
+    return (mycss_an_plus_b_t*)mycore_calloc(1, sizeof(mycss_an_plus_b_t));
 }
 
-mycss_status_t mycss_an_plus_b_init(mycss_entry_t* entry, mycss_an_plus_b_t* anb)
+mystatus_t mycss_an_plus_b_init(mycss_entry_t* entry, mycss_an_plus_b_t* anb)
 {
     return MyCSS_STATUS_OK;
 }
 
-mycss_status_t mycss_an_plus_b_clean_all(mycss_an_plus_b_t* anb)
+mystatus_t mycss_an_plus_b_clean_all(mycss_an_plus_b_t* anb)
 {
     return MyCSS_STATUS_OK;
 }
@@ -42,7 +42,7 @@ mycss_an_plus_b_t * mycss_an_plus_b_destroy(mycss_an_plus_b_t* anb, bool self_de
         return NULL;
     
     if(self_destroy) {
-        myhtml_free(anb);
+        mycore_free(anb);
         return NULL;
     }
     
@@ -91,7 +91,7 @@ void mycss_an_plus_b_parser_expectations_error(mycss_entry_t* entry)
 //// An+B Serialization
 ////
 /////////////////////////////////////////////////////////
-void mycss_an_plus_b_serialization(mycss_an_plus_b_entry_t* anb_entry, mycss_callback_serialization_f callback, void* context)
+void mycss_an_plus_b_serialization(mycss_an_plus_b_entry_t* anb_entry, mycore_callback_serialize_f callback, void* context)
 {
     char data[512];
     
@@ -137,10 +137,10 @@ bool mycss_an_plus_b_state_anb(mycss_entry_t* entry, mycss_token_t* token, bool 
         case MyCSS_TOKEN_TYPE_WHITESPACE:
             break;
         case MyCSS_TOKEN_TYPE_IDENT: {
-            myhtml_string_t str;
+            mycore_string_t str;
             mycss_token_data_to_string(entry, token, &str, true, false);
             
-            if(myhtml_strncasecmp(str.data, "-n-", 3) == 0)
+            if(mycore_strncasecmp(str.data, "-n-", 3) == 0)
             {
                 anb_entry->a = -1;
                 
@@ -149,7 +149,7 @@ bool mycss_an_plus_b_state_anb(mycss_entry_t* entry, mycss_token_t* token, bool 
                     
                     entry->parser = mycss_an_plus_b_state_anb_plus_n_hyphen;
                     
-                    myhtml_string_destroy(&str, false);
+                    mycore_string_destroy(&str, false);
                     return true;
                 }
                 /* -n-* */
@@ -159,18 +159,18 @@ bool mycss_an_plus_b_state_anb(mycss_entry_t* entry, mycss_token_t* token, bool 
                     anb_entry->is_broken = true;
                 }
                 
-                MyCSS_DEBUG_MESSAGE("mycss_an_plus_b_state_anb_hyphen_n_hyphen_asterisk_end");
+                MyCORE_DEBUG("mycss_an_plus_b_state_anb_hyphen_n_hyphen_asterisk_end");
                 entry->parser = entry->parser_switch;
             }
-            else if(myhtml_strncasecmp(str.data, "-n", 2) == 0) {
-                MyCSS_DEBUG_MESSAGE("mycss_an_plus_b_state_anb_hyphen_n_end")
+            else if(mycore_strncasecmp(str.data, "-n", 2) == 0) {
+                MyCORE_DEBUG("mycss_an_plus_b_state_anb_hyphen_n_end");
                 
                 anb_entry->a = -1;
                 
                 if(str.length == 2) {
                     entry->parser = mycss_an_plus_b_state_anb_plus_n;
                     
-                    myhtml_string_destroy(&str, false);
+                    mycore_string_destroy(&str, false);
                     return true;
                 }
                 
@@ -182,14 +182,14 @@ bool mycss_an_plus_b_state_anb(mycss_entry_t* entry, mycss_token_t* token, bool 
                 
                 entry->parser = entry->parser_switch;
             }
-            else if(myhtml_strncasecmp(str.data, "n-", 2) == 0)
+            else if(mycore_strncasecmp(str.data, "n-", 2) == 0)
             {
                 anb_entry->a = 1;
                 
                 if(str.length == 2) {
                     entry->parser = mycss_an_plus_b_state_anb_plus_n_hyphen;
                     
-                    myhtml_string_destroy(&str, false);
+                    mycore_string_destroy(&str, false);
                     return true;
                 }
                 
@@ -199,17 +199,17 @@ bool mycss_an_plus_b_state_anb(mycss_entry_t* entry, mycss_token_t* token, bool 
                     anb_entry->is_broken = true;
                 }
                 
-                MyCSS_DEBUG_MESSAGE("mycss_an_plus_b_state_anb_n");
+                MyCORE_DEBUG("mycss_an_plus_b_state_anb_n");
                 entry->parser = entry->parser_switch;
             }
-            else if(myhtml_strncasecmp(str.data, "n", 1) == 0)
+            else if(mycore_strncasecmp(str.data, "n", 1) == 0)
             {
                 anb_entry->a = 1;
                 
                 if(str.length == 1) {
                     entry->parser = mycss_an_plus_b_state_anb_plus_n;
                     
-                    myhtml_string_destroy(&str, false);
+                    mycore_string_destroy(&str, false);
                     return true;
                 }
                 
@@ -219,32 +219,32 @@ bool mycss_an_plus_b_state_anb(mycss_entry_t* entry, mycss_token_t* token, bool 
                     anb_entry->is_broken = true;
                 }
                 
-                MyCSS_DEBUG_MESSAGE("mycss_an_plus_b_state_anb_n");
+                MyCORE_DEBUG("mycss_an_plus_b_state_anb_n");
                 entry->parser = entry->parser_switch;
             }
-            else if(myhtml_strcasecmp(str.data, "even") == 0) {
+            else if(mycore_strcasecmp(str.data, "even") == 0) {
                 anb_entry->a = 2;
                 anb_entry->b = 0;
                 
-                MyCSS_DEBUG_MESSAGE("mycss_an_plus_b_state_anb_e_v_e_n")
+                MyCORE_DEBUG("mycss_an_plus_b_state_anb_e_v_e_n");
                 entry->parser = entry->parser_switch;
             }
-            else if(myhtml_strcasecmp(str.data, "odd") == 0) {
+            else if(mycore_strcasecmp(str.data, "odd") == 0) {
                 anb_entry->a = 2;
                 anb_entry->b = 1;
                 
-                MyCSS_DEBUG_MESSAGE("mycss_an_plus_b_state_anb_o_d_d")
+                MyCORE_DEBUG("mycss_an_plus_b_state_anb_o_d_d");
                 entry->parser = entry->parser_switch;
             }
             else {
-                myhtml_string_destroy(&str, false);
+                mycore_string_destroy(&str, false);
                 
                 mycss_an_plus_b_parser_expectations_error(entry);
                 entry->parser = entry->parser_switch;
                 return false;
             }
             
-            myhtml_string_destroy(&str, false);
+            mycore_string_destroy(&str, false);
             break;
         }
         case MyCSS_TOKEN_TYPE_DELIM: {
@@ -261,31 +261,31 @@ bool mycss_an_plus_b_state_anb(mycss_entry_t* entry, mycss_token_t* token, bool 
             break;
         }
         case MyCSS_TOKEN_TYPE_NUMBER: {
-            myhtml_string_t str;
+            mycore_string_t str;
             mycss_token_data_to_string(entry, token, &str, true, false);
             
             mycss_convert_data_to_integer(str.data, str.length, &anb_entry->b);
             
-            myhtml_string_destroy(&str, false);
+            mycore_string_destroy(&str, false);
             
-            MyCSS_DEBUG_MESSAGE("mycss_an_plus_b_state_anb_number")
+            MyCORE_DEBUG("mycss_an_plus_b_state_anb_number");
             entry->parser = entry->parser_switch;
             break;
         }
         case MyCSS_TOKEN_TYPE_DIMENSION: {
-            myhtml_string_t str;
+            mycore_string_t str;
             mycss_token_data_to_string(entry, token, &str, true, false);
             
             size_t consumed_len = mycss_convert_data_to_integer(str.data, str.length, &anb_entry->a);
             
-            if(myhtml_strncasecmp(&str.data[consumed_len], "n-", 2) == 0)
+            if(mycore_strncasecmp(&str.data[consumed_len], "n-", 2) == 0)
             {
                 size_t rem = str.length - consumed_len;
                 
                 if(rem == 2) {
                     entry->parser = mycss_an_plus_b_state_anb_plus_n_hyphen;
                     
-                    myhtml_string_destroy(&str, false);
+                    mycore_string_destroy(&str, false);
                     return true;
                 }
                 
@@ -295,17 +295,17 @@ bool mycss_an_plus_b_state_anb(mycss_entry_t* entry, mycss_token_t* token, bool 
                     anb_entry->is_broken = true;
                 }
                 
-                MyCSS_DEBUG_MESSAGE("mycss_an_plus_b_state_anb_n_hyphen_asterisk_end")
+                MyCORE_DEBUG("mycss_an_plus_b_state_anb_n_hyphen_asterisk_end");
                 entry->parser = entry->parser_switch;
             }
-            else if(myhtml_strncasecmp(&str.data[consumed_len], "n", 1) == 0)
+            else if(mycore_strncasecmp(&str.data[consumed_len], "n", 1) == 0)
             {
                 size_t rem = (str.length - consumed_len) - 1;
                 
                 if(rem == 0) {
                     entry->parser = mycss_an_plus_b_state_anb_plus_n;
                     
-                    myhtml_string_destroy(&str, false);
+                    mycore_string_destroy(&str, false);
                     return true;
                 }
                 
@@ -314,18 +314,18 @@ bool mycss_an_plus_b_state_anb(mycss_entry_t* entry, mycss_token_t* token, bool 
                     anb_entry->is_broken = true;
                 }
                 
-                MyCSS_DEBUG_MESSAGE("mycss_an_plus_b_state_anb_n_end")
+                MyCORE_DEBUG("mycss_an_plus_b_state_anb_n_end");
                 entry->parser = entry->parser_switch;
             }
             else {
-                myhtml_string_destroy(&str, false);
+                mycore_string_destroy(&str, false);
                 
                 mycss_an_plus_b_parser_expectations_error(entry);
                 entry->parser = entry->parser_switch;
                 return false;
             }
             
-            myhtml_string_destroy(&str, false);
+            mycore_string_destroy(&str, false);
             break;
         }
         default: {
@@ -344,15 +344,15 @@ bool mycss_an_plus_b_state_anb_plus(mycss_entry_t* entry, mycss_token_t* token, 
     
     switch (token->type) {
         case MyCSS_TOKEN_TYPE_IDENT: {
-            myhtml_string_t str;
+            mycore_string_t str;
             mycss_token_data_to_string(entry, token, &str, true, false);
             
-            if(myhtml_strncasecmp(str.data, "n-", 2) == 0)
+            if(mycore_strncasecmp(str.data, "n-", 2) == 0)
             {
                 if(str.length == 2) {
                     entry->parser = mycss_an_plus_b_state_anb_plus_n_hyphen;
                     
-                    myhtml_string_destroy(&str, false);
+                    mycore_string_destroy(&str, false);
                     return true;
                 }
                 
@@ -362,22 +362,22 @@ bool mycss_an_plus_b_state_anb_plus(mycss_entry_t* entry, mycss_token_t* token, 
                     anb_entry->is_broken = true;
                 }
                 
-                MyCSS_DEBUG_MESSAGE("mycss_an_plus_b_state_anb_plus_n_hyphen_asterisk_end")
+                MyCORE_DEBUG("mycss_an_plus_b_state_anb_plus_n_hyphen_asterisk_end");
                 entry->parser = entry->parser_switch;
             }
-            else if(myhtml_strncasecmp(str.data, "n", 1) == 0) {
-                MyCSS_DEBUG_MESSAGE("mycss_an_plus_b_state_anb_plus_n")
+            else if(mycore_strncasecmp(str.data, "n", 1) == 0) {
+                MyCORE_DEBUG("mycss_an_plus_b_state_anb_plus_n");
                 entry->parser = mycss_an_plus_b_state_anb_plus_n;
             }
             else {
-                myhtml_string_destroy(&str, false);
+                mycore_string_destroy(&str, false);
                 
                 mycss_an_plus_b_parser_expectations_error(entry);
                 entry->parser = entry->parser_switch;
                 return false;
             }
             
-            myhtml_string_destroy(&str, false);
+            mycore_string_destroy(&str, false);
             break;
         }
         default: {
@@ -399,9 +399,9 @@ bool mycss_an_plus_b_state_anb_plus_n_hyphen(mycss_entry_t* entry, mycss_token_t
     
     if(token->type == MyCSS_TOKEN_TYPE_NUMBER) {
         /* begin from 0-9 */
-        if(myhtml_string_chars_num_map[ (const unsigned char)(*token->data) ] != 0xff)
+        if(mycore_string_chars_num_map[ (const unsigned char)(*token->data) ] != 0xff)
         {
-            myhtml_string_t str;
+            mycore_string_t str;
             mycss_token_data_to_string(entry, token, &str, true, false);
             
             long res;
@@ -409,10 +409,10 @@ bool mycss_an_plus_b_state_anb_plus_n_hyphen(mycss_entry_t* entry, mycss_token_t
             
             anb_entry->b = -res;
             
-            MyCSS_DEBUG_MESSAGE("mycss_an_plus_b_state_anb_plus_n_hyphen_zero_hyphen_nine_end")
+            MyCORE_DEBUG("mycss_an_plus_b_state_anb_plus_n_hyphen_zero_hyphen_nine_end");
             entry->parser = entry->parser_switch;
             
-            myhtml_string_destroy(&str, false);
+            mycore_string_destroy(&str, false);
         }
         else {
             mycss_an_plus_b_parser_expectations_error(entry);
@@ -454,15 +454,15 @@ bool mycss_an_plus_b_state_anb_plus_n(mycss_entry_t* entry, mycss_token_t* token
         case MyCSS_TOKEN_TYPE_NUMBER: {
             if(*token->data == '+' || *token->data == '-')
             {
-                myhtml_string_t str;
+                mycore_string_t str;
                 mycss_token_data_to_string(entry, token, &str, true, false);
                 
                 mycss_convert_data_to_integer(str.data, str.length, &anb_entry->b);
                 
-                MyCSS_DEBUG_MESSAGE("mycss_an_plus_b_state_anb_plus_n_begin_plus_vertical_bar_hyphen")
+                MyCORE_DEBUG("mycss_an_plus_b_state_anb_plus_n_begin_plus_vertical_bar_hyphen");
                 entry->parser = entry->parser_switch;
                 
-                myhtml_string_destroy(&str, false);
+                mycore_string_destroy(&str, false);
             }
             else {
                 mycss_an_plus_b_parser_expectations_error(entry);
@@ -489,17 +489,17 @@ bool mycss_an_plus_b_state_anb_plus_n_plus(mycss_entry_t* entry, mycss_token_t* 
     
     if(token->type == MyCSS_TOKEN_TYPE_NUMBER) {
         /* begin from 0-9 */
-        if(myhtml_string_chars_num_map[ (const unsigned char)(*token->data) ] != 0xff)
+        if(mycore_string_chars_num_map[ (const unsigned char)(*token->data) ] != 0xff)
         {
-            myhtml_string_t str;
+            mycore_string_t str;
             mycss_token_data_to_string(entry, token, &str, true, false);
             
             mycss_convert_data_to_integer(str.data, str.length, &anb_entry->b);
             
-            MyCSS_DEBUG_MESSAGE("mycss_an_plus_b_state_anb_plus_n_plus_zero_hyphen_nine_end")
+            MyCORE_DEBUG("mycss_an_plus_b_state_anb_plus_n_plus_zero_hyphen_nine_end");
             entry->parser = entry->parser_switch;
             
-            myhtml_string_destroy(&str, false);
+            mycore_string_destroy(&str, false);
         }
         else {
             mycss_an_plus_b_parser_expectations_error(entry);

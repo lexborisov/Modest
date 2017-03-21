@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -19,9 +19,9 @@
 */
 
 #include "convert.h"
-#include "myhtml/utils/resources.h"
+#include "mycore/utils/resources.h"
 
-const char * mycss_convert_split_dimension_string(myhtml_string_t* str, double* value, bool* is_float)
+const char * mycss_convert_split_dimension_string(mycore_string_t* str, double* value, bool* is_float)
 {
     size_t length = mycss_convert_data_to_double(str->data, str->length, value, is_float);
     return &str->data[length];
@@ -177,9 +177,9 @@ size_t mycss_convert_data_to_integer(const char* data, size_t size, long* return
     
     const unsigned char* u_data = (const unsigned char*)data;
     
-    while(offset < size && myhtml_string_chars_num_map[u_data[offset]] != 0xff)
+    while(offset < size && mycore_string_chars_num_map[u_data[offset]] != 0xff)
     {
-        res_num = myhtml_string_chars_num_map[ u_data[offset] ] + res_num * 10;
+        res_num = mycore_string_chars_num_map[ u_data[offset] ] + res_num * 10;
         ++offset;
     }
     
@@ -200,9 +200,9 @@ size_t mycss_convert_hex_to_codepoint(const char *data, size_t size, size_t *cod
     
     while(length < size)
     {
-        if(myhtml_string_chars_hex_map[u_data[length]] != 0xff) {
+        if(mycore_string_chars_hex_map[u_data[length]] != 0xff) {
             *codepoint <<= 4;
-            *codepoint |= myhtml_string_chars_hex_map[ u_data[length] ];
+            *codepoint |= mycore_string_chars_hex_map[ u_data[length] ];
             
             --max_consumed;
             
@@ -233,10 +233,10 @@ size_t mycss_convert_unicode_range_to_codepoint(const char *data, size_t size, s
         
         do {
             *start <<= 4;
-            *start |= myhtml_string_chars_hex_map[ 0x30 ]; // 0x30 == '0'
+            *start |= mycore_string_chars_hex_map[ 0x30 ]; // 0x30 == '0'
             
             *end <<= 4;
-            *end |= myhtml_string_chars_hex_map[ 0x46 ]; // 0x46 == 'F'
+            *end |= mycore_string_chars_hex_map[ 0x46 ]; // 0x46 == 'F'
             
             ++length;
         }

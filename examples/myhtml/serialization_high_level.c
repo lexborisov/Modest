@@ -22,6 +22,8 @@
 #include <stdlib.h>
 #include <myhtml/api.h>
 
+#include "example.h"
+
 struct res_html {
     char  *html;
     size_t size;
@@ -60,7 +62,7 @@ struct res_html load_html_file(const char* filename)
     
     size_t nread = fread(html, 1, size, fh);
     if (nread != size) {
-        fprintf(stderr, "could not read %ld bytes (%zu bytes done)\n", size, nread);
+        fprintf(stderr, "could not read %ld bytes (" MyCORE_FMT_Z " bytes done)\n", size, nread);
         exit(EXIT_FAILURE);
     }
 
@@ -93,10 +95,10 @@ int main(int argc, const char * argv[])
     myhtml_tree_init(tree, myhtml);
     
     // parse html
-    myhtml_parse(tree, MyHTML_ENCODING_UTF_8, res.html, res.size);
+    myhtml_parse(tree, MyENCODING_UTF_8, res.html, res.size);
     
-    myhtml_string_raw_t str_raw;
-    myhtml_string_raw_clean_all(&str_raw);
+    mycore_string_raw_t str_raw;
+    mycore_string_raw_clean_all(&str_raw);
     
     if(myhtml_serialization_tree_buffer(myhtml_tree_get_document(tree), &str_raw)) {
         /* 
@@ -105,7 +107,7 @@ int main(int argc, const char * argv[])
          */
         
         printf("%s", str_raw.data);
-        myhtml_string_raw_destroy(&str_raw, false);
+        mycore_string_raw_destroy(&str_raw, false);
     }
     
     // release resources

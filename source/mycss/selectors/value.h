@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
 #pragma once
 
 #define mycss_selector_value_attribute(obj) ((mycss_selectors_object_attribute_t*)(obj))
-#define mycss_selector_value_string(obj) ((myhtml_string_t*)(obj))
+#define mycss_selector_value_string(obj) ((mycore_string_t*)(obj))
 #define mycss_selector_value_an_plus_b(obj) ((mycss_an_plus_b_entry_t*)(obj))
 #define mycss_selector_value_drop(obj) ((mycss_selectors_function_drop_type_t)(obj))
 #define mycss_selector_value_lang(obj) ((mycss_selectors_value_lang_t*)(obj))
@@ -36,13 +36,13 @@ extern "C" {
 
 #include "mycss/entry.h"
 #include "mycss/selectors/myosi.h"
-#include "myhtml/utils/mchar_async.h"
+#include "mycore/utils/mchar_async.h"
 
 typedef void * (*mycss_selectors_value_destroy_f)(mycss_entry_t* entry, mycss_selectors_type_t type, int sub_type, void* value, bool self_destroy);
 typedef void * (*mycss_selectors_value_function_destroy_f)(mycss_entry_t* entry, void* value, bool self_destroy);
 
 struct mycss_selectors_value_attribute {
-    myhtml_string_t* value;
+    mycore_string_t* value;
     
     mycss_selectors_match_t match;
     mycss_selectors_mod_t mod;
@@ -50,7 +50,7 @@ struct mycss_selectors_value_attribute {
 typedef mycss_selectors_object_attribute_t;
 
 struct mycss_selectors_value_lang {
-    myhtml_string_t str;
+    mycore_string_t str;
     struct mycss_selectors_value_lang* next;
 }
 typedef mycss_selectors_value_lang_t;

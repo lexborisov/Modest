@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -22,14 +22,14 @@
 
 mycss_stack_t * mycss_stack_create(void)
 {
-    return myhtml_calloc(1, sizeof(mycss_stack_t));
+    return mycore_calloc(1, sizeof(mycss_stack_t));
 }
 
-mycss_status_t mycss_stack_init(mycss_stack_t *stack, size_t size)
+mystatus_t mycss_stack_init(mycss_stack_t *stack, size_t size)
 {
     stack->entries_size   = size;
     stack->entries_length = 0;
-    stack->entries = (mycss_stack_entry_t*)myhtml_calloc(stack->entries_size, sizeof(mycss_stack_entry_t));
+    stack->entries = (mycss_stack_entry_t*)mycore_calloc(stack->entries_size, sizeof(mycss_stack_entry_t));
     
     if(stack->entries == NULL)
         return MyCSS_STATUS_ERROR_MEMORY_ALLOCATION;
@@ -48,24 +48,24 @@ mycss_stack_t * mycss_stack_destroy(mycss_stack_t *stack, bool self_destroy)
         return NULL;
     
     if(stack->entries) {
-        myhtml_free(stack->entries);
+        mycore_free(stack->entries);
         stack->entries = NULL;
     }
     
     if(self_destroy) {
-        myhtml_free(stack);
+        mycore_free(stack);
         return NULL;
     }
     
     return stack;
 }
 
-mycss_status_t mycss_stack_push(mycss_stack_t *stack, void* value, mycss_parser_token_f parser)
+mystatus_t mycss_stack_push(mycss_stack_t *stack, void* value, mycss_parser_token_f parser)
 {
     if(stack->entries_length >= stack->entries_size) {
         size_t new_size = stack->entries_length << 1;
         
-        mycss_stack_entry_t *entries = (mycss_stack_entry_t*)myhtml_realloc(stack->entries,
+        mycss_stack_entry_t *entries = (mycss_stack_entry_t*)mycore_realloc(stack->entries,
                                                                             sizeof(mycss_stack_entry_t) * new_size);
         
         if(entries) {

@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -30,18 +30,18 @@ extern "C" {
 #endif
 
 mycss_declaration_t * mycss_declaration_create(void);
-mycss_status_t  mycss_declaration_init(mycss_entry_t* entry, mycss_declaration_t* declaration);
+mystatus_t  mycss_declaration_init(mycss_entry_t* entry, mycss_declaration_t* declaration);
 void  mycss_declaration_clean_all(mycss_declaration_t* declaration);
 void mycss_declaration_clean(mycss_declaration_t* declaration);
 mycss_declaration_t * mycss_declaration_destroy(mycss_declaration_t* declaration, bool self_destroy);
 
 void mycss_declaration_entry_clean(mycss_declaration_entry_t* entry);
 
-mycss_declaration_entry_t * mycss_declaration_entry_create(mycss_declaration_t* declaration, myhtml_status_t* status);
+mycss_declaration_entry_t * mycss_declaration_entry_create(mycss_declaration_t* declaration, mystatus_t* status);
 void mycss_declaration_entry_clean_all(mycss_declaration_entry_t* entry);
 void mycss_declaration_entry_append_to_current(mycss_declaration_t* declaration, mycss_declaration_entry_t* dec_entry);
 
-mycss_declaration_entry_t * mycss_declaration_parse(mycss_declaration_t* declaration, myhtml_encoding_t encoding, const char* data, size_t data_size, mycss_status_t* out_status);
+mycss_declaration_entry_t * mycss_declaration_parse(mycss_declaration_t* declaration, myencoding_t encoding, const char* data, size_t data_size, mystatus_t* out_status);
 
 mycss_token_type_t mycss_declaration_ending_token_type(mycss_declaration_t* declaration);
 void mycss_declaration_ending_token_type_set(mycss_declaration_t* declaration, mycss_token_type_t ending_token_type);

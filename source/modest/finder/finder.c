@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -23,10 +23,10 @@
 
 modest_finder_t * modest_finder_create(void)
 {
-    return (modest_finder_t*)myhtml_calloc(1, sizeof(modest_finder_t));
+    return (modest_finder_t*)mycore_calloc(1, sizeof(modest_finder_t));
 }
 
-modest_status_t modest_finder_init(modest_finder_t* finder)
+mystatus_t modest_finder_init(modest_finder_t* finder)
 {
     return MODEST_STATUS_OK;
 }
@@ -42,7 +42,7 @@ modest_finder_t * modest_finder_destroy(modest_finder_t* finder, bool self_destr
         return NULL;
     
     if(self_destroy) {
-        myhtml_free(finder);
+        mycore_free(finder);
         return NULL;
     }
     
@@ -114,7 +114,7 @@ modest_finder_t * modest_finder_by_stylesheet(mycss_stylesheet_t *stylesheet, my
     if(finder == NULL)
         return NULL;
     
-    modest_status_t status = modest_finder_init(finder);
+    mystatus_t status = modest_finder_init(finder);
     
     if(status != MODEST_STATUS_OK) {
         modest_finder_destroy(finder, true);
@@ -122,7 +122,7 @@ modest_finder_t * modest_finder_by_stylesheet(mycss_stylesheet_t *stylesheet, my
     }
     
     if(*collection == NULL) {
-        myhtml_status_t status;
+        mystatus_t status;
         *collection = myhtml_collection_create(4096, &status);
         
         if(status) {
@@ -148,14 +148,14 @@ modest_finder_t * modest_finder_by_stylesheet(mycss_stylesheet_t *stylesheet, my
     return finder;
 }
 
-modest_status_t modest_finder_by_selectors_list(modest_finder_t* finder, myhtml_tree_node_t* scope_node,
+mystatus_t modest_finder_by_selectors_list(modest_finder_t* finder, myhtml_tree_node_t* scope_node,
                                                 mycss_selectors_list_t* selector_list, myhtml_collection_t** collection)
 {
     if(finder == NULL || selector_list == NULL || scope_node == NULL || collection == NULL)
         return MODEST_STATUS_ERROR;
     
     if(*collection == NULL) {
-        myhtml_status_t status;
+        mystatus_t status;
         *collection = myhtml_collection_create(4096, &status);
         
         if(status)

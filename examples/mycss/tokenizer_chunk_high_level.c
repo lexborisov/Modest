@@ -24,12 +24,14 @@
 
 #include <mycss/api.h>
 
+#include "example.h"
+
 mycss_token_t * token_ready_callback(mycss_entry_t* entry, mycss_token_t* token)
 {
     size_t tokens_count = mycss_entry_token_count(entry);
     mycss_token_type_t token_type = mycss_token_type(token);
 
-    printf("Token %zu: <%s>\n", tokens_count, mycss_token_name_by_type(token_type));
+    printf("Token " MyCORE_FMT_Z ": <%s>\n", tokens_count, mycss_token_name_by_type(token_type));
 
     return token;
 }
@@ -42,7 +44,7 @@ int main(int argc, const char * argv[])
 
     // basic init
     mycss_t *mycss = mycss_create();
-    mycss_status_t status = mycss_init(mycss);
+    mystatus_t status = mycss_init(mycss);
 
     // check initialization
     if (MyCSS_FAILED(status)) return EXIT_FAILURE;
@@ -54,8 +56,8 @@ int main(int argc, const char * argv[])
     // set custom callback for token is ready
     mycss_entry_token_ready_callback(entry, token_ready_callback);
 
-    // this is example, you can not specify, dy default MyHTML_ENCODING_UTF_8
-    mycss_encoding_set(entry, MyHTML_ENCODING_UTF_8);
+    // this is example, you can not specify, dy default MyENCODING_UTF_8
+    mycss_encoding_set(entry, MyENCODING_UTF_8);
 
     // parse css chunks
     mycss_parse_chunk(entry, css_chunk_1, strlen(css_chunk_1));

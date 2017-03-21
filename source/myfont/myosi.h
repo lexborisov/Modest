@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -85,7 +85,6 @@ extern "C" {
 // base
 /*
  Very important!!!
- see modest/myosi.h:modest_status_t
 */
 enum myfont_status {
     MyFONT_STATUS_OK                                    = 0x000000,

@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -21,7 +21,7 @@
 #include "mycss/declaration/entry.h"
 #include "mycss/declaration/entry_destroy_resources.h"
 
-mycss_declaration_entry_t * mycss_declaration_entry_create(mycss_declaration_t* declaration, myhtml_status_t* status)
+mycss_declaration_entry_t * mycss_declaration_entry_create(mycss_declaration_t* declaration, mystatus_t* status)
 {
     mycss_declaration_entry_t *dec_entry = mcobject_malloc(declaration->mcobject_entries, status);
     memset(dec_entry, 0, sizeof(mycss_declaration_entry_t));

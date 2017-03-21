@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -22,23 +22,23 @@
 
 mycss_stylesheet_t * mycss_stylesheet_create(void)
 {
-    return (mycss_stylesheet_t*)myhtml_calloc(1, sizeof(mycss_stylesheet_t));
+    return (mycss_stylesheet_t*)mycore_calloc(1, sizeof(mycss_stylesheet_t));
 }
 
-mycss_status_t mycss_stylesheet_init(mycss_stylesheet_t* stylesheet, mycss_entry_t* entry)
+mystatus_t mycss_stylesheet_init(mycss_stylesheet_t* stylesheet, mycss_entry_t* entry)
 {
     stylesheet->entry = entry;
     
-    mycss_status_t status = mycss_namespace_stylesheet_init(&stylesheet->ns_stylesheet, entry);
+    mystatus_t status = mycss_namespace_stylesheet_init(&stylesheet->ns_stylesheet, entry);
     if(status != MyCSS_STATUS_OK)
         return status;
     
     return MyCSS_STATUS_OK;
 }
 
-mycss_status_t mycss_stylesheet_clean_all(mycss_stylesheet_t* stylesheet)
+mystatus_t mycss_stylesheet_clean_all(mycss_stylesheet_t* stylesheet)
 {
-    mycss_status_t status = mycss_namespace_stylesheet_clean(&stylesheet->ns_stylesheet, stylesheet->entry);
+    mystatus_t status = mycss_namespace_stylesheet_clean(&stylesheet->ns_stylesheet, stylesheet->entry);
     if(status != MyCSS_STATUS_OK)
         return status;
     
@@ -52,7 +52,7 @@ mycss_stylesheet_t * mycss_stylesheet_destroy(mycss_stylesheet_t* stylesheet, bo
     mycss_namespace_stylesheet_destroy(&stylesheet->ns_stylesheet, stylesheet->entry, false);
     
     if(self_destroy) {
-        myhtml_free(stylesheet);
+        mycore_free(stylesheet);
         return NULL;
     }
     
@@ -60,7 +60,7 @@ mycss_stylesheet_t * mycss_stylesheet_destroy(mycss_stylesheet_t* stylesheet, bo
 }
 
 /* print */
-void mycss_stylesheet_serialization(mycss_stylesheet_t* stylesheet, mycss_callback_serialization_f callback, void* context)
+void mycss_stylesheet_serialization(mycss_stylesheet_t* stylesheet, mycore_callback_serialize_f callback, void* context)
 {
     mycss_selectors_serialization_list(stylesheet->entry->selectors, stylesheet->sel_list_first, callback, context);
 }

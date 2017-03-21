@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -22,8 +22,15 @@
 #define MODEST_MYOSI_H
 #pragma once
 
+#include "mycore/myosi.h"
 #include "myhtml/myhtml.h"
 #include "mycss/mycss.h"
+
+#define MODEST_VERSION_MAJOR 0
+#define MODEST_VERSION_MINOR 0
+#define MODEST_VERSION_PATCH 6
+
+#define MODEST_VERSION_STRING MyCORE_STR(MODEST_VERSION_MAJOR) MyCORE_STR(.) MyCORE_STR(MODEST_VERSION_MINOR) MyCORE_STR(.) MyCORE_STR(MODEST_VERSION_PATCH)
 
 #ifdef __cplusplus
 extern "C" {
@@ -36,12 +43,14 @@ extern "C" {
  for myhtml             0..00ffff;      MyHTML_STATUS_OK    == 0x000000
  for mycss and modules  010000..01ffff; MyCSS_STATUS_OK     == 0x000000
  for modest             020000..02ffff; MODEST_STATUS_OK    == 0x000000
- for myrender           030000..03ffff; MyRENDER_STATUS_OK  == 0x000000
+ for myrender           030000..037777; MyRENDER_STATUS_OK  == 0x000000
+ for myurl              038888..0388ff; MyURL_STATUS_OK     == 0x000000
+ for myunicode          038900..038bff; MyUNICODE_STATUS_OK == 0x000000
+ not occupied           038c00..03ffff;
  for mydom              040000..04ffff; MyDOM_STATUS_OK     == 0x000000
  for mynetwork          050000..05ffff; MyNETWORK_STATUS_OK == 0x000000
  for myecma             060000..06ffff; MyECMA_STATUS_OK    == 0x000000
- for myfont             070000..07ffff; MyFONT_STATUS_OK    == 0x000000
- not occupied           080000..
+ not occupied           070000..
 */
 enum modest_status {
     MODEST_STATUS_OK                             = 0x000000,

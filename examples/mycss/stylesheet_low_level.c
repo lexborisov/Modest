@@ -24,9 +24,10 @@
 
 #include <mycss/mycss.h>
 
-void serialization_callback(const char* data, size_t len, void* ctx)
+mystatus_t serialization_callback(const char* data, size_t len, void* ctx)
 {
     printf("%.*s", (int)len, data);
+    return MyCORE_STATUS_OK;
 }
 
 int main(int argc, const char * argv[])
@@ -39,7 +40,7 @@ body > div[id*=mu i]:not(:nth-child(2n+1)) {width: 1.4%}";
 
     // basic init
     mycss_t *mycss = mycss_create();
-    mycss_status_t status = mycss_init(mycss);
+    mystatus_t status = mycss_init(mycss);
 
     // check initialization
     if (MyCSS_FAILED(status)) return EXIT_FAILURE;
@@ -53,7 +54,7 @@ body > div[id*=mu i]:not(:nth-child(2n+1)) {width: 1.4%}";
     printf("%s", css);
     printf("\n\n");
 
-    status = mycss_parse(entry, MyHTML_ENCODING_UTF_8, css, strlen(css));
+    status = mycss_parse(entry, MyENCODING_UTF_8, css, strlen(css));
 
     /* print result */
     printf("Result:\n");

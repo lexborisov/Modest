@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -52,7 +52,7 @@ bool mycss_property_shared_check_declaration_end(mycss_entry_t* entry, mycss_tok
     return false;
 }
 
-bool mycss_property_shared_number(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_number(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, mycore_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_NUMBER)
         return false;
@@ -66,9 +66,9 @@ bool mycss_property_shared_number(mycss_entry_t* entry, mycss_token_t* token, vo
     mycss_convert_data_to_double(str->data, str->length, &return_num, &length->is_float);
     
     if(length->is_float)
-        length->f = (float)return_num;
+        length->value.f = (float)return_num;
     else
-        length->i = (int)return_num;
+        length->value.i = (int)return_num;
     
     *value = length;
     *value_type = MyCSS_PROPERTY_VALUE__NUMBER;
@@ -76,7 +76,7 @@ bool mycss_property_shared_number(mycss_entry_t* entry, mycss_token_t* token, vo
     return true;
 }
 
-bool mycss_property_shared_length(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_length(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, mycore_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_DIMENSION && token->type != MyCSS_TOKEN_TYPE_NUMBER)
         return false;
@@ -96,9 +96,9 @@ bool mycss_property_shared_length(mycss_entry_t* entry, mycss_token_t* token, vo
     mycss_values_length_t *length = mycss_values_create(entry, sizeof(mycss_values_length_t));
     
     if(is_float)
-        length->f = (float)return_num;
+        length->value.f = (float)return_num;
     else
-        length->i = (int)return_num;
+        length->value.i = (int)return_num;
     
     length->is_float = is_float;
     length->type = type;
@@ -109,7 +109,7 @@ bool mycss_property_shared_length(mycss_entry_t* entry, mycss_token_t* token, vo
     return true;
 }
 
-bool mycss_property_shared_resolution(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_resolution(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, mycore_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_DIMENSION)
         return false;
@@ -135,9 +135,9 @@ bool mycss_property_shared_resolution(mycss_entry_t* entry, mycss_token_t* token
     mycss_values_resolution_t *resolution = mycss_values_create(entry, sizeof(mycss_values_resolution_t));
     
     if(is_float)
-        resolution->f = (float)return_num;
+        resolution->value.f = (float)return_num;
     else
-        resolution->i = (int)return_num;
+        resolution->value.i = (int)return_num;
     
     resolution->is_float = is_float;
     resolution->type = type;
@@ -173,7 +173,7 @@ bool mycss_property_shared_custom_ident(mycss_entry_t* entry, mycss_token_t* tok
     return true;
 }
 
-bool mycss_property_shared_percentage(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_percentage(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, mycore_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_PERCENTAGE)
         return false;
@@ -187,9 +187,9 @@ bool mycss_property_shared_percentage(mycss_entry_t* entry, mycss_token_t* token
     mycss_convert_data_to_double(str->data, str->length, &return_num, &length->is_float);
     
     if(length->is_float)
-        length->f = (float)return_num;
+        length->value.f = (float)return_num;
     else
-        length->i = (int)return_num;
+        length->value.i = (int)return_num;
     
     *value = length;
     *value_type = MyCSS_PROPERTY_VALUE__PERCENTAGE;
@@ -197,13 +197,13 @@ bool mycss_property_shared_percentage(mycss_entry_t* entry, mycss_token_t* token
     return true;
 }
 
-bool mycss_property_shared_length_percentage(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_length_percentage(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, mycore_string_t* str)
 {
     return mycss_property_shared_length(entry, token, value, value_type, str) ||
     mycss_property_shared_percentage(entry, token, value, value_type, str);
 }
 
-bool mycss_property_shared_color(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str, bool* parser_changed)
+bool mycss_property_shared_color(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, mycore_string_t* str, bool* parser_changed)
 {
     switch (token->type) {
         case MyCSS_TOKEN_TYPE_FUNCTION:
@@ -238,8 +238,8 @@ bool mycss_property_shared_color(mycss_entry_t* entry, mycss_token_t* token, voi
             if(color_entry) {
                 mycss_values_color_t *color = mycss_values_create(entry, sizeof(mycss_values_color_t));
                 
-                color->name_id = color_entry->type;
-                color->type    = MyCSS_VALUES_COLOR_TYPE_NAMED;
+                color->value.name_id = color_entry->type;
+                color->type          = MyCSS_VALUES_COLOR_TYPE_NAMED;
                 
                 *value = color;
                 *value_type = MyCSS_PROPERTY_VALUE__COLOR;
@@ -261,7 +261,7 @@ bool mycss_property_shared_color(mycss_entry_t* entry, mycss_token_t* token, voi
 }
 
 bool mycss_property_shared_text_decoration_skip(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value,
-                                                unsigned int* value_type, myhtml_string_t* str, bool with_global)
+                                                unsigned int* value_type, mycore_string_t* str, bool with_global)
 {
     if(str->data == NULL)
         mycss_token_data_to_string(entry, token, str, true, false);
@@ -334,7 +334,7 @@ bool mycss_property_shared_text_decoration_skip(mycss_entry_t* entry, mycss_toke
 }
 
 bool mycss_property_shared_text_decoration_line(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value,
-                                                unsigned int* value_type, myhtml_string_t* str, bool with_global)
+                                                unsigned int* value_type, mycore_string_t* str, bool with_global)
 {
     if(str->data == NULL)
         mycss_token_data_to_string(entry, token, str, true, false);
@@ -385,7 +385,7 @@ bool mycss_property_shared_text_decoration_line(mycss_entry_t* entry, mycss_toke
     return false;
 }
 
-bool mycss_property_shared_text_decoration_style(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_text_decoration_style(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, mycore_string_t* str)
 {
     if(str->data == NULL)
         mycss_token_data_to_string(entry, token, str, true, false);
@@ -413,7 +413,7 @@ bool mycss_property_shared_text_decoration_style(mycss_entry_t* entry, mycss_tok
     return false;
 }
 
-bool mycss_property_shared_default(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_default(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, mycore_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
         return false;
@@ -437,7 +437,7 @@ bool mycss_property_shared_default(mycss_entry_t* entry, mycss_token_t* token, u
     return true;
 }
 
-unsigned int mycss_property_shared_get_value_type(mycss_entry_t* entry, mycss_token_t* token, myhtml_string_t* str)
+unsigned int mycss_property_shared_get_value_type(mycss_entry_t* entry, mycss_token_t* token, mycore_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
         return MyCSS_PROPERTY_TYPE_UNDEF;
@@ -448,7 +448,7 @@ unsigned int mycss_property_shared_get_value_type(mycss_entry_t* entry, mycss_to
     return mycss_property_value_type_by_name(str->data, str->length);
 }
 
-bool mycss_property_shared_by_value_type(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, unsigned int check_type, myhtml_string_t* str)
+bool mycss_property_shared_by_value_type(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, unsigned int check_type, mycore_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
         return false;
@@ -464,7 +464,7 @@ bool mycss_property_shared_by_value_type(mycss_entry_t* entry, mycss_token_t* to
     return false;
 }
 
-bool mycss_property_shared_width(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_width(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, mycore_string_t* str)
 {
     if(mycss_property_shared_length_percentage(entry, token, value, value_type, str))
         return true;
@@ -493,7 +493,7 @@ bool mycss_property_shared_width(mycss_entry_t* entry, mycss_token_t* token, voi
     return true;
 }
 
-bool mycss_property_shared_height(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_height(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, mycore_string_t* str)
 {
     if(mycss_property_shared_length_percentage(entry, token, value, value_type, str))
         return true;
@@ -522,7 +522,7 @@ bool mycss_property_shared_height(mycss_entry_t* entry, mycss_token_t* token, vo
     return true;
 }
 
-bool mycss_property_shared_line_width(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_line_width(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, mycore_string_t* str)
 {
     if(mycss_property_shared_length(entry, token, value, value_type, str))
         return true;
@@ -553,7 +553,7 @@ bool mycss_property_shared_line_width(mycss_entry_t* entry, mycss_token_t* token
     return true;
 }
 
-bool mycss_property_shared_line_height(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_line_height(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, mycore_string_t* str)
 {
     if(mycss_property_shared_length_percentage(entry, token, value, value_type, str) ||
        mycss_property_shared_number(entry, token, value, value_type, str))
@@ -584,7 +584,7 @@ bool mycss_property_shared_line_height(mycss_entry_t* entry, mycss_token_t* toke
     return false;
 }
 
-bool mycss_property_shared_line_style(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_line_style(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, mycore_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
         return false;
@@ -619,12 +619,12 @@ bool mycss_property_shared_line_style(mycss_entry_t* entry, mycss_token_t* token
     return true;
 }
 
-void mycss_property_shared_destroy_string(myhtml_string_t* str)
+void mycss_property_shared_destroy_string(mycore_string_t* str)
 {
-    myhtml_string_destroy(str, false);
+    mycore_string_destroy(str, false);
 }
 
-bool mycss_property_shared_font_ends(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_font_ends(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, mycore_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
         return false;
@@ -675,7 +675,7 @@ static mycss_values_font_family_entry_t * mycss_property_shared_font_family_chec
     return ff_entry;
 }
 
-bool mycss_property_shared_font_family(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, bool* dont_destroy_str, myhtml_string_t* str)
+bool mycss_property_shared_font_family(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, bool* dont_destroy_str, mycore_string_t* str)
 {
     *dont_destroy_str = false;
     
@@ -696,7 +696,7 @@ bool mycss_property_shared_font_family(mycss_entry_t* entry, mycss_token_t* toke
             mycss_values_font_family_entry_t *ff_entry = mycss_property_shared_font_family_check(entry, value);
             
             ff_entry->type = MyCSS_VALUES_FONT_FAMILY_TYPE_GENERIC;
-            ff_entry->prop_type = family_type;
+            ff_entry->value.prop_type = family_type;
             
             return true;
         }
@@ -724,7 +724,7 @@ bool mycss_property_shared_font_family(mycss_entry_t* entry, mycss_token_t* toke
             mycss_values_font_family_entry_t *ff_entry = mycss_property_shared_font_family_check(entry, value);
             
             ff_entry->type = MyCSS_VALUES_FONT_FAMILY_TYPE_NAME;
-            ff_entry->str = *str;
+            ff_entry->value.str = *str;
             
             *dont_destroy_str = true;
             return true;
@@ -732,7 +732,7 @@ bool mycss_property_shared_font_family(mycss_entry_t* entry, mycss_token_t* toke
     }
 }
 
-bool mycss_property_shared_font_weight(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_font_weight(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, mycore_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_IDENT && token->type != MyCSS_TOKEN_TYPE_NUMBER)
         return false;
@@ -769,7 +769,7 @@ bool mycss_property_shared_font_weight(mycss_entry_t* entry, mycss_token_t* toke
     return false;
 }
 
-bool mycss_property_shared_font_size(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_font_size(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, mycore_string_t* str)
 {
     if(mycss_property_shared_length_percentage(entry, token, value, value_type, str))
         return true;
@@ -805,7 +805,7 @@ bool mycss_property_shared_font_size(mycss_entry_t* entry, mycss_token_t* token,
     return false;
 }
 
-bool mycss_property_shared_font_stretch(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_font_stretch(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, mycore_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
         return false;
@@ -838,7 +838,7 @@ bool mycss_property_shared_font_stretch(mycss_entry_t* entry, mycss_token_t* tok
     return false;
 }
 
-bool mycss_property_shared_font_style(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_font_style(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, mycore_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
         return false;
@@ -865,11 +865,11 @@ bool mycss_property_shared_font_style(mycss_entry_t* entry, mycss_token_t* token
     return false;
 }
 
-bool mycss_property_shared_url(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_url(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, mycore_string_t* str)
 {
     if(token->type == MyCSS_TOKEN_TYPE_URL)
     {
-        myhtml_string_t *new_str = mycss_values_create(entry, sizeof(myhtml_string_t));
+        mycore_string_t *new_str = mycss_values_create(entry, sizeof(mycore_string_t));
         mycss_token_data_to_string(entry, token, new_str, true, false);
         
         *value = new_str;
@@ -887,7 +887,7 @@ bool mycss_property_shared_url(mycss_entry_t* entry, mycss_token_t* token, void*
     if(str->data == NULL)
         mycss_token_data_to_string(entry, token, str, true, false);
     
-    if(myhtml_strcasecmp(str->data, "url"))
+    if(mycore_strcasecmp(str->data, "url"))
         return false;
     
     entry->parser = mycss_property_parser_url_string;
@@ -896,7 +896,7 @@ bool mycss_property_shared_url(mycss_entry_t* entry, mycss_token_t* token, void*
     return true;
 }
 
-bool mycss_property_shared_image(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str, bool* parser_changed)
+bool mycss_property_shared_image(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, mycore_string_t* str, bool* parser_changed)
 {
     if(token->type == MyCSS_TOKEN_TYPE_URL)
     {
@@ -945,7 +945,7 @@ bool mycss_property_shared_image(mycss_entry_t* entry, mycss_token_t* token, voi
     return true;
 }
 
-bool mycss_property_shared_background_repeat_one(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_background_repeat_one(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, mycore_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
         return false;
@@ -968,7 +968,7 @@ bool mycss_property_shared_background_repeat_one(mycss_entry_t* entry, mycss_tok
     return false;
 }
 
-bool mycss_property_shared_background_repeat_two(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_background_repeat_two(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, mycore_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
         return false;
@@ -993,7 +993,7 @@ bool mycss_property_shared_background_repeat_two(mycss_entry_t* entry, mycss_tok
     return false;
 }
 
-bool mycss_property_shared_background_attachment(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_background_attachment(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, mycore_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
         return false;
@@ -1017,7 +1017,7 @@ bool mycss_property_shared_background_attachment(mycss_entry_t* entry, mycss_tok
     return false;
 }
 
-bool mycss_property_shared_background_position(mycss_entry_t* entry, mycss_token_t* token, void* value, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_background_position(mycss_entry_t* entry, mycss_token_t* token, void* value, unsigned int* value_type, mycore_string_t* str)
 {
     if(mycss_property_shared_length_percentage(entry, token, value, value_type, str))
         return true;
@@ -1046,7 +1046,7 @@ bool mycss_property_shared_background_position(mycss_entry_t* entry, mycss_token
     return false;
 }
 
-bool mycss_property_shared_background_clip(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_background_clip(mycss_entry_t* entry, mycss_token_t* token, unsigned int* value_type, mycore_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_IDENT)
         return false;
@@ -1070,7 +1070,7 @@ bool mycss_property_shared_background_clip(mycss_entry_t* entry, mycss_token_t* 
     return false;
 }
 
-bool mycss_property_shared_background_size(mycss_entry_t* entry, mycss_token_t* token, void* value, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_background_size(mycss_entry_t* entry, mycss_token_t* token, void* value, unsigned int* value_type, mycore_string_t* str)
 {
     if(mycss_property_shared_length_percentage(entry, token, value, value_type, str))
         return true;
@@ -1104,7 +1104,7 @@ bool mycss_property_shared_background_size(mycss_entry_t* entry, mycss_token_t* 
 
 
 
-bool mycss_property_shared_function_image(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_function_image(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, mycore_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_FUNCTION)
         return false;
@@ -1115,7 +1115,7 @@ bool mycss_property_shared_function_image(mycss_entry_t* entry, mycss_token_t* t
     if(str->data == NULL)
         mycss_token_data_to_string(entry, token, str, true, false);
     
-    if(myhtml_strcasecmp(str->data, "image"))
+    if(mycore_strcasecmp(str->data, "image"))
         return false;
     
     entry->parser = NULL;
@@ -1124,7 +1124,7 @@ bool mycss_property_shared_function_image(mycss_entry_t* entry, mycss_token_t* t
     return true;
 }
 
-bool mycss_property_shared_function_image_set(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_function_image_set(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, mycore_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_FUNCTION)
         return false;
@@ -1135,7 +1135,7 @@ bool mycss_property_shared_function_image_set(mycss_entry_t* entry, mycss_token_
     if(str->data == NULL)
         mycss_token_data_to_string(entry, token, str, true, false);
     
-    if(myhtml_strcasecmp(str->data, "image-set"))
+    if(mycore_strcasecmp(str->data, "image-set"))
         return false;
     
     entry->parser = NULL;
@@ -1144,7 +1144,7 @@ bool mycss_property_shared_function_image_set(mycss_entry_t* entry, mycss_token_
     return true;
 }
 
-bool mycss_property_shared_element(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, myhtml_string_t* str)
+bool mycss_property_shared_element(mycss_entry_t* entry, mycss_token_t* token, void** value, unsigned int* value_type, mycore_string_t* str)
 {
     if(token->type != MyCSS_TOKEN_TYPE_FUNCTION)
         return false;
@@ -1155,7 +1155,7 @@ bool mycss_property_shared_element(mycss_entry_t* entry, mycss_token_t* token, v
     if(str->data == NULL)
         mycss_token_data_to_string(entry, token, str, true, false);
     
-    if(myhtml_strcasecmp(str->data, "cross-fade"))
+    if(mycore_strcasecmp(str->data, "cross-fade"))
         return false;
     
     entry->parser = NULL;

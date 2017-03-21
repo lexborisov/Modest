@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -36,10 +36,14 @@
  */
 
 #define MyCSS_VERSION_MAJOR 0
-#define MyCSS_VERSION_MINOR 0
-#define MyCSS_VERSION_PATCH 9
+#define MyCSS_VERSION_MINOR 1
+#define MyCSS_VERSION_PATCH 0
 
-#include <myhtml/api.h>
+#include <mycore/myosi.h>
+#include <mycore/incoming.h>
+#include <mycore/mystring.h>
+#include <mycore/utils/mchar_async.h>
+#include <myencoding/myosi.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -52,7 +56,6 @@ extern "C" {
 // base
 /*
  Very important!!!
- see modest/myosi.h:modest_status_tv
 */
 enum mycss_status {
     MyCSS_STATUS_OK                                     = 0x000000,
@@ -185,7 +188,7 @@ mycss_create(void);
  *
  * @return MyCSS_STATUS_OK if successful, otherwise an error status value.
  */
-mycss_status_t
+mystatus_t
 mycss_init(mycss_t* mycss);
 
 /**
@@ -203,7 +206,7 @@ mycss_destroy(mycss_t* mycss, bool self_destroy);
  * Parsing CSS
  *
  * @param[in] previously created structure mycss_entry_t*
- * @param[in] Now is not working! Coming Soon. Input character encoding; Default: MyHTML_ENCODING_UTF_8 or MyHTML_ENCODING_DEFAULT or 0
+ * @param[in] Now is not working! Coming Soon. Input character encoding; Default: MyENCODING_UTF_8 or MyENCODING_DEFAULT or 0
  * @param[in] CSS data
  * @param[in] CSS data size
  *
@@ -211,8 +214,8 @@ mycss_destroy(mycss_t* mycss, bool self_destroy);
  *
  * @return MyCSS_STATUS_OK if successful, otherwise an error status
  */
-mycss_status_t
-mycss_parse(mycss_entry_t* entry, myhtml_encoding_t encoding, const char* css, size_t css_size);
+mystatus_t
+mycss_parse(mycss_entry_t* entry, myencoding_t encoding, const char* css, size_t css_size);
 
 /**
  * Parsing CSS chunk. For End Parsing call mycss_parse_chunk_end function
@@ -225,7 +228,7 @@ mycss_parse(mycss_entry_t* entry, myhtml_encoding_t encoding, const char* css, s
  *
  * @return MyCSS_STATUS_OK if successful, otherwise an error status
  */
-mycss_status_t
+mystatus_t
 mycss_parse_chunk(mycss_entry_t* entry, const char* css, size_t css_size);
 
 /**
@@ -235,7 +238,7 @@ mycss_parse_chunk(mycss_entry_t* entry, const char* css, size_t css_size);
  *
  * @return MyCSS_STATUS_OK if successful, otherwise an error status
  */
-mycss_status_t
+mystatus_t
 mycss_parse_chunk_end(mycss_entry_t* entry);
 
 /***********************************************************************************
@@ -260,7 +263,7 @@ mycss_entry_create(void);
  *
  * @return MyCSS_STATUS_OK if successful, otherwise an error status value.
  */
-mycss_status_t
+mystatus_t
 mycss_entry_init(mycss_t* mycss, mycss_entry_t* entry);
 
 /**
@@ -270,7 +273,7 @@ mycss_entry_init(mycss_t* mycss, mycss_entry_t* entry);
  *
  * @return MyCSS_STATUS_OK if successful, otherwise an error status value.
  */
-mycss_status_t
+mystatus_t
 mycss_entry_clean_all(mycss_entry_t* entry);
 
 /**
@@ -321,9 +324,9 @@ mycss_entry_token_count(mycss_entry_t* entry);
  *
  * @param[in] mycss_entry_t*
  *
- * @return myhtml_incoming_buffer_t* if successful, otherwise an NULL value.
+ * @return mycore_incoming_buffer_t* if successful, otherwise an NULL value.
  */
-myhtml_incoming_buffer_t*
+mycore_incoming_buffer_t*
 mycss_entry_incoming_buffer_current(mycss_entry_t* entry);
 
 /**
@@ -332,9 +335,9 @@ mycss_entry_incoming_buffer_current(mycss_entry_t* entry);
  *
  * @param[in] mycss_entry_t*
  *
- * @return myhtml_incoming_buffer_t* if successful, otherwise an NULL value.
+ * @return mycore_incoming_buffer_t* if successful, otherwise an NULL value.
  */
-myhtml_incoming_buffer_t*
+mycore_incoming_buffer_t*
 mycss_entry_incoming_buffer_first(mycss_entry_t* entry);
 
 /***********************************************************************************
@@ -400,14 +403,14 @@ mycss_token_name_by_type(mycss_token_type_t type);
  *
  * @param[in] mycss_entry_t*
  * @param[in] mycss_token_t*, token from which data will be obtained
- * @param[in] myhtml_string_t*, a pointer to the row in which the data will be written
- * @param[in] initialization myhtml_string_t* object
+ * @param[in] mycore_string_t*, a pointer to the row in which the data will be written
+ * @param[in] initialization mycore_string_t* object
  *
  * @return length of processed data
  */
 size_t
 mycss_token_data_to_string(mycss_entry_t* entry, mycss_token_t* token,
-                           myhtml_string_t* str, bool init_string);
+                           mycore_string_t* str, bool init_string);
 
 /***********************************************************************************
  *
@@ -424,20 +427,20 @@ mycss_token_data_to_string(mycss_entry_t* entry, mycss_token_t* token,
  * @param[in] mycss_entry_t*
  * @param[in] Input character encoding. 
  *   See https://github.com/lexborisov/myhtml/blob/master/source/myhtml/api.h 
- *   myhtml_encoding_t
+ *   myencoding_t
  *
  */
 void
-mycss_encoding_set(mycss_entry_t* entry, myhtml_encoding_t encoding);
+mycss_encoding_set(mycss_entry_t* entry, myencoding_t encoding);
 
 /**
  * Get character encoding for current stream
  *
  * @param[in] mycss_entry_t*
  *
- * @return myhtml_encoding_t
+ * @return myencoding_t
  */
-myhtml_encoding_t
+myencoding_t
 mycss_encoding_get(mycss_entry_t* entry);
 
 /**
@@ -446,16 +449,16 @@ mycss_encoding_get(mycss_entry_t* entry);
  * See for information:
  * https://www.w3.org/TR/css-syntax-3/#get-an-encoding
  * https://www.w3.org/TR/css-syntax-3/#charset-rule
- * myhtml_encoding_by_name in https://github.com/lexborisov/myhtml/blob/master/source/myhtml/api.h
+ * myencoding_by_name in https://github.com/lexborisov/myhtml/blob/master/source/myhtml/api.h
  *
- * If @charset rule is missing or encoding not found return MyHTML_ENCODING_UTF_8 by default
+ * If @charset rule is missing or encoding not found return MyENCODING_UTF_8 by default
  *
  * @param[in] css data stream
  * @param[in] css data stream size
  *
- * @return myhtml_encoding_t
+ * @return myencoding_t
  */
-myhtml_encoding_t
+myencoding_t
 mycss_encoding_check_charset_rule(const char* css, size_t size);
 
 /***********************************************************************************

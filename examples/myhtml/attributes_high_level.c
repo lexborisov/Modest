@@ -23,6 +23,11 @@
 #include <string.h>
 #include <myhtml/api.h>
 
+mystatus_t serialization_callback(const char* data, size_t len, void* ctx)
+{
+    printf("%.*s", (int)len, data);
+    return MyCORE_STATUS_OK;
+}
 
 int main(int argc, const char * argv[])
 {
@@ -37,7 +42,7 @@ int main(int argc, const char * argv[])
     myhtml_tree_init(tree, myhtml);
     
     // parse html
-    myhtml_parse_fragment(tree, MyHTML_ENCODING_UTF_8, html, strlen(html), MyHTML_TAG_DIV, MyHTML_NAMESPACE_HTML);
+    myhtml_parse_fragment(tree, MyENCODING_UTF_8, html, strlen(html), MyHTML_TAG_DIV, MyHTML_NAMESPACE_HTML);
     
     // get first DIV from index
     myhtml_collection_t *div_list = myhtml_get_nodes_by_name(tree, NULL, "div", 3, NULL);
@@ -45,19 +50,19 @@ int main(int argc, const char * argv[])
     
     // print original tree
     printf("Original tree:\n");
-    myhtml_tree_print_node_children(tree, myhtml_tree_get_document(tree), stdout, 0);
+    myhtml_serialization_tree_callback(myhtml_tree_get_node_html(tree), serialization_callback, NULL);
     
     printf("For a test; Create and delete 100000 attrs...\n");
     for(size_t j = 0; j < 100000; j++) {
-        myhtml_tree_attr_t *attr = myhtml_attribute_add(node, "key", 3, "value", 5, MyHTML_ENCODING_UTF_8);
+        myhtml_tree_attr_t *attr = myhtml_attribute_add(node, "key", 3, "value", 5, MyENCODING_UTF_8);
         myhtml_attribute_delete(tree, node, attr);
     }
     
     // add first attr in first div in tree
-    myhtml_attribute_add(node, "key", 3, "value", 5, MyHTML_ENCODING_UTF_8);
+    myhtml_attribute_add(node, "key", 3, "value", 5, MyENCODING_UTF_8);
     
     printf("Modified tree:\n");
-    myhtml_tree_print_node_children(tree, myhtml_tree_get_document(tree), stdout, 0);
+    myhtml_serialization_tree_callback(myhtml_tree_get_node_html(tree), serialization_callback, NULL);
     
     // get attr by key name
     myhtml_tree_attr_t *gets_attr = myhtml_attribute_by_key(node, "key", 3);

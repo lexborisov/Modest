@@ -1,12 +1,13 @@
-find_files_h = $(wildcard $(SRCDIR)/mycss/$(dir)/*.h)
-find_files_c = $(wildcard $(SRCDIR)/mycss/$(dir)/*.c)
+mycss_dirs := . selectors namespace media values property declaration
+mycss_objs := $(call MODEST_UTILS_OBJS,mycss,$(mycss_dirs))
 
-SUBDIRS := . selectors namespace media values property declaration
-HDRS += $(foreach dir,$(SUBDIRS),$(find_files_h))
-SRCS += $(foreach dir,$(SUBDIRS),$(find_files_c))
+mycss_description := CSS parser and modules by https://drafts.csswg.org/
+mycss_dependencies := mycore myencoding myport
 
-mycss_clone: MyCSS_DIR_$(SUBDIRS)
+mycss_all: $(mycss_objs)
 
-MyCSS_DIR_$(SUBDIRS):
-	mkdir -p $(INCLUDE_TMP)/mycss/$(patsubst MyCSS_DIR_%,%,$@)
-	cp $(SRCDIR)/mycss/$(patsubst MyCSS_DIR_%,%,$@)/*.h $(INCLUDE_TMP)/mycss/$(patsubst MyCSS_DIR_%,%,$@)/
+mycss_clean: 
+	rm -f $(mycss_objs)
+
+mycss_clone: 
+	$(call MODEST_UTILS_HDRS_CLONE,mycss,$(mycss_dirs))

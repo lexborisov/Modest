@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -32,7 +32,7 @@ modest_style_sheet_t * modest_style_sheet_create(modest_t* modest)
     return m_stylesheet;
 }
 
-modest_status_t modest_style_sheet_init(modest_t* modest, modest_style_sheet_t* m_stylesheet)
+mystatus_t modest_style_sheet_init(modest_t* modest, modest_style_sheet_t* m_stylesheet)
 {
     return MODEST_STATUS_OK;
 }

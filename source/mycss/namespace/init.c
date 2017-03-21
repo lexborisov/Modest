@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -22,17 +22,17 @@
 
 mycss_namespace_t * mycss_namespace_create(void)
 {
-    return (mycss_namespace_t*)myhtml_calloc(1, sizeof(mycss_namespace_t));
+    return (mycss_namespace_t*)mycore_calloc(1, sizeof(mycss_namespace_t));
 }
 
-mycss_status_t mycss_namespace_init(mycss_entry_t* entry, mycss_namespace_t* ns)
+mystatus_t mycss_namespace_init(mycss_entry_t* entry, mycss_namespace_t* ns)
 {
     /* Objects Namespace */
     ns->mcobject_entries = mcobject_create();
     if(ns->mcobject_entries == NULL)
         return MyCSS_STATUS_ERROR_NAMESPACE_ENTRIES_CREATE;
     
-    myhtml_status_t myhtml_status = mcobject_init(ns->mcobject_entries, 256, sizeof(mycss_namespace_entry_t));
+    mystatus_t myhtml_status = mcobject_init(ns->mcobject_entries, 256, sizeof(mycss_namespace_entry_t));
     if(myhtml_status)
         return MyCSS_STATUS_ERROR_NAMESPACE_ENTRIES_INIT;
     
@@ -44,7 +44,7 @@ void mycss_namespace_clean(mycss_namespace_t* ns)
     ns->entry = NULL;
 }
 
-mycss_status_t mycss_namespace_clean_all(mycss_namespace_t* ns)
+mystatus_t mycss_namespace_clean_all(mycss_namespace_t* ns)
 {
     mcobject_clean(ns->mcobject_entries);
     ns->entry = NULL;
@@ -60,7 +60,7 @@ mycss_namespace_t * mycss_namespace_destroy(mycss_namespace_t* ns, bool self_des
     ns->mcobject_entries = mcobject_destroy(ns->mcobject_entries, true);
     
     if(self_destroy) {
-        myhtml_free(ns);
+        mycore_free(ns);
         return NULL;
     }
     
@@ -80,17 +80,17 @@ void mycss_namespace_entry_clean(mycss_namespace_entry_t* ns_entry)
 mycss_namespace_entry_t * mycss_namespace_entry_destroy(mycss_namespace_entry_t* ns_entry, mycss_entry_t* entry, bool self_destroy)
 {
     if(ns_entry->name) {
-        myhtml_string_destroy(ns_entry->name, false);
+        mycore_string_destroy(ns_entry->name, false);
         mcobject_free(entry->mcobject_string_entries, ns_entry->name);
     }
     
     if(ns_entry->url) {
-        myhtml_string_destroy(ns_entry->url, false);
+        mycore_string_destroy(ns_entry->url, false);
         mcobject_free(entry->mcobject_string_entries, ns_entry->url);
     }
     
     if(self_destroy) {
-        myhtml_free(ns_entry);
+        mycore_free(ns_entry);
         return NULL;
     }
     
@@ -110,7 +110,7 @@ void mycss_namespace_entry_append_to_current(mycss_namespace_t* ns, mycss_namesp
     ns->entry_last = ns_entry;
 }
 
-mycss_status_t mycss_namespace_stylesheet_init(mycss_namespace_stylesheet_t* ns_stylesheet, mycss_entry_t* entry)
+mystatus_t mycss_namespace_stylesheet_init(mycss_namespace_stylesheet_t* ns_stylesheet, mycss_entry_t* entry)
 {
     ns_stylesheet->name_tree = mctree_create(14);
     if(ns_stylesheet->name_tree == NULL)
@@ -135,7 +135,7 @@ mycss_status_t mycss_namespace_stylesheet_init(mycss_namespace_stylesheet_t* ns_
     if(ns_stylesheet->entry_any.name == NULL)
         return MyCSS_STATUS_ERROR_STRING_CREATE;
     
-    myhtml_string_append(ns_stylesheet->entry_any.name, "*", 1);
+    mycore_string_append(ns_stylesheet->entry_any.name, "*", 1);
     ns_stylesheet->entry_any.ns_id = MyHTML_NAMESPACE_ANY;
     
     mycss_namespace_stylesheet_init_default(ns_stylesheet, entry, NULL, 0, MyHTML_NAMESPACE_ANY);
@@ -143,7 +143,7 @@ mycss_status_t mycss_namespace_stylesheet_init(mycss_namespace_stylesheet_t* ns_
     return MyCSS_STATUS_OK;
 }
 
-mycss_status_t mycss_namespace_stylesheet_clean(mycss_namespace_stylesheet_t* ns_stylesheet, mycss_entry_t* entry)
+mystatus_t mycss_namespace_stylesheet_clean(mycss_namespace_stylesheet_t* ns_stylesheet, mycss_entry_t* entry)
 {
     mctree_clean(ns_stylesheet->name_tree);
     ns_stylesheet->ns_id_counter = 0;
@@ -167,32 +167,32 @@ mycss_namespace_stylesheet_t * mycss_namespace_stylesheet_destroy(mycss_namespac
     }
     
     ns_stylesheet->name_tree = mctree_destroy(ns_stylesheet->name_tree);
-    ns_stylesheet->entry_undef.name = myhtml_string_destroy(ns_stylesheet->entry_undef.name, false);
-    ns_stylesheet->entry_any.name = myhtml_string_destroy(ns_stylesheet->entry_any.name, false);
+    ns_stylesheet->entry_undef.name = mycore_string_destroy(ns_stylesheet->entry_undef.name, false);
+    ns_stylesheet->entry_any.name = mycore_string_destroy(ns_stylesheet->entry_any.name, false);
     
     if(self_destroy) {
-        myhtml_free(ns_stylesheet);
+        mycore_free(ns_stylesheet);
         return NULL;
     }
     
     return ns_stylesheet;
 }
 
-mycss_status_t mycss_namespace_stylesheet_init_default(mycss_namespace_stylesheet_t* ns_stylesheet, mycss_entry_t* entry, const char* url, size_t url_length, myhtml_namespace_t def_ns)
+mystatus_t mycss_namespace_stylesheet_init_default(mycss_namespace_stylesheet_t* ns_stylesheet, mycss_entry_t* entry, const char* url, size_t url_length, myhtml_namespace_t def_ns)
 {
-    myhtml_string_t *str = ns_stylesheet->entry_default->url;
+    mycore_string_t *str = ns_stylesheet->entry_default->url;
     
     if(str == NULL) {
         str = mcobject_malloc(entry->mcobject_string_entries, NULL);
-        myhtml_string_init(entry->mchar, entry->mchar_node_id, str, (url_length + 1));
+        mycore_string_init(entry->mchar, entry->mchar_node_id, str, (url_length + 1));
         
         ns_stylesheet->entry_default->url = str;
     }
     else
-        myhtml_string_clean(str);
+        mycore_string_clean(str);
     
     if(url && url_length) {
-        myhtml_string_append(str, url, url_length);
+        mycore_string_append(str, url, url_length);
         ns_stylesheet->entry_default->ns_id = myhtml_namespace_id_by_url(url, url_length);
     }
     else
@@ -226,10 +226,10 @@ void mycss_namespace_stylesheet_append_default(mycss_namespace_stylesheet_t* ns_
 
 void mycss_namespace_stylesheet_destroy_default(mycss_namespace_stylesheet_t* ns_stylesheet, mycss_entry_t* entry)
 {
-    myhtml_string_t *str = ns_stylesheet->entry_default->url;
+    mycore_string_t *str = ns_stylesheet->entry_default->url;
     
     if(str) {
-        myhtml_string_destroy(str, false);
+        mycore_string_destroy(str, false);
         mcobject_free(entry->mcobject_string_entries, str);
         
         ns_stylesheet->entry_default->url = NULL;

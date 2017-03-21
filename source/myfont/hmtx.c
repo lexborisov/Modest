@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -20,7 +20,7 @@
 
 #include "myfont/hmtx.h"
 
-myfont_status_t myfont_load_table_hmtx(struct myfont_font *mf)
+mystatus_t myfont_load_table_hmtx(myfont_font_t* mf, uint8_t* font_data, size_t data_size)
 {
     memset(&mf->table_hmtx, 0, sizeof(myfont_table_hmtx_t));
     
@@ -31,13 +31,13 @@ myfont_status_t myfont_load_table_hmtx(struct myfont_font *mf)
     const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_hmtx];
     
     /* get current data */
-    uint8_t *data = &mf->file_data[table_offset];
+    uint8_t *data = &font_data[table_offset];
     uint16_t num_metrics = mf->table_hhea.numberOfHMetrics;
     
     if(num_metrics == 0)
         return MyFONT_STATUS_OK;
     
-    if(mf->file_size < (table_offset + (num_metrics * 2)))
+    if(data_size < (table_offset + (num_metrics * 2)))
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     myfont_long_hor_metric_t *lhor_metric = (myfont_long_hor_metric_t *)myfont_calloc(mf, num_metrics, sizeof(myfont_long_hor_metric_t));

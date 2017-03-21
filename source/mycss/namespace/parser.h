@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -29,7 +29,7 @@ extern "C" {
 #include "mycss/entry.h"
 #include "mycss/namespace/myosi.h"
 #include "myhtml/mynamespace.h"
-#include "myhtml/utils/mctree.h"
+#include "mycore/utils/mctree.h"
 
 void mycss_namespace_parser_begin(mycss_entry_t* entry);
 

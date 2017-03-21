@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -53,9 +53,9 @@ typedef myfont_table_head_t;
 
 struct myfont_font;
 
-myfont_status_t myfont_load_table_head(struct myfont_font *mf);
+mystatus_t myfont_load_table_head(myfont_font_t *mf, uint8_t* data, size_t data_size);
 
-float myfont_head_yMax_pixel(struct myfont_font *mf, float font_size);
+float myfont_head_yMax_pixel(myfont_font_t *mf, float font_size);
 
 #ifdef __cplusplus
 } /* extern "C" */

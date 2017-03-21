@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -20,7 +20,7 @@
 
 #include "myfont/loca.h"
 
-myfont_status_t myfont_load_table_loca(struct myfont_font *mf)
+mystatus_t myfont_load_table_loca(myfont_font_t* mf, uint8_t* font_data, size_t data_size)
 {
     memset(&mf->table_loca, 0, sizeof(myfont_table_loca_t));
     
@@ -31,7 +31,7 @@ myfont_status_t myfont_load_table_loca(struct myfont_font *mf)
     uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_loca];
     
     /* get current data */
-    uint8_t *data = &mf->file_data[table_offset];
+    uint8_t *data = &font_data[table_offset];
     uint16_t numGlyph = mf->table_maxp.numGlyphs;
     
     if(numGlyph == 0)
@@ -46,23 +46,23 @@ myfont_status_t myfont_load_table_loca(struct myfont_font *mf)
     
     if(mf->table_head.indexToLocFormat)
     {
-        if(mf->file_size < (table_offset + (numGlyph * 4))) {
+        if(data_size < (table_offset + (numGlyph * 4))) {
             myfont_free(mf, tloca->offsets);
             return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
         }
         
-        for(uint16_t i = 0; i < numGlyph; i++) {
+        for(size_t i = 0; i < numGlyph; i++) {
             tloca->offsets[i] = myfont_read_u32(&data);
         }
     }
     else
     {
-        if(mf->file_size < (table_offset + (numGlyph * 2))) {
+        if(data_size < (table_offset + (numGlyph * 2))) {
             myfont_free(mf, tloca->offsets);
             return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
         }
         
-        for(uint16_t i = 0; i < numGlyph; i++) {
+        for(size_t i = 0; i < numGlyph; i++) {
             tloca->offsets[i] = myfont_read_u16(&data) * 2;
         }
     }

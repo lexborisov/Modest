@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -45,15 +45,15 @@ struct mycss_an_plus_b_entry {
 };
 
 mycss_an_plus_b_t * mycss_an_plus_b_create(void);
-mycss_status_t mycss_an_plus_b_init(mycss_entry_t* entry, mycss_an_plus_b_t* anb);
-mycss_status_t mycss_an_plus_b_clean_all(mycss_an_plus_b_t* anb);
+mystatus_t mycss_an_plus_b_init(mycss_entry_t* entry, mycss_an_plus_b_t* anb);
+mystatus_t mycss_an_plus_b_clean_all(mycss_an_plus_b_t* anb);
 mycss_an_plus_b_t * mycss_an_plus_b_destroy(mycss_an_plus_b_t* anb, bool self_destroy);
 
 mycss_an_plus_b_entry_t * mycss_an_plus_b_entry_create(mycss_entry_t* entry);
 void mycss_an_plus_b_entry_clean_all(mycss_an_plus_b_entry_t* anb_entry);
 mycss_an_plus_b_entry_t * mycss_an_plus_b_entry_destroy(mycss_entry_t* entry, mycss_an_plus_b_entry_t* anb_entry, bool self_destroy);
 
-void mycss_an_plus_b_serialization(mycss_an_plus_b_entry_t* anb_entry, mycss_callback_serialization_f callback, void* context);
+void mycss_an_plus_b_serialization(mycss_an_plus_b_entry_t* anb_entry, mycore_callback_serialize_f callback, void* context);
 
 void mycss_an_plus_b_parser_expectations_error(mycss_entry_t* entry);
 

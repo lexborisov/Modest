@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -28,7 +28,7 @@ bool modest_finder_match_attribute_only_key(myhtml_token_attr_t* attr, const cha
     while (attr)
     {
         if(attr->key.length == key_len) {
-            if(myhtml_strncasecmp(key, attr->key.data, key_len) == 0)
+            if(mycore_strncasecmp(key, attr->key.data, key_len) == 0)
                 return true;
         }
         
@@ -46,7 +46,7 @@ bool modest_finder_match_attribute_eq(myhtml_token_attr_t* attr, const char* key
     while (attr)
     {
         if(attr->key.length == key_len) {
-            if(myhtml_strncasecmp(key, attr->key.data, key_len) == 0)
+            if(mycore_strncasecmp(key, attr->key.data, key_len) == 0)
             {
                 if(attr->value.length == value_len) {
                     if(case_sensitive) {
@@ -55,7 +55,7 @@ bool modest_finder_match_attribute_eq(myhtml_token_attr_t* attr, const char* key
                         }
                     }
                     else {
-                        if(myhtml_strncasecmp(value, attr->value.data, value_len) == 0) {
+                        if(mycore_strncasecmp(value, attr->value.data, value_len) == 0) {
                             return true;
                         }
                     }
@@ -79,46 +79,37 @@ bool modest_finder_match_attribute_ws(myhtml_token_attr_t* attr, const char* key
     while (attr)
     {
         if(attr->key.length == key_len) {
-            if(myhtml_strncasecmp(key, attr->key.data, key_len) == 0)
+            if(mycore_strncasecmp(key, attr->key.data, key_len) == 0)
             {
                 size_t i = 0;
+                size_t begin;
                 
                 if(attr->value.length >= value_len) {
                     if(case_sensitive)
                     {
                         while(i < attr->value.length)
                         {
-                            size_t end = i + value_len;
+                            begin = i;
+                            while(i < attr->value.length && mycore_utils_whithspace(attr->value.data[i], !=, &&)) {i++;}
                             
-                            if(end > attr->value.length)
-                                return false;
-                            
-                            if(
-                               (myhtml_strncmp(value, &attr->value.data[i], value_len) == 0) &&
-                               (myhtml_utils_whithspace(attr->value.data[end], ==, ||) || end == attr->value.length))
-                            {
+                            if((i - begin) == value_len && (mycore_strncmp(value, &attr->value.data[begin], value_len) == 0)) {
                                 return true;
                             }
-                            
-                            i++;
+                            /* skip all ws */
+                            while(i < attr->value.length && mycore_utils_whithspace(attr->value.data[i], ==, ||)) {i++;}
                         }
                     }
                     else {
                         while(i < attr->value.length)
                         {
-                            size_t end = i + value_len;
+                            begin = i;
+                            while(i < attr->value.length && mycore_utils_whithspace(attr->value.data[i], !=, &&)) {i++;}
                             
-                            if(end > attr->value.length)
-                                return false;
-                            
-                            if(
-                               (myhtml_strncasecmp(value, &attr->value.data[i], value_len) == 0) &&
-                               (myhtml_utils_whithspace(attr->value.data[end], ==, ||) || end == attr->value.length))
-                            {
+                            if((i - begin) == value_len && (mycore_strncasecmp(value, &attr->value.data[begin], value_len) == 0)) {
                                 return true;
                             }
-                            
-                            i++;
+                            /* skip all ws */
+                            while(i < attr->value.length && mycore_utils_whithspace(attr->value.data[i], ==, ||)) {i++;}
                         }
                     }
                 }
@@ -141,15 +132,15 @@ bool modest_finder_match_attribute_begin(myhtml_token_attr_t* attr, const char* 
     while (attr)
     {
         if(attr->key.length == key_len) {
-            if(myhtml_strncasecmp(key, attr->key.data, key_len) == 0)
+            if(mycore_strncasecmp(key, attr->key.data, key_len) == 0)
             {
                 if(attr->value.length >= value_len) {
                     if(case_sensitive) {
-                        if(myhtml_strncmp(value, attr->value.data, value_len) == 0)
+                        if(mycore_strncmp(value, attr->value.data, value_len) == 0)
                             return true;
                     }
                     else {
-                        if(myhtml_strncasecmp(value, attr->value.data, value_len) == 0)
+                        if(mycore_strncasecmp(value, attr->value.data, value_len) == 0)
                             return true;
                     }
                 }
@@ -172,15 +163,15 @@ bool modest_finder_match_attribute_end(myhtml_token_attr_t* attr, const char* ke
     while (attr)
     {
         if(attr->key.length == key_len) {
-            if(myhtml_strncasecmp(key, attr->key.data, key_len) == 0)
+            if(mycore_strncasecmp(key, attr->key.data, key_len) == 0)
             {
                 if(attr->value.length >= value_len) {
                     if(case_sensitive) {
-                        if(myhtml_strncmp(value, &attr->value.data[ (attr->value.length - value_len) ], value_len) == 0)
+                        if(mycore_strncmp(value, &attr->value.data[ (attr->value.length - value_len) ], value_len) == 0)
                             return true;
                     }
                     else {
-                        if(myhtml_strncasecmp(value, &attr->value.data[ (attr->value.length - value_len) ], value_len) == 0)
+                        if(mycore_strncasecmp(value, &attr->value.data[ (attr->value.length - value_len) ], value_len) == 0)
                             return true;
                     }
                 }
@@ -203,7 +194,7 @@ bool modest_finder_match_attribute_sub(myhtml_token_attr_t* attr, const char* ke
     while (attr)
     {
         if(attr->key.length == key_len) {
-            if(myhtml_strncasecmp(key, attr->key.data, key_len) == 0)
+            if(mycore_strncasecmp(key, attr->key.data, key_len) == 0)
             {
                 if(attr->value.length >= value_len) {
                     size_t i = 0;
@@ -212,7 +203,7 @@ bool modest_finder_match_attribute_sub(myhtml_token_attr_t* attr, const char* ke
                     {
                         while ((i + value_len) <= attr->value.length)
                         {
-                            if(myhtml_strncmp(value, &attr->value.data[i], value_len) == 0)
+                            if(mycore_strncmp(value, &attr->value.data[i], value_len) == 0)
                                 return true;
                             
                             i++;
@@ -221,7 +212,7 @@ bool modest_finder_match_attribute_sub(myhtml_token_attr_t* attr, const char* ke
                     else {
                         while ((i + value_len) <= attr->value.length)
                         {
-                            if(myhtml_strncasecmp(value, &attr->value.data[i], value_len) == 0)
+                            if(mycore_strncasecmp(value, &attr->value.data[i], value_len) == 0)
                                 return true;
                             
                             i++;
@@ -247,27 +238,27 @@ bool modest_finder_match_attribute_hsp(myhtml_token_attr_t* attr, const char* ke
     while (attr)
     {
         if(attr->key.length == key_len) {
-            if(myhtml_strncasecmp(key, attr->key.data, key_len) == 0)
+            if(mycore_strncasecmp(key, attr->key.data, key_len) == 0)
             {
                 if(attr->value.length == value_len) {
                     if(case_sensitive) {
-                        if(myhtml_strncmp(value, attr->value.data, value_len) == 0)
+                        if(mycore_strncmp(value, attr->value.data, value_len) == 0)
                             return true;
                     }
                     else {
-                        if(myhtml_strncasecmp(value, attr->value.data, value_len) == 0)
+                        if(mycore_strncasecmp(value, attr->value.data, value_len) == 0)
                             return true;
                     }
                 }
                 else if(attr->value.length > value_len) {
                     if(case_sensitive) {
-                        if(myhtml_strncmp(value, attr->value.data, value_len) == 0) {
+                        if(mycore_strncmp(value, attr->value.data, value_len) == 0) {
                             if(attr->value.data[value_len] == '-')
                                 return true;
                         }
                     }
                     else {
-                        if(myhtml_strncasecmp(value, attr->value.data, value_len) == 0) {
+                        if(mycore_strncasecmp(value, attr->value.data, value_len) == 0) {
                             if(attr->value.data[value_len] == '-')
                                 return true;
                         }

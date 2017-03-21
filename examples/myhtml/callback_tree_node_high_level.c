@@ -23,6 +23,8 @@
 
 #include <myhtml/api.h>
 
+#include "example.h"
+
 struct res_html {
     char  *html;
     size_t size;
@@ -61,7 +63,7 @@ struct res_html load_html_file(const char* filename)
     
     size_t nread = fread(html, 1, size, fh);
     if (nread != size) {
-        fprintf(stderr, "could not read %ld bytes (%zu bytes done)\n", size, nread);
+        fprintf(stderr, "could not read %ld bytes (" MyCORE_FMT_Z " bytes done)\n", size, nread);
         exit(EXIT_FAILURE);
     }
     
@@ -115,7 +117,7 @@ int main(int argc, const char * argv[])
     myhtml_callback_tree_node_remove_set(tree, callback_node_remove, NULL);
     
     // parse html
-    myhtml_parse(tree, MyHTML_ENCODING_UTF_8, res.html, res.size);
+    myhtml_parse(tree, MyENCODING_UTF_8, res.html, res.size);
     
     // release resources
     myhtml_tree_destroy(tree);

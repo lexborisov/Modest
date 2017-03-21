@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -20,7 +20,7 @@
 
 #include "myfont/maxp.h"
 
-myfont_status_t myfont_load_table_maxp(myfont_font_t *mf)
+mystatus_t myfont_load_table_maxp(myfont_font_t* mf, uint8_t* font_data, size_t data_size)
 {
     memset(&mf->table_maxp, 0, sizeof(myfont_table_maxp_t));
     
@@ -30,17 +30,17 @@ myfont_status_t myfont_load_table_maxp(myfont_font_t *mf)
     myfont_table_maxp_t *tmaxp = &mf->table_maxp;
     const uint32_t table_offset = mf->cache.tables_offset[MyFONT_TKEY_maxp];
     
-    if((table_offset + 4) > mf->file_size)
+    if((table_offset + 4) > data_size)
         return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
     
     /* get current data */
-    uint8_t *data = &mf->file_data[table_offset];
+    uint8_t *data = &font_data[table_offset];
     
     tmaxp->version = myfont_read_u32_as_net(&data);
     
     if(myfont_table_version_major(tmaxp->version) == 1)
     {
-        if((table_offset + 4 + 28) > mf->file_size)
+        if((table_offset + 4 + 28) > data_size)
             return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
         
         tmaxp->numGlyphs = myfont_read_u16(&data);
@@ -59,7 +59,7 @@ myfont_status_t myfont_load_table_maxp(myfont_font_t *mf)
         tmaxp->maxComponentDepth = myfont_read_u16(&data);
     }
     else {
-        if((table_offset + 4 + 2) > mf->file_size)
+        if((table_offset + 4 + 2) > data_size)
             return MyFONT_STATUS_ERROR_TABLE_UNEXPECTED_ENDING;
         
         tmaxp->numGlyphs = myfont_read_u16(&data);

@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -39,7 +39,7 @@ void mycss_selectors_parser_selector_ident_type(mycss_entry_t* entry, mycss_toke
 {
     mycss_selectors_entry_t *selector = entry->selectors->entry_last;
     
-    myhtml_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
+    mycore_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
     mycss_token_data_to_string(entry, token, str, true, false);
     
     /* set default namespace */
@@ -58,7 +58,7 @@ void mycss_selectors_parser_selector_ident_attr(mycss_entry_t* entry, mycss_toke
 {
     mycss_selectors_entry_t *selector = entry->selectors->entry_last;
     
-    myhtml_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
+    mycore_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
     mycss_token_data_to_string(entry, token, str, true, false);
     
     /* set default namespace */
@@ -77,7 +77,7 @@ void mycss_selectors_parser_selector_id(mycss_entry_t* entry, mycss_token_t* tok
 {
     mycss_selectors_entry_t *selector = entry->selectors->entry_last;
     
-    myhtml_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
+    mycore_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
     mycss_token_data_to_string(entry, token, str, true, false);
     
     /* set default namespace */
@@ -97,7 +97,7 @@ void mycss_selectors_parser_selector_class(mycss_entry_t* entry, mycss_token_t* 
 {
     mycss_selectors_entry_t *selector = entry->selectors->entry_last;
     
-    myhtml_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
+    mycore_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
     mycss_token_data_to_string(entry, token, str, true, false);
     
     /* set default namespace */
@@ -120,10 +120,10 @@ void mycss_selectors_parser_selector_class(mycss_entry_t* entry, mycss_token_t* 
 void mycss_selectors_parser_selector_namespace(mycss_entry_t* entry, mycss_token_t* token)
 {
     mycss_selectors_entry_t *selector = entry->selectors->entry_last;
-    myhtml_string_t *str = selector->key;
+    mycore_string_t *str = selector->key;
     
     if(str == NULL || str->length == 0) {
-        myhtml_string_destroy(str, 0);
+        mycore_string_destroy(str, 0);
         
         selector->key = NULL;
         
@@ -134,7 +134,7 @@ void mycss_selectors_parser_selector_namespace(mycss_entry_t* entry, mycss_token
     }
     
     if(str->length == 1 && *str->data == '*') {
-        myhtml_string_destroy(str, 0);
+        mycore_string_destroy(str, 0);
         
         selector->key = NULL;
         
@@ -150,7 +150,7 @@ void mycss_selectors_parser_selector_namespace(mycss_entry_t* entry, mycss_token
     if(selector->ns_entry == NULL)
         mycss_selectors_parser_expectations_error(entry, token);
     
-    myhtml_string_destroy(str, 0);
+    mycore_string_destroy(str, 0);
     selector->key = NULL;
 }
 
@@ -178,7 +178,7 @@ void mycss_selectors_parser_selector_after_namespace(mycss_entry_t* entry, mycss
 {
     mycss_selectors_entry_t *selector = entry->selectors->entry_last;
     
-    myhtml_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
+    mycore_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
     mycss_token_data_to_string(entry, token, str, true, true);
     
     selector->key = str;
@@ -209,7 +209,7 @@ void mycss_selectors_parser_selector_value(mycss_entry_t* entry, mycss_token_t* 
     mycss_selectors_entry_t *selector = entry->selectors->entry_last;
     mycss_selectors_object_attribute_t *attr = selector->value;
     
-    myhtml_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
+    mycore_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
     mycss_token_data_to_string(entry, token, str, true, false);
     
     attr->value = str;
@@ -229,7 +229,7 @@ void mycss_selectors_parser_selector_pseudo_class(mycss_entry_t* entry, mycss_to
 {
     mycss_selectors_entry_t *selector = entry->selectors->entry_last;
     
-    myhtml_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
+    mycore_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
     mycss_token_data_to_string(entry, token, str, true, true);
     
     selector->sub_type = mycss_pseudo_class_by_name(str->data, str->length);
@@ -259,7 +259,7 @@ void mycss_selectors_parser_selector_pseudo_class_function(mycss_entry_t* entry,
 {
     mycss_selectors_entry_t *selector = entry->selectors->entry_last;
     
-    myhtml_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
+    mycore_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
     mycss_token_data_to_string(entry, token, str, true, true);
     
     selector->key   = str;
@@ -303,7 +303,7 @@ void mycss_selectors_parser_selector_pseudo_element(mycss_entry_t* entry, mycss_
 {
     mycss_selectors_entry_t *selector = entry->selectors->entry_last;
     
-    myhtml_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
+    mycore_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
     mycss_token_data_to_string(entry, token, str, true, true);
     
     selector->key  = str;
@@ -325,7 +325,7 @@ void mycss_selectors_parser_selector_pseudo_element_function(mycss_entry_t* entr
 {
     mycss_selectors_entry_t *selector = entry->selectors->entry_last;
     
-    myhtml_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
+    mycore_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
     mycss_token_data_to_string(entry, token, str, true, true);
     
     selector->key   = str;
@@ -373,7 +373,7 @@ void mycss_selectors_parser_bad_token(mycss_entry_t* entry, mycss_token_t* token
     if((selector->flags & MyCSS_SELECTORS_FLAGS_SELECTOR_BAD) == 0) {
         selector->flags |= MyCSS_SELECTORS_FLAGS_SELECTOR_BAD;
         
-        myhtml_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
+        mycore_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
         selector->key = str;
         
         mycss_token_data_to_string(entry, token, selector->key, true, false);

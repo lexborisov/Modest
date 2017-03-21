@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -208,9 +208,9 @@ typedef myfont_table_cmap_t;
 
 #include "myfont/myfont.h"
 
-myfont_status_t myfont_load_table_cmap(myfont_font_t *mf);
+mystatus_t myfont_load_table_cmap(myfont_font_t* mf, uint8_t* data, size_t data_size);
 
-uint16_t myfont_glyph_index_by_codepoint(myfont_font_t *mf, unsigned long char_code, myfont_status_t* status);
+uint16_t myfont_glyph_index_by_codepoint(myfont_font_t *mf, unsigned long char_code, mystatus_t* status);
 
 #ifdef __cplusplus
 } /* extern "C" */

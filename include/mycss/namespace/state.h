@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -29,7 +29,7 @@ extern "C" {
 #include <mycss/entry.h>
 #include <mycss/namespace/myosi.h>
 #include <mycss/namespace/parser.h>
-#include <myhtml/utils.h>
+#include <mycore/utils.h>
 
 bool mycss_namespace_state_namespace(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_namespace_state_namespace_namespace(mycss_entry_t* entry, mycss_token_t* token, bool last_response);

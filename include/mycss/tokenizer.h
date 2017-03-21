@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -33,7 +33,7 @@ extern "C" {
 #include <mycss/tokenizer_global.h>
 #include <mycss/tokenizer_end.h>
 
-#include <myhtml/incoming.h>
+#include <mycore/incoming.h>
 
 #define MyCSS_TOKEN_READY_CALLBACK_FUNCTION(ENTRY, TOKEN) \
     ++ENTRY->token_counter; \
@@ -53,12 +53,12 @@ struct mycss_token {
     const char* data;
 };
 
-mycss_status_t mycss_tokenizer_state_init(mycss_t* mycss);
+mystatus_t mycss_tokenizer_state_init(mycss_t* mycss);
 void mycss_tokenizer_state_destroy(mycss_t* mycss);
 
-mycss_status_t mycss_tokenizer_chunk(mycss_entry_t* entry, const char* css, size_t css_length);
-mycss_status_t mycss_tokenizer_process(mycss_entry_t* entry, const char* css, size_t css_length);
-mycss_status_t mycss_tokenizer_end(mycss_entry_t* entry);
+mystatus_t mycss_tokenizer_chunk(mycss_entry_t* entry, const char* css, size_t css_length);
+mystatus_t mycss_tokenizer_process(mycss_entry_t* entry, const char* css, size_t css_length);
+mystatus_t mycss_tokenizer_end(mycss_entry_t* entry);
 
 size_t mycss_tokenizer_run_state_single(mycss_entry_t* entry, mycss_tokenizer_state_t state, const char* css, size_t css_offset, size_t css_size);
 size_t mycss_tokenizer_state_set_current_buffer_for_continue(mycss_entry_t* entry, size_t css_offset, size_t css_minus_offset);

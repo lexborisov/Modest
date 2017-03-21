@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -21,7 +21,12 @@
 #include "modest/finder/thread.h"
 
 /* private functions */
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
 static void modest_finder_thread_stream(mythread_id_t thread_id, void* arg);
+#else
+static void modest_finder_thread_stream_single(modest_finder_thread_t* finder_thread, mycss_selectors_list_t* selector_list);
+#endif
+
 static modest_finder_thread_context_t * modest_finder_thread_create_context(modest_finder_thread_t* finder_thread, size_t count);
 //static void modest_finder_thread_callback_found(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_list_t* selector_list,
 //                                                mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec, void* ctx);
@@ -29,11 +34,15 @@ static modest_finder_thread_context_t * modest_finder_thread_create_context(mode
 /* basic functions */
 modest_finder_thread_t * modest_finder_thread_create(void)
 {
-    return (modest_finder_thread_t*)myhtml_calloc(1, sizeof(modest_finder_thread_t));
+    return (modest_finder_thread_t*)mycore_calloc(1, sizeof(modest_finder_thread_t));
 }
 
-modest_status_t modest_finder_thread_init(modest_finder_t* finder, modest_finder_thread_t* finder_thread, size_t thread_count)
+mystatus_t modest_finder_thread_init(modest_finder_t* finder, modest_finder_thread_t* finder_thread, size_t thread_count)
 {
+#ifdef MyCORE_BUILD_WITHOUT_THREADS
+    thread_count = 1;
+#endif
+    
     finder_thread->finder = finder;
     
     /* objects for nodes */
@@ -59,23 +68,27 @@ modest_status_t modest_finder_thread_init(modest_finder_t* finder, modest_finder
         return MODEST_STATUS_OK;
     
     /* create and init threads */
+#ifdef MyCORE_BUILD_WITHOUT_THREADS
+    finder_thread->thread = NULL;
+#else
     finder_thread->thread = mythread_create();
     
     if(finder_thread->thread == NULL)
         return MODEST_STATUS_OK;
     
-    myhtml_status_t status = mythread_init(finder_thread->thread, "lastmac", thread_count);
+    mystatus_t status = mythread_init(finder_thread->thread, MyTHREAD_TYPE_STREAM, thread_count, 0);
     if(status) {
-        mythread_destroy(finder_thread->thread, NULL, true);
+        mythread_destroy(finder_thread->thread, NULL, NULL, true);
         return MODEST_STATUS_OK;
     }
     
     finder_thread->thread->context = finder_thread;
     
     /* create threads */
-    for(size_t i = finder_thread->thread->pth_list_root; i < finder_thread->thread->pth_list_size; i++) {
-        myhread_create_stream(finder_thread->thread, mythread_function, modest_finder_thread_stream, MyTHREAD_OPT_UNDEF, &status);
+    for(size_t i = 0; i < finder_thread->thread->entries_size; i++) {
+        myhread_entry_create(finder_thread->thread, mythread_function, modest_finder_thread_stream, MyTHREAD_OPT_STOP);
     }
+#endif
     
     return MODEST_STATUS_OK;
 }
@@ -93,28 +106,24 @@ modest_finder_thread_t * modest_finder_thread_destroy(modest_finder_thread_t* fi
     if(finder_thread == NULL)
         return NULL;
     
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
+    if(finder_thread->thread) {
+        finder_thread->thread = mythread_destroy(finder_thread->thread, mythread_callback_quit, NULL, true);
+    }
+#endif
+    
     finder_thread->entry_obj = mcobject_async_destroy(finder_thread->entry_obj, true);
     finder_thread->declaration_obj = mcobject_async_destroy(finder_thread->declaration_obj, true);
     
-    if(finder_thread->thread) {
-        finder_thread->thread->stream_opt = MyTHREAD_OPT_QUIT;
-        
-        for(size_t i = finder_thread->thread->pth_list_root; i < finder_thread->thread->pth_list_size; i++) {
-            finder_thread->thread->pth_list[i].data.opt = MyTHREAD_OPT_QUIT;
-        }
-        
-        finder_thread->thread = mythread_destroy(finder_thread->thread, NULL, true);
-    }
-    
     if(finder_thread->context_list) {
-        myhtml_free(finder_thread->context_list);
+        mycore_free(finder_thread->context_list);
         
         finder_thread->context_list = NULL;
         finder_thread->context_list_size = 0;
     }
     
     if(self_destroy) {
-        myhtml_free(finder_thread);
+        mycore_free(finder_thread);
         return NULL;
     }
     
@@ -133,8 +142,9 @@ void modest_finder_thread_collate_node(modest_t* modest, myhtml_tree_node_t* nod
     }
 }
 
-modest_status_t modest_finder_thread_process(modest_t* modest, modest_finder_thread_t* finder_thread,
-                                             myhtml_tree_node_t* scope_node, mycss_selectors_list_t* selector_list)
+#ifdef MyCORE_BUILD_WITHOUT_THREADS
+mystatus_t modest_finder_thread_process(modest_t* modest, modest_finder_thread_t* finder_thread,
+                                        myhtml_tree_node_t* scope_node, mycss_selectors_list_t* selector_list)
 {
     finder_thread->base_node = scope_node;
     finder_thread->selector_list = selector_list;
@@ -142,7 +152,62 @@ modest_status_t modest_finder_thread_process(modest_t* modest, modest_finder_thr
     if(finder_thread->finder == NULL)
         return MODEST_STATUS_ERROR;
     
-    mythread_resume_all(finder_thread->thread);
+    modest_finder_thread_stream_single(finder_thread, selector_list);
+    
+    /* calc result */
+    modest_finder_thread_context_t* context = finder_thread->context_list;
+    myhtml_tree_node_t* node = scope_node;
+    
+    /* compare results */
+    while(node) {
+        modest_finder_thread_entry_t* entry = context->entry;
+        
+        while(entry) {
+            if(entry->node == node)
+            {
+                if(entry->next)
+                    entry->next->prev = entry->prev;
+                else
+                    context->entry_last = entry->prev;
+                
+                if(entry->prev)
+                    entry->prev->next = entry->next;
+                else
+                    context->entry = entry->next;
+                
+                modest_finder_thread_collate_node(modest, node, entry);
+            }
+            
+            entry = entry->next;
+        }
+        
+        if(node->child)
+            node = node->child;
+        else {
+            while(node != scope_node && node->next == NULL)
+                node = node->parent;
+            
+            if(node == scope_node)
+                break;
+            
+            node = node->next;
+        }
+    }
+    
+    return MyCORE_STATUS_OK;
+}
+
+#else /* end def MyCORE_BUILD_WITHOUT_THREADS */
+mystatus_t modest_finder_thread_process(modest_t* modest, modest_finder_thread_t* finder_thread,
+                                        myhtml_tree_node_t* scope_node, mycss_selectors_list_t* selector_list)
+{
+    finder_thread->base_node = scope_node;
+    finder_thread->selector_list = selector_list;
+    
+    if(finder_thread->finder == NULL)
+        return MODEST_STATUS_ERROR;
+    
+    mythread_resume(finder_thread->thread, MyTHREAD_OPT_UNDEF);
     modest_finder_thread_wait_for_all_done(finder_thread);
     
     /* calc result */
@@ -151,7 +216,7 @@ modest_status_t modest_finder_thread_process(modest_t* modest, modest_finder_thr
     
     /* compare results */
     while(node) {
-        for(size_t i = finder_thread->thread->pth_list_root; i < finder_thread->thread->pth_list_size; i++)
+        for(size_t i = 0; i < finder_thread->thread->entries_length; i++)
         {
             modest_finder_thread_context_t* context = &context_list[i];
             modest_finder_thread_entry_t* entry = context->entry;
@@ -194,29 +259,26 @@ modest_status_t modest_finder_thread_process(modest_t* modest, modest_finder_thr
 
 void modest_finder_thread_wait_for_all_done(modest_finder_thread_t* finder_thread)
 {
-    const struct timespec tomeout = {0, 0};
-    
-    for (size_t idx = finder_thread->thread->pth_list_root; idx < finder_thread->thread->pth_list_size; idx++) {
-        while((finder_thread->thread->pth_list[idx].data.opt & MyTHREAD_OPT_DONE) == 0) {
-            myhtml_thread_nanosleep(&tomeout);
+    for (size_t idx = 0; idx < finder_thread->thread->entries_length; idx++) {
+        while((finder_thread->thread->entries[idx].context.opt & MyTHREAD_OPT_DONE) == 0) {
+            mythread_nanosleep_sleep(finder_thread->thread->timespec);
         }
     }
 }
+#endif /* if undef MyCORE_BUILD_WITHOUT_THREADS */
 
 modest_finder_thread_context_t * modest_finder_thread_create_context(modest_finder_thread_t* finder_thread, size_t count)
 {
-    /* +1 because threads ids begin 1 */
-    count++;
     finder_thread->context_list_size = count;
     
-    modest_finder_thread_context_t *ctx = myhtml_calloc(count, sizeof(modest_finder_thread_context_t));
+    modest_finder_thread_context_t *ctx = mycore_calloc(count, sizeof(modest_finder_thread_context_t));
     
     if(ctx == NULL)
         return NULL;
     
     mcobject_async_status_t mcstatus;
     
-    for(size_t i = 1; i < count; i++) {
+    for(size_t i = 0; i < count; i++) {
         ctx[i].entry_node_id = mcobject_async_node_add(finder_thread->entry_obj, &mcstatus);
         
         if(mcstatus) {
@@ -225,12 +287,12 @@ modest_finder_thread_context_t * modest_finder_thread_create_context(modest_find
                 mcobject_async_node_delete(finder_thread->entry_obj, ctx[i].entry_node_id);
             }
             
-            myhtml_free(ctx);
+            mycore_free(ctx);
             return NULL;
         }
     }
     
-    for(size_t i = 1; i < count; i++) {
+    for(size_t i = 0; i < count; i++) {
         ctx[i].declaration_node_id = mcobject_async_node_add(finder_thread->declaration_obj, &mcstatus);
         
         if(mcstatus) {
@@ -245,7 +307,7 @@ modest_finder_thread_context_t * modest_finder_thread_create_context(modest_find
                 mcobject_async_node_delete(finder_thread->declaration_obj, ctx[i].declaration_node_id);
             }
             
-            myhtml_free(ctx);
+            mycore_free(ctx);
             return NULL;
         }
     }
@@ -371,6 +433,25 @@ void modest_finder_thread_callback_found(modest_finder_t* finder, myhtml_tree_no
     }
 }
 
+void modest_finder_thread_stream_single(modest_finder_thread_t* finder_thread, mycss_selectors_list_t* selector_list)
+{
+    modest_finder_thread_found_context_t found_ctx = {finder_thread, finder_thread->context_list};
+    
+    while(selector_list)
+    {
+        for(size_t i = 0; i < selector_list->entries_list_length; i++) {
+            mycss_selectors_entries_list_t *entries = &selector_list->entries_list[i];
+            mycss_selectors_specificity_t spec = entries->specificity;
+            
+            modest_finder_node_combinator_begin(finder_thread->finder, finder_thread->base_node, selector_list,
+                                                entries->entry, &spec, modest_finder_thread_callback_found, &found_ctx);
+        }
+        
+        selector_list = selector_list->next;
+    }
+}
+
+#ifndef MyCORE_BUILD_WITHOUT_THREADS
 void modest_finder_thread_stream(mythread_id_t thread_id, void* arg)
 {
     mythread_context_t* ctx = (mythread_context_t*)arg;
@@ -380,7 +461,7 @@ void modest_finder_thread_stream(mythread_id_t thread_id, void* arg)
     modest_finder_thread_found_context_t found_ctx = {finder_thread, &finder_thread->context_list[ctx->id]};
     
     size_t count = 0, counnt_done = ctx->id - 1;
-    size_t offset = (ctx->mythread->pth_list_size - 1);
+    size_t offset = (ctx->mythread->entries_size - 1);
     
     while(selector_list) {
         for(size_t i = 0; i < selector_list->entries_list_length; i++) {
@@ -400,8 +481,6 @@ void modest_finder_thread_stream(mythread_id_t thread_id, void* arg)
         
         selector_list = selector_list->next;
     }
-    
-    ctx->opt = MyTHREAD_OPT_STOP|MyTHREAD_OPT_DONE;
 }
-
+#endif
 

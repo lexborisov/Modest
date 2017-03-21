@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -31,7 +31,7 @@ void mycss_namespace_parser_begin(mycss_entry_t* entry)
 
 void mycss_namespace_parser_name(mycss_entry_t* entry, mycss_token_t* token)
 {
-    myhtml_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
+    mycore_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
     mycss_token_data_to_string(entry, token, str, true, false);
     
     entry->ns->entry_last->name = str;
@@ -39,7 +39,7 @@ void mycss_namespace_parser_name(mycss_entry_t* entry, mycss_token_t* token)
 
 void mycss_namespace_parser_url(mycss_entry_t* entry, mycss_token_t* token)
 {
-    myhtml_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
+    mycore_string_t *str = mcobject_malloc(entry->mcobject_string_entries, NULL);
     mycss_token_data_to_string(entry, token, str, true, false);
     
     entry->ns->entry_last->url = str;
@@ -49,11 +49,11 @@ void mycss_namespace_parser_end(mycss_entry_t* entry, mycss_token_t* token)
 {
     mycss_namespace_entry_t *ns_entry = entry->ns->entry_last;
     
-    myhtml_string_t *str_url = entry->ns->entry_last->url;
+    mycore_string_t *str_url = entry->ns->entry_last->url;
     ns_entry->ns_id = myhtml_namespace_id_by_url(str_url->data, str_url->length);
     
     if(ns_entry->name) {
-        myhtml_string_t *str = ns_entry->name;
+        mycore_string_t *str = ns_entry->name;
         
         ns_entry->mctree_id = mctree_insert(entry->ns->ns_stylesheet->name_tree, str->data, str->length, (void*)ns_entry, NULL);
         

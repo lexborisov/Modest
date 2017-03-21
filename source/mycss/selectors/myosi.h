@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -36,7 +36,7 @@ typedef struct mycss_selectors_specificity mycss_selectors_specificity_t;
 #include "mycss/mystring.h"
 #include "mycss/namespace/myosi.h"
 #include "mycss/declaration/myosi.h"
-#include "myhtml/utils/mcobject.h"
+#include "mycore/utils/mcobject.h"
 
 typedef bool (*mycss_selectors_state_f)(mycss_entry_t* entry, mycss_selectors_t* selectors, mycss_selectors_entry_t* selector, mycss_token_t* token);
 typedef void (*mycss_callback_selector_done_f)(mycss_selectors_t* selectors, mycss_selectors_entry_t* selector);
@@ -218,7 +218,7 @@ struct mycss_selectors_entry {
     
     mycss_namespace_entry_t* ns_entry;
     
-    myhtml_string_t* key;
+    mycore_string_t* key;
     void* value;
     
     mycss_selectors_combinator_t combinator;

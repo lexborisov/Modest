@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2016 Alexander Borisov
+ Copyright (C) 2016-2017 Alexander Borisov
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -23,10 +23,10 @@
 
 mycss_declaration_t * mycss_declaration_create(void)
 {
-    return (mycss_declaration_t*)myhtml_calloc(1, sizeof(mycss_declaration_t));
+    return (mycss_declaration_t*)mycore_calloc(1, sizeof(mycss_declaration_t));
 }
 
-mycss_status_t mycss_declaration_init(mycss_entry_t* entry, mycss_declaration_t* declaration)
+mystatus_t mycss_declaration_init(mycss_entry_t* entry, mycss_declaration_t* declaration)
 {
     declaration->ref_entry = entry;
     declaration->entry = NULL;
@@ -37,7 +37,7 @@ mycss_status_t mycss_declaration_init(mycss_entry_t* entry, mycss_declaration_t*
     if(declaration->mcobject_entries == NULL)
         return MyCSS_STATUS_ERROR_DECLARATION_ENTRY_CREATE;
     
-    myhtml_status_t myhtml_status = mcobject_init(declaration->mcobject_entries, 256, sizeof(mycss_declaration_entry_t));
+    mystatus_t myhtml_status = mcobject_init(declaration->mcobject_entries, 256, sizeof(mycss_declaration_entry_t));
     if(myhtml_status)
         return MyCSS_STATUS_ERROR_DECLARATION_ENTRY_INIT;
     
@@ -78,7 +78,7 @@ mycss_declaration_t * mycss_declaration_destroy(mycss_declaration_t* declaration
     declaration->stack = mycss_stack_destroy(declaration->stack, true);
     
     if(self_destroy) {
-        myhtml_free(declaration);
+        mycore_free(declaration);
         return NULL;
     }
     
@@ -106,7 +106,7 @@ mycss_token_type_t mycss_declaration_ending_token_type(mycss_declaration_t* decl
     return declaration->ending_token;
 }
 
-mycss_declaration_entry_t * mycss_declaration_parse(mycss_declaration_t* declaration, myhtml_encoding_t encoding, const char* data, size_t data_size, mycss_status_t* out_status)
+mycss_declaration_entry_t * mycss_declaration_parse(mycss_declaration_t* declaration, myencoding_t encoding, const char* data, size_t data_size, mystatus_t* out_status)
 {
     if(data == NULL || data_size == 0) {
         if(out_status)
@@ -137,7 +137,7 @@ mycss_declaration_entry_t * mycss_declaration_parse(mycss_declaration_t* declara
     /* parsing */
     mycss_encoding_set(entry, encoding);
     
-    mycss_status_t status = mycss_tokenizer_chunk(entry, data, data_size);
+    mystatus_t status = mycss_tokenizer_chunk(entry, data, data_size);
     if(status != MyCSS_STATUS_OK) {
         if(out_status)
             *out_status = status;

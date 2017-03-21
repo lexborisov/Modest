@@ -3,19 +3,4 @@ compiler:
   - clang
   - gcc
 install: false
-
-env:
-  global:
-   - secure: "gNSRCjo+hi14yLpCDEmwZfzy0DFoOR+9BmkdpJhTK8NjUvIy+RmFtXgT98QHgh+fow8v/YXl8hSnyDT2+oSmsKN9P113ssgYihwoB4IuIBLSIrAf9KPfhIh6LZC23lKltQUrP9yPo3jzdD1dte1xv2tKRImDZ1Cze987EjDBbSwuVP/Gj3JlWMAafEPrh48jCM/O4DXR4podcd1biXbyX8+lbYJSFVaIq0SuagzK5Kjv8nDAFYlNk27RdhQGemmZOsM5xQM4PpgKpcQVHh0YuObCryf/O+orCDh7dOu9QlbMijabYxz/Jx7fZ1mLQGm7Kj6ETdCcf80MrrDechjJgh7uyFE/+VPDfkdaSCm1vMJCNBRgFSM0bxXqtLAyNs9TNOIJ3TUv3M4eN98Feh7I3ip9eTU/0R36HKU7sk+yotmOuAMDaMikbTQ2UuHekKev3TD0dA5O6xatyDF3jCnTJ+8aYQ096A79ZSabWUiLe6IyV/NauqSfY+mOz2NA+TxqzW92HqStdvmeOuSqCGdkGi3o2z77jEez795l2bqnIziuZhojfxjtvc/ryaZaBMYWqjSlOzRcix/SwIt8ccDCXJ4F/aNi16mYuDdL5c2mQaxtZ5Xz1IZduU87f6pWHdhLPoRMqpd/XChJVwKSFxbKmRWynUfHTcwJePSSyn5GRNA="
-
-addons:
-  coverity_scan:
-    project:
-      name: "lexborisov/Modest"
-      description: "Build submitted via Travis CI"
-    notification_email: lex.borisov@gmail.com
-    build_command_prepend: ""
-    build_command:   "make -j4"
-    branch_pattern: coverity_scan
-
 script: make -j4
