@@ -2,3 +2,5 @@
 *.o
 *.exe
 *~
+modest.pc
+uninstal.mk
