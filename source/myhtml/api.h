@@ -27,7 +27,7 @@
  *
  * Fast C/C++ HTML 5 Parser. Using threads.
  * With possibility of a Single Mode.
- * 
+ *
  * C99 and POSIX Threads! No dependencies!
  *
  * By https://html.spec.whatwg.org/ specification.
@@ -36,7 +36,7 @@
 
 #define MyHTML_VERSION_MAJOR 4
 #define MyHTML_VERSION_MINOR 0
-#define MyHTML_VERSION_PATCH 0
+#define MyHTML_VERSION_PATCH 1
 
 #define MyHTML_VERSION_STRING MyCORE_STR(MyHTML_VERSION_MAJOR) MyCORE_STR(.) MyCORE_STR(MyHTML_VERSION_MINOR) MyCORE_STR(.) MyCORE_STR(MyHTML_VERSION_PATCH)
 
@@ -337,7 +337,7 @@ enum myhtml_tags {
  for mynetwork          050000..05ffff; MyNETWORK_STATUS_OK == 0x000000
  for myecma             060000..06ffff; MyECMA_STATUS_OK    == 0x000000
  not occupied           070000..
-*/
+ */
 enum myhtml_status {
     MyHTML_STATUS_OK                                   = 0x0000,
     MyHTML_STATUS_ERROR                                = 0x0001,
@@ -413,7 +413,7 @@ typedef myhtml_tree_parse_flags_t;
  * @struct myhtml_t MyHTML
  *
  * Basic structure. Create once for using many times.
-*/
+ */
 typedef struct myhtml myhtml_t;
 
 /**
@@ -471,7 +471,7 @@ struct myhtml_version {
     int patch;
 }
 typedef myhtml_version_t;
-    
+
 // callback functions
 typedef void* (*myhtml_callback_token_f)(myhtml_tree_t* tree, myhtml_token_node_t* token, void* ctx);
 typedef void (*myhtml_callback_tree_node_f)(myhtml_tree_t* tree, myhtml_tree_node_t* node, void* ctx);
@@ -494,7 +494,7 @@ myhtml_create(void);
  * Allocating and Initialization resources for a MyHTML structure
  *
  * @param[in] myhtml_t*
- * @param[in] work options, how many threads will be. 
+ * @param[in] work options, how many threads will be.
  * Default: MyHTML_OPTIONS_PARSE_MODE_SEPARATELY
  *
  * @param[in] thread count, it depends on the choice of work options
@@ -561,7 +561,7 @@ myhtml_parse_fragment(myhtml_tree_t* tree, myencoding_t encoding,
                       myhtml_tag_id_t tag_id, enum myhtml_namespace ns);
 
 /**
- * Parsing HTML in Single Mode. 
+ * Parsing HTML in Single Mode.
  * No matter what was said during initialization MyHTML
  *
  * @param[in] previously created structure myhtml_tree_t*
@@ -578,7 +578,7 @@ myhtml_parse_single(myhtml_tree_t* tree, myencoding_t encoding,
                     const char* html, size_t html_size);
 
 /**
- * Parsing fragment of HTML in Single Mode. 
+ * Parsing fragment of HTML in Single Mode.
  * No matter what was said during initialization MyHTML
  *
  * @param[in] previously created structure myhtml_tree_t*
@@ -1039,7 +1039,7 @@ myhtml_get_nodes_by_attribute_value_contain(myhtml_tree_t *tree,
                                             mystatus_t* status);
 
 /**
- * Get nodes by attribute value; attribute value is a hyphen-separated list of values beginning; 
+ * Get nodes by attribute value; attribute value is a hyphen-separated list of values beginning;
  * like a [foo|="bar"]
  *
  * @param[in] myhtml_tree_t*
@@ -1775,7 +1775,7 @@ myhtml_collection_destroy(myhtml_collection_t *collection);
  *
  * @param[in] myhtml_collection_t*
  * @param[in] need nodes
- * @param[in] upto_length: count for up if nodes not exists 
+ * @param[in] upto_length: count for up if nodes not exists
  *            (current length + need + upto_length + 1)
  *
  * @return NULL if successful, otherwise an myhtml_collection_t* structure
@@ -1908,7 +1908,7 @@ myencoding_detect_bom(const char *text, size_t length, myencoding_t *encoding);
  */
 bool
 myencoding_detect_and_cut_bom(const char *text, size_t length, myencoding_t *encoding,
-                                   const char **new_text, size_t *new_size);
+                              const char **new_text, size_t *new_size);
 
 /**
  * Detect encoding by name
@@ -1951,7 +1951,7 @@ myencoding_t
 myencoding_prescan_stream_to_determine_encoding(const char *data, size_t data_size);
 
 /**
- * Extracting character encoding from string. Find "charset=" and see encoding. 
+ * Extracting character encoding from string. Find "charset=" and see encoding.
  * For example: "text/html; charset=windows-1251". Return MyENCODING_WINDOWS_1251
  *
  *
@@ -1965,7 +1965,43 @@ myencoding_prescan_stream_to_determine_encoding(const char *data, size_t data_si
  */
 bool
 myencoding_extracting_character_encoding_from_charset(const char *data, size_t data_size,
-                                                           myencoding_t *encoding);
+                                                      myencoding_t *encoding);
+
+/**
+ * Detect encoding in meta tag (<meta ...>) before start parsing and return found raw data
+ *
+ * See https://html.spec.whatwg.org/multipage/syntax.html#prescan-a-byte-stream-to-determine-its-encoding
+ *
+ * @param[in]  html data bytes
+ * @param[in]  html data length
+ * @param[out] return raw char data point for find encoding
+ * @param[out] return raw char length
+ *
+ * @return detected encoding if encoding found, otherwise MyENCODING_NOT_DETERMINED
+ */
+myencoding_t
+myencoding_prescan_stream_to_determine_encoding_with_found(const char *data, size_t data_size,
+                                                           const char **found, size_t *found_lenght);
+
+/**
+ * Extracting character encoding from string. Find "charset=" and see encoding. Return found raw data.
+ * For example: "text/html; charset=windows-1251". Return MyENCODING_WINDOWS_1251
+ *
+ *
+ * See https://html.spec.whatwg.org/multipage/infrastructure.html#algorithm-for-extracting-a-character-encoding-from-a-meta-element
+ *
+ * @param[in]  data
+ * @param[in]  data length
+ * @param[out] return encoding
+ * @param[out] return raw char data point for find encoding
+ * @param[out] return raw char length
+ *
+ * @return true if encoding found
+ */
+bool
+myencoding_extracting_character_encoding_from_charset_with_found(const char *data, size_t data_size,
+                                                                 myencoding_t *encoding,
+                                                                 const char **found, size_t *found_lenght);
 
 /***********************************************************************************
  *
@@ -1981,7 +2017,7 @@ myencoding_extracting_character_encoding_from_charset(const char *data, size_t d
  *  For each Tree creates its object, I recommend to use it (myhtml_tree_get_mchar).
  *
  * @param[in] node_id. For all threads (and Main thread) identifier that is unique.
- *  if created mchar_async_t object manually you know it, if not then take from the Tree 
+ *  if created mchar_async_t object manually you know it, if not then take from the Tree
  *  (see myhtml_tree_get_mchar_node_id)
  *
  * @param[in] mycore_string_t*. It can be obtained from myhtml_tree_node_t object
@@ -2149,10 +2185,10 @@ mycore_string_data_free(mchar_async_t *mchar, size_t node_id, char *data);
  *
  * MyHTML_STRING_RAW
  *
- * All work with mycore_string_raw_t object occurs through 
+ * All work with mycore_string_raw_t object occurs through
  *    mycore_malloc (standart malloc), mycore_realloc (standart realloc),
  *    mycore_free (standart free).
- * 
+ *
  * You are free to change them on without fear that something will happen
  * You can call free for str_raw.data, or change str_raw.length = 0
  *
@@ -2408,7 +2444,7 @@ myhtml_callback_tree_node_remove(myhtml_tree_t* tree);
  *  then this callback calls from Main thread
  *
  * Warning!!!
- * If you well access to attributes or text for node and you using thread mode then 
+ * If you well access to attributes or text for node and you using thread mode then
  * you need wait for token processing done. See myhtml_token_node_wait_for_done
  *
  * @param[in] myhtml_tree_t*
@@ -2470,7 +2506,7 @@ mycore_strncasecmp(const char* str1, const char* str2, size_t size);
  ***********************************************************************************/
 
 /**
- * Tree fragment serialization 
+ * Tree fragment serialization
  * The same as myhtml_serialization_tree_buffer function
  */
 mystatus_t
