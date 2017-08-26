@@ -1,20 +1,20 @@
 /*
  Copyright (C) 2015-2017 Alexander Borisov
- 
+
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
  License as published by the Free Software Foundation; either
  version 2.1 of the License, or (at your option) any later version.
- 
+
  This library is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  Lesser General Public License for more details.
- 
+
  You should have received a copy of the GNU Lesser General Public
  License along with this library; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- 
+
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
@@ -328,7 +328,7 @@ enum myhtml_tags {
 // base
 /*
  Very important!!!
- 
+
  for myhtml             0..00ffff;      MyHTML_STATUS_OK    == 0x000000
  for mycss and modules  010000..01ffff; MyCSS_STATUS_OK     == 0x000000
  for modest             020000..02ffff; MODEST_STATUS_OK    == 0x000000
@@ -380,7 +380,7 @@ enum myhtml_namespace {
     MyHTML_NAMESPACE_XLINK      = 0x04,
     MyHTML_NAMESPACE_XML        = 0x05,
     MyHTML_NAMESPACE_XMLNS      = 0x06,
-    
+
     /* MyHTML_NAMESPACE_ANY == MyHTML_NAMESPACE_LAST_ENTRY */
     MyHTML_NAMESPACE_ANY        = 0x07,
     MyHTML_NAMESPACE_LAST_ENTRY = 0x07
@@ -1366,7 +1366,7 @@ myhtml_node_string(myhtml_tree_node_t *node);
  * @return myhtml_tree_node_t
  */
 myhtml_position_t
-myhtml_node_raw_pasition(myhtml_tree_node_t *node);
+myhtml_node_raw_position(myhtml_tree_node_t *node);
 
 /**
  * Get element position for Tree Node in Incoming Buffer
@@ -1378,7 +1378,7 @@ myhtml_node_raw_pasition(myhtml_tree_node_t *node);
  * @return myhtml_tree_node_t
  */
 myhtml_position_t
-myhtml_node_element_pasition(myhtml_tree_node_t *node);
+myhtml_node_element_position(myhtml_tree_node_t *node);
 
 /**
  * Get data value from tree node
@@ -1619,7 +1619,7 @@ myhtml_token_node_tag_id(myhtml_token_node_t *token_node);
  * @return myhtml_position_t
  */
 myhtml_position_t
-myhtml_token_node_raw_pasition(myhtml_token_node_t *token_node);
+myhtml_token_node_raw_position(myhtml_token_node_t *token_node);
 
 /**
  * Get element position for Token Node in Incoming Buffer
@@ -1631,7 +1631,7 @@ myhtml_token_node_raw_pasition(myhtml_token_node_t *token_node);
  * @return myhtml_position_t
  */
 myhtml_position_t
-myhtml_token_node_element_pasition(myhtml_token_node_t *token_node);
+myhtml_token_node_element_position(myhtml_token_node_t *token_node);
 
 /**
  * Get first attribute of a token node
