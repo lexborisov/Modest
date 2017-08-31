@@ -101,14 +101,12 @@ int main(int argc, const char * argv[])
     mycore_string_raw_clean_all(&str_raw);
     
     if(myhtml_serialization_tree_buffer(myhtml_tree_get_document(tree), &str_raw)) {
-        /* 
-            or myhtml_tree_get_node_html(tree) or myhtml_tree_get_node_head(tree)
-            or myhtml_tree_get_node_body(tree) or some node
-         */
-        
-        printf("%s", str_raw.data);
-        mycore_string_raw_destroy(&str_raw, false);
+        fprintf(stderr, "Could not serialization for the tree\n");
+        exit(EXIT_FAILURE);
     }
+    
+    printf("%s", str_raw.data);
+    mycore_string_raw_destroy(&str_raw, false);
     
     // release resources
     myhtml_tree_destroy(tree);

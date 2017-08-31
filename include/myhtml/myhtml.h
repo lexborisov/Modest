@@ -1,20 +1,20 @@
 /*
  Copyright (C) 2015-2017 Alexander Borisov
-
+ 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
  License as published by the Free Software Foundation; either
  version 2.1 of the License, or (at your option) any later version.
-
+ 
  This library is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  Lesser General Public License for more details.
-
+ 
  You should have received a copy of the GNU Lesser General Public
  License along with this library; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-
+ 
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
@@ -69,10 +69,10 @@ struct myhtml {
     mythread_t* thread_batch;
     mythread_t* thread_list[3];
     size_t      thread_total;
-
+    
     myhtml_tokenizer_state_f* parse_state_func;
     myhtml_insertion_f* insertion_func;
-
+    
     enum myhtml_options opt;
     myhtml_tree_node_t *marker;
 };

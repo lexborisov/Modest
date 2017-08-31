@@ -1,20 +1,20 @@
 /*
  Copyright (C) 2015-2017 Alexander Borisov
-
+ 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
  License as published by the Free Software Foundation; either
  version 2.1 of the License, or (at your option) any later version.
-
+ 
  This library is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  Lesser General Public License for more details.
-
+ 
  You should have received a copy of the GNU Lesser General Public
  License along with this library; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-
+ 
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
@@ -42,7 +42,7 @@ extern "C" {
 struct myhtml_token_replacement_entry {
     char* from;
     size_t from_size;
-
+    
     char* to;
     size_t to_size;
 };
@@ -50,55 +50,55 @@ struct myhtml_token_replacement_entry {
 struct myhtml_token_namespace_replacement {
     char* from;
     size_t from_size;
-
+    
     char* to;
     size_t to_size;
-
+    
     enum myhtml_namespace ns;
 };
 
 struct myhtml_token_attr {
     myhtml_token_attr_t* next;
     myhtml_token_attr_t* prev;
-
+    
     mycore_string_t key;
     mycore_string_t value;
-
+    
     size_t raw_key_begin;
     size_t raw_key_length;
     size_t raw_value_begin;
     size_t raw_value_length;
-
+    
     enum myhtml_namespace ns;
 };
 
 struct myhtml_token_node {
     myhtml_tag_id_t tag_id;
-
+    
     mycore_string_t str;
-
+    
     size_t raw_begin;
     size_t raw_length;
-
+    
     size_t element_begin;
     size_t element_length;
-
+    
     myhtml_token_attr_t* attr_first;
     myhtml_token_attr_t* attr_last;
-
+    
     volatile enum myhtml_token_type type;
 };
 
 struct myhtml_token {
     myhtml_tree_t* tree; // ref
-
+    
     mcobject_async_t* nodes_obj; // myhtml_token_node_t
     mcobject_async_t* attr_obj;  // myhtml_token_attr_t
-
+    
     // def thread node id
     size_t mcasync_token_id;
     size_t mcasync_attr_id;
-
+    
     bool is_new_tmp;
 };
 
