@@ -110,6 +110,11 @@ void mycss_selectors_function_begin_has(mycss_entry_t* entry, mycss_selectors_en
     mycss_entry_parser_list_push(entry, mycss_selectors_function_parser_has, entry->parser_switch, entry->parser_ending_token, false);
 }
 
+void mycss_selectors_function_begin_contains(mycss_entry_t* entry, mycss_selectors_entry_t* selector)
+{
+    // TODO: imeplement
+}
+
 void mycss_selectors_function_begin_nth_last_child(mycss_entry_t* entry, mycss_selectors_entry_t* selector)
 {
     selector->sub_type = MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_NTH_LAST_CHILD;

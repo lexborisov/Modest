@@ -64,6 +64,7 @@ void mycss_selectors_function_begin_current(mycss_entry_t* entry, mycss_selector
 void mycss_selectors_function_begin_nth_last_child(mycss_entry_t* entry, mycss_selectors_entry_t* selector);
 void mycss_selectors_function_begin_nth_last_of_type(mycss_entry_t* entry, mycss_selectors_entry_t* selector);
 void mycss_selectors_function_begin_has(mycss_entry_t* entry, mycss_selectors_entry_t* selector);
+void mycss_selectors_function_begin_contains(mycss_entry_t* entry, mycss_selectors_entry_t* selector);
 void mycss_selectors_function_begin_nth_column(mycss_entry_t* entry, mycss_selectors_entry_t* selector);
 
 void mycss_selectors_begin_unknown(mycss_entry_t* entry, mycss_selectors_entry_t* selector);

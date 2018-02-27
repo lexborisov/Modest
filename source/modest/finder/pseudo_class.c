@@ -77,6 +77,11 @@ bool modest_finder_selector_sub_type_pseudo_class_function_has(modest_finder_t* 
     return false;
 }
 
+bool modest_finder_selector_sub_type_pseudo_class_function_contains(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
+{
+
+}
+
 bool modest_finder_selector_sub_type_pseudo_class_function_lang(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;
