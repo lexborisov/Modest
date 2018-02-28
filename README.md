@@ -42,6 +42,7 @@ See [INSTALL.md](https://github.com/lexborisov/Modest/blob/master/INSTALL.md)
 ## External Bindings and Wrappers
 * [Crystal wrapper](https://github.com/kostya/modest) for CSS Selectors (Modest Finder)
 * [Python binding](https://github.com/rushter/selectolax) for Modest engine (fast HTML5 parser and CSS selectors)
+* [Elixir/Erlang](https://github.com/f34nk/modest_ex) bindings
 
 ## Examples
 
