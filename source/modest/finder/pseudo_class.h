@@ -43,7 +43,7 @@ bool modest_finder_selector_sub_type_pseudo_class_function_nth_last_child(modest
 bool modest_finder_selector_sub_type_pseudo_class_function_nth_last_column(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec);
 bool modest_finder_selector_sub_type_pseudo_class_function_nth_last_of_type(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec);
 bool modest_finder_selector_sub_type_pseudo_class_function_nth_of_type(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec);
-bool modest_finder_selector_sub_type_pseudo_class_function_nth_of_contains(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec);
+bool modest_finder_selector_sub_type_pseudo_class_function_contains(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec);
 
 /* classes */
 bool modest_finder_selector_sub_type_pseudo_class_undef(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec);
