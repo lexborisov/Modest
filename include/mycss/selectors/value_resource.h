@@ -52,6 +52,7 @@ static const mycss_selectors_value_function_destroy_f mycss_selectors_value_func
     mycss_selectors_value_pseudo_class_function_nth_last_column_destroy,
     mycss_selectors_value_pseudo_class_function_nth_last_of_type_destroy,
     mycss_selectors_value_pseudo_class_function_nth_of_type_destroy,
+    mycss_selectors_value_pseudo_class_function_contains_destroy,
 };
 
 #endif /* MyHTML_MyCSS_SELECTORS_VALUE_RESOURCE_H */

@@ -22,7 +22,7 @@
 #define MyHTML_MyCSS_SELECTORS_FUNCTION_PARSER_H
 #pragma once
 
-#define MyCSS_SELECTORS_FUNCTION_NAME_STATIC_SIZE 57
+#define MyCSS_SELECTORS_FUNCTION_NAME_STATIC_SIZE 58
 
 #ifdef __cplusplus
 extern "C" {
@@ -37,6 +37,8 @@ bool mycss_selectors_unknown_parser(mycss_entry_t* entry, mycss_token_t* token, 
 
 bool mycss_selectors_function_parser_not_or_matches_or_current_parser(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_selectors_function_parser_has(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+
+bool mycss_selectors_function_parser_contains(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 
 bool mycss_selectors_function_parser_nth_with_selectors(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_selectors_function_parser_nth_with_selectors_need_of(mycss_entry_t* entry, mycss_token_t* token, bool last_response);

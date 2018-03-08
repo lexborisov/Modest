@@ -22,7 +22,7 @@
 #define MyHTML_MyCSS_SELECTORS_FUNCTION_RESOURCE_H
 #pragma once
 
-#define MyCSS_SELECTORS_FUNCTION_NAME_STATIC_SIZE 57
+#define MyCSS_SELECTORS_FUNCTION_NAME_STATIC_SIZE 58
 
 static const mycss_selectots_function_begin_entry_t mycss_selectors_function_begin_map_index[] =
 {
@@ -83,6 +83,7 @@ static const mycss_selectots_function_begin_entry_t mycss_selectors_function_beg
     {NULL, 0, NULL, 0, 0},
     {NULL, 0, NULL, 0, 0},
     {"drop", 4, mycss_selectors_function_begin_drop, 0, 56},
+    {"contains", 8, mycss_selectors_function_begin_contains, 0, 57},
     {NULL, 0, NULL, 0, 0},
 };
 

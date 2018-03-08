@@ -112,7 +112,22 @@ void mycss_selectors_function_begin_has(mycss_entry_t* entry, mycss_selectors_en
 
 void mycss_selectors_function_begin_contains(mycss_entry_t* entry, mycss_selectors_entry_t* selector)
 {
-    // TODO: imeplement
+    // FRANK
+    selector->sub_type = MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_CONTAINS;
+    
+    mycss_selectors_t *selectors = entry->selectors;
+    mycss_selectors_list_t **new_list = (mycss_selectors_list_t**)(&selectors->entry_last->value);
+    mycss_selectors_list_t *current_list = selectors->list_last;
+    
+    selectors->list = new_list;
+    selectors->list_last = NULL;
+    selectors->ending_token = entry->parser_ending_token;
+    
+    mycss_selectors_state_relative_selector_list(entry, NULL, true);
+    
+    (*new_list)->parent = current_list;
+    
+    mycss_entry_parser_list_push(entry, mycss_selectors_function_parser_contains, entry->parser_switch, entry->parser_ending_token, false);
 }
 
 void mycss_selectors_function_begin_nth_last_child(mycss_entry_t* entry, mycss_selectors_entry_t* selector)

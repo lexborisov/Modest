@@ -13,6 +13,7 @@ my $func_map = {
         not => "",
         matches => "",
         has => "",
+        contains => "",
         dir => "",
         lang => "",
         current => "",
