@@ -120,8 +120,8 @@ void print_found_result(myhtml_tree_t* html_tree, myhtml_collection_t *collectio
 int main(int argc, const char * argv[])
 {
     const char *html = "<div><p id=p1><p id=p2><p id=p3><a>link</a><p id=p4><p id=p5><p id=p6></div>";
-    const char *selector = "div > :nth-child(2n+1):not(:contains(\"link\"))";
-    // const char *selector = "div:contains(a)";
+    // const char *selector = "div > :nth-child(2n+1):not(:contains(\"link\"))";
+    const char *selector = ":contains(\"link\")";
     
     /* init MyHTML and parse HTML */
     myhtml_tree_t *html_tree = parse_html(html, strlen(html));
