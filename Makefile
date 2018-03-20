@@ -181,6 +181,7 @@ clean: $(MODEST_BUILD_MODULES_TARGET_CLEAN)
 	rm -f $(call MODEST_LIBRARY_WITH_VERSION) && rm -f $(call MODEST_LIBRARY_STATIC)
 	rm -rf $(TEST_DIR_BASE)
 	$(call MODEST_BUILD_CLEAN_AFTER)
+	rm $(MODEST_PKG_CONFIG_FILE)
 	for f in $(BUILD_SUB_DIRS); do $(MAKE) -C $$f clean; done
 
 clone: clean_api $(MODEST_BUILD_MODULES_TARGET_CLONE)
@@ -203,7 +204,9 @@ uninstall:
 test: library
 	$(MAKE) -C $(TEST_DIR) run
 
-make-pc-file:
+make-pc-file: $(MODEST_PKG_CONFIG_FILE)
+
+$(MODEST_PKG_CONFIG_FILE): $(MODEST_PKG_CONFIG_FILE).in
 	$(call MODEST_PKG_CONFIG_PROCESS,$(MODEST_PKG_CONFIG_FILE).in, $(MODEST_PKG_CONFIG_FILE))
 
 modules:

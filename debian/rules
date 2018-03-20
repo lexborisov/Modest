@@ -6,5 +6,8 @@
 %:
 	dh $@ --parallel
 
+override_dh_auto_build:
+	dh_auto_build -- prefix=/usr
+
 override_dh_auto_install:
-	prefix=/usr dh_auto_install --
+	dh_auto_install -- prefix=/usr
