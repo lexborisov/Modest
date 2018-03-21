@@ -178,8 +178,9 @@ static: make-pc-file create $(MODEST_BUILD_MODULES_TARGET_ALL)
 	$(call MODEST_BUILD_STATIC_AFTER)
 
 clean: $(MODEST_BUILD_MODULES_TARGET_CLEAN)
-	rm -f $(call MODEST_LIBRARY_WITH_VERSION) && rm -f $(call MODEST_LIBRARY_STATIC)
-	rm -rf $(TEST_DIR_BASE)
+	-rm $(call MODEST_LIBRARY_WITH_VERSION)
+	-rm $(call MODEST_LIBRARY_STATIC)
+	-rm -r $(TEST_DIR_BASE)
 	$(call MODEST_BUILD_CLEAN_AFTER)
 	-rm $(MODEST_PKG_CONFIG_FILE)
 	for f in $(BUILD_SUB_DIRS); do $(MAKE) -C $$f clean; done
