@@ -45,6 +45,14 @@ void mycss_selectors_serialization_chain(mycss_selectors_t* selectors, mycss_sel
     }
 }
 
+bool mycss_selectors_serialization_contains(mycss_selectors_t* selectors, void *value,
+                                        mycore_callback_serialize_f callback, void* context)
+{
+    // FRANK
+    printf("mycss_selectors_serialization_contains() '%s'\n", (char*)value);
+    return true;
+}
+
 bool mycss_selectors_serialization_list(mycss_selectors_t* selectors, mycss_selectors_list_t* selectors_list,
                                         mycore_callback_serialize_f callback, void* context)
 {
@@ -150,9 +158,17 @@ bool mycss_selectors_serialization_selector(mycss_selectors_t* selectors, mycss_
             
             callback("(", 1, context);
             
+            // FRANK
+            printf("mycss_selectors_serialization_selector() selector->sub_type = %d\n", (int)selector->sub_type);
+
             switch (selector->sub_type) {
-                case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_HAS:
+                // case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_CONTAINS:
+                    // if(selector->value)
+                    //     mycss_selectors_serialization_contains(selectors, selector->value, callback, context);
+                    // break;
+
                 case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_CONTAINS:
+                case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_HAS:
                 case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_NOT:
                 case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_MATCHES:
                 case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_CURRENT:
