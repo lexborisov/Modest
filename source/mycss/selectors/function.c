@@ -28,13 +28,22 @@
 /////////////////////////////////////////////////////////
 const mycss_selectots_function_begin_entry_t * mycss_function_begin_entry_by_name(const char* name, size_t length)
 {
+    // FRANK
+    printf("mycss_function_begin_entry_by_name: %s, %d\n", name, (int)length);
+
     size_t idx = ((mycore_string_chars_lowercase_map[ (const unsigned char)name[0] ] *
                    mycore_string_chars_lowercase_map[ (const unsigned char)name[(length - 1)] ] *
                    length)
                   % MyCSS_SELECTORS_FUNCTION_NAME_STATIC_SIZE) + 1;
     
+    // FRANK
+    printf("mycss_function_begin_entry_by_name: %d\n", (int)idx);
+
     while (mycss_selectors_function_begin_map_index[idx].name)
-    {
+    {   
+        // FRANK
+        printf("mycss_function_begin_entry_by_name: %s\n", mycss_selectors_function_begin_map_index[idx].name);
+
         if(mycss_selectors_function_begin_map_index[idx].length == length) {
             if(mycore_strncasecmp(mycss_selectors_function_begin_map_index[idx].name, name, length) == 0)
                 return &mycss_selectors_function_begin_map_index[idx];

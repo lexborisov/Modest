@@ -22,7 +22,9 @@
 #define MyHTML_MyCSS_SELECTORS_FUNCTION_RESOURCE_H
 #pragma once
 
-#define MyCSS_SELECTORS_FUNCTION_NAME_STATIC_SIZE 58
+// FRANK
+// #define MyCSS_SELECTORS_FUNCTION_NAME_STATIC_SIZE 58
+#define MyCSS_SELECTORS_FUNCTION_NAME_STATIC_SIZE 59
 
 static const mycss_selectots_function_begin_entry_t mycss_selectors_function_begin_map_index[] =
 {
