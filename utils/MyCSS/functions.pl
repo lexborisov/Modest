@@ -13,7 +13,6 @@ my $func_map = {
         not => "",
         matches => "",
         has => "",
-        contains => "",
         dir => "",
         lang => "",
         current => "",
@@ -23,7 +22,8 @@ my $func_map = {
         'nth-of-type' => "",
         'nth-last-of-type' => "",
         'nth-column' => "",
-        'nth-last-column' => ""
+        'nth-last-column' => "",
+        'contains' => ""
 };
 
 my $INDEX_OF_NAMES = print_functions();

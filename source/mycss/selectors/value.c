@@ -371,4 +371,16 @@ void * mycss_selectors_value_pseudo_class_function_nth_of_type_destroy(mycss_ent
     return value;
 }
 
+void * mycss_selectors_value_pseudo_class_function_contains_destroy(mycss_entry_t* entry, void* value, bool self_destroy)
+{
+    if(value == NULL)
+        return NULL;
+    
+    if(self_destroy) {
+        mchar_async_free(entry->mchar, entry->mchar_value_node_id, value);
+        return NULL;
+    }
+    
+    return value;
+}
 
