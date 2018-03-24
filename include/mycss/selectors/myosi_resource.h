@@ -23,11 +23,11 @@
 #pragma once
 
 static const char mycss_selectors_resource_matcher_names_map[][3] = {
-    "=", "~=", "|=", "^=", "$=", "*=", "'", "\""
+    "=", "~=", "|=", "^=", "$=", "*="
 };
 
 static const char mycss_selectors_resource_combinator_names_map[][3] = {
-    "", " ", ">", "+", "~", "||", "'", "\""
+    "", " ", ">", "+", "~", "||"
 };
 
 #endif /* MyHTML_MyCSS_SELECTORS_MYOSI_RESOURCE_H */

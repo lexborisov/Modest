@@ -225,17 +225,17 @@ bool mycss_selectors_serialization_selector(mycss_selectors_t* selectors, mycss_
             callback("(", 1, context);
 
             switch (selector->sub_type) {
-                case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_CONTAINS:
-                    // TODO: implement
-                    // FRANK
-                    // printf("\n\tMyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_CONTAINS\n");
-                    // printf("\t%s\n", (selector->value) ? "selector value exists" : "selector value does not exist");
-
-                    if(selector->value)
-                        mycss_selectors_serialization_list(selectors, selector->value, callback, context);
-                    break;
-
                 // case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_CONTAINS:
+                //     // TODO: implement
+                //     // FRANK
+                //     // printf("\n\tMyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_CONTAINS\n");
+                //     // printf("\t%s\n", (selector->value) ? "selector value exists" : "selector value does not exist");
+
+                //     if(selector->value)
+                //         mycss_selectors_serialization_list(selectors, selector->value, callback, context);
+                //     break;
+
+                case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_CONTAINS:
                 case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_HAS:
                 case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_NOT:
                 case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_MATCHES:
