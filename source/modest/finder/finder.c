@@ -187,23 +187,29 @@ myhtml_tree_node_t * modest_finder_node_combinator_begin(modest_finder_t* finder
     myhtml_tree_node_t *node = base_node;
     
     // FRANK
-    printf("\nmodest_finder_node_combinator_begin()\n\t%s\n", (node)?"has node":"no node");
+    printf("\nmodest_finder_node_combinator_begin()\n");
+    printf("\t%s\n", (node)?"has node":"no node");
+    printf("\tselector->type = %d\n", (int)selector->type);
 
     while(node) {
         if(node->tag_id != MyHTML_TAG__TEXT && node->tag_id != MyHTML_TAG__COMMENT &&
            modest_finder_static_selector_type_map[selector->type](finder, node, selector, spec))
         {
-            printf("\t%s\n", (selector->next != NULL)?"has next":"no next");
+            // printf("\nmodest_finder_node_combinator_begin()\n");
+            // printf("\t%s\n", (selector->next != NULL)?"has next":"no next");
             if(selector->next == NULL) {
-                printf("\t%s\n", (callback_found)?"callback_found":"no callback_found");
+                // printf("\t%s\n", (callback_found)?"callback_found":"no callback_found");
                 if(callback_found)
                     callback_found(finder, node, selector_list, selector, spec, ctx);
             }
             else {
-                printf("\tselector->next->combinator = %d\n", (int)selector->next->combinator);
+                // printf("\nmodest_finder_node_combinator_begin()\n");
+                // printf("\tselector->next->combinator = %d\n", (int)selector->next->combinator);
                 
                 myhtml_tree_node_t *find_node = modest_finder_static_selector_combinator_map[selector->next->combinator](finder, node, selector_list, selector->next, spec, callback_found, ctx);
-                printf("\t%s\n", (find_node)?"find_node":"no find_node");
+
+                // printf("\nmodest_finder_node_combinator_begin()\n");
+                // printf("\t%s\n", (find_node)?"find_node":"no find_node");
 
                 if(find_node == NULL) {
                     while(node != base_node && node->next == NULL)

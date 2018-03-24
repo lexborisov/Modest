@@ -152,7 +152,7 @@ void * mycss_selectors_value_pseudo_class_function_contains_create(mycss_entry_t
     // TODO: implement
     // FRANK
     printf("\nmycss_selectors_value_pseudo_class_function_contains_create()\n");
-    return NULL;
+    return mycss_selectors_list_create(entry->selectors);
 }
 
 void * mycss_selectors_value_pseudo_class_function_lang_create(mycss_entry_t* entry, bool set_clean)
@@ -251,6 +251,23 @@ void * mycss_selectors_value_pseudo_class_function_drop_destroy(mycss_entry_t* e
 void * mycss_selectors_value_pseudo_class_function_has_destroy(mycss_entry_t* entry, void* value, bool self_destroy)
 {
     return mycss_selectors_list_destroy(entry->selectors, value, self_destroy);
+}
+
+void * mycss_selectors_value_pseudo_class_function_contains_destroy(mycss_entry_t* entry, void* value, bool self_destroy)
+{
+    // FRANK
+    // TODO: implement
+    printf("\nmycss_selectors_value_pseudo_class_function_contains_destroy()\n");
+
+    if(value == NULL)
+        return NULL;
+    
+    if(self_destroy) {
+        mchar_async_free(entry->mchar, entry->mchar_value_node_id, value);
+        return NULL;
+    }
+    
+    return value;
 }
 
 void * mycss_selectors_value_pseudo_class_function_lang_destroy(mycss_entry_t* entry, void* value, bool self_destroy)
@@ -373,20 +390,5 @@ void * mycss_selectors_value_pseudo_class_function_nth_of_type_destroy(mycss_ent
     return value;
 }
 
-void * mycss_selectors_value_pseudo_class_function_contains_destroy(mycss_entry_t* entry, void* value, bool self_destroy)
-{
-    // FRANK
-    // TODO: implement
-    printf("\nmycss_selectors_value_pseudo_class_function_contains_destroy()\n");
 
-    if(value == NULL)
-        return NULL;
-    
-    if(self_destroy) {
-        mchar_async_free(entry->mchar, entry->mchar_value_node_id, value);
-        return NULL;
-    }
-    
-    return value;
-}
 

@@ -241,9 +241,9 @@ bool mycss_selectors_function_parser_contains(mycss_entry_t* entry, mycss_token_
     printf("\nmycss_selectors_function_parser_contains()\n");
     // printf("\ttoken->type = %d\n\tentry->parser_ending_token = %d\n\tlast_response = %d\n", (int)token->type, entry->parser_ending_token, (int)last_response);
     
-    // mycss_selectors_t *selectors = entry->selectors;
-    // mycss_selectors_entry_t *selector = selectors->entry_last;
-    // printf("\t%s\n", (selector->value) ? "selector->value exists" : "selector->value does not exist");
+    mycss_selectors_t *selectors = entry->selectors;
+    mycss_selectors_entry_t *selector = selectors->entry_last;
+    printf("\t%s\n", (selector->value) ? "selector->value exists" : "selector->value does not exist");
 
     if(token){
         

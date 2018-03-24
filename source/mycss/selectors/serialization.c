@@ -51,6 +51,8 @@ bool mycss_selectors_serialization_contains(mycss_selectors_t* selectors, void *
     // TODO: implement
     // FRANK
     printf("\nmycss_selectors_serialization_contains()\n");
+    
+
     return true;
 }
 
@@ -60,8 +62,8 @@ bool mycss_selectors_serialization_list(mycss_selectors_t* selectors, mycss_sele
     while(selectors_list) {
 
         // FRANK
-        printf("\nmycss_selectors_serialization_list()\n");
-        printf("\tselectors_list->entries_list_length = %d\n", (int)selectors_list->entries_list_length);
+        // printf("\nmycss_selectors_serialization_list()\n");
+        // printf("\tselectors_list->entries_list_length = %d\n", (int)selectors_list->entries_list_length);
 
         for(size_t i = 0; i < selectors_list->entries_list_length; i++)
         {
@@ -94,6 +96,11 @@ bool mycss_selectors_serialization_list(mycss_selectors_t* selectors, mycss_sele
 bool mycss_selectors_serialization_selector(mycss_selectors_t* selectors, mycss_selectors_entry_t* selector,
                                             mycore_callback_serialize_f callback, void* context)
 {
+    // FRANK
+    // printf("\nmycss_selectors_serialization_selector()\n");
+    // printf("\tselector->type = %d\n", (int)selector->type);
+    // printf("\tselector->sub_type = %d\n", (int)selector->sub_type);
+
     switch(selector->type) {
         case MyCSS_SELECTORS_TYPE_ELEMENT: {
             if(selector->ns_entry)
@@ -163,19 +170,16 @@ bool mycss_selectors_serialization_selector(mycss_selectors_t* selectors, mycss_
             }
             
             callback("(", 1, context);
-            
-            // FRANK
-            printf("\nmycss_selectors_serialization_selector()\n\tselector->sub_type = %d\n", (int)selector->sub_type);
 
             switch (selector->sub_type) {
                 case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_CONTAINS:
                     // TODO: implement
                     // FRANK
-                    printf("\tMyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_CONTAINS\n");
-                    printf("\t%s\n", (selector->value) ? "selector value exists" : "selector value does not exist");
+                    // printf("\n\tMyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_CONTAINS\n");
+                    // printf("\t%s\n", (selector->value) ? "selector value exists" : "selector value does not exist");
 
-                    // if(selector->value)
-                    //     mycss_selectors_serialization_contains(selectors, selector->value, callback, context);
+                    if(selector->value)
+                        mycss_selectors_serialization_list(selectors, selector->value, callback, context);
                     break;
 
                 // case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_CONTAINS:

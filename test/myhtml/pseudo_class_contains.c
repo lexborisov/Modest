@@ -86,8 +86,10 @@ mycss_selectors_list_t * prepare_selector(mycss_entry_t *css_entry, const char* 
                                                          MyENCODING_UTF_8,
                                                          selector, selector_size,
                                                          &out_status);
-    printf("\nprepare_selector()\n\t%s\n", (list != NULL)?"has list":"no list");
-    printf("\tlist->flags = %d\n", (int)list->flags);
+
+    // printf("\nprepare_selector()\n");
+    // printf("\t%s\n", (list != NULL)?"has list":"no list");
+    // printf("\tlist->flags = %d\n", (int)list->flags);
 
     /* check parsing errors */
     if(list == NULL || (list->flags & MyCSS_SELECTORS_FLAGS_SELECTOR_BAD)) {
@@ -102,7 +104,7 @@ mycss_selectors_list_t * prepare_selector(mycss_entry_t *css_entry, const char* 
         exit(EXIT_FAILURE);
     }
     
-    printf("\treturn list\n");
+    // printf("\treturn list\n");
     return list;
 }
 
@@ -123,7 +125,7 @@ void print_found_result(myhtml_tree_t* html_tree, myhtml_collection_t *collectio
 
 int main(int argc, const char * argv[])
 {
-    const char *html = "<div>Another <p>Hello World</p></div>";
+    const char *html = "<div>Another<p>Hello World</p><p>Something Else</p></div>";
     // const char *selector = ":has(p)";
     const char *selector = "p:contains(Hello World)";
     
