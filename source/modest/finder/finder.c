@@ -163,8 +163,8 @@ mystatus_t modest_finder_by_selectors_list(modest_finder_t* finder, myhtml_tree_
     }
     
     // FRANK
-    printf("\nmodest_finder_by_selectors_list()\n");
-    printf("\tselector_list->entries_list_length = %d\n", (int)selector_list->entries_list_length);
+    // printf("\nmodest_finder_by_selectors_list()\n");
+    // printf("\tselector_list->entries_list_length = %d\n", (int)selector_list->entries_list_length);
 
     for(size_t i = 0; i < selector_list->entries_list_length; i++) {
         mycss_selectors_specificity_t spec = selector_list->entries_list[i].specificity;
@@ -187,9 +187,9 @@ myhtml_tree_node_t * modest_finder_node_combinator_begin(modest_finder_t* finder
     myhtml_tree_node_t *node = base_node;
     
     // FRANK
-    printf("\nmodest_finder_node_combinator_begin()\n");
-    printf("\t%s\n", (node)?"has node":"no node");
-    printf("\tselector->type = %d\n", (int)selector->type);
+    // printf("\nmodest_finder_node_combinator_begin()\n");
+    // printf("\t%s\n", (node)?"has node":"no node");
+    // printf("\tselector->type = %d\n", (int)selector->type);
 
     while(node) {
         if(node->tag_id != MyHTML_TAG__TEXT && node->tag_id != MyHTML_TAG__COMMENT &&
@@ -249,8 +249,8 @@ myhtml_tree_node_t * modest_finder_node_combinator_undef(modest_finder_t* finder
         return NULL;
     
     // FRANK
-    printf("\nmodest_finder_node_combinator_undef()\n");
-    printf("\tselector->type = %d\n", (int)selector->type);
+    // printf("\nmodest_finder_node_combinator_undef()\n");
+    // printf("\tselector->type = %d\n", (int)selector->type);
 
     mycss_selectors_specificity_t match_spec = *spec;
     

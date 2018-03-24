@@ -144,7 +144,7 @@ mycss_selectors_list_t * mycss_selectors_parse_by_function(mycss_selectors_t* se
     
     // FRANK
     // printf("\nmycss_selectors_parse_by_function()\n");
-    // printf("\tstatus = %d %s\n", (int)status, ((int)status == MyHTML_STATUS_OK)?"MyHTML_STATUS_OK":"not OK");
+    // printf("\t%s\n", ((int)status == MyHTML_STATUS_OK)?"MyHTML_STATUS_OK":"not OK");
 
     if(out_status)
         *out_status = status;

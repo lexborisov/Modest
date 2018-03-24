@@ -77,6 +77,67 @@ bool modest_finder_selector_sub_type_pseudo_class_function_has(modest_finder_t* 
     return false;
 }
 
+// concat str1 and str2
+char *concat_string(const char *str1, const char *str2)
+{
+    char *finalString = NULL;
+    size_t n = 0;
+
+    if(str1) n += strlen(str1);
+    if(str2) n += strlen(str2);
+
+    if((str1 || str2) && (finalString = malloc(n + 1)) != NULL)
+    {
+        *finalString = '\0';
+
+        if(str1) strcpy(finalString, str1);
+        if(str2) strcat(finalString, str2);
+    }
+
+    return finalString;
+}
+
+bool modest_finder_selector_sub_type_pseudo_class_function_contains(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
+{
+    // FRANK
+    // printf("\nmodest_finder_selector_sub_type_pseudo_class_function_contains()\n");
+    if(base_node){
+        const char* text = NULL;
+        myhtml_tree_node_t *text_node = myhtml_node_child(base_node);
+        if(text_node) {
+          text = myhtml_node_text(text_node, NULL);
+          if(text){
+            // printf("\ttext = %s\n", text);
+            char *data = NULL;
+
+            mycss_selectors_list_t *list = selector->value;
+            for(size_t i = 0; i < list->entries_list_length; i++) {
+                bool i_found = false;
+                mycss_selectors_entry_t *sel_entry = list->entries_list[i].entry;
+
+                if(sel_entry->key->data){
+                    data = concat_string(data, sel_entry->key->data);
+                }
+                
+                mycss_selectors_entry_t *next = sel_entry->next;
+                while(next && !i_found){
+                    if(next->key->data){
+                        data = concat_string(data, " ");
+                        data = concat_string(data, next->key->data);
+                    }
+                    next = next->next;
+                }
+            }
+            // printf("\tdata = %s\n", data);
+            if(strstr(text, data) != NULL) {
+               return true;
+            }
+          }
+        }
+    }
+    return false;
+}
+/*
 bool modest_finder_selector_sub_type_pseudo_class_function_contains(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     // FRANK
@@ -136,6 +197,7 @@ bool modest_finder_selector_sub_type_pseudo_class_function_contains(modest_finde
     
     return false;
 }
+*/
 
 bool modest_finder_selector_sub_type_pseudo_class_function_lang(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {

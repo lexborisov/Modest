@@ -234,32 +234,32 @@ bool mycss_selectors_function_parser_has(mycss_entry_t* entry, mycss_token_t* to
 //     printf("\nmycss_selectors_function_parser_contains_find_bad_selector()\n");
 // }
 
-bool mycss_selectors_function_parser_contains(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
-{
-    // TODO: implement
-    // FRANK
-    printf("\nmycss_selectors_function_parser_contains()\n");
-    // printf("\ttoken->type = %d\n\tentry->parser_ending_token = %d\n\tlast_response = %d\n", (int)token->type, entry->parser_ending_token, (int)last_response);
+// bool mycss_selectors_function_parser_contains(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+// {
+//     // TODO: implement
+//     // FRANK
+//     printf("\nmycss_selectors_function_parser_contains()\n");
+//     // printf("\ttoken->type = %d\n\tentry->parser_ending_token = %d\n\tlast_response = %d\n", (int)token->type, entry->parser_ending_token, (int)last_response);
     
-    mycss_selectors_t *selectors = entry->selectors;
-    mycss_selectors_entry_t *selector = selectors->entry_last;
-    printf("\t%s\n", (selector->value) ? "selector->value exists" : "selector->value does not exist");
+//     mycss_selectors_t *selectors = entry->selectors;
+//     mycss_selectors_entry_t *selector = selectors->entry_last;
+//     printf("\t%s\n", (selector->value) ? "selector->value exists" : "selector->value does not exist");
 
-    if(token){
+//     if(token){
         
-        // printf("%.*s", (int)size, buffer);
-        printf("\ttoken from %d -> %d, type = %d\n", (int)token->begin, (int)token->length, (int)token->type);
-        printf("\tdata = \"%.*s\"\n", (int)token->length, (char*)token->data);
+//         // printf("%.*s", (int)size, buffer);
+//         printf("\ttoken from %d -> %d, type = %d\n", (int)token->begin, (int)token->length, (int)token->type);
+//         printf("\tdata = \"%.*s\"\n", (int)token->length, (char*)token->data);
 
-        if(token->type == entry->parser_ending_token) {
-            printf("\ttype is entry->parser_ending_token\n");
-            mycss_entry_parser_list_pop(entry);
-            return false;
-        }
-    }
+//         if(token->type == entry->parser_ending_token) {
+//             printf("\ttype is entry->parser_ending_token\n");
+//             mycss_entry_parser_list_pop(entry);
+//             return false;
+//         }
+//     }
     
-    return true;
-}
+//     return true;
+// }
 
 ///////////////////////////////////////////////////////////
 ////// NTH OF SELECTORS

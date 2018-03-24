@@ -89,7 +89,6 @@ mycss_selectors_list_t * prepare_selector(mycss_entry_t *css_entry, const char* 
 
     // printf("\nprepare_selector()\n");
     // printf("\t%s\n", (list != NULL)?"has list":"no list");
-    // printf("\tlist->flags = %d\n", (int)list->flags);
 
     /* check parsing errors */
     if(list == NULL || (list->flags & MyCSS_SELECTORS_FLAGS_SELECTOR_BAD)) {
@@ -125,9 +124,12 @@ void print_found_result(myhtml_tree_t* html_tree, myhtml_collection_t *collectio
 
 int main(int argc, const char * argv[])
 {
-    const char *html = "<div>Another<p>Hello World</p><p>Something Else</p></div>";
+    const char *html = "<div>Another<p id=\"hello world\">Hello World</p><p id=\"world\">World</p></div>";
     // const char *selector = ":has(p)";
-    const char *selector = "p:contains(Hello World)";
+    // const char *selector = ":contains(Hello World)";
+    const char *selector = ":contains(World)";
+    // const char *selector = "p:contains('Hello World')"; // Bad Selector
+    // const char *selector = "p:contains(\"Hello World\")"; // Bad Selector
     
     /* init MyHTML and parse HTML */
     myhtml_tree_t *html_tree = parse_html(html, strlen(html));

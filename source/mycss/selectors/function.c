@@ -118,7 +118,7 @@ void mycss_selectors_function_begin_contains(mycss_entry_t* entry, mycss_selecto
     
     // FRANK
     // TODO: implement
-    printf("\nmycss_selectors_function_begin_contains()\n");
+    // printf("\nmycss_selectors_function_begin_contains()\n");
     // printf("\tselector->sub_type = %d\n", (int)selector->sub_type);
 
     mycss_selectors_t *selectors = entry->selectors;

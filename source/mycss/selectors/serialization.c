@@ -21,6 +21,70 @@
 #include "mycss/selectors/serialization.h"
 #include "mycss/selectors/myosi_resource.h"
 
+// void mycss_selectors_serialization_chain_contains(mycss_selectors_t* selectors, mycss_selectors_entry_t* selector,
+//                                          mycore_callback_serialize_f callback, void* context)
+// {
+//     while(selector) {
+//         if(selector->combinator == MyCSS_SELECTORS_COMBINATOR_DESCENDANT)
+//             callback(" ", 1, context);
+//         else if(selector->combinator == MyCSS_SELECTORS_COMBINATOR_UNDEF) {
+//             /* "" */
+//         }
+//         else {
+//             callback(" ", 1, context);
+            
+//             const char *comb_name = mycss_selectors_resource_combinator_names_map[ selector->combinator ];
+//             callback(comb_name, strlen(comb_name), context);
+            
+//             callback(" ", 1, context);
+//         }
+        
+//         mycss_selectors_serialization_selector(selectors, selector, callback, context);
+        
+//         selector = selector->next;
+//     }
+// }
+
+// bool mycss_selectors_serialization_contains(mycss_selectors_t* selectors, mycss_selectors_list_t *selectors_list,
+//                                         mycore_callback_serialize_f callback, void* context)
+// {
+//     // TODO: implement
+//     // FRANK
+//     // printf("\nmycss_selectors_serialization_contains()\n");
+//     while(selectors_list) {
+
+//         // FRANK
+//         // printf("\nmycss_selectors_serialization_list()\n");
+//         // printf("\tselectors_list->entries_list_length = %d\n", (int)selectors_list->entries_list_length);
+
+//         for(size_t i = 0; i < selectors_list->entries_list_length; i++)
+//         {
+//             mycss_selectors_entries_list_t *entries = &selectors_list->entries_list[i];
+//             mycss_selectors_serialization_chain_contains(selectors, entries->entry, callback, context);
+            
+//             if((i + 1) != selectors_list->entries_list_length)
+//                 callback(", ", 2, context);
+//         }
+        
+//         // if(selectors_list->declaration_entry) {
+//         //     callback(" {", 2, context);
+//         //     mycss_declaration_serialization_entries(selectors->ref_entry, selectors_list->declaration_entry, callback, context);
+//         //     callback("}", 1, context);
+//         // }
+        
+//         // if(selectors_list->flags == MyCSS_SELECTORS_FLAGS_SELECTOR_BAD) {
+//         //     callback("^BAD_SELECTOR_LIST", 18, context);
+//         // }
+        
+//         if(selectors_list->next)
+//             callback("\n", 1, context);
+        
+//         selectors_list = selectors_list->next;
+//     }
+    
+//     return true;
+// }
+
 void mycss_selectors_serialization_chain(mycss_selectors_t* selectors, mycss_selectors_entry_t* selector,
                                          mycore_callback_serialize_f callback, void* context)
 {
@@ -43,17 +107,6 @@ void mycss_selectors_serialization_chain(mycss_selectors_t* selectors, mycss_sel
         
         selector = selector->next;
     }
-}
-
-bool mycss_selectors_serialization_contains(mycss_selectors_t* selectors, void *value,
-                                        mycore_callback_serialize_f callback, void* context)
-{
-    // TODO: implement
-    // FRANK
-    printf("\nmycss_selectors_serialization_contains()\n");
-    
-
-    return true;
 }
 
 bool mycss_selectors_serialization_list(mycss_selectors_t* selectors, mycss_selectors_list_t* selectors_list,

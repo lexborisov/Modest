@@ -257,17 +257,19 @@ void * mycss_selectors_value_pseudo_class_function_contains_destroy(mycss_entry_
 {
     // FRANK
     // TODO: implement
-    printf("\nmycss_selectors_value_pseudo_class_function_contains_destroy()\n");
+    // printf("\nmycss_selectors_value_pseudo_class_function_contains_destroy()\n");
 
-    if(value == NULL)
-        return NULL;
+    return mycss_selectors_list_destroy(entry->selectors, value, self_destroy);
     
-    if(self_destroy) {
-        mchar_async_free(entry->mchar, entry->mchar_value_node_id, value);
-        return NULL;
-    }
+    // if(value == NULL)
+    //     return NULL;
     
-    return value;
+    // if(self_destroy) {
+    //     mchar_async_free(entry->mchar, entry->mchar_value_node_id, value);
+    //     return NULL;
+    // }
+    
+    // return value;
 }
 
 void * mycss_selectors_value_pseudo_class_function_lang_destroy(mycss_entry_t* entry, void* value, bool self_destroy)
