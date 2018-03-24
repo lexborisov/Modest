@@ -80,23 +80,25 @@ bool modest_finder_selector_sub_type_pseudo_class_function_has(modest_finder_t* 
 bool modest_finder_selector_sub_type_pseudo_class_function_contains(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     // FRANK
-    mycss_selectors_list_t *list = selector->value;
-    bool i_found;
+    // TODO: implemenet
+    printf("\nmodest_finder_selector_sub_type_pseudo_class_function_contains()\n");
+    // mycss_selectors_list_t *list = selector->value;
+    // bool i_found;
     
-    for(size_t i = 0; i < list->entries_list_length; i++)
-    {
-        i_found = false;
+    // for(size_t i = 0; i < list->entries_list_length; i++)
+    // {
+    //     i_found = false;
         
-        mycss_selectors_entry_t *sel_entry = list->entries_list[i].entry;
+    //     mycss_selectors_entry_t *sel_entry = list->entries_list[i].entry;
         
-        if(sel_entry->combinator == MyCSS_SELECTORS_COMBINATOR_UNDEF)
-            modest_finder_node_combinator_descendant(finder, base_node, NULL, sel_entry, spec, modest_finder_callback_found_with_bool, &i_found);
-        else
-            modest_finder_static_selector_combinator_map[sel_entry->combinator](finder, base_node, NULL, sel_entry, spec, modest_finder_callback_found_with_bool, &i_found);
+    //     if(sel_entry->combinator == MyCSS_SELECTORS_COMBINATOR_UNDEF)
+    //         modest_finder_node_combinator_descendant(finder, base_node, NULL, sel_entry, spec, modest_finder_callback_found_with_bool, &i_found);
+    //     else
+    //         modest_finder_static_selector_combinator_map[sel_entry->combinator](finder, base_node, NULL, sel_entry, spec, modest_finder_callback_found_with_bool, &i_found);
         
-        if(i_found == true)
-            return true;
-    }
+    //     if(i_found == true)
+    //         return true;
+    // }
     
     return false;
 }

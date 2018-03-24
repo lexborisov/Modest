@@ -83,7 +83,6 @@ void * mycss_selectors_value_pseudo_class_function_nth_last_child_create(mycss_e
 void * mycss_selectors_value_pseudo_class_function_nth_last_column_create(mycss_entry_t* entry, bool set_clean);
 void * mycss_selectors_value_pseudo_class_function_nth_last_of_type_create(mycss_entry_t* entry, bool set_clean);
 void * mycss_selectors_value_pseudo_class_function_nth_of_type_create(mycss_entry_t* entry, bool set_clean);
-// FRANK
 void * mycss_selectors_value_pseudo_class_function_contains_create(mycss_entry_t* entry, bool set_clean);
 
 /* pseudo class function destroy */
@@ -101,7 +100,6 @@ void * mycss_selectors_value_pseudo_class_function_nth_last_child_destroy(mycss_
 void * mycss_selectors_value_pseudo_class_function_nth_last_column_destroy(mycss_entry_t* entry, void* value, bool self_destroy);
 void * mycss_selectors_value_pseudo_class_function_nth_last_of_type_destroy(mycss_entry_t* entry, void* value, bool self_destroy);
 void * mycss_selectors_value_pseudo_class_function_nth_of_type_destroy(mycss_entry_t* entry, void* value, bool self_destroy);
-// FRANK
 void * mycss_selectors_value_pseudo_class_function_contains_destroy(mycss_entry_t* entry, void* value, bool self_destroy);
 
 #ifdef __cplusplus

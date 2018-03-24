@@ -41,6 +41,7 @@ static const modest_finder_selector_type_f modest_finder_static_selector_sub_typ
 {
     modest_finder_selector_sub_type_pseudo_class_function_undef,              /* UNDEF */
     modest_finder_selector_sub_type_pseudo_class_function_undef,              /* MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_UNKNOWN */
+    modest_finder_selector_sub_type_pseudo_class_function_contains,         /* MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_CONTAINS */
     modest_finder_selector_sub_type_pseudo_class_function_current,            /* MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_CURRENT */
     modest_finder_selector_sub_type_pseudo_class_function_dir,                /* MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_DIR */
     modest_finder_selector_sub_type_pseudo_class_function_drop,               /* MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_DROP */
@@ -54,7 +55,6 @@ static const modest_finder_selector_type_f modest_finder_static_selector_sub_typ
     modest_finder_selector_sub_type_pseudo_class_function_nth_last_column,    /* MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_NTH_LAST_COLUMN */
     modest_finder_selector_sub_type_pseudo_class_function_nth_last_of_type,   /* MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_NTH_LAST_OF_TYPE */
     modest_finder_selector_sub_type_pseudo_class_function_nth_of_type         /* MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_NTH_OF_TYPE */
-    modest_finder_selector_sub_type_pseudo_class_function_contains         /* MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_CONTAINS */
 };
 
 /* see enum mycss_selectors_sub_type (mycss_selectors_sub_type_t) on mycss/selectors/myosi.h */
