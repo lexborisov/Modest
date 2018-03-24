@@ -21,70 +21,6 @@
 #include "mycss/selectors/serialization.h"
 #include "mycss/selectors/myosi_resource.h"
 
-// void mycss_selectors_serialization_chain_contains(mycss_selectors_t* selectors, mycss_selectors_entry_t* selector,
-//                                          mycore_callback_serialize_f callback, void* context)
-// {
-//     while(selector) {
-//         if(selector->combinator == MyCSS_SELECTORS_COMBINATOR_DESCENDANT)
-//             callback(" ", 1, context);
-//         else if(selector->combinator == MyCSS_SELECTORS_COMBINATOR_UNDEF) {
-//             /* "" */
-//         }
-//         else {
-//             callback(" ", 1, context);
-            
-//             const char *comb_name = mycss_selectors_resource_combinator_names_map[ selector->combinator ];
-//             callback(comb_name, strlen(comb_name), context);
-            
-//             callback(" ", 1, context);
-//         }
-        
-//         mycss_selectors_serialization_selector(selectors, selector, callback, context);
-        
-//         selector = selector->next;
-//     }
-// }
-
-// bool mycss_selectors_serialization_contains(mycss_selectors_t* selectors, mycss_selectors_list_t *selectors_list,
-//                                         mycore_callback_serialize_f callback, void* context)
-// {
-//     // TODO: implement
-//     // FRANK
-//     // printf("\nmycss_selectors_serialization_contains()\n");
-//     while(selectors_list) {
-
-//         // FRANK
-//         // printf("\nmycss_selectors_serialization_list()\n");
-//         // printf("\tselectors_list->entries_list_length = %d\n", (int)selectors_list->entries_list_length);
-
-//         for(size_t i = 0; i < selectors_list->entries_list_length; i++)
-//         {
-//             mycss_selectors_entries_list_t *entries = &selectors_list->entries_list[i];
-//             mycss_selectors_serialization_chain_contains(selectors, entries->entry, callback, context);
-            
-//             if((i + 1) != selectors_list->entries_list_length)
-//                 callback(", ", 2, context);
-//         }
-        
-//         // if(selectors_list->declaration_entry) {
-//         //     callback(" {", 2, context);
-//         //     mycss_declaration_serialization_entries(selectors->ref_entry, selectors_list->declaration_entry, callback, context);
-//         //     callback("}", 1, context);
-//         // }
-        
-//         // if(selectors_list->flags == MyCSS_SELECTORS_FLAGS_SELECTOR_BAD) {
-//         //     callback("^BAD_SELECTOR_LIST", 18, context);
-//         // }
-        
-//         if(selectors_list->next)
-//             callback("\n", 1, context);
-        
-//         selectors_list = selectors_list->next;
-//     }
-    
-//     return true;
-// }
-
 void mycss_selectors_serialization_chain(mycss_selectors_t* selectors, mycss_selectors_entry_t* selector,
                                          mycore_callback_serialize_f callback, void* context)
 {
@@ -113,10 +49,6 @@ bool mycss_selectors_serialization_list(mycss_selectors_t* selectors, mycss_sele
                                         mycore_callback_serialize_f callback, void* context)
 {
     while(selectors_list) {
-
-        // FRANK
-        // printf("\nmycss_selectors_serialization_list()\n");
-        // printf("\tselectors_list->entries_list_length = %d\n", (int)selectors_list->entries_list_length);
 
         for(size_t i = 0; i < selectors_list->entries_list_length; i++)
         {
@@ -149,11 +81,6 @@ bool mycss_selectors_serialization_list(mycss_selectors_t* selectors, mycss_sele
 bool mycss_selectors_serialization_selector(mycss_selectors_t* selectors, mycss_selectors_entry_t* selector,
                                             mycore_callback_serialize_f callback, void* context)
 {
-    // FRANK
-    // printf("\nmycss_selectors_serialization_selector()\n");
-    // printf("\tselector->type = %d\n", (int)selector->type);
-    // printf("\tselector->sub_type = %d\n", (int)selector->sub_type);
-
     switch(selector->type) {
         case MyCSS_SELECTORS_TYPE_ELEMENT: {
             if(selector->ns_entry)
@@ -225,16 +152,6 @@ bool mycss_selectors_serialization_selector(mycss_selectors_t* selectors, mycss_
             callback("(", 1, context);
 
             switch (selector->sub_type) {
-                // case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_CONTAINS:
-                //     // TODO: implement
-                //     // FRANK
-                //     // printf("\n\tMyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_CONTAINS\n");
-                //     // printf("\t%s\n", (selector->value) ? "selector value exists" : "selector value does not exist");
-
-                //     if(selector->value)
-                //         mycss_selectors_serialization_list(selectors, selector->value, callback, context);
-                //     break;
-
                 case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_CONTAINS:
                 case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_HAS:
                 case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_NOT:

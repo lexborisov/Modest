@@ -112,10 +112,6 @@ bool modest_finder_selector_type_attribute(modest_finder_t* finder, myhtml_tree_
 
 bool modest_finder_selector_type_pseudo_class_function(modest_finder_t* finder, myhtml_tree_node_t* node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
-    // FRANK
-    // printf("\nmodest_finder_selector_type_pseudo_class_function()\n");
-    // printf("\tselector->sub_type = %d\n", (int)selector->sub_type);
-
     if(selector->sub_type < MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_LAST_ENTRY)
         return modest_finder_static_selector_sub_type_pseudo_class_function_map[selector->sub_type](finder, node, selector, spec);
     

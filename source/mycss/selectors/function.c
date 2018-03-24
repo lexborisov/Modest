@@ -113,13 +113,6 @@ void mycss_selectors_function_begin_has(mycss_entry_t* entry, mycss_selectors_en
 void mycss_selectors_function_begin_contains(mycss_entry_t* entry, mycss_selectors_entry_t* selector)
 {
     selector->sub_type = MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_CONTAINS;
-    // selector->value = NULL;
-    // entry->parser = mycss_selectors_function_parser_contains;
-    
-    // FRANK
-    // TODO: implement
-    // printf("\nmycss_selectors_function_begin_contains()\n");
-    // printf("\tselector->sub_type = %d\n", (int)selector->sub_type);
 
     mycss_selectors_t *selectors = entry->selectors;
     mycss_selectors_list_t **new_list = (mycss_selectors_list_t**)(&selectors->entry_last->value);
@@ -134,7 +127,6 @@ void mycss_selectors_function_begin_contains(mycss_entry_t* entry, mycss_selecto
     (*new_list)->parent = current_list;
     
     mycss_entry_parser_list_push(entry, mycss_selectors_function_parser_has, entry->parser_switch, entry->parser_ending_token, false);
-    // mycss_entry_parser_list_push(entry, mycss_selectors_function_parser_contains, entry->parser_switch, entry->parser_ending_token, false);
 }
 
 void mycss_selectors_function_begin_nth_last_child(mycss_entry_t* entry, mycss_selectors_entry_t* selector)

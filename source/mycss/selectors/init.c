@@ -127,7 +127,6 @@ mycss_selectors_list_t * mycss_selectors_parse_by_function(mycss_selectors_t* se
     
     mycss_selectors_list_t *list = NULL;
     selectors->list = &list;
-    
 
     /* parsing */
     mycss_encoding_set(entry, encoding);
@@ -142,18 +141,11 @@ mycss_selectors_list_t * mycss_selectors_parse_by_function(mycss_selectors_t* se
     
     status = mycss_tokenizer_end(entry);
     
-    // FRANK
-    // printf("\nmycss_selectors_parse_by_function()\n");
-    // printf("\t%s\n", ((int)status == MyHTML_STATUS_OK)?"MyHTML_STATUS_OK":"not OK");
-
     if(out_status)
         *out_status = status;
     
     if(list)
         return list;
-
-    // FRANK
-    // printf("\n\tmissing list, return NULL\n");
 
     return NULL;
 }

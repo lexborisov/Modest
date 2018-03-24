@@ -99,17 +99,13 @@ char *concat_string(const char *str1, const char *str2)
 
 bool modest_finder_selector_sub_type_pseudo_class_function_contains(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
-    // FRANK
-    // printf("\nmodest_finder_selector_sub_type_pseudo_class_function_contains()\n");
     if(base_node){
         const char* text = NULL;
         myhtml_tree_node_t *text_node = myhtml_node_child(base_node);
         if(text_node) {
           text = myhtml_node_text(text_node, NULL);
           if(text){
-            // printf("\ttext = %s\n", text);
             char *data = NULL;
-
             mycss_selectors_list_t *list = selector->value;
             for(size_t i = 0; i < list->entries_list_length; i++) {
                 bool i_found = false;
@@ -128,7 +124,6 @@ bool modest_finder_selector_sub_type_pseudo_class_function_contains(modest_finde
                     next = next->next;
                 }
             }
-            // printf("\tdata = %s\n", data);
             if(strstr(text, data) != NULL) {
                return true;
             }
@@ -137,67 +132,6 @@ bool modest_finder_selector_sub_type_pseudo_class_function_contains(modest_finde
     }
     return false;
 }
-/*
-bool modest_finder_selector_sub_type_pseudo_class_function_contains(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
-{
-    // FRANK
-    // TODO: implemenet
-    printf("\nmodest_finder_selector_sub_type_pseudo_class_function_contains()\n");
-    printf("\t%s\n", (base_node) ? "has base_node" : "no base_node");
-    printf("\t%s\n", (selector->value) ? "selector->value exists" : "selector->value does not exist");
-
-    if(base_node){
-        const char *tag_name = myhtml_tag_name_by_id(base_node->tree, myhtml_node_tag_id(base_node), NULL);
-        printf("\ttag_name = %s\n", tag_name);
-        myhtml_position_t pos = myhtml_node_raw_position(base_node);
-        printf("\tpos = %d -> %d\n", (int)pos.begin, (int)pos.length);
-
-        myhtml_tree_node_t *text_node = myhtml_node_child(base_node);
-        if(text_node) {
-          const char* text = myhtml_node_text(text_node, NULL);
-          if(text){
-            printf("\ttext = %s\n", text);
-          }
-        }
-    }
-    
-    mycss_selectors_list_t *list = selector->value;
-    bool i_found;
-    
-    for(size_t i = 0; i < list->entries_list_length; i++)
-    {
-        i_found = false;
-        
-        mycss_selectors_entry_t *sel_entry = list->entries_list[i].entry;
-        // printf("\tsel_entry->value = %s\n", (char*)sel_entry->value);
-        printf("\tsel_entry->key->data = %s\n", (char*)sel_entry->key->data);
-        // printf("\tsel_entry->key->size = %d\n", (int)sel_entry->key->size);
-        // printf("\tsel_entry->key->length = %d\n", (int)sel_entry->key->length);
-
-        printf("\t%s\n", (sel_entry->next) ? "has sel_entry->next" : "no sel_entry->next");
-
-        mycss_selectors_entry_t *next = sel_entry->next;
-        while(next){
-            printf("\tnext->key->data = %s\n", (char*)next->key->data);
-            next = next->next;
-        }
-
-        // printf("\tsel_entry->combinator = %d\n", (int)sel_entry->combinator);
-
-        // if(sel_entry->combinator == MyCSS_SELECTORS_COMBINATOR_UNDEF){
-        //     printf("\tMyCSS_SELECTORS_COMBINATOR_UNDEF\n");
-        //     modest_finder_node_combinator_descendant(finder, base_node, NULL, sel_entry, spec, modest_finder_callback_found_with_bool, &i_found);
-        // }
-        // else
-        //     modest_finder_static_selector_combinator_map[sel_entry->combinator](finder, base_node, NULL, sel_entry, spec, modest_finder_callback_found_with_bool, &i_found);
-        
-        if(i_found == true)
-            return true;
-    }
-    
-    return false;
-}
-*/
 
 bool modest_finder_selector_sub_type_pseudo_class_function_lang(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {

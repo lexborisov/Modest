@@ -273,10 +273,6 @@ void mycss_selectors_parser_selector_pseudo_class_function(mycss_entry_t* entry,
     
     mycss_selectors_function_begin_f to_func = mycss_function_begin_by_name(str->data, str->length);
     
-    // FRANK
-    // printf("\nmycss_selectors_parser_selector_pseudo_class_function()\n");
-    // printf("\tbegin_by_name = '%s'\n\t%s\n", str->data, (to_func) ? "exists" : "does not exist");
-
     if(to_func) {
         to_func(entry, selector);
     }
