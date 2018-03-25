@@ -7,4 +7,4 @@ Name: @libname@
 Description: @description@
 Version: @version@
 Cflags: @cflags@
-Libs: -L${libdir} -l@libname@
+Libs: -L${libdir} -l@libname@ -lm

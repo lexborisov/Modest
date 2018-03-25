@@ -112,14 +112,16 @@ BUILD_SUB_DIRS := examples $(TEST_DIR)
 PROJECT_INSTALL_LIBRARY := lib
 PROJECT_INSTALL_HEADER  := include
 
-libdir     ?= $(prefix)/$(PROJECT_INSTALL_LIBRARY)
-includedir ?= $(prefix)/$(PROJECT_INSTALL_HEADER)
+libdir     ?= $(DESTDIR)$(prefix)/$(PROJECT_INSTALL_LIBRARY)
+includedir ?= $(DESTDIR)$(prefix)/$(PROJECT_INSTALL_HEADER)
 
-MODEST_INSTALL_CREATE_DIR := mkdir -p $(prefix)/$(PROJECT_INSTALL_LIBRARY) 
-MODEST_INSTALL_COMMAND := $(MODEST_INSTALL_CREATE_DIR) $(MODEST_UTILS_NEW_LINE) cp -av $(LIB_DIR_BASE)/* $(libdir)
-
+MODEST_INSTALL_CREATE_DIR := mkdir -p $(libdir)
 ifneq ($(PROJECT_INSTALL_WITHOUT_HEADERS),YES)
-	MODEST_INSTALL_CREATE_DIR += $(prefix)/$(PROJECT_INSTALL_HEADER)
+	MODEST_INSTALL_CREATE_DIR += $(includedir)
+endif
+
+MODEST_INSTALL_COMMAND := cp -av $(LIB_DIR_BASE)/* $(libdir)
+ifneq ($(PROJECT_INSTALL_WITHOUT_HEADERS),YES)
 	MODEST_INSTALL_COMMAND += $(MODEST_UTILS_NEW_LINE) cp -av $(INCLUDE_DIR_API)/* $(includedir)
 endif
 
@@ -142,7 +144,7 @@ MODEST_UNINSTALL_COMMAND = echo "MODEST_UNINSTALL_MK_COMMAND = $(MODEST_UNINSTAL
 # PKG-CONFIG
 #***************
 MODEST_PKG_CONFIG_FILE := modest.pc
-MODEST_PKG_CONFIG_CFLAGS := $(foreach name,$(MODEST_BUILD_MODULES_LIST_WITHOUT_PORT),-I$\{includedir}/$(name))
+MODEST_PKG_CONFIG_CFLAGS := $(foreach name,$(MODEST_BUILD_MODULES_LIST_WITHOUT_PORT),-I$$\{includedir}/$(name))
 MODEST_PKG_CONFIG_PROCESS = \
 $(SED) \
 -e 's,@version\@,$(PROJECT_VERSION_STRING),g' \
@@ -154,6 +156,10 @@ $(SED) \
 -e 's,@libname\@,$(LIB_NAME),g' \
 -e 's,@description\@,$(DESCRIPTION),g' \
 $1 > $2
+MODEST_INSTALL_CREATE_DIR += $(libdir)/pkgconfig
+MODEST_INSTALL_COMMAND += $(MODEST_UTILS_NEW_LINE) cp -av $(MODEST_PKG_CONFIG_FILE) $(libdir)/pkgconfig
+
+MODEST_INSTALL_COMMAND := $(MODEST_INSTALL_CREATE_DIR) $(MODEST_UTILS_NEW_LINE) $(MODEST_INSTALL_COMMAND)
 
 #********************
 # Target options
@@ -172,9 +178,11 @@ static: make-pc-file create $(MODEST_BUILD_MODULES_TARGET_ALL)
 	$(call MODEST_BUILD_STATIC_AFTER)
 
 clean: $(MODEST_BUILD_MODULES_TARGET_CLEAN)
-	rm -f $(call MODEST_LIBRARY_WITH_VERSION) && rm -f $(call MODEST_LIBRARY_STATIC)
-	rm -rf $(TEST_DIR_BASE)
+	-rm $(call MODEST_LIBRARY_WITH_VERSION)
+	-rm $(call MODEST_LIBRARY_STATIC)
+	-rm -r $(TEST_DIR_BASE)
 	$(call MODEST_BUILD_CLEAN_AFTER)
+	-rm $(MODEST_PKG_CONFIG_FILE)
 	for f in $(BUILD_SUB_DIRS); do $(MAKE) -C $$f clean; done
 
 clone: clean_api $(MODEST_BUILD_MODULES_TARGET_CLONE)
@@ -197,7 +205,9 @@ uninstall:
 test: library
 	$(MAKE) -C $(TEST_DIR) run
 
-make-pc-file:
+make-pc-file: $(MODEST_PKG_CONFIG_FILE)
+
+$(MODEST_PKG_CONFIG_FILE): $(MODEST_PKG_CONFIG_FILE).in
 	$(call MODEST_PKG_CONFIG_PROCESS,$(MODEST_PKG_CONFIG_FILE).in, $(MODEST_PKG_CONFIG_FILE))
 
 modules:

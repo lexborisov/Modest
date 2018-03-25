@@ -1,0 +1,31 @@
+Source: modest
+Section: libs
+Priority: optional
+Maintainer: Alexander Fedyashov <a@fedyashov.com>
+Standards-Version: 3.9.5
+Vcs-Git: git://github.com/lexborisov/Modest.git
+Vcs-Browser: https://github.com/lexborisov/Modest
+Homepage: https://github.com/lexborisov/Modest
+Build-Depends:
+ debhelper (>= 9)
+
+Package: libmodest
+Architecture: any
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends}
+Description: Modest —  a pure C HTML renderer
+ Modest is a fast HTML renderer implemented as a pure C99 library with no
+ outside dependencies.
+
+Package: libmodest-dev
+Section: libdevel
+Architecture: any
+Depends:
+ libmodest (= ${binary:Version}),
+ ${misc:Depends}
+Description: Modest —  a pure C HTML renderer (development files)
+ Modest is a fast HTML renderer implemented as a pure C99 library with no
+ outside dependencies.

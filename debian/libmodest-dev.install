@@ -1,0 +1,4 @@
+usr/include
+usr/lib/libmodest.so
+usr/lib/libmodest_static.a
+usr/lib/pkgconfig
