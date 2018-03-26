@@ -102,12 +102,14 @@ bool modest_finder_selector_sub_type_pseudo_class_function_contains(modest_finde
         if(sel_entry->key->data){
             const char *str = sel_entry->key->data;
             int length = strlen(str) + 1;
+
             char *new_data = mycore_realloc(data, length);
             if(new_data == NULL) {
                 mycore_free(data);
                 return false;
             }
-            snprintf(&new_data[0], length, "%s", str);
+
+            snprintf(new_data, length, "%s", str);
             data = new_data;
         }
 
@@ -118,11 +120,13 @@ bool modest_finder_selector_sub_type_pseudo_class_function_contains(modest_finde
                 const char *whitespace = (prev > 0) ? " " : "";
                 const char *str = next->key->data;
                 int length = strlen(whitespace) + strlen(str) + 1;
+
                 char *new_data = mycore_realloc(data, prev + length);
                 if(new_data == NULL) {
                     mycore_free(data);
                     return false;
                 }
+                
                 snprintf(&new_data[prev], length, "%s%s", whitespace, str);
                 data = new_data;
             }
