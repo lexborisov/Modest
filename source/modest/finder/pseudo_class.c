@@ -97,29 +97,34 @@ bool modest_finder_selector_sub_type_pseudo_class_function_contains(modest_finde
         if(data == NULL) {
             return false;
         }
+        
         mycss_selectors_entry_t *sel_entry = list->entries_list[i].entry;
         if(sel_entry->key->data){
             const char *str = sel_entry->key->data;
             int length = strlen(str) + 1;
-            data = mycore_realloc(data, length);
-            if(data == NULL) {
+            char *new_data = mycore_realloc(data, length);
+            if(new_data == NULL) {
+                mycore_free(data);
                 return false;
             }
-            snprintf(&data[0], length, "%s", str);
+            snprintf(&new_data[0], length, "%s", str);
+            data = new_data;
         }
 
         mycss_selectors_entry_t *next = sel_entry->next;
         while(next) {
             if(next->key->data) {
                 int prev = strlen(data);
-                const char* whitespace = (prev > 0) ? " " : "";
+                const char *whitespace = (prev > 0) ? " " : "";
                 const char *str = next->key->data;
                 int length = strlen(whitespace) + strlen(str) + 1;
-                data = mycore_realloc(data, prev + length);
-                if(data == NULL) {
+                char *new_data = mycore_realloc(data, prev + length);
+                if(new_data == NULL) {
+                    mycore_free(data);
                     return false;
                 }
-                snprintf(&data[prev], length, "%s%s", whitespace, str);
+                snprintf(&new_data[prev], length, "%s%s", whitespace, str);
+                data = new_data;
             }
             next = next->next;
         }
@@ -128,9 +133,7 @@ bool modest_finder_selector_sub_type_pseudo_class_function_contains(modest_finde
             mycore_free(data);
             return true;
         }
-        else {
-            mycore_free(data);
-        }
+        mycore_free(data);
     }
     
     return false;
