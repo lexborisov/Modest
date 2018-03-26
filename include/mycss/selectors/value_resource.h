@@ -39,6 +39,7 @@ static const mycss_selectors_value_destroy_f mycss_selectors_value_destroy_map[M
 static const mycss_selectors_value_function_destroy_f mycss_selectors_value_function_destroy_map[MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_LAST_ENTRY] = {
     mycss_selectors_value_pseudo_class_function_undef_destroy,
     mycss_selectors_value_pseudo_class_function_undef_destroy,
+    mycss_selectors_value_pseudo_class_function_contains_destroy,
     mycss_selectors_value_pseudo_class_function_current_destroy,
     mycss_selectors_value_pseudo_class_function_dir_destroy,
     mycss_selectors_value_pseudo_class_function_drop_destroy,

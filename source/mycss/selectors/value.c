@@ -147,6 +147,11 @@ void * mycss_selectors_value_pseudo_class_function_has_create(mycss_entry_t* ent
     return mycss_selectors_list_create(entry->selectors);
 }
 
+void * mycss_selectors_value_pseudo_class_function_contains_create(mycss_entry_t* entry, bool set_clean)
+{
+    return mycss_selectors_list_create(entry->selectors);
+}
+
 void * mycss_selectors_value_pseudo_class_function_lang_create(mycss_entry_t* entry, bool set_clean)
 {
     mycss_selectors_value_lang_t* lang = (mycss_selectors_value_lang_t*)
@@ -241,6 +246,11 @@ void * mycss_selectors_value_pseudo_class_function_drop_destroy(mycss_entry_t* e
 }
 
 void * mycss_selectors_value_pseudo_class_function_has_destroy(mycss_entry_t* entry, void* value, bool self_destroy)
+{
+    return mycss_selectors_list_destroy(entry->selectors, value, self_destroy);
+}
+
+void * mycss_selectors_value_pseudo_class_function_contains_destroy(mycss_entry_t* entry, void* value, bool self_destroy)
 {
     return mycss_selectors_list_destroy(entry->selectors, value, self_destroy);
 }
@@ -364,5 +374,6 @@ void * mycss_selectors_value_pseudo_class_function_nth_of_type_destroy(mycss_ent
     
     return value;
 }
+
 
 

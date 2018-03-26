@@ -77,6 +77,72 @@ bool modest_finder_selector_sub_type_pseudo_class_function_has(modest_finder_t* 
     return false;
 }
 
+bool modest_finder_selector_sub_type_pseudo_class_function_contains(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
+{
+    if(base_node == NULL)
+        return false;
+    
+    myhtml_tree_node_t *text_node = myhtml_node_child(base_node);
+    if(text_node == NULL)
+        return false;
+
+    const char* text = myhtml_node_text(text_node, NULL);
+    if(text == NULL)
+        return false;
+
+    mycss_selectors_list_t *list = (mycss_selectors_list_t*)selector->value;
+    for(size_t i = 0; i < list->entries_list_length; i++) {
+        char *data = NULL;
+        data = mycore_malloc(0);
+        if(data == NULL) {
+            return false;
+        }
+        
+        mycss_selectors_entry_t *sel_entry = list->entries_list[i].entry;
+        if(sel_entry->key->data){
+            const char *str = sel_entry->key->data;
+            int length = strlen(str) + 1;
+
+            char *new_data = mycore_realloc(data, length);
+            if(new_data == NULL) {
+                mycore_free(data);
+                return false;
+            }
+
+            snprintf(new_data, length, "%s", str);
+            data = new_data;
+        }
+
+        mycss_selectors_entry_t *next = sel_entry->next;
+        while(next) {
+            if(next->key->data) {
+                int prev = strlen(data);
+                const char *whitespace = (prev > 0) ? " " : "";
+                const char *str = next->key->data;
+                int length = strlen(whitespace) + strlen(str) + 1;
+
+                char *new_data = mycore_realloc(data, prev + length);
+                if(new_data == NULL) {
+                    mycore_free(data);
+                    return false;
+                }
+                
+                snprintf(&new_data[prev], length, "%s%s", whitespace, str);
+                data = new_data;
+            }
+            next = next->next;
+        }
+
+        if(strstr(text, data) != NULL) {
+            mycore_free(data);
+            return true;
+        }
+        mycore_free(data);
+    }
+    
+    return false;
+}
+
 bool modest_finder_selector_sub_type_pseudo_class_function_lang(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     return false;

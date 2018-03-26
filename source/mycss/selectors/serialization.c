@@ -49,6 +49,7 @@ bool mycss_selectors_serialization_list(mycss_selectors_t* selectors, mycss_sele
                                         mycore_callback_serialize_f callback, void* context)
 {
     while(selectors_list) {
+
         for(size_t i = 0; i < selectors_list->entries_list_length; i++)
         {
             mycss_selectors_entries_list_t *entries = &selectors_list->entries_list[i];
@@ -149,8 +150,9 @@ bool mycss_selectors_serialization_selector(mycss_selectors_t* selectors, mycss_
             }
             
             callback("(", 1, context);
-            
+
             switch (selector->sub_type) {
+                case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_CONTAINS:
                 case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_HAS:
                 case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_NOT:
                 case MyCSS_SELECTORS_SUB_TYPE_PSEUDO_CLASS_FUNCTION_MATCHES:

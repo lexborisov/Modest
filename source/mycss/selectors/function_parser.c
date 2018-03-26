@@ -224,6 +224,67 @@ bool mycss_selectors_function_parser_has(mycss_entry_t* entry, mycss_token_t* to
 }
 
 ///////////////////////////////////////////////////////////
+////// CONTAINS
+//////
+///////////////////////////////////////////////////////////
+void mycss_selectors_function_parser_contains_find_bad_selector(mycss_selectors_list_t* selectors_list)
+{
+    for(size_t i = 0; i < selectors_list->entries_list_length; i++) {
+        mycss_selectors_entry_t* selector = selectors_list->entries_list[i].entry;
+
+        while(selector) {
+            if(selector->type == MyCSS_SELECTORS_TYPE_PSEUDO_ELEMENT) {
+                if((selectors_list->flags & MyCSS_SELECTORS_FLAGS_SELECTOR_BAD) == 0)
+                    selectors_list->flags |= MyCSS_SELECTORS_FLAGS_SELECTOR_BAD;
+
+                return;
+            }
+
+            selector = selector->next;
+        }
+    }
+}
+
+bool mycss_selectors_function_parser_contains(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    mycss_selectors_t *selectors = entry->selectors;
+    mycss_selectors_list_t *selectors_list = selectors->list_last;
+    mycss_selectors_list_t *parent_list = selectors->list_last->parent;
+    
+    selectors->entry_last = mycss_selectors_list_last_entry(parent_list);
+    selectors->list_last = parent_list;
+    selectors->specificity = &parent_list->entries_list[ (parent_list->entries_list_length - 1) ].specificity;
+    
+    mycss_selectors_function_parser_contains_find_bad_selector(selectors_list);
+    selectors_list = mycss_selectors_parser_check_selector_list(selectors, selectors_list);
+    
+    if(selectors_list == NULL) {
+        if(selectors->entry_last) {
+            selectors->entry_last->value = NULL;
+            selectors->entry_last->flags |= MyCSS_SELECTORS_FLAGS_SELECTOR_BAD;
+        }
+    }
+    else if((selectors_list->flags & MyCSS_SELECTORS_FLAGS_SELECTOR_BAD) && selectors->entry_last) {
+        selectors->entry_last->flags |= MyCSS_SELECTORS_FLAGS_SELECTOR_BAD;
+    }
+    
+    if(token->type == entry->parser_ending_token) {
+        mycss_entry_parser_list_pop(entry);
+        return false;
+    }
+    
+    if(selectors_list)
+        selectors_list->flags |= MyCSS_SELECTORS_FLAGS_SELECTOR_BAD;
+    
+    if(selectors->entry_last)
+        selectors->entry_last->flags |= MyCSS_SELECTORS_FLAGS_SELECTOR_BAD;
+    
+    entry->parser = mycss_selectors_function_parser_state_drop_component_value;
+    
+    return false;
+}
+
+///////////////////////////////////////////////////////////
 ////// NTH OF SELECTORS
 //////
 ///////////////////////////////////////////////////////////

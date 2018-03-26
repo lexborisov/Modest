@@ -161,7 +161,7 @@ mystatus_t modest_finder_by_selectors_list(modest_finder_t* finder, myhtml_tree_
         if(status)
             return MODEST_STATUS_ERROR_MEMORY_ALLOCATION;
     }
-    
+
     for(size_t i = 0; i < selector_list->entries_list_length; i++) {
         mycss_selectors_specificity_t spec = selector_list->entries_list[i].specificity;
         
@@ -179,6 +179,7 @@ myhtml_tree_node_t * modest_finder_node_combinator_begin(modest_finder_t* finder
     if(selector == NULL)
         return NULL;
     
+    
     myhtml_tree_node_t *node = base_node;
     
     while(node) {
@@ -191,7 +192,7 @@ myhtml_tree_node_t * modest_finder_node_combinator_begin(modest_finder_t* finder
             }
             else {
                 myhtml_tree_node_t *find_node = modest_finder_static_selector_combinator_map[selector->next->combinator](finder, node, selector_list, selector->next, spec, callback_found, ctx);
-                
+
                 if(find_node == NULL) {
                     while(node != base_node && node->next == NULL)
                         node = node->parent;
@@ -217,7 +218,7 @@ myhtml_tree_node_t * modest_finder_node_combinator_begin(modest_finder_t* finder
             node = node->next;
         }
     }
-    
+
     return NULL;
 }
 

@@ -127,7 +127,7 @@ mycss_selectors_list_t * mycss_selectors_parse_by_function(mycss_selectors_t* se
     
     mycss_selectors_list_t *list = NULL;
     selectors->list = &list;
-    
+
     /* parsing */
     mycss_encoding_set(entry, encoding);
     
@@ -146,7 +146,7 @@ mycss_selectors_list_t * mycss_selectors_parse_by_function(mycss_selectors_t* se
     
     if(list)
         return list;
-    
+
     return NULL;
 }
 
