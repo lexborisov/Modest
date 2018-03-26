@@ -77,59 +77,54 @@ bool modest_finder_selector_sub_type_pseudo_class_function_has(modest_finder_t* 
     return false;
 }
 
-// concat str1 and str2
-char *concat_string(const char *str1, const char *str2)
-{
-    char *result = NULL;
-    size_t n = 0;
-
-    if(str1) n += strlen(str1);
-    if(str2) n += strlen(str2);
-
-    if((str1 || str2) && (result = malloc(n + 1)) != NULL)
-    {
-        *result = '\0';
-
-        if(str1) strcpy(result, str1);
-        if(str2) strcat(result, str2);
-    }
-
-    return result;
-}
-
 bool modest_finder_selector_sub_type_pseudo_class_function_contains(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
-    if(base_node){
-        const char* text = NULL;
-        myhtml_tree_node_t *text_node = myhtml_node_child(base_node);
-        if(text_node) {
-          text = myhtml_node_text(text_node, NULL);
-          if(text){
-            char *data = NULL;
-            mycss_selectors_list_t *list = selector->value;
-            for(size_t i = 0; i < list->entries_list_length; i++) {
-                bool i_found = false;
-                mycss_selectors_entry_t *sel_entry = list->entries_list[i].entry;
+    if(base_node == NULL)
+        return false;
+    
+    myhtml_tree_node_t *text_node = myhtml_node_child(base_node);
+    if(text_node == NULL)
+        return false;
 
-                if(sel_entry->key->data){
-                    data = concat_string(data, sel_entry->key->data);
-                }
-                
-                mycss_selectors_entry_t *next = sel_entry->next;
-                while(next && !i_found){
-                    if(next->key->data){
-                        data = concat_string(data, " ");
-                        data = concat_string(data, next->key->data);
-                    }
-                    next = next->next;
-                }
+    const char* text = myhtml_node_text(text_node, NULL);
+    if(text == NULL)
+        return false;
+
+    mycss_selectors_list_t *list = (mycss_selectors_list_t*)selector->value;
+    for(size_t i = 0; i < list->entries_list_length; i++) {
+        char *data = NULL;
+        data = mycore_malloc(0);
+
+        mycss_selectors_entry_t *sel_entry = list->entries_list[i].entry;
+        if(sel_entry->key->data){
+            const char *str = sel_entry->key->data;
+            int length = strlen(str) + 1;
+            data = mycore_realloc(data, length);
+            snprintf(&data[0], length, "%s", str);
+        }
+
+        mycss_selectors_entry_t *next = sel_entry->next;
+        while(next) {
+            if(next->key->data) {
+                int prev = strlen(data);
+                const char* whitespace = (prev > 0) ? " " : "";
+                const char *str = next->key->data;
+                int length = strlen(whitespace) + strlen(str) + 1;
+                data = mycore_realloc(data, prev + length);
+                snprintf(&data[prev], length, "%s%s", whitespace, str);
             }
-            if(strstr(text, data) != NULL) {
-               return true;
-            }
-          }
+            next = next->next;
+        }
+
+        if(strstr(text, data) != NULL) {
+            mycore_free(data);
+            return true;
+        }
+        else {
+            mycore_free(data);
         }
     }
+    
     return false;
 }
 
