@@ -124,12 +124,13 @@ void print_found_result(myhtml_tree_t* html_tree, myhtml_collection_t *collectio
 
 int main(int argc, const char * argv[])
 {
-    const char *html = "<div>Another<p id=\"hello world\">Hello World</p><p id=\"world\">World</p></div>";
+    const char *html = "<div>a<p id=\"c d\">c d</p><p id=\"c\">c</p></div>";
     // const char *selector = ":has(p)";
-    // const char *selector = ":contains(Hello World)";
-    const char *selector = ":contains(World)";
-    // const char *selector = "p:contains('Hello World')"; // Bad Selector
-    // const char *selector = "p:contains(\"Hello World\")"; // Bad Selector
+    // const char *selector = ":contains(c d)";
+    // const char *selector = ":contains(c)";
+    const char *selector = ":contains(c,d)";
+    // const char *selector = "p:contains('c d')"; // Bad Selector
+    // const char *selector = "p:contains(\"c d\")"; // Bad Selector
     
     /* init MyHTML and parse HTML */
     myhtml_tree_t *html_tree = parse_html(html, strlen(html));
