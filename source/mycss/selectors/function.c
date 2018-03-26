@@ -34,7 +34,7 @@ const mycss_selectots_function_begin_entry_t * mycss_function_begin_entry_by_nam
                   % MyCSS_SELECTORS_FUNCTION_NAME_STATIC_SIZE) + 1;
     
     while (mycss_selectors_function_begin_map_index[idx].name)
-    {   
+    {
         if(mycss_selectors_function_begin_map_index[idx].length == length) {
             if(mycore_strncasecmp(mycss_selectors_function_begin_map_index[idx].name, name, length) == 0)
                 return &mycss_selectors_function_begin_map_index[idx];
@@ -126,7 +126,7 @@ void mycss_selectors_function_begin_contains(mycss_entry_t* entry, mycss_selecto
     
     (*new_list)->parent = current_list;
     
-    mycss_entry_parser_list_push(entry, mycss_selectors_function_parser_has, entry->parser_switch, entry->parser_ending_token, false);
+    mycss_entry_parser_list_push(entry, mycss_selectors_function_parser_contains, entry->parser_switch, entry->parser_ending_token, false);
 }
 
 void mycss_selectors_function_begin_nth_last_child(mycss_entry_t* entry, mycss_selectors_entry_t* selector)
