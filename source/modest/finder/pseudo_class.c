@@ -94,12 +94,17 @@ bool modest_finder_selector_sub_type_pseudo_class_function_contains(modest_finde
     for(size_t i = 0; i < list->entries_list_length; i++) {
         char *data = NULL;
         data = mycore_malloc(0);
-
+        if(data == NULL) {
+            return false;
+        }
         mycss_selectors_entry_t *sel_entry = list->entries_list[i].entry;
         if(sel_entry->key->data){
             const char *str = sel_entry->key->data;
             int length = strlen(str) + 1;
             data = mycore_realloc(data, length);
+            if(data == NULL) {
+                return false;
+            }
             snprintf(&data[0], length, "%s", str);
         }
 
@@ -111,6 +116,9 @@ bool modest_finder_selector_sub_type_pseudo_class_function_contains(modest_finde
                 const char *str = next->key->data;
                 int length = strlen(whitespace) + strlen(str) + 1;
                 data = mycore_realloc(data, prev + length);
+                if(data == NULL) {
+                    return false;
+                }
                 snprintf(&data[prev], length, "%s%s", whitespace, str);
             }
             next = next->next;
