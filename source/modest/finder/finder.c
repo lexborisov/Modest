@@ -190,7 +190,7 @@ myhtml_tree_node_t * modest_finder_node_combinator_begin(modest_finder_t* finder
                 if(callback_found)
                     callback_found(finder, node, selector_list, selector, spec, ctx);
             }
-            else {                
+            else {
                 myhtml_tree_node_t *find_node = modest_finder_static_selector_combinator_map[selector->next->combinator](finder, node, selector_list, selector->next, spec, callback_found, ctx);
 
                 if(find_node == NULL) {
@@ -230,10 +230,6 @@ myhtml_tree_node_t * modest_finder_node_combinator_undef(modest_finder_t* finder
     if(selector == NULL)
         return NULL;
     
-    // FRANK
-    // printf("\nmodest_finder_node_combinator_undef()\n");
-    // printf("\tselector->type = %d\n", (int)selector->type);
-
     mycss_selectors_specificity_t match_spec = *spec;
     
     if(base_node->tag_id != MyHTML_TAG__TEXT && base_node->tag_id != MyHTML_TAG__COMMENT &&
