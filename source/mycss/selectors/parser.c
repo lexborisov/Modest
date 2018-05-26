@@ -248,8 +248,13 @@ void mycss_selectors_parser_selector_pseudo_class(mycss_entry_t* entry, mycss_to
         }
     }
     
-    if(entry->selectors->specificity)
-        entry->selectors->specificity->b++;
+    if (selector->type == MyCSS_SELECTORS_TYPE_PSEUDO_ELEMENT) {
+        if(entry->selectors->specificity)
+            entry->selectors->specificity->c++;
+    } else {
+        if(entry->selectors->specificity)
+            entry->selectors->specificity->b++;
+    }
     
     mycss_selectors_parser_check_and_set_bad_parent_selector(entry, entry->selectors->list_last);
     mycss_selectors_parser_selector_end(entry, token);
