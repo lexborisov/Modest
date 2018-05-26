@@ -248,7 +248,7 @@ void mycss_selectors_parser_selector_pseudo_class(mycss_entry_t* entry, mycss_to
         }
     }
     
-    if (selector->type == MyCSS_SELECTORS_TYPE_PSEUDO_ELEMENT) {
+    if(selector->type == MyCSS_SELECTORS_TYPE_PSEUDO_ELEMENT) {
         if(entry->selectors->specificity)
             entry->selectors->specificity->c++;
     } else {
