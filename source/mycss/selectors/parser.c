@@ -108,7 +108,7 @@ void mycss_selectors_parser_selector_class(mycss_entry_t* entry, mycss_token_t* 
     selector->key  = str;
     
     if(entry->selectors->specificity)
-        entry->selectors->specificity->a++;
+        entry->selectors->specificity->b++;
     
     mycss_selectors_parser_selector_end(entry, token);
 }
