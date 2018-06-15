@@ -44,6 +44,7 @@ See [INSTALL.md](https://github.com/lexborisov/Modest/blob/master/INSTALL.md)
 * [Python binding](https://github.com/rushter/selectolax) for Modest engine (fast HTML5 parser and CSS selectors)
 * [Elixir/Erlang](https://github.com/f34nk/modest_ex) bindings
 * Perl 5 [HTML5::DOM](https://github.com/Azq2/perl-html5-dom) module (fast HTML5 parser with DOM and CSS selectors)
+* [arrogant](https://github.com/2night/arrogant/) library for D programming language (fast HTML5 parser with DOM and CSS selectors) 
 
 ## Examples
 
