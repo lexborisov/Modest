@@ -629,3 +629,4 @@ mystatus_t myhtml_serialization_node_buffer(myhtml_tree_node_t* node, mycore_str
     
     return myhtml_serialization_node_callback(node, myhtml_serialization_concatenate, str);
 }
+
