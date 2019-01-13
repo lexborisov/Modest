@@ -458,7 +458,7 @@ void mythread_queue_list_entry_make_batch(mythread_t* mythread, mythread_queue_l
         return;
     
     size_t i = 0;
-    for(size_t from = mythread->id_increase; from < mythread->entries_length; from++) {
+    for(size_t from = mythread->id_increase; from <= mythread->entries_length; from++) {
         entry->thread_param[from].use = i;
         i++;
     }
@@ -469,8 +469,9 @@ void mythread_queue_list_entry_make_stream(mythread_t* mythread, mythread_queue_
     if(entry == NULL || mythread == NULL)
         return;
     
-    for(size_t from = mythread->id_increase; from < mythread->entries_length; from++) {
-        entry->thread_param[from].use = 0;
+    for(size_t from = mythread->id_increase; from <= mythread->entries_length; from++) {
+        if (from < entry->thread_param_size)
+            entry->thread_param[from].use = 0;
     }
 }
 
