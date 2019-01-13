@@ -594,3 +594,7 @@ size_t myhtml_tokenizer_state_script_data_double_escape_end(myhtml_tree_t* tree,
     
     return html_offset;
 }
+
+
+
+
