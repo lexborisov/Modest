@@ -1,0 +1,11 @@
+@PACKAGE_INIT@
+
+#include(CMakeFindDependencyMacro)
+# NOTE Had to use find_package because find_dependency does not support COMPONENTS or MODULE until 3.8.0
+#find_package(Boost 1.55 REQUIRED COMPONENTS regex)
+
+# prevent including it several times
+if(NOT @PROJECT_NAME@_FOUND)
+   include("@PACKAGE_MODEST_INSTALL_CONFIGDIR@/@PROJECT_NAME@.cmake")
+   check_required_components(@PROJECT_NAME@})
+endif()
