@@ -93,25 +93,25 @@ void modest_style_map_collate_declaration_margin(modest_t* modest, myhtml_tree_n
     mycss_values_shorthand_four_t *val_four = (mycss_values_shorthand_four_t*)decl->value;
     
     if(val_four->two == NULL) {
-        modest_style_map_collate_declaration_for_all(modest, node, val_four->one, MyCSS_PROPERTY_TYPE_MARGIN_LEFT, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, val_four->one, MyCSS_PROPERTY_TYPE_MARGIN_TOP, spec);
         modest_style_map_collate_declaration_for_all(modest, node, val_four->one, MyCSS_PROPERTY_TYPE_MARGIN_RIGHT, spec);
         modest_style_map_collate_declaration_for_all(modest, node, val_four->one, MyCSS_PROPERTY_TYPE_MARGIN_BOTTOM, spec);
         modest_style_map_collate_declaration_for_all(modest, node, val_four->one, MyCSS_PROPERTY_TYPE_MARGIN_LEFT, spec);
     }
     else if(val_four->three == NULL) {
-        modest_style_map_collate_declaration_for_all(modest, node, val_four->one, MyCSS_PROPERTY_TYPE_MARGIN_LEFT, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, val_four->one, MyCSS_PROPERTY_TYPE_MARGIN_TOP, spec);
         modest_style_map_collate_declaration_for_all(modest, node, val_four->two, MyCSS_PROPERTY_TYPE_MARGIN_RIGHT, spec);
         modest_style_map_collate_declaration_for_all(modest, node, val_four->one, MyCSS_PROPERTY_TYPE_MARGIN_BOTTOM, spec);
         modest_style_map_collate_declaration_for_all(modest, node, val_four->two, MyCSS_PROPERTY_TYPE_MARGIN_LEFT, spec);
     }
     else if(val_four->four == NULL) {
-        modest_style_map_collate_declaration_for_all(modest, node, val_four->one, MyCSS_PROPERTY_TYPE_MARGIN_LEFT, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, val_four->one, MyCSS_PROPERTY_TYPE_MARGIN_TOP, spec);
         modest_style_map_collate_declaration_for_all(modest, node, val_four->two, MyCSS_PROPERTY_TYPE_MARGIN_RIGHT, spec);
         modest_style_map_collate_declaration_for_all(modest, node, val_four->three, MyCSS_PROPERTY_TYPE_MARGIN_BOTTOM, spec);
         modest_style_map_collate_declaration_for_all(modest, node, val_four->two, MyCSS_PROPERTY_TYPE_MARGIN_LEFT, spec);
     }
     else {
-        modest_style_map_collate_declaration_for_all(modest, node, val_four->one, MyCSS_PROPERTY_TYPE_MARGIN_LEFT, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, val_four->one, MyCSS_PROPERTY_TYPE_MARGIN_TOP, spec);
         modest_style_map_collate_declaration_for_all(modest, node, val_four->two, MyCSS_PROPERTY_TYPE_MARGIN_RIGHT, spec);
         modest_style_map_collate_declaration_for_all(modest, node, val_four->three, MyCSS_PROPERTY_TYPE_MARGIN_BOTTOM, spec);
         modest_style_map_collate_declaration_for_all(modest, node, val_four->four, MyCSS_PROPERTY_TYPE_MARGIN_LEFT, spec);
