@@ -801,4 +801,16 @@ static mycss_declaration_entry_t mycss_declaration_default_entry_vertical_align 
     NULL, NULL
 };
 
+static mycss_declaration_entry_t mycss_declaration_default_entry_border_spacing = {
+    MyCSS_PROPERTY_TYPE_BORDER_SPACING,
+    MyCSS_PROPERTY_VALUE_UNDEF,
+    &(mycss_values_shorthand_two_type_t){
+        &(mycss_values_length_t){{0}, false, MyCSS_UNIT_TYPE_UNDEF},
+        &(mycss_values_length_t){{0}, false, MyCSS_UNIT_TYPE_UNDEF},
+    },
+    false,
+    MyCSS_DECLARATION_FLAGS_READ_ONLY,
+    NULL, NULL
+};
+
 #endif /* MyCSS_DECLARATION_DEFAULT_ENTRIES_H */

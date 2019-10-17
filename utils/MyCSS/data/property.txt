@@ -161,7 +161,7 @@ zoom-in | zoom-out | inherit | initial | unset" initial="auto" default="cursor">
 <!-- https://drafts.csswg.org/css-tables-3/#propdef-border-collapse -->
 <property name="border-collapse" value="separate | collapse" initial="separate"></property>
 <!-- https://drafts.csswg.org/css-tables-3/#propdef-border-spacing -->
-<property name="border-spacing" value="" initial="0px 0px"></property>
+<property name="border-spacing" value="<length> | inherit | initial | unset" initial="0px 0px" serialize="shorthand_two_type" destroy="border_spacing" default="border_spacing"></property>
 <!-- https://drafts.csswg.org/css-tables-3/#propdef-caption-side -->
 <property name="caption-side" value="top | bottom" initial="top"></property>
 <!-- https://drafts.csswg.org/css-tables-3/#propdef-empty-cells -->
