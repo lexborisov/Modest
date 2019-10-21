@@ -1033,7 +1033,7 @@ bool mycss_property_parser_border_radius(mycss_entry_t* entry, mycss_token_t* to
     return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
 }
 
-bool mycss_property_parser_border_top_right_radius(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+bool mycss_property_parser_short_two_type(mycss_entry_t* entry, mycss_token_t* token)
 {
     if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
         return true;
@@ -1073,6 +1073,11 @@ bool mycss_property_parser_border_top_right_radius(mycss_entry_t* entry, mycss_t
     }
     
     return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+}
+
+bool mycss_property_parser_border_top_right_radius(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
+{
+    return mycss_property_parser_short_two_type(entry, token);
 }
 
 bool mycss_property_parser_border_top_left_radius(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
@@ -2838,7 +2843,7 @@ bool mycss_property_parser_border_image_width(mycss_entry_t* entry, mycss_token_
 
 bool mycss_property_parser_border_spacing(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
-    return mycss_property_shared_switch_to_parse_error(entry);
+    return mycss_property_parser_short_two_type(entry, token);
 }
 
 bool mycss_property_parser_box_decoration_break(mycss_entry_t* entry, mycss_token_t* token, bool last_response)

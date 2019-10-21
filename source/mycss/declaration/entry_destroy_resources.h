@@ -90,7 +90,7 @@ static mycss_callback_declaration_destroy_f mycss_declaration_entry_destroy_map_
 	mycss_declaration_entry_destroy_undef,
 	mycss_declaration_entry_destroy_undef,
 	mycss_declaration_entry_destroy_undef,
-	mycss_declaration_entry_destroy_undef,
+	mycss_declaration_entry_destroy_border_spacing,
 	mycss_declaration_entry_destroy_border_style,
 	mycss_declaration_entry_destroy_border_x,
 	mycss_declaration_entry_destroy_undef,

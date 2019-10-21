@@ -1117,6 +1117,12 @@ enum mycss_property_border_top_right_radius {
 }
 typedef mycss_property_border_top_right_radius_t;
 
+enum mycss_property_border_spacing {
+    MyCSS_PROPERTY_BORDER_SPACING_INHERIT    = 0x0092,
+    MyCSS_PROPERTY_BORDER_SPACING__LENGTH    = 0x019a,
+}
+typedef mycss_property_border_spacing_t;
+
 enum mycss_property_border_top_style {
 	MyCSS_PROPERTY_BORDER_TOP_STYLE_NONE    = 0x00d3,
 	MyCSS_PROPERTY_BORDER_TOP_STYLE_SOLID   = 0x013d,

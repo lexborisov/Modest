@@ -92,7 +92,7 @@ static mycss_declaration_entry_t * mycss_declaration_default_entry_index_type[My
 	&mycss_declaration_default_entry_border_right_color,
 	&mycss_declaration_default_entry_border_right_style,
 	&mycss_declaration_default_entry_border_right_width,
-	&mycss_declaration_default_entry_undef,
+	&mycss_declaration_default_entry_border_spacing,
 	&mycss_declaration_default_entry_undef,
 	&mycss_declaration_default_entry_undef,
 	&mycss_declaration_default_entry_border_top_color,

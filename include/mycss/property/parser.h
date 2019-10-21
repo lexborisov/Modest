@@ -131,6 +131,7 @@ bool mycss_property_parser_border_right(mycss_entry_t* entry, mycss_token_t* tok
 bool mycss_property_parser_border_right_color(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_property_parser_border_right_style(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_property_parser_border_right_width(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
+bool mycss_property_parser_short_two_type(mycss_entry_t* entry, mycss_token_t* token);
 bool mycss_property_parser_border_spacing(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_property_parser_border_style(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
 bool mycss_property_parser_border_top(mycss_entry_t* entry, mycss_token_t* token, bool last_response);
