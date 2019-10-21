@@ -334,8 +334,11 @@ bool modest_finder_thread_spec_is_up(modest_style_raw_specificity_t* spec_f, mod
     
     if(spec_f->c > spec_t->c)
         return true;
+    else if(spec_f->c < spec_t->c)
+        return false;
     
-    return false;
+    /* when a property is repeated with multiple values take the last one*/
+    return true;
 }
 
 void modest_finder_thread_declaratin_append(modest_finder_thread_found_context_t* found_context, bool is_low_priority,
