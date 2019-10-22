@@ -425,6 +425,8 @@ bool modest_finder_selector_sub_type_pseudo_class_undef(modest_finder_t* finder,
 
 bool modest_finder_selector_sub_type_pseudo_class_active(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
+    if (base_node->token)
+	return modest_finder_match_attribute_only_key(base_node->token->attr_first, "focus", 5);
     return false;
 }
 
@@ -506,10 +508,14 @@ bool modest_finder_selector_sub_type_pseudo_class_checked(modest_finder_t* finde
             attr = attr->next;
         }
     }
-    else if(base_node->tag_id == MyHTML_TAG_OPTION) {
+    else if(base_node->tag_id == MyHTML_TAG_OPTION)
+    {
         return modest_finder_match_attribute_only_key(base_node->token->attr_first, "selected", 8);
     }
-    
+    else if(base_node->token && base_node->tag_id >= MyHTML_TAG_LAST_ENTRY)
+    {
+	return modest_finder_match_attribute_only_key(base_node->token->attr_first, "checked", 8);
+    }
     return false;
 }
 
@@ -600,6 +606,14 @@ bool modest_finder_selector_sub_type_pseudo_class_disabled(modest_finder_t* find
         
         return false;
     }
+
+    /* custom HTML tag*/
+    if(base_node->token && base_node->tag_id >= MyHTML_TAG_LAST_ENTRY)
+    {
+	if (modest_finder_match_attribute_only_key(base_node->token->attr_first, "disabled", 8))
+	    return true;
+	return false;
+    }
     
     return false;
 }
@@ -668,6 +682,8 @@ bool modest_finder_selector_sub_type_pseudo_class_first_of_type(modest_finder_t*
 
 bool modest_finder_selector_sub_type_pseudo_class_focus(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
+    if (base_node->token)
+	return modest_finder_match_attribute_only_key(base_node->token->attr_first, "focus", 5);
     return false;
 }
 
@@ -678,6 +694,8 @@ bool modest_finder_selector_sub_type_pseudo_class_future(modest_finder_t* finder
 
 bool modest_finder_selector_sub_type_pseudo_class_hover(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
+    if (base_node->token)
+	return modest_finder_match_attribute_only_key(base_node->token->attr_first, "hover", 5);
     return false;
 }
 
