@@ -426,7 +426,7 @@ bool modest_finder_selector_sub_type_pseudo_class_undef(modest_finder_t* finder,
 bool modest_finder_selector_sub_type_pseudo_class_active(modest_finder_t* finder, myhtml_tree_node_t* base_node, mycss_selectors_entry_t* selector, mycss_selectors_specificity_t* spec)
 {
     if (base_node->token)
-	return modest_finder_match_attribute_only_key(base_node->token->attr_first, "focus", 5);
+	return modest_finder_match_attribute_only_key(base_node->token->attr_first, "active", 6);
     return false;
 }
 
