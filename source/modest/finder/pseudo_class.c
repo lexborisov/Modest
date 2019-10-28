@@ -514,7 +514,7 @@ bool modest_finder_selector_sub_type_pseudo_class_checked(modest_finder_t* finde
     }
     else if(base_node->token && base_node->tag_id >= MyHTML_TAG_LAST_ENTRY)
     {
-	return modest_finder_match_attribute_only_key(base_node->token->attr_first, "checked", 8);
+	return modest_finder_match_attribute_only_key(base_node->token->attr_first, "checked", 7);
     }
     return false;
 }
