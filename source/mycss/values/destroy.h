@@ -66,7 +66,7 @@ mycss_values_cross_fade_t * mycss_values_destroy_cross_fade(mycss_entry_t* entry
 mycss_values_image_list_t * mycss_values_destroy_image_list(mycss_entry_t* entry, mycss_values_image_list_t* value, bool self_destroy);
     
 /* Background */
-mycss_values_background_list_t * mycss_values_destroy_background(mycss_entry_t* entry, mycss_values_background_list_t* value, bool self_destroy);
+mycss_values_background_t * mycss_values_destroy_background(mycss_entry_t* entry, mycss_values_background_t* value, bool self_destroy);
 mycss_values_background_repeat_list_t * mycss_values_destroy_background_repeat(mycss_entry_t* entry, mycss_values_background_repeat_list_t* value, bool self_destroy);
 mycss_values_background_position_t * mycss_values_destroy_background_position(mycss_entry_t* entry, mycss_values_background_position_t* value, bool self_destroy);
 mycss_values_background_size_list_t * mycss_values_destroy_background_size(mycss_entry_t* entry, mycss_values_background_size_list_t* value, bool self_destroy);

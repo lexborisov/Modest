@@ -461,62 +461,56 @@ bool mycss_declaration_serialization_background(mycss_entry_t* entry, mycss_decl
 {
     if(dec_entry == NULL)
         return false;
-    
+
     if(dec_entry->value == NULL)
         return mycss_declaration_serialization_undef(entry, dec_entry, callback, context);
-    
-    mycss_values_background_list_t *list = dec_entry->value;
-    
-    for(size_t i = 0; i < list->entries_length; i++) {
-        if(i)
-            callback(", ", 2, context);
-        
-        mycss_values_background_t* bg = &list->entries[i];
-        bool o_e = false;
-        
-        if(bg->color) {
-            o_e = true;
-            mycss_property_serialization_value(bg->color->value_type, bg->color->value, callback, context);
-        }
-        
-        if(bg->image) {
-            if(o_e) callback(" ", 1, context); else o_e = true;
-            mycss_declaration_serialization_background_image(entry, bg->image, callback, context);
-        }
-        
-        if(bg->position) {
-            if(o_e) callback(" ", 1, context); else o_e = true;
-            mycss_declaration_serialization_background_position(entry, bg->position, callback, context);
-            
-            if(bg->size) {
-                callback(" / ", 3, context);
-                mycss_declaration_serialization_background_size(entry, bg->size, callback, context);
-            }
-        }
-        
-        if(bg->repeat) {
-            if(o_e) callback(" ", 1, context); else o_e = true;
-            mycss_declaration_serialization_background_repeat(entry, bg->repeat, callback, context);
-        }
-        
-        if(bg->attachment) {
-            if(o_e) callback(" ", 1, context); else o_e = true;
-            mycss_declaration_serialization_type_list(entry, bg->attachment, callback, context);
-        }
-        
-        if(bg->clip) {
-            if(o_e) callback(" ", 1, context); else o_e = true;
-            mycss_declaration_serialization_type_list(entry, bg->clip, callback, context);
-        }
-        
-        if(bg->origin) {
-            if(o_e) callback(" ", 1, context);
-            mycss_declaration_serialization_type_list(entry, bg->origin, callback, context);
+
+    mycss_values_background_t* bg = dec_entry->value;
+
+    bool o_e = false;
+
+    if(bg->color) {
+        o_e = true;
+        mycss_property_serialization_value(bg->color->value_type, bg->color->value, callback, context);
+    }
+
+    if(bg->image) {
+        if(o_e) callback(" ", 1, context); else o_e = true;
+        mycss_declaration_serialization_background_image(entry, bg->image, callback, context);
+    }
+
+    if(bg->position) {
+        if(o_e) callback(" ", 1, context); else o_e = true;
+        mycss_declaration_serialization_background_position(entry, bg->position, callback, context);
+
+        if(bg->size) {
+            callback(" / ", 3, context);
+            mycss_declaration_serialization_background_size(entry, bg->size, callback, context);
         }
     }
-    
+
+    if(bg->repeat) {
+        if(o_e) callback(" ", 1, context); else o_e = true;
+        mycss_declaration_serialization_background_repeat(entry, bg->repeat, callback, context);
+    }
+
+    if(bg->attachment) {
+        if(o_e) callback(" ", 1, context); else o_e = true;
+        mycss_declaration_serialization_type_list(entry, bg->attachment, callback, context);
+    }
+
+    if(bg->clip) {
+        if(o_e) callback(" ", 1, context); else o_e = true;
+        mycss_declaration_serialization_type_list(entry, bg->clip, callback, context);
+    }
+
+    if(bg->origin) {
+        if(o_e) callback(" ", 1, context);
+        mycss_declaration_serialization_type_list(entry, bg->origin, callback, context);
+    }
+
     mycss_declaration_serialization_important_if_need(dec_entry, callback, context);
-    
+
     return true;
 }
 

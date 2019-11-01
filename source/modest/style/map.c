@@ -186,4 +186,161 @@ void modest_style_map_collate_declaration_border_style(modest_t* modest, myhtml_
     }
 }
 
+/* background */
+void modest_style_map_collate_declaration_background(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, mycss_property_type_t type, modest_style_raw_specificity_t* spec)
+{
+    if(node->data == NULL || decl->value == NULL)
+        return;
+
+    mycss_values_background_t* background = decl->value;
+    if(background == NULL)
+        return;
+
+    if(background->image) {
+        modest_style_map_collate_declaration_for_all(modest, node, background->image, MyCSS_PROPERTY_TYPE_BACKGROUND_IMAGE, spec);
+    }
+    if(background->color) {
+        modest_style_map_collate_declaration_for_all(modest, node, background->color, MyCSS_PROPERTY_TYPE_BACKGROUND_COLOR, spec);
+    }
+    if(background->attachment) {
+        modest_style_map_collate_declaration_for_all(modest, node, background->attachment, MyCSS_PROPERTY_TYPE_BACKGROUND_ATTACHMENT, spec);
+    }
+    if(background->position) {
+        modest_style_map_collate_declaration_for_all(modest, node, background->position, MyCSS_PROPERTY_TYPE_BACKGROUND_POSITION, spec);
+    }
+    if(background->size) {
+        modest_style_map_collate_declaration_for_all(modest, node, background->size, MyCSS_PROPERTY_TYPE_BACKGROUND_SIZE, spec);
+    }
+    if(background->repeat) {
+        modest_style_map_collate_declaration_for_all(modest, node, background->repeat, MyCSS_PROPERTY_TYPE_BACKGROUND_REPEAT, spec);
+    }
+    if(background->size) {
+        modest_style_map_collate_declaration_for_all(modest, node, background->size, MyCSS_PROPERTY_TYPE_BACKGROUND_SIZE, spec);
+    }
+    if(background->origin) {
+        modest_style_map_collate_declaration_for_all(modest, node, background->origin, MyCSS_PROPERTY_TYPE_BACKGROUND_ORIGIN, spec);
+    }
+    if(background->clip) {
+        modest_style_map_collate_declaration_for_all(modest, node, background->clip, MyCSS_PROPERTY_TYPE_BACKGROUND_CLIP, spec);
+    }
+}
+
+/* border */
+void modest_style_map_collate_declaration_border(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, mycss_property_type_t type, modest_style_raw_specificity_t* spec)
+{
+    if(node->data == NULL || decl->value == NULL)
+        return;
+
+    mycss_values_border_t *border = decl->value;
+
+    if(border == NULL)
+        return;
+
+    if(border->width) {
+        modest_style_map_collate_declaration_for_all(modest, node, border->width, MyCSS_PROPERTY_TYPE_BORDER_TOP_WIDTH, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, border->width, MyCSS_PROPERTY_TYPE_BORDER_BOTTOM_WIDTH, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, border->width, MyCSS_PROPERTY_TYPE_BORDER_LEFT_WIDTH, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, border->width, MyCSS_PROPERTY_TYPE_BORDER_RIGHT_WIDTH, spec);
+    }
+    if(border->style) {
+        modest_style_map_collate_declaration_for_all(modest, node, border->style, MyCSS_PROPERTY_TYPE_BORDER_TOP_STYLE, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, border->style, MyCSS_PROPERTY_TYPE_BORDER_BOTTOM_STYLE, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, border->style, MyCSS_PROPERTY_TYPE_BORDER_LEFT_STYLE, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, border->style, MyCSS_PROPERTY_TYPE_BORDER_RIGHT_STYLE, spec);
+    }
+    if(border->color) {
+        modest_style_map_collate_declaration_for_all(modest, node, border->color, MyCSS_PROPERTY_TYPE_BORDER_TOP_COLOR, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, border->color, MyCSS_PROPERTY_TYPE_BORDER_BOTTOM_COLOR, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, border->color, MyCSS_PROPERTY_TYPE_BORDER_LEFT_COLOR, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, border->color, MyCSS_PROPERTY_TYPE_BORDER_RIGHT_COLOR, spec);
+    }
+}
+
+/* border-top */
+void modest_style_map_collate_declaration_border_top(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, mycss_property_type_t type, modest_style_raw_specificity_t* spec)
+{
+    if(node->data == NULL || decl->value == NULL)
+        return;
+
+    mycss_values_border_t *border = decl->value;
+
+    if(border == NULL)
+        return;
+
+    if(border->width) {
+        modest_style_map_collate_declaration_for_all(modest, node, border->width, MyCSS_PROPERTY_TYPE_BORDER_TOP_WIDTH, spec);
+    }
+    if(border->style) {
+        modest_style_map_collate_declaration_for_all(modest, node, border->style, MyCSS_PROPERTY_TYPE_BORDER_TOP_STYLE, spec);
+    }
+    if(border->color) {
+        modest_style_map_collate_declaration_for_all(modest, node, border->color, MyCSS_PROPERTY_TYPE_BORDER_TOP_COLOR, spec);
+    }
+}
+
+/* border-bottom */
+void modest_style_map_collate_declaration_border_bottom(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, mycss_property_type_t type, modest_style_raw_specificity_t* spec)
+{
+    if(node->data == NULL || decl->value == NULL)
+        return;
+
+    mycss_values_border_t *border = decl->value;
+
+    if(border == NULL)
+        return;
+
+    if(border->width) {
+        modest_style_map_collate_declaration_for_all(modest, node, border->width, MyCSS_PROPERTY_TYPE_BORDER_BOTTOM_WIDTH, spec);
+    }
+    if(border->style) {
+        modest_style_map_collate_declaration_for_all(modest, node, border->style, MyCSS_PROPERTY_TYPE_BORDER_BOTTOM_STYLE, spec);
+    }
+    if(border->color) {
+        modest_style_map_collate_declaration_for_all(modest, node, border->color, MyCSS_PROPERTY_TYPE_BORDER_BOTTOM_COLOR, spec);
+    }
+}
+
+/* border-left */
+void modest_style_map_collate_declaration_border_left(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, mycss_property_type_t type, modest_style_raw_specificity_t* spec)
+{
+    if(node->data == NULL || decl->value == NULL)
+        return;
+
+    mycss_values_border_t *border = decl->value;
+
+    if(border == NULL)
+        return;
+
+    if(border->width) {
+        modest_style_map_collate_declaration_for_all(modest, node, border->width, MyCSS_PROPERTY_TYPE_BORDER_LEFT_WIDTH, spec);
+    }
+    if(border->style) {
+        modest_style_map_collate_declaration_for_all(modest, node, border->style, MyCSS_PROPERTY_TYPE_BORDER_LEFT_STYLE, spec);
+    }
+    if(border->color) {
+        modest_style_map_collate_declaration_for_all(modest, node, border->color, MyCSS_PROPERTY_TYPE_BORDER_LEFT_COLOR, spec);
+    }
+}
+
+/* border-right */
+void modest_style_map_collate_declaration_border_right(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, mycss_property_type_t type, modest_style_raw_specificity_t* spec)
+{
+    if(node->data == NULL || decl->value == NULL)
+        return;
+
+    mycss_values_border_t *border = decl->value;
+
+    if(border == NULL)
+        return;
+
+    if(border->width) {
+        modest_style_map_collate_declaration_for_all(modest, node, border->width, MyCSS_PROPERTY_TYPE_BORDER_RIGHT_WIDTH, spec);
+    }
+    if(border->style) {
+        modest_style_map_collate_declaration_for_all(modest, node, border->style, MyCSS_PROPERTY_TYPE_BORDER_RIGHT_STYLE, spec);
+    }
+    if(border->color) {
+        modest_style_map_collate_declaration_for_all(modest, node, border->color, MyCSS_PROPERTY_TYPE_BORDER_RIGHT_COLOR, spec);
+    }
+}
 

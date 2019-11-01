@@ -255,12 +255,11 @@ static bool mycss_property_parser_background_step_end(mycss_entry_t* entry, mycs
     entry->parser = mycss_property_parser_background;
     
     if(token->type == MyCSS_TOKEN_TYPE_COMMA) {
-        mycss_values_background_t *background = mycss_values_background_list_current_entry(entry->declaration->entry_last->value);
+        mycss_values_background_t *background = entry->declaration->entry_last->value;
         
         if(background->color)
             return mycss_property_shared_switch_to_parse_error(entry);
-        
-        mycss_values_background_list_add_entry(entry, entry->declaration->entry_last->value);
+
         return true;
     }
     

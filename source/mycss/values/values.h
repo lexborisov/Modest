@@ -67,7 +67,6 @@ typedef struct mycss_values_background_position mycss_values_background_position
 typedef struct mycss_values_background_size_list mycss_values_background_size_list_t;
 typedef struct mycss_values_background_size_entry mycss_values_background_size_entry_t;
 typedef struct mycss_values_background mycss_values_background_t;
-typedef struct mycss_values_background_list mycss_values_background_list_t;
 
 typedef struct mycss_values_border mycss_values_border_t;
 
