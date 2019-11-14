@@ -322,7 +322,7 @@ zoom-in | zoom-out | inherit | initial | unset" initial="auto" default="cursor">
 <!-- https://drafts.csswg.org/css-color/#propdef-color -->
 <property name="color" value="<color> | inherit | initial | unset" initial="" default="color"></property>
 <!-- https://drafts.csswg.org/css-color/#propdef-opacity -->
-<property name="opacity" value="" initial="1"></property>
+<property name="opacity" value="" initial="1" default="opacity"></property>
 <!-- https://drafts.csswg.org/css-color/#propdef-color-adjust -->
 <property name="color-adjust" value="economy | exact" initial="economy"></property>
 
