@@ -138,30 +138,3 @@ mycss_values_background_size_entry_t * mycss_values_background_size_list_add_ent
     return size_entry;
 }
 
-mycss_values_background_t * mycss_values_background_list_add_entry(mycss_entry_t* entry, mycss_values_background_list_t *list)
-{
-    if(list->entries == NULL) {
-        list->entries = mycss_values_create(entry, sizeof(mycss_values_background_t));
-        list->entries_length = 0;
-    }
-    else {
-        list->entries = mycss_values_realloc(entry, list->entries,
-                                             list->entries_length * sizeof(mycss_values_background_t),
-                                             sizeof(mycss_values_background_t));
-    }
-    
-    mycss_values_background_t *bg = &list->entries[ list->entries_length ];
-    list->entries_length++;
-    
-    return bg;
-}
-
-mycss_values_background_t * mycss_values_background_list_current_entry(mycss_values_background_list_t *list)
-{
-    if(list->entries_length == 0)
-        return NULL;
-        
-    return &list->entries[ (list->entries_length - 1) ];
-}
-
-

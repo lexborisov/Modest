@@ -255,12 +255,11 @@ static bool mycss_property_parser_background_step_end(mycss_entry_t* entry, mycs
     entry->parser = mycss_property_parser_background;
     
     if(token->type == MyCSS_TOKEN_TYPE_COMMA) {
-        mycss_values_background_t *background = mycss_values_background_list_current_entry(entry->declaration->entry_last->value);
+        mycss_values_background_t *background = entry->declaration->entry_last->value;
         
         if(background->color)
             return mycss_property_shared_switch_to_parse_error(entry);
-        
-        mycss_values_background_list_add_entry(entry, entry->declaration->entry_last->value);
+
         return true;
     }
     
@@ -307,7 +306,7 @@ static bool mycss_property_parser_background_step_size_height(mycss_entry_t* ent
     mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
-    mycss_values_background_t *background = mycss_values_background_list_current_entry(dec_entry->value);
+    mycss_values_background_t *background = dec_entry->value;
     
     void *value = NULL;
     unsigned int value_type = 0;
@@ -346,7 +345,7 @@ bool mycss_property_parser_background_step_size(mycss_entry_t* entry, mycss_toke
     mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
     
-    mycss_values_background_t *background = mycss_values_background_list_current_entry(dec_entry->value);
+    mycss_values_background_t *background = dec_entry->value;
     
     void *value = NULL;
     unsigned int value_type = 0;
@@ -404,7 +403,7 @@ static bool mycss_property_parser_background_step_position(mycss_entry_t* entry,
     
     if(mycss_property_shared_background_position(entry, token, &value, &value_type, &str))
     {
-        mycss_values_background_t *background = mycss_values_background_list_current_entry(dec_entry->value);
+        mycss_values_background_t *background = dec_entry->value;
         
         if(mycss_property_parser_background_check_position(entry, background, value, value_type))
             return mycss_property_parser_destroy_string(&str, true);
@@ -423,7 +422,7 @@ static bool mycss_property_parser_background_step_repeat_wait_two(mycss_entry_t*
     
     mycore_string_t str = {0};
     mycss_declaration_entry_t* dec_entry = entry->declaration->entry_last;
-    mycss_values_background_t *background = mycss_values_background_list_current_entry(dec_entry->value);
+    mycss_values_background_t *background = dec_entry->value;
     
     unsigned int value_type = 0;
     
@@ -444,11 +443,8 @@ static bool mycss_property_parser_background_step_repeat_wait_two(mycss_entry_t*
 
 mycss_values_background_t * mycss_property_parser_background_check_entry(mycss_entry_t* entry, mycss_declaration_entry_t* dec_entry)
 {
-    mycss_values_background_t *background = mycss_values_background_list_current_entry(dec_entry->value);
-    
-    if(background == NULL)
-        return mycss_values_background_list_add_entry(entry, dec_entry->value);
-    
+    mycss_values_background_t *background = dec_entry->value;
+
     return background;
 }
 
@@ -466,18 +462,16 @@ bool mycss_property_parser_background(mycss_entry_t* entry, mycss_token_t* token
     bool parser_changed = false;
     
     if(dec_entry->value == NULL)
-        dec_entry->value = mycss_values_create(entry, sizeof(mycss_values_background_list_t));
-    
+        dec_entry->value = mycss_values_create(entry, sizeof(mycss_values_background_t));
+
     /* Image */
     if(mycss_property_shared_image(entry, token, &value, &value_type, &str, &parser_changed))
     {
-        mycss_values_background_t *background = mycss_property_parser_background_check_entry(entry, dec_entry);
+        mycss_values_background_t *background =  dec_entry->value;
         
-        if(background->image)
-            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
-        
-        background->image = mycss_declaration_entry_create(entry->declaration, NULL);
-        
+        if(background->image == NULL)
+            background->image = mycss_declaration_entry_create(entry->declaration, NULL);
+
         if(background->image->value == NULL)
             background->image->value = mycss_values_create(entry, sizeof(mycss_values_image_list_t));
         
@@ -504,10 +498,8 @@ bool mycss_property_parser_background(mycss_entry_t* entry, mycss_token_t* token
     {
         mycss_values_background_t *background = mycss_property_parser_background_check_entry(entry, dec_entry);
         
-        if(background->image)
-            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
-        
-        background->image = mycss_declaration_entry_create(entry->declaration, NULL);
+        if(background->image == NULL)
+            background->image = mycss_declaration_entry_create(entry->declaration, NULL);
         
         if(background->image->value == NULL)
             background->image->value = mycss_values_create(entry, sizeof(mycss_values_image_list_t));
@@ -529,10 +521,9 @@ bool mycss_property_parser_background(mycss_entry_t* entry, mycss_token_t* token
     {
         mycss_values_background_t *background = mycss_property_parser_background_check_entry(entry, dec_entry);
         
-        if(background->position)
-            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
-        
-        background->position = mycss_declaration_entry_create(entry->declaration, NULL);
+        if(background->position == NULL)
+            background->position = mycss_declaration_entry_create(entry->declaration, NULL);
+
         background->position->type = MyCSS_PROPERTY_TYPE_BACKGROUND_POSITION;
         
         if(mycss_property_parser_background_check_position(entry, background, value, value_type)) {
@@ -548,10 +539,8 @@ bool mycss_property_parser_background(mycss_entry_t* entry, mycss_token_t* token
     {
         mycss_values_background_t *background = mycss_property_parser_background_check_entry(entry, dec_entry);
         
-        if(background->repeat)
-            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
-        
-        background->repeat = mycss_declaration_entry_create(entry->declaration, NULL);
+        if(background->repeat == NULL)
+            background->repeat = mycss_declaration_entry_create(entry->declaration, NULL);
         
         if(background->repeat->value == NULL)
             background->repeat->value = mycss_values_create(entry, sizeof(mycss_values_background_repeat_list_t));
@@ -569,10 +558,8 @@ bool mycss_property_parser_background(mycss_entry_t* entry, mycss_token_t* token
     {
         mycss_values_background_t *background = mycss_property_parser_background_check_entry(entry, dec_entry);
         
-        if(background->repeat)
-            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
-        
-        background->repeat = mycss_declaration_entry_create(entry->declaration, NULL);
+        if(background->repeat == NULL)
+            background->repeat = mycss_declaration_entry_create(entry->declaration, NULL);
         
         if(background->repeat->value == NULL)
             background->repeat->value = mycss_values_create(entry, sizeof(mycss_values_background_repeat_list_t));
@@ -591,10 +578,8 @@ bool mycss_property_parser_background(mycss_entry_t* entry, mycss_token_t* token
     {
         mycss_values_background_t *background = mycss_property_parser_background_check_entry(entry, dec_entry);
         
-        if(background->color)
-            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
-        
-        background->color = mycss_declaration_entry_create(entry->declaration, NULL);
+        if(background->color == NULL)
+            background->color = mycss_declaration_entry_create(entry->declaration, NULL);
         background->color->type = MyCSS_PROPERTY_TYPE_BACKGROUND_COLOR;
         background->color->value = value;
         background->color->value_type = value_type;
@@ -615,10 +600,8 @@ bool mycss_property_parser_background(mycss_entry_t* entry, mycss_token_t* token
     {
         mycss_values_background_t *background = mycss_property_parser_background_check_entry(entry, dec_entry);
         
-        if(background->attachment)
-            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
-        
-        background->attachment = mycss_declaration_entry_create(entry->declaration, NULL);
+        if(background->attachment == NULL)
+            background->attachment = mycss_declaration_entry_create(entry->declaration, NULL);
         
         if(background->attachment->value == NULL)
             background->attachment->value = mycss_values_create(entry, sizeof(mycss_values_type_list_t));
@@ -638,10 +621,8 @@ bool mycss_property_parser_background(mycss_entry_t* entry, mycss_token_t* token
         mycss_values_background_t *background = mycss_property_parser_background_check_entry(entry, dec_entry);
         
         if(background->clip) {
-            if(background->origin)
-                return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
-            
-            background->origin = mycss_declaration_entry_create(entry->declaration, NULL);
+            if(background->origin == NULL)
+                background->origin = mycss_declaration_entry_create(entry->declaration, NULL);
             
             if(background->origin->value == NULL)
                 background->origin->value = mycss_values_create(entry, sizeof(mycss_values_type_list_t));
