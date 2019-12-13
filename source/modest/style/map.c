@@ -225,6 +225,61 @@ void modest_style_map_collate_declaration_background(modest_t* modest, myhtml_tr
     }
 }
 
+/* text decoration*/
+void modest_style_map_collate_declaration_text_decoration(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, mycss_property_type_t type, modest_style_raw_specificity_t* spec)
+{
+    if(node->data == NULL || decl->value == NULL)
+        return;
+
+    mycss_values_text_decoration_t* decoration = decl->value;
+    if(decoration == NULL)
+        return;
+
+    if(decoration->line) {
+        modest_style_map_collate_declaration_for_all(modest, node, decoration->line, MyCSS_PROPERTY_TYPE_TEXT_DECORATION_LINE, spec);
+    }
+
+    if(decoration->style) {
+        modest_style_map_collate_declaration_for_all(modest, node, decoration->style, MyCSS_PROPERTY_TYPE_TEXT_DECORATION_STYLE, spec);
+    }
+
+    if(decoration->color) {
+        modest_style_map_collate_declaration_for_all(modest, node, decoration->color, MyCSS_PROPERTY_TYPE_TEXT_DECORATION_COLOR, spec);
+    }
+}
+
+/* font*/
+void modest_style_map_collate_declaration_font(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, mycss_property_type_t type, modest_style_raw_specificity_t* spec)
+{
+    if(node->data == NULL || decl->value == NULL)
+        return;
+
+    mycss_values_font_t* font = decl->value;
+    if(font == NULL)
+        return;
+
+    if(font->style) {
+        modest_style_map_collate_declaration_for_all(modest, node, font->style, MyCSS_PROPERTY_TYPE_FONT_STYLE, spec);
+    }
+
+    if(font->size) {
+        modest_style_map_collate_declaration_for_all(modest, node, font->size, MyCSS_PROPERTY_TYPE_FONT_SIZE, spec);
+    }
+
+    if(font->weight) {
+        modest_style_map_collate_declaration_for_all(modest, node, font->weight, MyCSS_PROPERTY_TYPE_FONT_WEIGHT, spec);
+    }
+
+    if(font->family) {
+        modest_style_map_collate_declaration_for_all(modest, node, font->family, MyCSS_PROPERTY_TYPE_FONT_FAMILY, spec);
+    }
+
+    if(font->stretch) {
+        modest_style_map_collate_declaration_for_all(modest, node, font->stretch, MyCSS_PROPERTY_TYPE_FONT_STRETCH, spec);
+    }
+
+}
+
 /* border */
 void modest_style_map_collate_declaration_border(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, mycss_property_type_t type, modest_style_raw_specificity_t* spec)
 {
