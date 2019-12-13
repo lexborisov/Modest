@@ -344,3 +344,36 @@ void modest_style_map_collate_declaration_border_right(modest_t* modest, myhtml_
     }
 }
 
+/* border radius */
+void modest_style_map_collate_declaration_border_radius(modest_t* modest, myhtml_tree_node_t* node, mycss_declaration_entry_t* decl, mycss_property_type_t type, modest_style_raw_specificity_t* spec)
+{
+    if(node->data == NULL || decl->value == NULL)
+        return;
+
+    mycss_values_shorthand_four_t *val_four = (mycss_values_shorthand_four_t*)decl->value;
+
+    if(val_four->two == NULL) {
+        modest_style_map_collate_declaration_for_all(modest, node, val_four->one, MyCSS_PROPERTY_TYPE_BORDER_TOP_LEFT_RADIUS, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, val_four->one, MyCSS_PROPERTY_TYPE_BORDER_TOP_RIGHT_RADIUS, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, val_four->one, MyCSS_PROPERTY_TYPE_BORDER_BOTTOM_RIGHT_RADIUS, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, val_four->one, MyCSS_PROPERTY_TYPE_BORDER_BOTTOM_LEFT_RADIUS, spec);
+    }
+    else if(val_four->three == NULL) {
+        modest_style_map_collate_declaration_for_all(modest, node, val_four->one, MyCSS_PROPERTY_TYPE_BORDER_TOP_LEFT_RADIUS, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, val_four->two, MyCSS_PROPERTY_TYPE_BORDER_TOP_RIGHT_RADIUS, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, val_four->one, MyCSS_PROPERTY_TYPE_BORDER_BOTTOM_RIGHT_RADIUS, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, val_four->two, MyCSS_PROPERTY_TYPE_BORDER_BOTTOM_LEFT_RADIUS, spec);
+    }
+    else if(val_four->four == NULL) {
+        modest_style_map_collate_declaration_for_all(modest, node, val_four->one, MyCSS_PROPERTY_TYPE_BORDER_TOP_LEFT_RADIUS, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, val_four->two, MyCSS_PROPERTY_TYPE_BORDER_TOP_RIGHT_RADIUS, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, val_four->three, MyCSS_PROPERTY_TYPE_BORDER_BOTTOM_RIGHT_RADIUS, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, val_four->two, MyCSS_PROPERTY_TYPE_BORDER_BOTTOM_LEFT_RADIUS, spec);
+    }
+    else {
+        modest_style_map_collate_declaration_for_all(modest, node, val_four->one, MyCSS_PROPERTY_TYPE_BORDER_TOP_LEFT_RADIUS, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, val_four->two, MyCSS_PROPERTY_TYPE_BORDER_TOP_RIGHT_RADIUS, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, val_four->three, MyCSS_PROPERTY_TYPE_BORDER_BOTTOM_RIGHT_RADIUS, spec);
+        modest_style_map_collate_declaration_for_all(modest, node, val_four->four, MyCSS_PROPERTY_TYPE_BORDER_BOTTOM_LEFT_RADIUS, spec);
+    }
+}

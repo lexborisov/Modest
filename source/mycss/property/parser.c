@@ -896,6 +896,51 @@ bool mycss_property_parser_border_radius_two(mycss_entry_t* entry, mycss_token_t
     mycss_values_shorthand_four_t *value = dec_entry->value;
     
     if(mycss_property_shared_check_declaration_end(entry, token)) {
+        mycss_values_shorthand_two_type_t* top_right = ((mycss_values_shorthand_two_type_t*) (value->two->value));
+        if (top_right != NULL)
+        {
+            if (top_right->one == NULL)
+            {
+                top_right->one = ((mycss_values_shorthand_two_type_t*) (value->one->value))->one;
+                top_right->type_one = ((mycss_values_shorthand_two_type_t*) (value->one->value))->type_one;
+            }
+            else if (top_right->two == NULL)
+            {
+                top_right->two = ((mycss_values_shorthand_two_type_t*) (value->one->value))->two;
+                top_right->type_two = ((mycss_values_shorthand_two_type_t*) (value->one->value))->type_two;
+            }
+        }
+
+        mycss_values_shorthand_two_type_t* bottom_right = ((mycss_values_shorthand_two_type_t*) (value->three->value));
+        if (bottom_right != NULL)
+        {
+            if (bottom_right->one == NULL)
+            {
+                bottom_right->one = ((mycss_values_shorthand_two_type_t*) (value->one->value))->one;
+                bottom_right->type_one = ((mycss_values_shorthand_two_type_t*) (value->one->value))->type_one;
+            }
+            else if (bottom_right->two == NULL)
+            {
+                bottom_right->two = ((mycss_values_shorthand_two_type_t*) (value->one->value))->two;
+                bottom_right->type_two = ((mycss_values_shorthand_two_type_t*) (value->one->value))->type_two;
+            }
+        }
+
+        mycss_values_shorthand_two_type_t *bottom_left = ((mycss_values_shorthand_two_type_t*) (value->four->value));
+        if (bottom_left != NULL)
+        {
+            if (bottom_left->one == NULL)
+            {
+                bottom_left->one = ((mycss_values_shorthand_two_type_t*) (value->two->value))->one;
+                bottom_left->type_one = ((mycss_values_shorthand_two_type_t*) (value->two->value))->type_one;
+            }
+            else if (bottom_left->two == NULL)
+            {
+                bottom_left->two = ((mycss_values_shorthand_two_type_t*) (value->two->value))->two;
+                bottom_left->type_two = ((mycss_values_shorthand_two_type_t*) (value->two->value))->type_two;
+            }
+        }
+
         return true;
     }
     
@@ -934,13 +979,13 @@ bool mycss_property_parser_border_radius_two(mycss_entry_t* entry, mycss_token_t
     {
         if((value->four = mycss_property_parser_border_radius_shared(entry, token, &str, false))) {
             value->four->type = MyCSS_PROPERTY_TYPE_BORDER_BOTTOM_LEFT_RADIUS;
-            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+            return mycss_property_parser_destroy_string(&str, true);
         }
     }
     else if(((mycss_values_shorthand_two_type_t*)(value->four->value))->two == NULL)
     {
         if(mycss_property_parser_border_radius_two_shared(entry, token, value->four->value, &str))
-            return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+            return mycss_property_parser_destroy_string(&str, true);
     }
     
     return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
