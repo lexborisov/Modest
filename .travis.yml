@@ -2,5 +2,5 @@ language: c
 compiler:
   - clang
   - gcc
-install: false
+install: skip
 script: make -j4
