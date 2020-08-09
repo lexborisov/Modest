@@ -801,6 +801,7 @@ static mycss_declaration_entry_t mycss_declaration_default_entry_vertical_align 
     NULL, NULL
 };
 
+
 static mycss_declaration_entry_t mycss_declaration_default_entry_border_spacing = {
     MyCSS_PROPERTY_TYPE_BORDER_SPACING,
     MyCSS_PROPERTY_VALUE_UNDEF,
