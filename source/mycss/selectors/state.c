@@ -80,7 +80,7 @@ bool mycss_selectors_state_drop_component_value(mycss_entry_t* entry, mycss_toke
     if(token->type == entry->selectors->ending_token) {
         if(mycss_entry_parser_list_current_is_local(entry) == false) {
             mycss_entry_parser_list_pop(entry);
-            return false;
+            return true;
         }
     }
     
