@@ -159,6 +159,13 @@ bool mycss_property_parser_background_position_check(mycss_values_background_pos
                         return false;
                 }
             }
+            case MyCSS_PROPERTY_BACKGROUND_POSITION_CENTER:
+            {
+                if (position->three.type == MyCSS_PROPERTY_VALUE_UNDEF)
+                    return true;
+
+                return false;
+            }
                 
             default:
                 return false;
