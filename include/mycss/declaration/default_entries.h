@@ -814,4 +814,13 @@ static mycss_declaration_entry_t mycss_declaration_default_entry_border_spacing 
     NULL, NULL
 };
 
+static mycss_declaration_entry_t mycss_declaration_default_entry_opacity = {
+    MyCSS_PROPERTY_TYPE_OPACITY,
+    MyCSS_PROPERTY_VALUE__NUMBER,
+    &(mycss_values_number_t) {{1}, false},
+    false,
+    MyCSS_DECLARATION_FLAGS_READ_ONLY,
+    NULL, NULL
+};
+
 #endif /* MyCSS_DECLARATION_DEFAULT_ENTRIES_H */

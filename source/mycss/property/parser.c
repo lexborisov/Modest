@@ -3233,7 +3233,20 @@ bool mycss_property_parser_offset_start(mycss_entry_t* entry, mycss_token_t* tok
 
 bool mycss_property_parser_opacity(mycss_entry_t* entry, mycss_token_t* token, bool last_response)
 {
-    return mycss_property_shared_switch_to_parse_error(entry);
+    if(token->type == MyCSS_TOKEN_TYPE_WHITESPACE)
+        return true;
+
+    mycore_string_t str = {0};
+    mycss_declaration_entry_t* declr_entry = entry->declaration->entry_last;
+
+    if (mycss_property_shared_percentage(entry, token, &declr_entry->value, &declr_entry->value_type, &str))
+        return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+
+    if (mycss_property_shared_number(entry, token, &declr_entry->value, &declr_entry->value_type, &str))
+        return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_find_important(entry));
+
+    return mycss_property_parser_destroy_string(&str, mycss_property_shared_switch_to_parse_error(entry));
+
 }
 
 bool mycss_property_parser_order(mycss_entry_t* entry, mycss_token_t* token, bool last_response)

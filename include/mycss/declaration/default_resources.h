@@ -215,7 +215,7 @@ static mycss_declaration_entry_t * mycss_declaration_default_entry_index_type[My
 	&mycss_declaration_default_entry_undef,
 	&mycss_declaration_default_entry_undef,
 	&mycss_declaration_default_entry_undef,
-	&mycss_declaration_default_entry_undef,
+	&mycss_declaration_default_entry_opacity,
 	&mycss_declaration_default_entry_undef,
 	&mycss_declaration_default_entry_undef,
 	&mycss_declaration_default_entry_undef,
