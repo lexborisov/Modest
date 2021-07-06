@@ -337,8 +337,7 @@ bool modest_finder_thread_spec_is_up(modest_style_raw_specificity_t* spec_f, mod
     else if(spec_f->c < spec_t->c)
         return false;
     
-    /* when a property is repeated with multiple values take the last one*/
-    return true;
+    return false;
 }
 
 void modest_finder_thread_declaratin_append(modest_finder_thread_found_context_t* found_context, bool is_low_priority,
@@ -390,12 +389,21 @@ void modest_finder_thread_declaratin_list_replace(modest_finder_thread_found_con
                                                   modest_finder_thread_entry_t* entry, mycss_declaration_entry_t* dec_entry,
                                                   mycss_selectors_specificity_t* spec)
 {
-    while(dec_entry) {
-        modest_style_raw_specificity_t raw_spec = {((unsigned int)dec_entry->is_important), spec->a, spec->b, spec->c};
-        
-        modest_finder_thread_declaratin_append(found_context, false, entry, dec_entry, &raw_spec);
-        
-        dec_entry = dec_entry->next;
+
+    //to make sure last property declaration takes precedence, iterate from last to first
+    mycss_declaration_entry_t* next_entry = dec_entry != NULL ? dec_entry->next : NULL;
+    while (next_entry)
+    {
+	dec_entry = next_entry;
+	next_entry = next_entry->next;
+    }
+
+    while(dec_entry)
+    {
+	modest_style_raw_specificity_t raw_spec = { ((unsigned int)dec_entry->is_important), spec->a, spec->b, spec->c };
+
+	modest_finder_thread_declaratin_append(found_context, false, entry, dec_entry, &raw_spec);
+	dec_entry = dec_entry->prev;
     }
 }
 
