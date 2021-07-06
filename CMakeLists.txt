@@ -303,8 +303,12 @@ install(FILES
 
 
 #Add an alias so that library can be used inside the build tree, e.g. when testing
-add_library(${PROJECT_NAME}::${PROJECT_LIB_SHARED} ALIAS ${PROJECT_LIB_SHARED})
-add_library(${PROJECT_NAME}::${PROJECT_LIB_STATIC} ALIAS ${PROJECT_LIB_STATIC})
+if(MODEST_BUILD_SHARED)
+   add_library(${PROJECT_NAME}::${PROJECT_LIB_SHARED} ALIAS ${PROJECT_LIB_SHARED})
+endif()
+if(MODEST_BUILD_STATIC)
+   add_library(${PROJECT_NAME}::${PROJECT_LIB_STATIC} ALIAS ${PROJECT_LIB_STATIC})
+endif()
 
 
 ################
