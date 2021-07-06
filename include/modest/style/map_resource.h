@@ -85,7 +85,7 @@ static const modest_style_map_collate_f modest_style_map_static_collate_declarat
     modest_style_map_collate_declaration_for_all,
     modest_style_map_collate_declaration_for_all,
     modest_style_map_collate_declaration_for_all,
-    modest_style_map_collate_declaration_for_all,
+    modest_style_map_collate_declaration_border_radius,
     modest_style_map_collate_declaration_border_right,
     modest_style_map_collate_declaration_for_all,
     modest_style_map_collate_declaration_for_all,
