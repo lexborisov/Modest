@@ -18,7 +18,7 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#include "mycss/property/parser.h"
+#include "mycss/property/parser_image.h"
 
 mycss_values_image_image_set_option_t * mycss_property_parser_image_function_get_next_option(mycss_entry_t* entry, mycss_values_image_image_set_t *ii_set)
 {

@@ -18,8 +18,7 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#include "mycore/utils/resources.h"
-#include "myhtml/tag.h"
+#include "myhtml/tag_init.h"
 
 static const myhtml_tag_context_t myhtml_tag_base_list[MyHTML_TAG_LAST_ENTRY] = 
 {

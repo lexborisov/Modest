@@ -18,8 +18,7 @@
  Authors: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#include "mycore/myosi.h"
-#include "mycore/perf.h"
+#include "myport/posix/mycore/perf.h"
 
 #ifdef MyCORE_WITH_PERF
 

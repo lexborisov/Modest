@@ -15,28 +15,21 @@
  License along with this library; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  
- Author: lex.borisov@gmail.com (Alexander Borisov)
+ Authors: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#include "myport/posix/mycore/memory.h"
+#ifndef MyCSS_PROPERTY_PARSER_URL_H
+#define MyCSS_PROPERTY_PARSER_URL_H
+#pragma once
 
-void * mycore_malloc(size_t size)
-{
-    return malloc(size);
-}
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-void * mycore_realloc(void* dst, size_t size)
-{
-    return realloc(dst, size);
-}
+#include "mycss/property/parser.h"
 
-void * mycore_calloc(size_t num, size_t size)
-{
-    return calloc(num, size);
-}
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
-void * mycore_free(void* dst)
-{
-    free(dst);
-    return NULL;
-}
+#endif /* MyCSS_PROPERTY_PARSER_URL_H */

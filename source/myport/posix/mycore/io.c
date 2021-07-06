@@ -18,8 +18,7 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#include "mycore/myosi.h"
-#include <stdarg.h>
+#include "myport/posix/mycore/io.h"
 
 /* FILE */
 FILE * mycore_fopen(const char *filename, const char *mode)

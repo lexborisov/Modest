@@ -18,7 +18,7 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#include "mycss/property/parser.h"
+#include "mycss/property/parser_url.h"
 
 static void mycss_values_parser_url_switch(mycss_entry_t* entry)
 {

@@ -18,7 +18,7 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#include "mycore/utils/mcsync.h"
+#include "myport/posix/mycore/utils/mcsync.h"
 
 #ifndef MyCORE_BUILD_WITHOUT_THREADS
 #include <pthread.h>
