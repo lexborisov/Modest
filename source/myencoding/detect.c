@@ -18,9 +18,7 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#include "myencoding/encoding.h"
-#include "myencoding/detect_resource.h"
-#include "mycore/utils/resources.h"
+#include "myencoding/detect.h"
 
 myencoding_trigram_result_t myencoding_detect_by_trigram(unsigned const char *u_text, size_t length,
                                                                    const myencoding_trigram_t *list, size_t list_length,

@@ -18,7 +18,7 @@
  Author: lex.borisov@gmail.com (Alexander Borisov)
 */
 
-#include "mycss/property/parser.h"
+#include "mycss/property/parser_text_decoration.h"
 
 static void mycss_property_parser_text_decoration_parser_switch(mycss_entry_t* entry)
 {
