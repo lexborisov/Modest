@@ -2045,7 +2045,7 @@ myencoding_extracting_character_encoding_from_charset_with_found(const char *dat
  * Init mycore_string_t structure
  *
  * @param[in] mchar_async_t*. It can be obtained from myhtml_tree_t object
- *  (see myhtml_tree_get_mchar function) or create manualy
+ *  (see myhtml_tree_get_mchar function) or create manually
  *  For each Tree creates its object, I recommend to use it (myhtml_tree_get_mchar).
  *
  * @param[in] node_id. For all threads (and Main thread) identifier that is unique.
@@ -2053,7 +2053,7 @@ myencoding_extracting_character_encoding_from_charset_with_found(const char *dat
  *  (see myhtml_tree_get_mchar_node_id)
  *
  * @param[in] mycore_string_t*. It can be obtained from myhtml_tree_node_t object
- *  (see myhtml_node_string function) or create manualy
+ *  (see myhtml_node_string function) or create manually
  *
  * @param[in] data size. Set the size you want for char*
  *
